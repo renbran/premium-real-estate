@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Payment Voucher Security Groups -->
+        
+        <!-- Basic User Group -->
+        <record id="group_payment_voucher_user" model="res.groups">
+            <field name="name">Payment Voucher User</field>
+            <field name="category_id" ref="base.module_category_accounting"/>
+            <field name="comment">Can create and view payment vouchers</field>
+        </record>
+        
+        <!-- Reviewer Group -->
+        <record id="group_payment_voucher_reviewer" model="res.groups">
+            <field name="name">Payment Voucher Reviewer</field>
+            <field name="category_id" ref="base.module_category_accounting"/>
+            <field name="implied_ids" eval="[(4, ref('group_payment_voucher_user'))]"/>
+            <field name="comment">Can review payment vouchers (Stage 1)</field>
+        </record>
+        
+        <!-- Approver Group -->
+        <record id="group_payment_voucher_approver" model="res.groups">
+            <field name="name">Payment Voucher Approver</field>
+            <field name="category_id" ref="base.module_category_accounting"/>
+            <field name="implied_ids" eval="[(4, ref('group_payment_voucher_reviewer'))]"/>
+            <field name="comment">Can approve payment vouchers (Stage 2)</field>
+        </record>
+        
+        <!-- Authorizer Group -->
+        <record id="group_payment_voucher_authorizer" model="res.groups">
+            <field name="name">Payment Voucher Authorizer</field>
+            <field name="category_id" ref="base.module_category_accounting"/>
+            <field name="implied_ids" eval="[(4, ref('group_payment_voucher_approver'))]"/>
+            <field name="comment">Can authorize vendor payment vouchers (Stage 3)</field>
+        </record>
+        
+        <!-- Poster Group -->
+        <record id="group_payment_voucher_poster" model="res.groups">
+            <field name="name">Payment Voucher Poster</field>
+            <field name="category_id" ref="base.module_category_accounting"/>
+            <field name="implied_ids" eval="[(4, ref('group_payment_voucher_authorizer'))]"/>
+            <field name="comment">Can post approved payment vouchers (Final Stage)</field>
+        </record>
+        
+        <!-- Manager Group -->
+        <record id="group_payment_voucher_manager" model="res.groups">
+            <field name="name">Payment Voucher Manager</field>
+            <field name="category_id" ref="base.module_category_accounting"/>
+            <field name="implied_ids" eval="[(4, ref('group_payment_voucher_poster')), (4, ref('account.group_account_manager'))]"/>
+            <field name="comment">Full access to payment vouchers including cancellation and reset</field>
+        </record>
+        
+        <!-- Bypass Approval Group -->
+        <record id="group_payment_bypass_approval" model="res.groups">
+            <field name="name">Payment Bypass Approval</field>
+            <field name="category_id" ref="base.module_category_accounting"/>
+            <field name="comment">Can bypass payment approval workflow for direct posting</field>
+        </record>
+
+        <!-- Aliases for backward compatibility -->
+        <record id="group_payment_user" model="res.groups">
+            <field name="name">Payment User (Alias)</field>
+            <field name="category_id" ref="base.module_category_hidden"/>
+            <field name="implied_ids" eval="[(4, ref('group_payment_voucher_user'))]"/>
+        </record>
+        
+        <record id="group_payment_reviewer" model="res.groups">
+            <field name="name">Payment Reviewer (Alias)</field>
+            <field name="category_id" ref="base.module_category_hidden"/>
+            <field name="implied_ids" eval="[(4, ref('group_payment_voucher_reviewer'))]"/>
+        </record>
+        
+        <record id="group_payment_approver" model="res.groups">
+            <field name="name">Payment Approver (Alias)</field>
+            <field name="category_id" ref="base.module_category_hidden"/>
+            <field name="implied_ids" eval="[(4, ref('group_payment_voucher_approver'))]"/>
+        </record>
+        
+        <record id="group_payment_authorizer" model="res.groups">
+            <field name="name">Payment Authorizer (Alias)</field>
+            <field name="category_id" ref="base.module_category_hidden"/>
+            <field name="implied_ids" eval="[(4, ref('group_payment_voucher_authorizer'))]"/>
+        </record>
+        
+        <record id="group_payment_poster" model="res.groups">
+            <field name="name">Payment Poster (Alias)</field>
+            <field name="category_id" ref="base.module_category_hidden"/>
+            <field name="implied_ids" eval="[(4, ref('group_payment_voucher_poster'))]"/>
+        </record>
+        
+        <record id="group_payment_manager" model="res.groups">
+            <field name="name">Payment Manager (Alias)</field>
+            <field name="category_id" ref="base.module_category_hidden"/>
+            <field name="implied_ids" eval="[(4, ref('group_payment_voucher_manager'))]"/>
+        </record>
+
+        <!-- Access Rules for account.payment -->
+        <record id="access_account_payment_user" model="ir.model.access">
+            <field name="name">account.payment.user</field>
+            <field name="model_id" ref="account.model_account_payment"/>
+            <field name="group_id" ref="group_payment_voucher_user"/>
+            <field name="perm_read">1</field>
+            <field name="perm_write">1</field>
+            <field name="perm_create">1</field>
+            <field name="perm_unlink">0</field>
+        </record>
+
+        <record id="access_account_payment_reviewer" model="ir.model.access">
+            <field name="name">account.payment.reviewer</field>
+            <field name="model_id" ref="account.model_account_payment"/>
+            <field name="group_id" ref="group_payment_voucher_reviewer"/>
+            <field name="perm_read">1</field>
+            <field name="perm_write">1</field>
+            <field name="perm_create">1</field>
+            <field name="perm_unlink">0</field>
+        </record>
+
+        <record id="access_account_payment_approver" model="ir.model.access">
+            <field name="name">account.payment.approver</field>
+            <field name="model_id" ref="account.model_account_payment"/>
+            <field name="group_id" ref="group_payment_voucher_approver"/>
+            <field name="perm_read">1</field>
+            <field name="perm_write">1</field>
+            <field name="perm_create">1</field>
+            <field name="perm_unlink">0</field>
+        </record>
+
+        <record id="access_account_payment_authorizer" model="ir.model.access">
+            <field name="name">account.payment.authorizer</field>
+            <field name="model_id" ref="account.model_account_payment"/>
+            <field name="group_id" ref="group_payment_voucher_authorizer"/>
+            <field name="perm_read">1</field>
+            <field name="perm_write">1</field>
+            <field name="perm_create">1</field>
+            <field name="perm_unlink">0</field>
+        </record>
+
+        <record id="access_account_payment_poster" model="ir.model.access">
+            <field name="name">account.payment.poster</field>
+            <field name="model_id" ref="account.model_account_payment"/>
+            <field name="group_id" ref="group_payment_voucher_poster"/>
+            <field name="perm_read">1</field>
+            <field name="perm_write">1</field>
+            <field name="perm_create">1</field>
+            <field name="perm_unlink">0</field>
+        </record>
+
+        <record id="access_account_payment_manager" model="ir.model.access">
+            <field name="name">account.payment.manager</field>
+            <field name="model_id" ref="account.model_account_payment"/>
+            <field name="group_id" ref="group_payment_voucher_manager"/>
+            <field name="perm_read">1</field>
+            <field name="perm_write">1</field>
+            <field name="perm_create">1</field>
+            <field name="perm_unlink">1</field>
+        </record>
+
+        <!-- Record Rules for Enhanced Security -->
+        
+        <!-- Users can only see their own draft payments -->
+        <record id="payment_voucher_user_own_rule" model="ir.rule">
+            <field name="name">Payment Voucher: Users can see own drafts</field>
+            <field name="model_id" ref="account.model_account_payment"/>
+            <field name="domain_force">['|', ('approval_state', '!=', 'draft'), ('create_uid', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_payment_voucher_user'))]"/>
+            <field name="perm_read">1</field>
+            <field name="perm_write">1</field>
+            <field name="perm_create">1</field>
+            <field name="perm_unlink">0</field>
+        </record>
+
+        <!-- Reviewers can see payments under review -->
+        <record id="payment_voucher_reviewer_rule" model="ir.rule">
+            <field name="name">Payment Voucher: Reviewers see pending reviews</field>
+            <field name="model_id" ref="account.model_account_payment"/>
+            <field name="domain_force">['|', ('approval_state', '!=', 'under_review'), ('approval_state', '=', 'under_review')]</field>
+            <field name="groups" eval="[(4, ref('group_payment_voucher_reviewer'))]"/>
+            <field name="perm_read">1</field>
+            <field name="perm_write">1</field>
+            <field name="perm_create">1</field>
+            <field name="perm_unlink">0</field>
+        </record>
+
+        <!-- Approvers can see payments for approval -->
+        <record id="payment_voucher_approver_rule" model="ir.rule">
+            <field name="name">Payment Voucher: Approvers see pending approvals</field>
+            <field name="model_id" ref="account.model_account_payment"/>
+            <field name="domain_force">['|', ('approval_state', '!=', 'for_approval'), ('approval_state', '=', 'for_approval')]</field>
+            <field name="groups" eval="[(4, ref('group_payment_voucher_approver'))]"/>
+            <field name="perm_read">1</field>
+            <field name="perm_write">1</field>
+            <field name="perm_create">1</field>
+            <field name="perm_unlink">0</field>
+        </record>
+
+        <!-- Authorizers can see payments for authorization -->
+        <record id="payment_voucher_authorizer_rule" model="ir.rule">
+            <field name="name">Payment Voucher: Authorizers see pending authorizations</field>
+            <field name="model_id" ref="account.model_account_payment"/>
+            <field name="domain_force">['|', ('approval_state', '!=', 'for_authorization'), ('approval_state', '=', 'for_authorization')]</field>
+            <field name="groups" eval="[(4, ref('group_payment_voucher_authorizer'))]"/>
+            <field name="perm_read">1</field>
+            <field name="perm_write">1</field>
+            <field name="perm_create">1</field>
+            <field name="perm_unlink">0</field>
+        </record>
+
+        <!-- Posters can see approved payments -->
+        <record id="payment_voucher_poster_rule" model="ir.rule">
+            <field name="name">Payment Voucher: Posters see approved payments</field>
+            <field name="model_id" ref="account.model_account_payment"/>
+            <field name="domain_force">['|', ('approval_state', '!=', 'approved'), ('approval_state', '=', 'approved')]</field>
+            <field name="groups" eval="[(4, ref('group_payment_voucher_poster'))]"/>
+            <field name="perm_read">1</field>
+            <field name="perm_write">1</field>
+            <field name="perm_create">1</field>
+            <field name="perm_unlink">0</field>
+        </record>
+
+        <!-- Managers can see all payments -->
+        <record id="payment_voucher_manager_rule" model="ir.rule">
+            <field name="name">Payment Voucher: Managers see all</field>
+            <field name="model_id" ref="account.model_account_payment"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_payment_voucher_manager'))]"/>
+            <field name="perm_read">1</field>
+            <field name="perm_write">1</field>
+            <field name="perm_create">1</field>
+            <field name="perm_unlink">1</field>
+        </record>
+
+        <!-- Simplified Group Aliases for Code References -->
+        <record id="group_payment_reviewer" model="res.groups">
+            <field name="name">Payment Reviewer (Alias)</field>
+            <field name="category_id" ref="base.module_category_accounting"/>
+            <field name="implied_ids" eval="[(4, ref('group_payment_voucher_reviewer'))]"/>
+            <field name="comment">Alias group for payment reviewing permissions</field>
+        </record>
+        
+        <record id="group_payment_approver" model="res.groups">
+            <field name="name">Payment Approver (Alias)</field>
+            <field name="category_id" ref="base.module_category_accounting"/>
+            <field name="implied_ids" eval="[(4, ref('group_payment_voucher_approver'))]"/>
+            <field name="comment">Alias group for payment approval permissions</field>
+        </record>
+        
+        <record id="group_payment_poster" model="res.groups">
+            <field name="name">Payment Poster (Alias)</field>
+            <field name="category_id" ref="base.module_category_accounting"/>
+            <field name="implied_ids" eval="[(4, ref('group_payment_voucher_poster'))]"/>
+            <field name="comment">Alias group for payment posting permissions</field>
+        </record>
+
+    </data>
+</odoo>

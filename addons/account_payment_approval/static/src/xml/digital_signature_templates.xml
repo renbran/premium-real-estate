@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="account_payment_approval.DigitalSignaturePad" owl="1">
+        <div class="o_digital_signature_container">
+            <div class="o_signature_pad_wrapper">
+                <canvas class="o_signature_pad" t-ref="signaturePad"/>
+                <div class="o_signature_controls">
+                    <button type="button" class="btn btn-secondary o_signature_clear" t-on-click="clearSignature">
+                        <i class="fa fa-eraser"/>
+ Clear
+                    </button>
+                    <button type="button" class="btn btn-primary o_signature_save" t-on-click="saveSignature">
+                        <i class="fa fa-check"/>
+ Save Signature
+                    </button>
+                </div>
+            </div>
+            <div t-if="props.signature" class="o_signature_display">
+                <img t-att-src="'data:image/png;base64,' + props.signature" alt="Digital Signature"/>
+            </div>
+        </div>
+    </t>
+</templates>

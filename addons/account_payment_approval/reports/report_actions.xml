@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Payment Voucher Report Action -->
+    <record id="action_report_payment_voucher" model="ir.actions.report">
+        <field name="name">Payment Voucher</field>
+        <field name="model">account.payment</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">account_payment_approval.report_payment_voucher_document</field>
+        <field name="report_file">account_payment_approval.report_payment_voucher_document</field>
+        <field name="binding_model_id" ref="account.model_account_payment"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- Receipt Voucher Report Action -->
+    <record id="action_report_receipt_voucher" model="ir.actions.report">
+        <field name="name">Receipt Voucher</field>
+        <field name="model">account.payment</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">account_payment_approval.report_receipt_voucher_document</field>
+        <field name="report_file">account_payment_approval.report_receipt_voucher_document</field>
+        <field name="binding_model_id" ref="account.model_account_payment"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- QR Verification Report -->
+    <record id="action_report_qr_verification" model="ir.actions.report">
+        <field name="name">QR Verification Page</field>
+        <field name="model">account.payment</field>
+        <field name="report_type">qweb-html</field>
+        <field name="report_name">account_payment_approval.report_qr_verification_document</field>
+        <field name="report_file">account_payment_approval.report_qr_verification_document</field>
+        <field name="binding_model_id" ref="account.model_account_payment"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- Verification Report (HTML for web viewing) -->
+    <record id="action_report_voucher_verification_web" model="ir.actions.report">
+        <field name="name">Voucher Verification (Web)</field>
+        <field name="model">account.payment</field>
+        <field name="report_type">qweb-html</field>
+        <field name="report_name">account_payment_approval.report_qr_verification_document</field>
+        <field name="report_file">account_payment_approval.report_qr_verification_document</field>
+        <field name="binding_model_id" ref="account.model_account_payment"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Default Webhook Mapping -->
+    <record id="webhook_mapping_default" model="webhook.mapping">
+        <field name="name">Default Webhook Mapping</field>
+        <field name="endpoint_url">https://example.com/webhook/crm</field>
+        <field name="method">POST</field>
+        <field name="active">True</field>
+        <field name="default_values">{"type": "lead"}</field>
+        <field name="description">Default webhook mapping for CRM leads</field>
+    </record>
+
+    <!-- Default Field Mappings -->
+    <record id="webhook_field_mapping_name" model="webhook.field.mapping">
+        <field name="webhook_mapping_id" ref="webhook_mapping_default"/>
+        <field name="source_field">name</field>
+        <field name="target_field">name</field>
+        <field name="transformation_type">strip</field>
+        <field name="required">True</field>
+    </record>
+
+    <record id="webhook_field_mapping_email" model="webhook.field.mapping">
+        <field name="webhook_mapping_id" ref="webhook_mapping_default"/>
+        <field name="source_field">email</field>
+        <field name="target_field">email_from</field>
+        <field name="transformation_type">lower</field>
+    </record>
+
+    <record id="webhook_field_mapping_phone" model="webhook.field.mapping">
+        <field name="webhook_mapping_id" ref="webhook_mapping_default"/>
+        <field name="source_field">phone</field>
+        <field name="target_field">phone</field>
+        <field name="transformation_type">strip</field>
+    </record>
+
+    <record id="webhook_field_mapping_company" model="webhook.field.mapping">
+        <field name="webhook_mapping_id" ref="webhook_mapping_default"/>
+        <field name="source_field">company</field>
+        <field name="target_field">company_name</field>
+        <field name="transformation_type">strip</field>
+    </record>
+
+    <record id="webhook_field_mapping_message" model="webhook.field.mapping">
+        <field name="webhook_mapping_id" ref="webhook_mapping_default"/>
+        <field name="source_field">message</field>
+        <field name="target_field">description</field>
+        <field name="transformation_type">strip</field>
+    </record>
+</odoo>

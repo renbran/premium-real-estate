@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Executive Sales Dashboard</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #800020 0%, #600018 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0 0 10px 0;
+            font-size: 2.5em;
+            font-weight: 700;
+        }
+        .header p {
+            margin: 0;
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 40px;
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 30px 0;
+        }
+        .feature {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 8px;
+            border-left: 4px solid #800020;
+        }
+        .feature h3 {
+            margin: 0 0 15px 0;
+            color: #800020;
+            font-size: 1.3em;
+        }
+        .feature ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        .feature li {
+            margin-bottom: 8px;
+        }
+        .compatibility {
+            background: #e8f5e8;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 30px 0;
+            border: 1px solid #28a745;
+        }
+        .compatibility h3 {
+            margin: 0 0 15px 0;
+            color: #28a745;
+        }
+        .installation {
+            background: #fff3cd;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 30px 0;
+            border: 1px solid #ffc107;
+        }
+        .installation h3 {
+            margin: 0 0 15px 0;
+            color: #856404;
+        }
+        .tech-specs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .tech-spec {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        .tech-spec .number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #800020;
+            display: block;
+        }
+        .tech-spec .label {
+            color: #666;
+            font-size: 0.9em;
+        }
+        .screenshot {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #800020;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        .btn:hover {
+            background: #600018;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Executive Sales Dashboard</h1>
+            <p>Advanced Real-time Sales Analytics for Odoo 17</p>
+        </div>
+        
+        <div class="content">
+            <p>Transform your sales data into actionable insights with our comprehensive Executive Sales Dashboard. Designed specifically for Odoo 17, this module provides real-time analytics, performance tracking, and beautiful visualizations to help you make data-driven decisions.</p>
+            
+            <div class="features">
+                <div class="feature">
+                    <h3>📊 Real-time Analytics</h3>
+                    <ul>
+                        <li>Live sales performance metrics</li>
+                        <li>Dynamic KPI tracking</li>
+                        <li>Conversion rate analysis</li>
+                        <li>Revenue growth calculations</li>
+                        <li>Pipeline velocity monitoring</li>
+                    </ul>
+                </div>
+                
+                <div class="feature">
+                    <h3>📈 Interactive Charts</h3>
+                    <ul>
+                        <li>Monthly sales trends</li>
+                        <li>Revenue distribution by category</li>
+                        <li>Order status breakdowns</li>
+                        <li>Performance comparisons</li>
+                        <li>Mobile-responsive visualizations</li>
+                    </ul>
+                </div>
+                
+                <div class="feature">
+                    <h3>🏆 Top Performers</h3>
+                    <ul>
+                        <li>Top sales agents ranking</li>
+                        <li>Best performing agencies</li>
+                        <li>Commission tracking</li>
+                        <li>Performance metrics</li>
+                        <li>Achievement analytics</li>
+                    </ul>
+                </div>
+                
+                <div class="feature">
+                    <h3>🎯 Advanced Filtering</h3>
+                    <ul>
+                        <li>Date range selection</li>
+                        <li>Sales type categorization</li>
+                        <li>Multi-criteria filtering</li>
+                        <li>Custom period analysis</li>
+                        <li>Real-time data updates</li>
+                    </ul>
+                </div>
+                
+                <div class="feature">
+                    <h3>💼 Executive Features</h3>
+                    <ul>
+                        <li>High-level KPI overview</li>
+                        <li>Trend analysis</li>
+                        <li>Performance benchmarking</li>
+                        <li>Strategic insights</li>
+                        <li>Export capabilities</li>
+                    </ul>
+                </div>
+                
+                <div class="feature">
+                    <h3>🔧 Technical Excellence</h3>
+                    <ul>
+                        <li>Modern OWL framework</li>
+                        <li>Chart.js integration</li>
+                        <li>Responsive design</li>
+                        <li>Error handling</li>
+                        <li>Performance optimized</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="tech-specs">
+                <div class="tech-spec">
+                    <span class="number">6</span>
+                    <span class="label">Key Performance Indicators</span>
+                </div>
+                <div class="tech-spec">
+                    <span class="number">3</span>
+                    <span class="label">Interactive Charts</span>
+                </div>
+                <div class="tech-spec">
+                    <span class="number">4</span>
+                    <span class="label">Performance Tables</span>
+                </div>
+                <div class="tech-spec">
+                    <span class="number">100%</span>
+                    <span class="label">Mobile Responsive</span>
+                </div>
+            </div>
+            
+            <div class="compatibility">
+                <h3>✅ Module Compatibility</h3>
+                <p><strong>Compatible with popular Odoo modules:</strong></p>
+                <ul>
+                    <li><strong>le_sale_type</strong> - Automatic sales type categorization and filtering</li>
+                    <li><strong>commission_ax</strong> - Agent and broker commission tracking</li>
+                    <li><strong>osus_invoice_report</strong> - Enhanced reporting fields and booking dates</li>
+                    <li><strong>Standard Odoo Sales</strong> - Works with base sales module out of the box</li>
+                </ul>
+                <p><em>The dashboard automatically detects available modules and adjusts functionality accordingly.</em></p>
+            </div>
+            
+            <div class="installation">
+                <h3>🚀 Quick Installation</h3>
+                <ol>
+                    <li>Download and extract the module to your Odoo addons directory</li>
+                    <li>Restart your Odoo server</li>
+                    <li>Go to Apps → Update Apps List</li>
+                    <li>Search for "Executive Sales Dashboard" and install</li>
+                    <li>Access via Sales → Sales Dashboard menu</li>
+                </ol>
+                <p><strong>Requirements:</strong> Odoo 17.0+, Sales module installed</p>
+            </div>
+            
+            <div class="screenshot">
+                <h3>🖼️ Dashboard Preview</h3>
+                <p><em>Experience a modern, intuitive interface designed for executives and sales managers.</em></p>
+                <p style="background: #e9ecef; padding: 40px; border-radius: 8px; color: #6c757d; font-style: italic;">
+                    📊 Interactive Charts | 📈 Real-time KPIs | 🏆 Top Performers | 📅 Recent Orders
+                </p>
+            </div>
+            
+            <h2>Key Features in Detail</h2>
+            
+            <h3>📊 Executive KPIs</h3>
+            <ul>
+                <li><strong>Total Quotations:</strong> Track all pending quotes with amounts</li>
+                <li><strong>Sales Orders:</strong> Monitor confirmed orders and values</li>
+                <li><strong>Invoiced Sales:</strong> Track completed transactions</li>
+                <li><strong>Conversion Rate:</strong> Measure quote-to-invoice success</li>
+                <li><strong>Average Deal Size:</strong> Understand transaction values</li>
+                <li><strong>Revenue Growth:</strong> Compare with previous periods</li>
+            </ul>
+            
+            <h3>📈 Interactive Visualizations</h3>
+            <ul>
+                <li><strong>Sales Trends:</strong> Line chart showing monthly fluctuations</li>
+                <li><strong>Revenue Distribution:</strong> Pie chart by sales categories</li>
+                <li><strong>Order Status:</strong> Bar chart of order stages</li>
+                <li><strong>Performance Tables:</strong> Detailed agent and agency rankings</li>
+            </ul>
+            
+            <h3>🎯 Smart Filtering</h3>
+            <ul>
+                <li><strong>Date Range:</strong> Flexible period selection</li>
+                <li><strong>Sales Types:</strong> Filter by business categories</li>
+                <li><strong>Real-time Updates:</strong> Instant data refresh</li>
+                <li><strong>Multi-criteria:</strong> Combine multiple filters</li>
+            </ul>
+            
+            <h2>Technical Specifications</h2>
+            
+            <ul>
+                <li><strong>Framework:</strong> OWL (Odoo Web Library) for modern JavaScript</li>
+                <li><strong>Charts:</strong> Chart.js for interactive visualizations</li>
+                <li><strong>Styling:</strong> Modern SCSS with responsive design</li>
+                <li><strong>Backend:</strong> Python with optimized ORM queries</li>
+                <li><strong>Performance:</strong> Efficient data loading and caching</li>
+                <li><strong>Security:</strong> Role-based access control</li>
+            </ul>
+            
+            <h2>Benefits for Your Organization</h2>
+            
+            <div class="features">
+                <div class="feature">
+                    <h3>For Executives</h3>
+                    <ul>
+                        <li>High-level performance overview</li>
+                        <li>Strategic decision support</li>
+                        <li>Trend identification</li>
+                        <li>Goal tracking</li>
+                    </ul>
+                </div>
+                
+                <div class="feature">
+                    <h3>For Sales Managers</h3>
+                    <ul>
+                        <li>Team performance monitoring</li>
+                        <li>Individual agent tracking</li>
+                        <li>Pipeline management</li>
+                        <li>Commission analysis</li>
+                    </ul>
+                </div>
+                
+                <div class="feature">
+                    <h3>For Sales Teams</h3>
+                    <ul>
+                        <li>Performance visibility</li>
+                        <li>Goal achievement tracking</li>
+                        <li>Competitive insights</li>
+                        <li>Motivation through rankings</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin: 40px 0;">
+                <a href="#" class="btn">Install Executive Sales Dashboard</a>
+            </div>
+            
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 30px 0; text-align: center;">
+                <h3 style="margin: 0 0 10px 0; color: #800020;">Support & Documentation</h3>
+                <p style="margin: 0;">Complete installation guide, troubleshooting tips, and technical documentation included.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

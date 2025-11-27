@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Professional Payment Voucher Template -->
+        <template id="payment_voucher_professional" name="Professional Payment Voucher">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <style>
+                                @page {
+                                    margin: 5mm;
+                                    size: A4;
+                                }
+                                
+                                .voucher-container {
+                                    font-family: Arial, sans-serif;
+                                    background: white;
+                                    font-size: 12px;
+                                    line-height: 1.4;
+                                    margin: 0;
+                                    padding: 0;
+                                }
+                                
+                                .voucher-header {
+                                    background: linear-gradient(135deg, #6B2B47, #8B1538);
+                                    color: white;
+                                    padding: 12px;
+                                    margin: 0 0 15px 0;
+                                    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+                                }
+                                
+                                .voucher-title {
+                                    text-align: center;
+                                    font-size: 26px;
+                                    font-weight: bold;
+                                    letter-spacing: 2px;
+                                    margin: 0;
+                                    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+                                    text-transform: uppercase;
+                                }
+                                
+                                .voucher-subtitle {
+                                    text-align: center;
+                                    font-size: 14px;
+                                    margin: 4px 0;
+                                }
+                                
+                                .field-section {
+                                    margin-bottom: 10px;
+                                }
+                                
+                                .field-label {
+                                    color: #6b0632;
+                                    font-weight: bold;
+                                    font-size: 12px;
+                                    margin-bottom: 4px;
+                                    text-transform: uppercase;
+                                    letter-spacing: 0.5px;
+                                }
+                                
+                                .field-value {
+                                    border-bottom: 1px solid #333;
+                                    padding: 4px;
+                                    margin-bottom: 6px;
+                                    min-height: 16px;
+                                    color: #000;
+                                    font-weight: 500;
+                                    font-size: 12px;
+                                }
+                                
+                                .amount-section {
+                                    background: linear-gradient(135deg, #b19024, #8B6F00);
+                                    color: white;
+                                    padding: 15px;
+                                    text-align: center;
+                                    margin: 15px 0;
+                                    font-size: 18px;
+                                    font-weight: bold;
+                                    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+                                    border-radius: 5px;
+                                }
+                                
+                                .payment-summary-section {
+                                    margin: 12px 0;
+                                    padding: 12px;
+                                    background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+                                    border: 2px solid #ffc107;
+                                    border-radius: 6px;
+                                }
+                                
+                                .summary-title {
+                                    color: #856404;
+                                    font-weight: bold;
+                                    font-size: 13px;
+                                    margin-bottom: 6px;
+                                    text-transform: uppercase;
+                                    letter-spacing: 0.5px;
+                                }
+                                
+                                .summary-item {
+                                    margin-bottom: 4px;
+                                    font-size: 12px;
+                                    line-height: 1.4;
+                                }
+                                
+                                .signature-section {
+                                    margin-top: 15px;
+                                    padding-top: 12px;
+                                    border-top: 2px solid #e9ecef;
+                                }
+                                
+                                .signature-box {
+                                    text-align: center;
+                                    padding: 6px;
+                                    margin-bottom: 8px;
+                                }
+                                
+                                .signature-line {
+                                    border-bottom: 2px solid #333;
+                                    margin-bottom: 5px;
+                                    height: 25px;
+                                    display: flex;
+                                    align-items: flex-end;
+                                    justify-content: center;
+                                }
+                                
+                                .signature-label {
+                                    font-weight: bold;
+                                    color: #6b0632;
+                                    font-size: 11px;
+                                    text-transform: uppercase;
+                                    letter-spacing: 0.5px;
+                                }
+                                
+                                .signature-initials {
+                                    font-size: 14px;
+                                    font-weight: bold;
+                                    color: #6B2B47;
+                                    font-style: italic;
+                                }
+                                
+                                .footer-note {
+                                    background: linear-gradient(135deg, #6B2B47, #8B1538);
+                                    color: white;
+                                    text-align: center;
+                                    padding: 10px;
+                                    font-size: 11px;
+                                    margin: 15px 0 0 0;
+                                }
+                                
+                                .creator-info {
+                                    font-size: 10px;
+                                    color: #666;
+                                    margin-top: 5px;
+                                    text-align: right;
+                                }
+                                
+                                .received-by-box {
+                                    border: 2px solid #6b0632;
+                                    padding: 10px;
+                                    background: #f8f9fa;
+                                    margin-top: 8px;
+                                    border-radius: 5px;
+                                }
+                                
+                                .compact-row {
+                                    margin-bottom: 8px;
+                                }
+                                
+                                .qr-code-container {
+                                    text-align: center;
+                                    padding: 8px;
+                                }
+                                
+                                .qr-code-box {
+                                    background: white;
+                                    padding: 6px;
+                                    border-radius: 4px;
+                                    display: inline-block;
+                                    border: 2px solid #333;
+                                }
+                                
+                                @media print {
+                                    .page {
+                                        margin: 0;
+                                        padding: 2px;
+                                    }
+                                    .voucher-container {
+                                        margin: 0;
+                                        padding: 0;
+                                    }
+                                }
+                            </style>
+
+                            <div class="voucher-container">
+                                <!-- Header Section -->
+                                <div class="voucher-header">
+                                    <div class="row">
+                                        <div class="col-2">
+                                            <div class="qr-code-container">
+                                                <div class="qr-code-box">
+                                                    <t t-if="o.qr_code">
+                                                        <img t-att-src="'data:image/png;base64,' + o.qr_code.decode('utf-8')" style="width: 65px; height: 65px;"/>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <div style="width: 65px; height: 65px; background: white; border: 1px solid #333; position: relative;">
+                                                            <div style="position: absolute; top: 2px; left: 2px; width: 15px; height: 15px; background: #000;"></div>
+                                                            <div style="position: absolute; top: 2px; right: 2px; width: 15px; height: 15px; background: #000;"></div>
+                                                            <div style="position: absolute; bottom: 2px; left: 2px; width: 15px; height: 15px; background: #000;"></div>
+                                                            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 12px; height: 12px; background: #000;"></div>
+                                                        </div>
+                                                    </t>
+                                                </div>
+                                                <div style="font-size: 8px; margin-top: 2px; color: white;">Verify</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-8">
+                                            <h1 class="voucher-title">
+                                                <t t-if="o.payment_type == 'inbound'">Receipt</t>
+                                                <t t-else="">Voucher</t>
+                                            </h1>
+                                            <div class="voucher-subtitle">
+                                                <strong>Ref: <span t-field="o.name"/> | Date: <span t-field="o.date"/></strong>
+                                            </div>
+                                        </div>
+                                        <div class="col-2">
+                                            <div style="text-align: right; font-size: 7px;">
+                                                <div t-field="o.company_id.city" t-if="o.company_id.city"/>
+                                                <div t-field="o.company_id.phone" t-if="o.company_id.phone"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Main Content in 2 Columns -->
+                                <div class="row">
+                                    <div class="col-6">
+                                        <!-- Left Column -->
+                                        <div class="field-section">
+                                            <div class="field-label">
+                                                <span t-if="o.payment_type == 'outbound'">Pay To:</span>
+                                                <span t-if="o.payment_type == 'inbound'">Received From:</span>
+                                            </div>
+                                            <div class="field-value"><span t-field="o.partner_id.name"/></div>
+                                        </div>
+
+                                        <div class="field-section">
+                                            <div class="field-label">Phone:</div>
+                                            <div class="field-value">
+                                                <span t-field="o.partner_id.mobile" t-if="o.partner_id.mobile"/>
+                                                <span t-field="o.partner_id.phone" t-if="not o.partner_id.mobile and o.partner_id.phone"/>
+                                                <t t-if="not o.partner_id.mobile and not o.partner_id.phone">N/A</t>
+                                            </div>
+                                        </div>
+
+                                        <div class="field-section">
+                                            <div class="field-label">Email:</div>
+                                            <div class="field-value">
+                                                <span t-field="o.partner_id.email" t-if="o.partner_id.email"/>
+                                                <t t-if="not o.partner_id.email">N/A</t>
+                                            </div>
+                                        </div>
+
+                                        <div class="field-section">
+                                            <div class="field-label">Payment Method:</div>
+                                            <div class="field-value"><span t-field="o.journal_id.name"/></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-6">
+                                        <!-- Right Column -->
+                                        <div class="field-section">
+                                            <div class="field-label">Related Invoice:</div>
+                                            <div class="field-value">
+                                                <span t-field="o.ref" t-if="o.ref"/>
+                                                <t t-if="not o.ref">N/A</t>
+                                            </div>
+                                        </div>
+
+                                        <div class="field-section">
+                                            <div class="field-label">Transaction Type:</div>
+                                            <div class="field-value">
+                                                <t t-if="o.payment_type == 'inbound'">
+                                                    <span style="color: #28a745; font-weight: bold;">Receipt (Money Received)</span>
+                                                </t>
+                                                <t t-else="">
+                                                    <span style="color: #dc3545; font-weight: bold;">Payment (Money Paid)</span>
+                                                </t>
+                                            </div>
+                                        </div>
+
+                                        <div class="field-section">
+                                            <div class="field-label">Remarks:</div>
+                                            <div class="field-value" style="min-height: 30px;">
+                                                <span t-field="o.memo" t-if="o.memo"/>
+                                                <t t-if="not o.memo">-</t>
+                                            </div>
+                                        </div>
+
+                                        <div class="field-section">
+                                            <div class="field-label">Currency:</div>
+                                            <div class="field-value"><span t-field="o.currency_id.name"/></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Amount in Words -->
+                                <div class="field-section">
+                                    <div class="field-label">Amount in Words:</div>
+                                    <div class="field-value" style="font-style: italic; font-size: 13px;">
+                                        <span t-esc="o._amount_in_words()"/>
+                                    </div>
+                                </div>
+
+                                <!-- Total Amount -->
+                                <div class="amount-section">
+                                    <strong>TOTAL AMOUNT: <span t-field="o.amount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></strong>
+                                </div>
+
+                                <!-- Compact Signature Section -->
+                                <div class="signature-section">
+                                    <!-- Top Row: 3 columns -->
+                                    <div class="row compact-row">
+                                        <div class="col-4">
+                                            <div class="signature-box">
+                                                <div class="signature-line">
+                                                    <t t-if="o.create_uid.name">
+                                                        <div class="signature-initials">
+                                                            <span t-esc="''.join([word[0].upper() for word in o.create_uid.name.split()[:2]])"/>
+                                                        </div>
+                                                    </t>
+                                                </div>
+                                                <div class="signature-label">Created By</div>
+                                                <div style="font-size: 11px;"><span t-field="o.create_uid.name"/></div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-4">
+                                            <div class="signature-box">
+                                                <div class="signature-line">
+                                                    <t t-if="o.reviewer_id">
+                                                        <div class="signature-initials">
+                                                            <span t-esc="''.join([word[0].upper() for word in o.reviewer_id.name.split()[:2]])"/>
+                                                        </div>
+                                                    </t>
+                                                </div>
+                                                <div class="signature-label">Reviewed By</div>
+                                                <div style="font-size: 11px;">
+                                                    <span t-field="o.reviewer_id.name" t-if="o.reviewer_id"/>
+                                                    <span t-if="not o.reviewer_id">Name: ________</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-4">
+                                            <div class="signature-box">
+                                                <div class="signature-line">
+                                                    <t t-if="o.approver_id">
+                                                        <div class="signature-initials">
+                                                            <span t-esc="''.join([word[0].upper() for word in o.approver_id.name.split()[:2]])"/>
+                                                        </div>
+                                                    </t>
+                                                </div>
+                                                <div class="signature-label">Approved By</div>
+                                                <div style="font-size: 11px;">
+                                                    <span t-field="o.approver_id.name" t-if="o.approver_id"/>
+                                                    <span t-if="not o.approver_id">Name: ________</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Authorized By -->
+                                    <div class="row compact-row">
+                                        <div class="col-12">
+                                            <div class="signature-box">
+                                                <div class="signature-line">
+                                                    <t t-if="o.authorizer_id">
+                                                        <div class="signature-initials">
+                                                            <span t-esc="''.join([word[0].upper() for word in o.authorizer_id.name.split()[:2]])"/>
+                                                        </div>
+                                                    </t>
+                                                </div>
+                                                <div class="signature-label">Authorized By</div>
+                                                <div style="font-size: 11px;">
+                                                    <span t-field="o.authorizer_id.name" t-if="o.authorizer_id"/>
+                                                    <span t-if="not o.authorizer_id">Name and Signature: _________________ Date: ______</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Received By -->
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="received-by-box">
+                                                <div class="signature-label" style="text-align: center; margin-bottom: 3px;">Received By</div>
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        <div style="margin-bottom: 3px;">
+                                                            <div style="font-weight: bold; margin-bottom: 1px; font-size: 9px;">Name and Signature:</div>
+                                                            <div style="border-bottom: 1px solid #333; height: 15px;"></div>
+                                                            <div style="font-size: 8px; color: #666;">Print: <span t-field="o.partner_id.name"/></div>
+                                                        </div>
+                                                        <div>
+                                                            <div style="font-weight: bold; margin-bottom: 1px; font-size: 9px;">Mobile:</div>
+                                                            <div style="border-bottom: 1px solid #333; height: 12px; font-size: 9px; padding-top: 1px;">
+                                                                <span t-field="o.partner_id.mobile" t-if="o.partner_id.mobile"/>
+                                                                <t t-if="not o.partner_id.mobile">_______</t>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <div style="margin-bottom: 3px;">
+                                                            <div style="font-weight: bold; margin-bottom: 1px; font-size: 9px;">Date:</div>
+                                                            <div style="border-bottom: 1px solid #333; height: 12px; font-size: 9px; padding-top: 1px;">
+                                                                <span t-field="o.date"/>
+                                                            </div>
+                                                        </div>
+                                                        <div>
+                                                            <div style="font-weight: bold; margin-bottom: 1px; font-size: 9px;">ID Copy:</div>
+                                                            <div style="font-size: 9px;">[ ] Yes [ ] No</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Creator Info -->
+                                <div class="creator-info">
+                                    Created: <span t-field="o.create_uid.name"/> | <span t-field="o.create_date"/>
+                                    <t t-if="o.write_uid != o.create_uid"> | Modified: <span t-field="o.write_uid.name"/></t>
+                                </div>
+
+                                <!-- Footer -->
+                                <div class="footer-note">
+                                    <strong>Thank you for your business!</strong> | 
+                                    Computer-generated document | 
+                                    <span t-field="o.company_id.name"/>, <span t-field="o.company_id.country_id.name"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <!-- Professional Voucher Styles -->
+        <template id="payment_voucher_styles" name="Payment Voucher Styles">
+            <style type="text/css">
+                /* Additional styles can be added here if needed */
+            </style>
+        </template>
+
+    </data>
+</odoo>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Webhook Mapping Form View -->
+    <record id="view_webhook_mapping_form" model="ir.ui.view">
+        <field name="name">webhook.mapping.form</field>
+        <field name="model">webhook.mapping</field>
+        <field name="arch" type="xml">
+            <form string="Webhook Mapping">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="endpoint_url"/>
+                            <field name="method"/>
+                            <field name="active"/>
+                        </group>
+                        <group>
+                            <field name="sequence"/>
+                            <field name="description"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Field Mappings">
+                            <field name="field_mapping_ids">
+                                <tree string="Field Mappings" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="source_field"/>
+                                    <field name="target_field"/>
+                                    <field name="field_type"/>
+                                    <field name="transformation_type"/>
+                                    <field name="default_value"/>
+                                    <field name="required"/>
+                                </tree>
+                                <form string="Field Mapping">
+                                    <sheet>
+                                        <group>
+                                            <group>
+                                                <field name="source_field"/>
+                                                <field name="target_field"/>
+                                                <field name="field_type"/>
+                                                <field name="transformation_type"/>
+                                            </group>
+                                            <group>
+                                                <field name="default_value"/>
+                                                <field name="required"/>
+                                                <field name="custom_function" invisible="transformation_type != 'custom'"/>
+                                                <field name="sequence"/>
+                                            </group>
+                                        </group>
+                                    </sheet>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Default Values">
+                            <field name="default_values" widget="ace" options="{'mode': 'json'}"/>
+                        </page>
+                        <page string="Transformation Rules">
+                            <field name="transformation_rules" widget="ace" options="{'mode': 'python'}"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Webhook Field Mapping Form View -->
+    <record id="view_webhook_field_mapping_form" model="ir.ui.view">
+        <field name="name">webhook.field.mapping.form</field>
+        <field name="model">webhook.field.mapping</field>
+        <field name="arch" type="xml">
+            <form string="Field Mapping">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="source_field"/>
+                            <field name="target_field"/>
+                            <field name="field_type"/>
+                            <field name="transformation_type"/>
+                        </group>
+                        <group>
+                            <field name="default_value"/>
+                            <field name="required"/>
+                            <field name="custom_function" invisible="transformation_type != 'custom'"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Webhook Mapping Tree View -->
+    <record id="view_webhook_mapping_tree" model="ir.ui.view">
+        <field name="name">webhook.mapping.tree</field>
+        <field name="model">webhook.mapping</field>
+        <field name="arch" type="xml">
+            <tree string="Webhook Mappings">
+                <field name="name"/>
+                <field name="endpoint_url"/>
+                <field name="method"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Webhook Mapping Action -->
+    <record id="action_webhook_mapping" model="ir.actions.act_window">
+        <field name="name">Webhook Mappings</field>
+        <field name="res_model">webhook.mapping</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a webhook mapping configuration
+            </p>
+            <p>
+                Configure how webhook data should be mapped to CRM lead fields.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem id="menu_webhook_root" name="Webhooks" parent="crm.crm_menu_root" sequence="20"/>
+    <menuitem id="menu_webhook_mapping" name="Webhook Mappings" parent="menu_webhook_root" 
+              action="action_webhook_mapping" sequence="10"/>
+</odoo>

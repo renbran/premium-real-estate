@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- White Label Settings in General Settings -->
+        <record id="res_config_settings_view_form_white_label" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.white.label</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('settings')]" position="inside">
+                    <div class="app_settings_block" data-string="White Label Branding" string="White Label Branding" data-key="white_label_branding">
+                        <h2>White Label Branding</h2>
+                        
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="replace_odoo_branding"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="replace_odoo_branding"/>
+                                    <div class="text-muted">
+                                        Replace Odoo branding throughout the system with your company branding
+                                    </div>
+                                    <div class="content-group" invisible="replace_odoo_branding == False">
+                                        <div class="mt16">
+                                            <field name="white_label_name" placeholder="Your Company Name"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="hide_odoo_documentation"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="hide_odoo_documentation"/>
+                                    <div class="text-muted">
+                                        Hide links to Odoo documentation from help menus
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="hide_odoo_support"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="hide_odoo_support"/>
+                                    <div class="text-muted">
+                                        Hide links to Odoo support from help menus
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12 o_setting_box">
+                                <div class="o_setting_right_pane">
+                                    <label for="custom_logo_url">Custom Logo URL</label>
+                                    <div class="text-muted">
+                                        URL for your custom logo (recommended size: 180x40px)
+                                    </div>
+                                    <field name="custom_logo_url" placeholder="https://yourcompany.com/logo.png"/>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12 o_setting_box">
+                                <div class="o_setting_right_pane">
+                                    <label for="custom_favicon_url">Custom Favicon URL</label>
+                                    <div class="text-muted">
+                                        URL for your custom favicon (recommended: 32x32px ICO file)
+                                    </div>
+                                    <field name="custom_favicon_url" placeholder="https://yourcompany.com/favicon.ico"/>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12 o_setting_box">
+                                <div class="o_setting_right_pane">
+                                    <label for="custom_footer_text">Custom Footer Text</label>
+                                    <div class="text-muted">
+                                        Custom text to display in footer instead of Odoo copyright
+                                    </div>
+                                    <field name="custom_footer_text" placeholder="© 2025 Your Company Name. All rights reserved."/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+        
+    </data>
+</odoo>

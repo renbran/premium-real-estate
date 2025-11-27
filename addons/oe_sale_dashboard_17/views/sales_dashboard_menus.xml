@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    <!-- Compact Sales Dashboard Main Menu -->
+    <menuitem id="sales_dashboard_main_menu"
+          name="Sales Dashboard"
+          parent="sale.sale_menu_root"
+          sequence="1"/>
+
+    <!-- Enhanced Dashboard Submenu -->
+    <menuitem id="sales_dashboard_enhanced_sub_menu"
+          name="Enhanced Dashboard"
+          parent="sales_dashboard_main_menu"
+          sequence="1"
+          action="oe_sale_dashboard_17_enhanced_action"/>
+
+    <!-- Classic Dashboard Submenu -->
+    <menuitem id="sales_dashboard_sub_menu"
+          name="Classic Dashboard"
+          parent="sales_dashboard_main_menu"
+          sequence="2"
+          action="oe_sale_dashboard_17_action"/>
+    </data>
+</odoo>

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Sales Dashboard Action -->
+        <record id="oe_sale_dashboard_17_action" model="ir.actions.client">
+            <field name="name">Sales Dashboard</field>
+            <field name="tag">sales_dashboard</field>
+        </record>
+
+        <!-- Enhanced Sales Dashboard Action -->
+        <record id="oe_sale_dashboard_17_enhanced_action" model="ir.actions.client">
+            <field name="name">Enhanced Sales Dashboard</field>
+            <field name="tag">sales_dashboard_enhanced</field>
+        </record>
+
+        <!-- Sales Dashboard View Template -->
+        <template id="view_sales_dashboard" name="Sales Dashboard">
+            <div class="sales_dashboard_container">
+                <!-- Header Section -->
+                <div class="dashboard_header">
+                    <div class="dashboard_title">
+                        <h2>Sales Dashboard</h2>
+                        <p>Real-time sales analytics and performance metrics</p>
+                    </div>
+                    <div class="dashboard_filters">
+                        <div class="filter_group">
+                            <span class="o_form_label">Date Range:</span>
+                            <input type="date" id="start_date" class="form-control"/>
+                            <input type="date" id="end_date" class="form-control"/>
+                            <button class="btn btn-primary" id="refresh_dashboard">Refresh</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- KPI Cards Section -->
+                <div class="kpi_section">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="kpi_card">
+                                <div class="kpi_icon">
+                                    <i class="fa fa-file-text-o" title="Total Quotations Icon"></i>
+                                </div>
+                                <div class="kpi_content">
+                                    <h3 id="total_quotations">0</h3>
+                                    <p>Total Quotations</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="kpi_card">
+                                <div class="kpi_icon">
+                                    <i class="fa fa-shopping-cart" title="Sales Orders Icon"></i>
+                                </div>
+                                <div class="kpi_content">
+                                    <h3 id="total_orders">0</h3>
+                                    <p>Sales Orders</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="kpi_card">
+                                <div class="kpi_icon">
+                                    <i class="fa fa-check-circle" title="Invoiced Sales Icon"></i>
+                                </div>
+                                <div class="kpi_content">
+                                    <h3 id="total_invoiced">0</h3>
+                                    <p>Invoiced Sales</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="kpi_card">
+                                <div class="kpi_icon">
+                                    <i class="fa fa-money" title="Total Revenue Icon"></i>
+                                </div>
+                                <div class="kpi_content">
+                                    <h3 id="total_amount">0</h3>
+                                    <p>Total Revenue</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="charts_section">
+                    <div class="row">
+                        <!-- Monthly Trend Chart -->
+                        <div class="col-md-8">
+                            <div class="chart_container">
+                                <h4>Monthly Sales Trend</h4>
+                                <canvas id="monthly_trend_chart" width="400" height="200"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Sales by State Pie Chart -->
+                        <div class="col-md-4">
+                            <div class="chart_container">
+                                <h4>Sales by State</h4>
+                                <canvas id="sales_state_chart" width="300" height="200"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <!-- Top Customers Chart -->
+                        <div class="col-md-6">
+                            <div class="chart_container">
+                                <h4>Top Customers</h4>
+                                <canvas id="top_customers_chart" width="400" height="200"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Sales Team Performance -->
+                        <div class="col-md-6">
+                            <div class="chart_container">
+                                <h4>Sales Team Performance</h4>
+                                <canvas id="sales_team_chart" width="400" height="200"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data Tables Section -->
+                <div class="tables_section mt-4">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="table_container">
+                                <h4>Recent Sales Orders</h4>
+                                <div id="recent_orders_table">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Order #</th>
+                                                <th>Customer</th>
+                                                <th>Date</th>
+                                                <th>Amount</th>
+                                                <th>State</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="orders_table_body">
+                                            <!-- Populated by JavaScript -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </data>
+</odoo>

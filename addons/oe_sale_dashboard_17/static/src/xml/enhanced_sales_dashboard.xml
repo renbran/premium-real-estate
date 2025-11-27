@@ -1,0 +1,587 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+
+    <!-- Enhanced Sales Dashboard Template -->
+    <t t-name="oe_sale_dashboard_17.enhanced_sales_dashboard" owl="1">
+        <div class="o_sales_dashboard" role="main" aria-labelledby="dashboard-title">
+            <!-- Header Section -->
+            <div class="dashboard_header bg-white border-bottom p-3 mb-4" role="banner">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <h2 id="dashboard-title" class="text-osus-burgundy mb-1">Enhanced Sales Dashboard</h2>
+                        <p class="text-muted mb-0">Professional sales analytics with OSUS branding</p>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row g-2" role="form" aria-label="Dashboard filters">
+                            <div class="col-md-4">
+                                <label for="dashboard_start_date" class="form-label">Start Date</label>
+                                <input type="date" id="dashboard_start_date" name="start_date" class="form-control" t-model="state.filters.start_date" t-on-change="(ev) => this.onFilterChange('start_date', ev.target.value)" aria-label="Start date for dashboard filter"/>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="dashboard_end_date" class="form-label">End Date</label>
+                                <input type="date" id="dashboard_end_date" name="end_date" class="form-control" t-model="state.filters.end_date" t-on-change="(ev) => this.onFilterChange('end_date', ev.target.value)" aria-label="End date for dashboard filter"/>
+                            </div>
+                            <div class="col-md-4 d-flex align-items-end">
+                                <button type="button" class="btn btn-osus-primary me-2" t-on-click="onApplyFilters" aria-label="Apply date filters to dashboard data">
+                                    <i class="fa fa-refresh" aria-hidden="true"/>
+ Apply Filters
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary" t-on-click="onRefreshDashboard" aria-label="Refresh dashboard data">
+                                    <i class="fa fa-sync" aria-hidden="true"/>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loading State -->
+            <div t-if="state.isLoading" class="text-center p-5">
+                <div class="spinner-border text-osus-burgundy" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-3 text-muted">Loading dashboard data...</p>
+            </div>
+
+            <!-- Dashboard Content -->
+            <div t-else="" class="dashboard_content">
+
+                <!-- KPI Cards Section -->
+                <section class="row mb-4" role="region" aria-labelledby="kpi-section-title">
+                    <h3 id="kpi-section-title" class="visually-hidden">Key Performance Indicators</h3>
+                    <div class="col-md-3 mb-3">
+                        <div class="card osus-kpi-card border-0 shadow-sm" role="article" aria-labelledby="total-quotations-label">
+                            <div class="card-body text-center">
+                                <div class="kpi-icon mb-2">
+                                    <i class="fa fa-file-text-o fa-2x text-osus-burgundy" aria-hidden="true"/>
+                                </div>
+                                <h3 class="fw-bold text-osus-burgundy mb-1" t-esc="formatNumber(state.data.performance.total_quotations)"/>
+                                <p id="total-quotations-label" class="text-muted mb-0">Total Quotations</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <div class="card osus-kpi-card border-0 shadow-sm" role="article" aria-labelledby="sales-orders-label">
+                            <div class="card-body text-center">
+                                <div class="kpi-icon mb-2">
+                                    <i class="fa fa-shopping-cart fa-2x text-osus-gold" aria-hidden="true"/>
+                                </div>
+                                <h3 class="fw-bold text-osus-gold mb-1" t-esc="formatNumber(state.data.performance.total_sales)"/>
+                                <p id="sales-orders-label" class="text-muted mb-0">Sales Orders</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <div class="card osus-kpi-card border-0 shadow-sm" role="article" aria-labelledby="invoiced-sales-label">
+                            <div class="card-body text-center">
+                                <div class="kpi-icon mb-2">
+                                    <i class="fa fa-check-circle fa-2x text-success" aria-hidden="true"/>
+                                </div>
+                                <h3 class="fw-bold text-success mb-1" t-esc="formatNumber(state.data.performance.total_invoiced)"/>
+                                <p id="invoiced-sales-label" class="text-muted mb-0">Invoiced Sales</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <div class="card osus-kpi-card border-0 shadow-sm" role="article" aria-labelledby="total-revenue-label">
+                            <div class="card-body text-center">
+                                <div class="kpi-icon mb-2">
+                                    <i class="fa fa-money fa-2x text-osus-burgundy" aria-hidden="true"/>
+                                </div>
+                                <h3 class="fw-bold text-osus-burgundy mb-1" t-esc="formatCurrency(state.data.performance.total_amount)"/>
+                                <p id="total-revenue-label" class="text-muted mb-0">Total Revenue</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Charts Section -->
+                <section class="row mb-4" role="region" aria-labelledby="charts-section-title">
+                    <h3 id="charts-section-title" class="visually-hidden">Sales Analytics Charts</h3>
+                    <!-- Monthly Trend Chart -->
+                    <div class="col-md-8 mb-3">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-osus-light">
+                                <h5 class="card-title text-osus-burgundy mb-0">
+                                    <i class="fa fa-line-chart me-2" aria-hidden="true"/>
+                                    Monthly Sales Trend
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container" style="height: 300px;">
+                                    <canvas id="monthly_trend_chart" aria-label="Monthly sales trend chart showing sales performance over time" role="img"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pipeline Chart -->
+                    <div class="col-md-4 mb-3">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-osus-light">
+                                <h5 class="card-title text-osus-burgundy mb-0">
+                                    <i class="fa fa-pie-chart me-2" aria-hidden="true"/>
+                                    Sales Pipeline
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container" style="height: 300px;">
+                                    <canvas id="pipeline_chart" aria-label="Sales pipeline chart showing distribution of sales by stage" role="img"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Rankings Section -->
+                <section class="row" role="region" aria-labelledby="rankings-section-title" t-if="state.data.agent_rankings.rankings and state.data.agent_rankings.rankings.length > 0">
+                    <h3 id="rankings-section-title" class="visually-hidden">Performance Rankings</h3>
+                    <!-- Agent Rankings -->
+                    <div class="col-md-6 mb-3">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-osus-light">
+                                <h5 class="card-title text-osus-burgundy mb-0">
+                                    <i class="fa fa-user me-2" aria-hidden="true"/>
+                                    Top Agents
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-sm" role="table" aria-label="Top performing sales agents ranking table">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">Name</th>
+                                                <th scope="col">Deals</th>
+                                                <th scope="col">Amount</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr t-foreach="state.data.agent_rankings.rankings.slice(0, 5)" t-as="agent" t-key="agent.agent_id">
+                                                <td class="fw-bold text-osus-burgundy" t-esc="agent.rank"/>
+                                                <td t-esc="agent.name"/>
+                                                <td t-esc="agent.deal_count"/>
+                                                <td class="fw-bold" t-esc="agent.formatted_amount"/>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Broker Rankings -->
+                    <div class="col-md-6 mb-3" t-if="state.data.broker_rankings.rankings and state.data.broker_rankings.rankings.length > 0">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-osus-light">
+                                <h5 class="card-title text-osus-burgundy mb-0">
+                                    <i class="fa fa-users me-2" aria-hidden="true"/>
+                                    Top Brokers
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-sm" role="table" aria-label="Top performing brokers ranking table">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">Name</th>
+                                                <th scope="col">Deals</th>
+                                                <th scope="col">Amount</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr t-foreach="state.data.broker_rankings.rankings.slice(0, 5)" t-as="broker" t-key="broker.broker_id">
+                                                <td class="fw-bold text-osus-gold" t-esc="broker.rank"/>
+                                                <td t-esc="broker.name"/>
+                                                <td t-esc="broker.deal_count"/>
+                                                <td class="fw-bold" t-esc="broker.formatted_amount"/>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Info Messages -->
+                <section class="row" role="region" aria-labelledby="info-section-title" t-if="!state.data.agent_rankings.rankings or state.data.agent_rankings.rankings.length === 0">
+                    <h3 id="info-section-title" class="visually-hidden">Information Messages</h3>
+                    <div class="col-12">
+                        <div class="alert alert-info" role="note">
+                            <i class="fa fa-info-circle me-2" aria-hidden="true"/>
+                            <strong>Optional Features:</strong> Agent and broker rankings are available when commission_ax module is installed.
+                            Sale type filtering is available when le_sale_type module is installed.
+                            All features work independently and gracefully degrade when modules are not available.
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Enhanced Dashboard View Toggle -->
+                <section class="row mb-4" role="region" aria-labelledby="enhanced-toggle-section">
+                    <div class="col-12">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h4 class="text-osus-burgundy mb-1">Real Estate Enhanced View</h4>
+                                        <p class="text-muted mb-0">Enhanced analytics with real estate specific metrics and filtering</p>
+                                    </div>
+                                    <button type="button" class="btn btn-outline-osus-burgundy" t-on-click="onToggleEnhancedView">
+                                        <span t-if="!state.showEnhancedView">
+                                            <i class="fa fa-plus-circle me-2"/>
+Enable Enhanced View
+                                        </span>
+                                        <span t-else="">
+                                            <i class="fa fa-minus-circle me-2"/>
+Disable Enhanced View
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Enhanced Dashboard Content (when enabled) -->
+                <div t-if="state.showEnhancedView" class="enhanced-dashboard-content">
+
+                    <!-- Enhanced Filters Section -->
+                    <section class="row mb-4" role="region" aria-labelledby="enhanced-filters-title">
+                        <h3 id="enhanced-filters-title" class="visually-hidden">Enhanced Dashboard Filters</h3>
+                        <div class="col-12">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header bg-osus-burgundy text-white">
+                                    <h4 class="mb-0">
+                                        <i class="fa fa-filter me-2"/>
+Enhanced Filtering Options
+                                    </h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row g-3">
+                                        <!-- Booking Date Filter -->
+                                        <div class="col-md-3" t-if="getIntegrationStatus().real_estate_available">
+                                            <label for="booking_date_filter" class="form-label">Booking Date</label>
+                                            <input type="date" id="booking_date_filter" class="form-control" t-model="state.filters.booking_date" t-on-change="(ev) => this.onEnhancedFilterChange('booking_date', ev.target.value)"/>
+                                        </div>
+
+                                        <!-- Sale Order Type Filter -->
+                                        <div class="col-md-3" t-if="getIntegrationStatus().le_sale_type_available">
+                                            <label for="sale_order_type_filter" class="form-label">Sale Order Type</label>
+                                            <select id="sale_order_type_filter" class="form-select" t-model="state.filters.sale_order_type_id" t-on-change="(ev) => this.onEnhancedFilterChange('sale_order_type_id', parseInt(ev.target.value) || null)">
+                                                <option value="">All Types</option>
+                                                <!-- Sale types will be populated via JS -->
+                                            </select>
+                                        </div>
+
+                                        <!-- Project Filter -->
+                                        <div class="col-md-3" t-if="getIntegrationStatus().project_field_available">
+                                            <label for="project_filter" class="form-label">Projects</label>
+                                            <select id="project_filter" class="form-select" multiple="true">
+                                                <!-- Projects will be populated via JS -->
+                                            </select>
+                                        </div>
+
+                                        <!-- Apply Enhanced Filters Button -->
+                                        <div class="col-md-3 d-flex align-items-end">
+                                            <button type="button" class="btn btn-osus-primary w-100" t-on-click="onApplyEnhancedFilters">
+                                                <i class="fa fa-filter me-2"/>
+Apply Enhanced Filters
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Enhanced Scorecard Section -->
+                    <section class="row mb-4" role="region" aria-labelledby="enhanced-scorecard-title">
+                        <h3 id="enhanced-scorecard-title" class="visually-hidden">Enhanced Sales Metrics</h3>
+                        <div class="col-md-2 mb-3">
+                            <div class="card osus-kpi-card border-0 shadow-sm enhanced-card">
+                                <div class="card-body text-center">
+                                    <div class="kpi-icon mb-2">
+                                        <i class="fa fa-dollar-sign fa-2x text-osus-burgundy"/>
+                                    </div>
+                                    <h3 class="fw-bold text-osus-burgundy mb-1" t-esc="getEnhancedScorecard().total_sales_value_formatted"/>
+                                    <p class="text-muted mb-0">Total Sales Value</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2 mb-3">
+                            <div class="card osus-kpi-card border-0 shadow-sm enhanced-card">
+                                <div class="card-body text-center">
+                                    <div class="kpi-icon mb-2">
+                                        <i class="fa fa-file-invoice-dollar fa-2x text-osus-gold"/>
+                                    </div>
+                                    <h3 class="fw-bold text-osus-gold mb-1" t-esc="getEnhancedScorecard().total_invoiced_amount_formatted"/>
+                                    <p class="text-muted mb-0">Total Invoiced</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2 mb-3">
+                            <div class="card osus-kpi-card border-0 shadow-sm enhanced-card">
+                                <div class="card-body text-center">
+                                    <div class="kpi-icon mb-2">
+                                        <i class="fa fa-check-circle fa-2x text-success"/>
+                                    </div>
+                                    <h3 class="fw-bold text-success mb-1" t-esc="getEnhancedScorecard().total_paid_amount_formatted"/>
+                                    <p class="text-muted mb-0">Total Paid</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2 mb-3">
+                            <div class="card osus-kpi-card border-0 shadow-sm enhanced-card">
+                                <div class="card-body text-center">
+                                    <div class="kpi-icon mb-2">
+                                        <i class="fa fa-percentage fa-2x text-info"/>
+                                    </div>
+                                    <h3 class="fw-bold text-info mb-1" t-esc="getEnhancedScorecard().payment_completion_rate + '%'"/>
+                                    <p class="text-muted mb-0">Payment Rate</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2 mb-3" t-if="getIntegrationStatus().real_estate_available">
+                            <div class="card osus-kpi-card border-0 shadow-sm enhanced-card">
+                                <div class="card-body text-center">
+                                    <div class="kpi-icon mb-2">
+                                        <i class="fa fa-building fa-2x text-warning"/>
+                                    </div>
+                                    <h3 class="fw-bold text-warning mb-1" t-esc="getEnhancedScorecard().total_sale_value_realestate_formatted"/>
+                                    <p class="text-muted mb-0">Real Estate Value</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2 mb-3" t-if="getIntegrationStatus().commission_field_available">
+                            <div class="card osus-kpi-card border-0 shadow-sm enhanced-card">
+                                <div class="card-body text-center">
+                                    <div class="kpi-icon mb-2">
+                                        <i class="fa fa-handshake fa-2x text-secondary"/>
+                                    </div>
+                                    <h3 class="fw-bold text-secondary mb-1" t-esc="getEnhancedScorecard().total_developer_commission_formatted"/>
+                                    <p class="text-muted mb-0">Developer Commission</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Enhanced Charts Section -->
+                    <section class="row mb-4" role="region" aria-labelledby="enhanced-charts-title">
+                        <h3 id="enhanced-charts-title" class="visually-hidden">Enhanced Analytics Charts</h3>
+
+                        <!-- Trends Chart -->
+                        <div class="col-md-6 mb-4">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header bg-light border-0">
+                                    <h4 class="text-osus-burgundy mb-0">
+                                        <i class="fa fa-line-chart me-2"/>
+Sales Trends Analysis
+                                    </h4>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="trends_chart" style="max-height: 400px;"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Comparison Chart -->
+                        <div class="col-md-6 mb-4">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header bg-light border-0">
+                                    <h4 class="text-osus-burgundy mb-0">
+                                        <i class="fa fa-pie-chart me-2"/>
+Sales Type Comparison
+                                    </h4>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="comparison_chart" style="max-height: 400px;"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Project Performance Chart -->
+                        <div class="col-md-6 mb-4" t-if="getIntegrationStatus().project_field_available">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header bg-light border-0">
+                                    <h4 class="text-osus-burgundy mb-0">
+                                        <i class="fa fa-building me-2"/>
+Project Performance
+                                    </h4>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="project_performance_chart" style="max-height: 400px;"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Commission Analysis Chart -->
+                        <div class="col-md-6 mb-4" t-if="getIntegrationStatus().commission_field_available">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header bg-light border-0">
+                                    <h4 class="text-osus-burgundy mb-0">
+                                        <i class="fa fa-handshake me-2"/>
+Commission Distribution
+                                    </h4>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="commission_analysis_chart" style="max-height: 400px;"/>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Enhanced Analytics Tables -->
+                    <section class="row mb-4" role="region" aria-labelledby="enhanced-tables-title">
+                        <h3 id="enhanced-tables-title" class="visually-hidden">Enhanced Analytics Tables</h3>
+
+                        <!-- Sale Type Breakdown Table -->
+                        <div class="col-md-6 mb-4" t-if="getIntegrationStatus().le_sale_type_available">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header bg-osus-burgundy text-white">
+                                    <h4 class="mb-0">
+                                        <i class="fa fa-tags me-2"/>
+Sale Type Performance
+                                    </h4>
+                                </div>
+                                <div class="card-body p-0">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover mb-0">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th scope="col">Sale Type</th>
+                                                    <th scope="col">Count</th>
+                                                    <th scope="col">Total Amount</th>
+                                                    <th scope="col">Average Value</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr t-foreach="getSaleTypeBreakdown()" t-as="saleType" t-key="saleType.type">
+                                                    <td class="fw-bold" t-esc="saleType.type"/>
+                                                    <td t-esc="saleType.count"/>
+                                                    <td class="fw-bold text-osus-burgundy" t-esc="saleType.amount"/>
+                                                    <td t-esc="saleType.avg_value"/>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Project Breakdown Table -->
+                        <div class="col-md-6 mb-4" t-if="getIntegrationStatus().project_field_available">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header bg-osus-gold text-white">
+                                    <h4 class="mb-0">
+                                        <i class="fa fa-building me-2"/>
+Project Performance
+                                    </h4>
+                                </div>
+                                <div class="card-body p-0">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover mb-0">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th scope="col">Project</th>
+                                                    <th scope="col">Sales Count</th>
+                                                    <th scope="col">Total Amount</th>
+                                                    <th scope="col">Units Sold</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr t-foreach="getProjectBreakdown()" t-as="project" t-key="project.project">
+                                                    <td class="fw-bold" t-esc="project.project"/>
+                                                    <td t-esc="project.count"/>
+                                                    <td class="fw-bold text-osus-gold" t-esc="project.amount"/>
+                                                    <td t-esc="project.units_sold"/>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Integration Status Info -->
+                    <section class="row mb-4" role="region" aria-labelledby="integration-status-title">
+                        <h3 id="integration-status-title" class="visually-hidden">Module Integration Status</h3>
+                        <div class="col-12">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header bg-light">
+                                    <h4 class="text-osus-burgundy mb-0">
+                                        <i class="fa fa-info-circle me-2"/>
+Module Integration Status
+                                    </h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="integration-status-item">
+                                                <span t-if="getIntegrationStatus().le_sale_type_available" class="badge bg-success">
+                                                    <i class="fa fa-check me-1"/>
+Sale Types Available
+                                                </span>
+                                                <span t-else="" class="badge bg-secondary">
+                                                    <i class="fa fa-times me-1"/>
+Sale Types Not Available
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="integration-status-item">
+                                                <span t-if="getIntegrationStatus().real_estate_available" class="badge bg-success">
+                                                    <i class="fa fa-check me-1"/>
+Real Estate Available
+                                                </span>
+                                                <span t-else="" class="badge bg-secondary">
+                                                    <i class="fa fa-times me-1"/>
+Real Estate Not Available
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="integration-status-item">
+                                                <span t-if="getIntegrationStatus().project_field_available" class="badge bg-success">
+                                                    <i class="fa fa-check me-1"/>
+Projects Available
+                                                </span>
+                                                <span t-else="" class="badge bg-secondary">
+                                                    <i class="fa fa-times me-1"/>
+Projects Not Available
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="integration-status-item">
+                                                <span t-if="getIntegrationStatus().commission_field_available" class="badge bg-success">
+                                                    <i class="fa fa-check me-1"/>
+Commissions Available
+                                                </span>
+                                                <span t-else="" class="badge bg-secondary">
+                                                    <i class="fa fa-times me-1"/>
+Commissions Not Available
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

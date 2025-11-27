@@ -1,0 +1,40 @@
+<odoo>
+    <data>
+        <record id="view_position_access_template_tree" model="ir.ui.view">
+            <field name="name">position.access.template.tree</field>
+            <field name="model">position.access.template</field>
+            <field name="arch" type="xml">
+                <tree string="Position Access Templates">
+                    <field name="name"/>
+                    <field name="position_id"/>
+                    <field name="access_rights"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_position_access_template_form" model="ir.ui.view">
+            <field name="name">position.access.template.form</field>
+            <field name="model">position.access.template</field>
+            <field name="arch" type="xml">
+                <form string="Position Access Template">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="position_id"/>
+                            <field name="access_rights" widget="many2many_tags"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_position_access_template" model="ir.actions.act_window">
+            <field name="name">Access Templates</field>
+            <field name="res_model">position.access.template</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_position_access_template_tree"/>
+        </record>
+
+        <menuitem id="menu_position_access_template" name="Access Templates" parent="base.menu_custom" action="action_position_access_template"/>
+    </data>
+</odoo>

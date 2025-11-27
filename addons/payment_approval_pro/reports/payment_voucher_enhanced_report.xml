@@ -1,0 +1,664 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Enhanced Payment Voucher Report Template -->
+        <template id="report_payment_voucher_document_enhanced">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <style>
+                                @page {
+                                    margin: 8mm;
+                                    size: A4;
+                                    @bottom-center {
+                                        content: "Page " counter(page) " of " counter(pages);
+                                        font-size: 9px;
+                                        color: #666;
+                                    }
+                                }
+                                
+                                .voucher-container {
+                                    font-family: 'Segoe UI', Arial, sans-serif;
+                                    background: white;
+                                    font-size: 11px;
+                                    line-height: 1.3;
+                                    margin: 0;
+                                    padding: 0;
+                                    color: #333;
+                                }
+                                
+                                .voucher-header {
+                                    background: linear-gradient(135deg, #1f4788, #2980b9);
+                                    color: white;
+                                    padding: 15px;
+                                    margin-bottom: 20px;
+                                    border-radius: 6px;
+                                    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+                                }
+                                
+                                .voucher-title {
+                                    font-size: 28px;
+                                    font-weight: 700;
+                                    letter-spacing: 1.5px;
+                                    margin: 0;
+                                    text-align: center;
+                                    text-transform: uppercase;
+                                    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+                                }
+                                
+                                .voucher-subtitle {
+                                    text-align: center;
+                                    font-size: 14px;
+                                    margin: 8px 0 0 0;
+                                    opacity: 0.9;
+                                }
+                                
+                                .osus-branding {
+                                    position: absolute;
+                                    top: 10px;
+                                    left: 15px;
+                                    background: rgba(255,255,255,0.95);
+                                    padding: 8px 12px;
+                                    border-radius: 4px;
+                                    color: #1f4788;
+                                    font-weight: 600;
+                                    font-size: 12px;
+                                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                                }
+                                
+                                .voucher-info-bar {
+                                    background: #f8f9fa;
+                                    padding: 12px;
+                                    border-left: 4px solid #1f4788;
+                                    margin-bottom: 20px;
+                                    border-radius: 4px;
+                                }
+                                
+                                .info-grid {
+                                    display: grid;
+                                    grid-template-columns: 1fr 1fr;
+                                    gap: 20px;
+                                    margin-bottom: 20px;
+                                }
+                                
+                                .info-section {
+                                    background: #fafafa;
+                                    padding: 15px;
+                                    border: 1px solid #e0e0e0;
+                                    border-radius: 6px;
+                                }
+                                
+                                .section-title {
+                                    color: #1f4788;
+                                    font-weight: 600;
+                                    font-size: 13px;
+                                    margin-bottom: 10px;
+                                    text-transform: uppercase;
+                                    letter-spacing: 0.5px;
+                                    border-bottom: 2px solid #1f4788;
+                                    padding-bottom: 4px;
+                                }
+                                
+                                .field-row {
+                                    margin-bottom: 8px;
+                                    display: flex;
+                                    align-items: center;
+                                }
+                                
+                                .field-label {
+                                    color: #7f8c8d;
+                                    font-weight: 500;
+                                    font-size: 10px;
+                                    width: 100px;
+                                    flex-shrink: 0;
+                                    text-transform: uppercase;
+                                    letter-spacing: 0.3px;
+                                }
+                                
+                                .field-value {
+                                    flex: 1;
+                                    padding: 4px 8px;
+                                    border-bottom: 1px solid #bdc3c7;
+                                    min-height: 16px;
+                                    font-weight: 500;
+                                    color: #2c3e50;
+                                }
+                                
+                                .amount-section {
+                                    background: linear-gradient(135deg, #1f4788, #2980b9);
+                                    color: white;
+                                    padding: 20px;
+                                    text-align: center;
+                                    margin: 20px 0;
+                                    font-size: 22px;
+                                    font-weight: 700;
+                                    border-radius: 8px;
+                                    box-shadow: 0 4px 12px rgba(31, 71, 136, 0.3);
+                                    letter-spacing: 1px;
+                                }
+                                
+                                .payment-details {
+                                    background: #fff8dc;
+                                    border: 2px solid #1f4788;
+                                    border-radius: 8px;
+                                    padding: 15px;
+                                    margin: 20px 0;
+                                }
+                                
+                                .payment-details-title {
+                                    color: #1f4788;
+                                    font-weight: 600;
+                                    font-size: 14px;
+                                    margin-bottom: 10px;
+                                    text-transform: uppercase;
+                                    text-align: center;
+                                }
+                                
+                                .itemization-section {
+                                    margin: 20px 0;
+                                    border: 1px solid #ddd;
+                                    border-radius: 6px;
+                                    overflow: hidden;
+                                }
+                                
+                                .itemization-header {
+                                    background: #1f4788;
+                                    color: white;
+                                    padding: 10px 15px;
+                                    font-weight: 600;
+                                    text-transform: uppercase;
+                                    letter-spacing: 0.5px;
+                                }
+                                
+                                .itemization-body {
+                                    padding: 15px;
+                                    background: #f8f9fa;
+                                }
+                                
+                                .signature-section {
+                                    margin-top: 30px;
+                                    padding: 20px;
+                                    background: #f8f9fa;
+                                    border: 2px solid #ecf0f1;
+                                    border-radius: 8px;
+                                }
+                                
+                                .signature-grid {
+                                    display: grid;
+                                    grid-template-columns: 1fr 1fr 1fr;
+                                    gap: 20px;
+                                    margin-bottom: 20px;
+                                }
+                                
+                                .signature-box {
+                                    text-align: center;
+                                    padding: 15px;
+                                    background: white;
+                                    border: 1px solid #ddd;
+                                    border-radius: 6px;
+                                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                                }
+                                
+                                .signature-line {
+                                    border-bottom: 2px solid #1f4788;
+                                    height: 40px;
+                                    margin-bottom: 8px;
+                                    display: flex;
+                                    align-items: flex-end;
+                                    justify-content: center;
+                                    position: relative;
+                                }
+                                
+                                .signature-label {
+                                    font-weight: 600;
+                                    color: #1f4788;
+                                    font-size: 11px;
+                                    text-transform: uppercase;
+                                    letter-spacing: 0.5px;
+                                    margin-bottom: 4px;
+                                }
+                                
+                                .signature-details {
+                                    font-size: 9px;
+                                    color: #7f8c8d;
+                                    line-height: 1.2;
+                                }
+                                
+                                .receipt-section {
+                                    background: #e8f5e8;
+                                    border: 2px solid #1f4788;
+                                    border-radius: 8px;
+                                    padding: 20px;
+                                    margin: 20px 0;
+                                }
+                                
+                                .receipt-title {
+                                    color: #1f4788;
+                                    font-weight: 700;
+                                    font-size: 16px;
+                                    text-align: center;
+                                    margin-bottom: 15px;
+                                    text-transform: uppercase;
+                                    letter-spacing: 1px;
+                                }
+                                
+                                .receipt-grid {
+                                    display: grid;
+                                    grid-template-columns: 1fr 1fr;
+                                    gap: 15px;
+                                }
+                                
+                                .receipt-field {
+                                    margin-bottom: 10px;
+                                }
+                                
+                                .receipt-field-label {
+                                    font-weight: 600;
+                                    color: #1f4788;
+                                    font-size: 10px;
+                                    text-transform: uppercase;
+                                    margin-bottom: 3px;
+                                }
+                                
+                                .receipt-field-value {
+                                    border-bottom: 2px solid #1f4788;
+                                    padding: 6px 0;
+                                    min-height: 20px;
+                                    font-weight: 500;
+                                }
+                                
+                                .verification-qr {
+                                    position: absolute;
+                                    top: 15px;
+                                    right: 15px;
+                                    text-align: center;
+                                    background: white;
+                                    padding: 8px;
+                                    border: 2px solid #1f4788;
+                                    border-radius: 6px;
+                                    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                                }
+                                
+                                .company-info {
+                                    position: absolute;
+                                    top: 15px;
+                                    left: 15px;
+                                    color: white;
+                                    font-size: 10px;
+                                    line-height: 1.2;
+                                }
+                                
+                                .footer-section {
+                                    background: linear-gradient(135deg, #1f4788, #2980b9);
+                                    color: white;
+                                    text-align: center;
+                                    padding: 15px;
+                                    margin-top: 20px;
+                                    border-radius: 6px;
+                                    font-size: 12px;
+                                }
+                                
+                                .status-badge {
+                                    display: inline-block;
+                                    padding: 4px 8px;
+                                    border-radius: 12px;
+                                    font-size: 10px;
+                                    font-weight: 600;
+                                    text-transform: uppercase;
+                                    letter-spacing: 0.5px;
+                                }
+                                
+                                .status-inbound {
+                                    background: #d4edda;
+                                    color: #155724;
+                                    border: 1px solid #c3e6cb;
+                                }
+                                
+                                .status-outbound {
+                                    background: #f8d7da;
+                                    color: #721c24;
+                                    border: 1px solid #f5c6cb;
+                                }
+                                
+                                .metadata-section {
+                                    margin-top: 15px;
+                                    padding-top: 15px;
+                                    border-top: 1px solid #ecf0f1;
+                                    font-size: 9px;
+                                    color: #7f8c8d;
+                                }
+                                
+                                @media print {
+                                    .page { margin: 0; padding: 5mm; }
+                                    .voucher-container { margin: 0; padding: 0; }
+                                    .verification-qr { position: static; display: inline-block; }
+                                }
+                            </style>
+
+                            <div class="voucher-container">
+                                <!-- Header Section with Company Info and QR -->
+                                <div class="voucher-header" style="position: relative;">
+                                    <div class="osus-branding">
+                                        OSUS Properties
+                                    </div>
+                                    
+                                    <div class="company-info">
+                                        <div><strong t-field="o.company_id.name"/></div>
+                                        <div t-field="o.company_id.street"/>
+                                        <div>
+                                            <span t-field="o.company_id.city"/>, 
+                                            <span t-field="o.company_id.country_id.name"/>
+                                        </div>
+                                        <div t-field="o.company_id.phone"/>
+                                    </div>
+                                    
+                                    <div class="voucher-title">
+                                        <t t-if="o.payment_type == 'inbound'">Payment Receipt</t>
+                                        <t t-else="">Payment Voucher</t>
+                                    </div>
+                                    
+                                    <div class="voucher-subtitle">
+                                        <strong>
+                                            Document No: <span t-field="o.name"/> | 
+                                            Date: <span t-field="o.date" t-options="{'widget': 'date'}"/>
+                                        </strong>
+                                    </div>
+                                    
+                                    <div class="verification-qr">
+                                        <t t-if="o.qr_code">
+                                            <img t-att-src="'data:image/png;base64,' + o.qr_code.decode('utf-8')" 
+                                                 style="width: 50px; height: 50px;"/>
+                                        </t>
+                                        <t t-else="">
+                                            <div style="width: 50px; height: 50px; background: #ecf0f1; border: 1px solid #bdc3c7; 
+                                                        display: flex; align-items: center; justify-content: center; 
+                                                        font-size: 8px; color: #7f8c8d;">QR</div>
+                                        </t>
+                                        <div style="font-size: 8px; margin-top: 2px;">Verify</div>
+                                    </div>
+                                </div>
+
+                                <!-- Status and Reference Information -->
+                                <div class="voucher-info-bar">
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <div>
+                                            <span class="status-badge" t-att-class="'status-inbound' if o.payment_type == 'inbound' else 'status-outbound'">
+                                                <t t-if="o.payment_type == 'inbound'">● Money Received</t>
+                                                <t t-else="">● Money Paid</t>
+                                            </span>
+                                        </div>
+                                        <div style="text-align: right; font-size: 12px; font-weight: 600;">
+                                            Reference: <span t-field="o.ref" style="color: #1f4788;"/>
+                                            <t t-if="not o.ref">-</t>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Main Information Grid -->
+                                <div class="info-grid">
+                                    <!-- Party Information -->
+                                    <div class="info-section">
+                                        <div class="section-title">
+                                            <t t-if="o.payment_type == 'inbound'">Received From</t>
+                                            <t t-else="">Paid To</t>
+                                        </div>
+                                        <div class="field-row">
+                                            <span class="field-label">Name:</span>
+                                            <span class="field-value" t-field="o.partner_id.name"/>
+                                        </div>
+                                        <div class="field-row">
+                                            <span class="field-label">Phone:</span>
+                                            <span class="field-value">
+                                                <span t-field="o.partner_id.mobile"/>
+                                                <t t-if="not o.partner_id.mobile">N/A</t>
+                                            </span>
+                                        </div>
+                                        <div class="field-row">
+                                            <span class="field-label">Email:</span>
+                                            <span class="field-value">
+                                                <span t-field="o.partner_id.email"/>
+                                                <t t-if="not o.partner_id.email">N/A</t>
+                                            </span>
+                                        </div>
+                                        <div class="field-row">
+                                            <span class="field-label">Address:</span>
+                                            <span class="field-value">
+                                                <div t-field="o.partner_id" t-options="{'widget': 'contact', 'fields': ['address'], 'no_marker': True}"/>
+                                                <t t-if="not o.partner_id.street">N/A</t>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Payment Information -->
+                                    <div class="info-section">
+                                        <div class="section-title">Payment Details</div>
+                                        <div class="field-row">
+                                            <span class="field-label">Method:</span>
+                                            <span class="field-value" t-field="o.journal_id.name"/>
+                                        </div>
+                                        <div class="field-row">
+                                            <span class="field-label">Currency:</span>
+                                            <span class="field-value" t-field="o.currency_id.name"/>
+                                        </div>
+                                        <div class="field-row">
+                                            <span class="field-label">State:</span>
+                                            <span class="field-value">
+                                                <t t-if="o.state == 'draft'">Draft</t>
+                                                <t t-elif="o.state == 'posted'">Posted</t>
+                                                <t t-elif="o.state == 'sent'">Sent</t>
+                                                <t t-elif="o.state == 'reconciled'">Reconciled</t>
+                                                <t t-else=""><span t-field="o.state"/></t>
+                                            </span>
+                                        </div>
+                                        <div class="field-row">
+                                            <span class="field-label">Created:</span>
+                                            <span class="field-value">
+                                                <span t-field="o.create_date" t-options="{'widget': 'datetime'}"/>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Payment Itemization Section -->
+                                <div class="itemization-section">
+                                    <div class="itemization-header">
+                                        Payment Breakdown &amp; Related Documents
+                                    </div>
+                                    <div class="itemization-body">
+                                        <t t-set="move_lines" t-value="o.move_id.line_ids.filtered(lambda l: l.account_id.user_type_id.type in ['receivable', 'payable'])"/>
+                                        <t t-if="move_lines">
+                                            <table style="width: 100%; border-collapse: collapse;">
+                                                <thead>
+                                                    <tr style="background: #ecf0f1;">
+                                                        <th style="padding: 8px; border: 1px solid #bdc3c7; text-align: left;">Account</th>
+                                                        <th style="padding: 8px; border: 1px solid #bdc3c7; text-align: left;">Reference</th>
+                                                        <th style="padding: 8px; border: 1px solid #bdc3c7; text-align: right;">Amount</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <t t-foreach="move_lines" t-as="line">
+                                                        <tr>
+                                                            <td style="padding: 6px; border: 1px solid #bdc3c7;"><span t-field="line.account_id.name"/></td>
+                                                            <td style="padding: 6px; border: 1px solid #bdc3c7;"><span t-field="line.name"/></td>
+                                                            <td style="padding: 6px; border: 1px solid #bdc3c7; text-align: right;">
+                                                                <span t-field="line.debit" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                                                <t t-if="line.credit > 0">
+                                                                    (<span t-field="line.credit" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>)
+                                                                </t>
+                                                            </td>
+                                                        </tr>
+                                                    </t>
+                                                </tbody>
+                                            </table>
+                                        </t>
+                                        <t t-else="">
+                                            <div style="padding: 15px; text-align: center; color: #7f8c8d; font-style: italic;">
+                                                No detailed breakdown available for this payment.
+                                            </div>
+                                        </t>
+                                        
+                                        <!-- Related Invoice Information -->
+                                        <t t-if="o.reconciled_invoice_ids">
+                                            <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #ecf0f1;">
+                                                <strong>Related Invoices:</strong>
+                                                <ul style="margin: 5px 0; padding-left: 20px;">
+                                                    <t t-foreach="o.reconciled_invoice_ids" t-as="invoice">
+                                                        <li style="margin: 3px 0;">
+                                                            <span t-field="invoice.name"/> - 
+                                                            <span t-field="invoice.amount_total" t-options="{'widget': 'monetary', 'display_currency': invoice.currency_id}"/>
+                                                        </li>
+                                                    </t>
+                                                </ul>
+                                            </div>
+                                        </t>
+                                    </div>
+                                </div>
+
+                                <!-- Amount in Words -->
+                                <div class="payment-details">
+                                    <div class="payment-details-title">Amount in Words</div>
+                                    <div style="text-align: center; font-size: 14px; font-weight: 600; font-style: italic; color: #1f4788;">
+                                        <t t-if="hasattr(o, 'check_amount_in_words') and o.check_amount_in_words">
+                                            <span t-field="o.check_amount_in_words"/>
+                                        </t>
+                                        <t t-else="">
+                                            <span t-esc="o.currency_id.amount_to_text(o.amount)"/>
+                                        </t>
+                                    </div>
+                                </div>
+
+                                <!-- Total Amount Display -->
+                                <div class="amount-section">
+                                    TOTAL AMOUNT: <span t-field="o.amount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                </div>
+
+                                <!-- Three Internal Signatories Section -->
+                                <div class="signature-section">
+                                    <div style="text-align: center; margin-bottom: 20px;">
+                                        <strong style="font-size: 14px; color: #1f4788; text-transform: uppercase; letter-spacing: 1px;">
+                                            Internal Authorization
+                                        </strong>
+                                    </div>
+                                    
+                                    <div class="signature-grid">
+                                        <div class="signature-box">
+                                            <div class="signature-line">
+                                                <t t-if="o.create_uid">
+                                                    <div style="font-size: 12px; font-weight: 600; color: #1f4788;">
+                                                        <t t-set="name_parts" t-value="o.create_uid.name.split()"/>
+                                                        <span t-esc="(name_parts[0][:1] + (name_parts[1][:1] if len(name_parts) > 1 else '')).upper()"/>
+                                                    </div>
+                                                </t>
+                                            </div>
+                                            <div class="signature-label">Prepared By</div>
+                                            <div class="signature-details">
+                                                <div><span t-field="o.create_uid.name"/></div>
+                                                <div>Date: <span t-field="o.create_date" t-options="{'widget': 'date'}"/></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="signature-box">
+                                            <div class="signature-line"></div>
+                                            <div class="signature-label">Reviewed By</div>
+                                            <div class="signature-details">
+                                                <div>Name: _________________</div>
+                                                <div>Date: _________________</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="signature-box">
+                                            <div class="signature-line"></div>
+                                            <div class="signature-label">Approved By</div>
+                                            <div class="signature-details">
+                                                <div>Name: _________________</div>
+                                                <div>Date: _________________</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Receipt of Payment Section -->
+                                <div class="receipt-section">
+                                    <div class="receipt-title">Acknowledgment of Receipt</div>
+                                    <div class="receipt-grid">
+                                        <div>
+                                            <div class="receipt-field">
+                                                <div class="receipt-field-label">Received By (Print Name):</div>
+                                                <div class="receipt-field-value">
+                                                    <span t-field="o.partner_id.name"/>
+                                                </div>
+                                            </div>
+                                            <div class="receipt-field">
+                                                <div class="receipt-field-label">Signature:</div>
+                                                <div class="receipt-field-value"></div>
+                                            </div>
+                                            <div class="receipt-field">
+                                                <div class="receipt-field-label">Contact Number:</div>
+                                                <div class="receipt-field-value">
+                                                    <span t-field="o.partner_id.mobile"/>
+                                                    <t t-if="not o.partner_id.mobile">________________</t>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="receipt-field">
+                                                <div class="receipt-field-label">Date Received:</div>
+                                                <div class="receipt-field-value">
+                                                    <span t-field="o.date" t-options="{'widget': 'date'}"/>
+                                                </div>
+                                            </div>
+                                            <div class="receipt-field">
+                                                <div class="receipt-field-label">ID Verification:</div>
+                                                <div class="receipt-field-value">
+                                                    <span style="margin-right: 15px;">☐ Emirates ID</span>
+                                                    <span style="margin-right: 15px;">☐ Passport</span>
+                                                    <span>☐ Other: ________</span>
+                                                </div>
+                                            </div>
+                                            <div class="receipt-field">
+                                                <div class="receipt-field-label">Witness (Optional):</div>
+                                                <div class="receipt-field-value">________________</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div style="margin-top: 15px; padding: 10px; background: rgba(31, 71, 136, 0.1); border-radius: 4px; text-align: center;">
+                                        <strong style="color: #1f4788;">
+                                            I acknowledge receipt of the above-mentioned amount and confirm all details are correct.
+                                        </strong>
+                                    </div>
+                                </div>
+
+                                <!-- Metadata and Footer -->
+                                <div class="metadata-section">
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <div>
+                                            Created by: <span t-field="o.create_uid.name"/> on <span t-field="o.create_date" t-options="{'widget': 'datetime'}"/>
+                                        </div>
+                                        <div>
+                                            <t t-if="o.write_uid != o.create_uid">
+                                                Last modified by: <span t-field="o.write_uid.name"/> on <span t-field="o.write_date" t-options="{'widget': 'datetime'}"/>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="footer-section">
+                                    <div style="font-weight: 600; margin-bottom: 5px;">
+                                        This is a computer-generated document and is valid without signature
+                                    </div>
+                                    <div style="font-size: 11px; opacity: 0.9;">
+                                        <span t-field="o.company_id.name"/> | 
+                                        <span t-field="o.company_id.city"/>, <span t-field="o.company_id.country_id.name"/> | 
+                                        Generated on: <span t-esc="datetime.datetime.now().strftime('%Y-%m-%d %H:%M')"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

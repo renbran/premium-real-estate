@@ -1,0 +1,89 @@
+/* OSUS Branding Styles - CloudPepper Optimized */
+/* Core OSUS brand colors and styling */
+
+:root {
+  --osus-primary: #722f37;
+  --osus-secondary: #b8860b;
+  --osus-accent: #8b3a42;
+  --osus-light: #f8f9fa;
+  --osus-border: #dee2e6;
+}
+
+/* OSUS brand application */
+/* Using BEM methodology: .o_account_payment_final__osus-brand */
+.o_account_payment_final__osus-brand {
+  color: var(--osus-primary);
+
+  &.osus-primary {
+    background-color: var(--osus-primary);
+    color: white;
+  }
+
+  &.osus-secondary {
+    background-color: var(--osus-secondary);
+    color: var(--osus-primary);
+  }
+}
+
+/* Button theming */
+/* Using BEM methodology: .o_account_payment_final__btn-osus-primary */
+.o_account_payment_final__btn-osus-primary {
+  background-color: var(--osus-primary);
+  border-color: var(--osus-primary);
+  color: white;
+
+  &:hover,
+  &:focus {
+    background-color: #5c252a;
+    border-color: #5c252a;
+    color: white;
+  }
+}
+
+/* Using BEM methodology: .o_account_payment_final__btn-osus-secondary */
+.o_account_payment_final__btn-osus-secondary {
+  background-color: var(--osus-secondary);
+  border-color: var(--osus-secondary);
+  color: var(--osus-primary);
+
+  &:hover,
+  &:focus {
+    background-color: #996f09;
+    border-color: #996f09;
+    color: white;
+  }
+}
+
+// Form branding
+.o_form_view.osus-branded {
+  .o_form_sheet {
+    border-top: 3px solid var(--osus-primary);
+  }
+
+  .oe_title h1 {
+    color: var(--osus-primary);
+  }
+}
+
+// List view branding
+.o_list_view.osus-branded {
+  .o_list_table thead th {
+    background-color: var(--osus-light);
+    border-bottom: 2px solid var(--osus-primary);
+  }
+}
+
+// OSUS logo and header
+/* Consider using BEM methodology: .o_module_name__osus-header */
+.o_module_osus-header {
+  background: linear-gradient(135deg, var(--osus-primary), var(--osus-accent));
+  color: white;
+  padding: 1rem;
+  border-radius: 8px;
+
+  /* Consider using BEM methodology: .o_module_name__osus-logo */
+  .o_module_osus-logo {
+    height: 40px;
+    filter: brightness(0) invert(1);
+  }
+}

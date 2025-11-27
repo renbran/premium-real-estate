@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Approval Timeline Widget Template -->
+    <template id="ApprovalTimelineTemplate" name="account_payment_approval.ApprovalTimelineTemplate">
+        <div class="o_approval_timeline_widget">
+            <div class="timeline-header">
+                <h5 class="mb-3">
+                    <i class="fa fa-clock-o mr-2"/>
+                    Payment Approval Timeline
+                </h5>
+                <button t-if="!props.readonly" class="btn btn-sm btn-secondary mb-3" t-on-click="onRefreshTimeline">
+                    <i class="fa fa-refresh mr-1"/>
+                    Refresh
+                </button>
+            </div>
+
+            <div t-if="state.isLoading" class="text-center py-4">
+                <i class="fa fa-spinner fa-spin fa-2x"/>
+                <p class="mt-2">Loading timeline data...</p>
+            </div>
+
+            <div t-else="">
+                <div t-if="!state.timelineData.length" class="alert alert-info">
+                    <i class="fa fa-info-circle mr-2"/>
+                    No approval payments found for this journal entry.
+                </div>
+
+                <div t-else="" class="timeline-container">
+                    <div t-foreach="state.timelineData" t-as="payment" t-key="payment.payment_id" class="payment-timeline-item mb-4">
+                        <div class="payment-header d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <h6 class="mb-1">
+                                    <t t-esc="payment.payment_name"/>
+                                    <span class="text-muted">(                                        <t t-esc="payment.voucher_number"/>
+)</span>
+                                </h6>
+                                <span class="text-success font-weight-bold">
+                                    <t t-esc="payment.amount"/>
+                                    <small class="text-muted">- Current: <t t-esc="payment.current_state"/>
+                                    </small>
+                                </span>
+                            </div>
+                            <button class="btn btn-sm btn-outline-primary" t-on-click="() => this.onViewPayment(payment.payment_id)">
+                                <i class="fa fa-external-link mr-1"/>
+                                View Payment
+                            </button>
+                        </div>
+
+                        <div class="timeline-steps">
+                            <div class="row">
+                                <div t-foreach="payment.timeline" t-as="step" t-key="step.state" class="col-md-2 timeline-step">
+                                    <div class="timeline-step-container text-center">
+                                        <div t-attf-class="timeline-step-icon #{getStepClass(step)}">
+                                            <i t-attf-class="fa #{getStepIcon(step.state)}"/>
+                                        </div>
+                                        <div class="timeline-step-content mt-2">
+                                            <small class="font-weight-bold d-block">
+                                                <t t-esc="getStateDisplayName(step.state)"/>
+                                            </small>
+                                            <small t-if="step.date" class="text-muted d-block">
+                                                <t t-esc="step.date"/>
+                                            </small>
+                                            <small t-if="step.user" class="text-info d-block">
+                                                <t t-esc="step.user"/>
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="timeline-progress-bar mt-2">
+                                <div class="progress">
+                                    <div class="progress-bar bg-success" t-attf-style="width: #{Math.round((payment.timeline.filter(s => s.completed).length / payment.timeline.length) * 100)}%"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- Reconciliation Navigator Widget Template -->
+    <template id="ReconciliationNavigatorTemplate" name="account_payment_approval.ReconciliationNavigatorTemplate">
+        <div class="o_reconciliation_navigator_widget">
+            <div class="navigator-header">
+                <h5 class="mb-3">
+                    <i class="fa fa-link mr-2"/>
+                    Reconciliation Navigator
+                </h5>
+                <button t-if="!props.readonly" class="btn btn-sm btn-secondary mb-3" t-on-click="onRefreshData">
+                    <i class="fa fa-refresh mr-1"/>
+                    Refresh
+                </button>
+            </div>
+
+            <div t-if="state.isLoading" class="text-center py-4">
+                <i class="fa fa-spinner fa-spin fa-2x"/>
+                <p class="mt-2">Loading reconciliation data...</p>
+            </div>
+
+            <div t-else="" class="navigator-content">
+                <!-- Reconciliation Summary -->
+                <div class="reconciliation-summary mb-4">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="stat-card text-center p-3 border rounded">
+                                <i class="fa fa-check-circle fa-2x text-success mb-2"/>
+                                <h6 class="mb-1">Reconciled</h6>
+                                <span class="h5 text-success">
+                                    <t t-esc="state.reconciliationData.reconciled_count || 0"/>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card text-center p-3 border rounded">
+                                <i class="fa fa-clock-o fa-2x text-warning mb-2"/>
+                                <h6 class="mb-1">Partial</h6>
+                                <span class="h5 text-warning">
+                                    <t t-esc="state.reconciliationData.partial_count || 0"/>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card text-center p-3 border rounded">
+                                <i class="fa fa-exclamation-circle fa-2x text-danger mb-2"/>
+                                <h6 class="mb-1">Outstanding</h6>
+                                <span class="h5 text-danger">
+                                    <t t-esc="state.reconciliationData.outstanding_count || 0"/>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card text-center p-3 border rounded">
+                                <i class="fa fa-money fa-2x text-info mb-2"/>
+                                <h6 class="mb-1">Amount</h6>
+                                <span class="h5 text-info">
+                                    <t t-esc="state.reconciliationData.total_amount || '0.00'"/>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reconciliation Details -->
+                <div class="reconciliation-details">
+                    <!-- Matched Invoices Section -->
+                    <div class="detail-section mb-4">
+                        <div class="section-header d-flex justify-content-between align-items-center p-3 bg-light border rounded-top">
+                            <h6 class="mb-0">
+                                <i class="fa fa-file-text-o mr-2"/>
+                                Matched Invoices
+                                <span class="badge badge-info ml-2">
+                                    <t t-esc="state.reconciliationData.matched_invoices?.length || 0"/>
+                                </span>
+                            </h6>
+                            <button class="btn btn-sm btn-outline-secondary" t-on-click="() => this.toggleSection('matched_invoices')">
+                                <i t-attf-class="fa fa-chevron-#{isSectionExpanded('matched_invoices') ? 'up' : 'down'}"/>
+                            </button>
+                        </div>
+                        <div t-if="isSectionExpanded('matched_invoices')" class="section-content border-left border-right border-bottom rounded-bottom p-3">
+                            <div t-if="!state.reconciliationData.matched_invoices?.length" class="text-muted text-center py-3">
+                                No matched invoices found
+                            </div>
+                            <div t-else="">
+                                <div t-foreach="state.reconciliationData.matched_invoices" t-as="invoice" t-key="invoice.id" class="invoice-item d-flex justify-content-between align-items-center py-2 border-bottom">
+                                    <div>
+                                        <strong>
+                                            <t t-esc="invoice.name"/>
+                                        </strong>
+                                        <small class="text-muted d-block">
+                                            Partner: <t t-esc="invoice.partner_name"/>
+                                        </small>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="font-weight-bold">
+                                            <t t-esc="invoice.amount_total"/>
+                                        </span>
+                                        <button class="btn btn-sm btn-outline-primary ml-2" t-on-click="() => this.onViewInvoice(invoice.id)">
+                                            <i class="fa fa-external-link"/>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Outstanding Lines Section -->
+                    <div class="detail-section mb-4">
+                        <div class="section-header d-flex justify-content-between align-items-center p-3 bg-light border rounded-top">
+                            <h6 class="mb-0">
+                                <i class="fa fa-exclamation-triangle mr-2"/>
+                                Outstanding Lines
+                                <span class="badge badge-warning ml-2">
+                                    <t t-esc="state.reconciliationData.outstanding_lines?.length || 0"/>
+                                </span>
+                            </h6>
+                            <button class="btn btn-sm btn-outline-secondary" t-on-click="() => this.toggleSection('outstanding_lines')">
+                                <i t-attf-class="fa fa-chevron-#{isSectionExpanded('outstanding_lines') ? 'up' : 'down'}"/>
+                            </button>
+                        </div>
+                        <div t-if="isSectionExpanded('outstanding_lines')" class="section-content border-left border-right border-bottom rounded-bottom p-3">
+                            <div t-if="!state.reconciliationData.outstanding_lines?.length" class="text-muted text-center py-3">
+                                All lines are reconciled
+                            </div>
+                            <div t-else="">
+                                <div t-foreach="state.reconciliationData.outstanding_lines" t-as="line" t-key="line.id" class="line-item d-flex justify-content-between align-items-center py-2 border-bottom">
+                                    <div>
+                                        <strong>
+                                            <t t-esc="line.account_name"/>
+                                        </strong>
+                                        <small class="text-muted d-block">
+                                            Reference: <t t-esc="line.name"/>
+                                        </small>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="font-weight-bold text-warning">
+                                            <t t-esc="line.amount_residual"/>
+                                        </span>
+                                        <button class="btn btn-sm btn-outline-warning ml-2" t-on-click="() => this.onOpenReconciliation(line.id)">
+                                            <i class="fa fa-link mr-1"/>
+                                            Reconcile
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- Payment Approval Badge Widget Template -->
+    <template id="PaymentApprovalBadgeTemplate" name="account_payment_approval.PaymentApprovalBadgeTemplate">
+        <span t-attf-class="#{getBadgeClass()}" t-att-title="getDisplayText()" t-on-click="onBadgeClick" style="cursor: pointer;">
+            <t t-esc="getDisplayText()"/>
+        </span>
+    </template>
+
+</odoo>

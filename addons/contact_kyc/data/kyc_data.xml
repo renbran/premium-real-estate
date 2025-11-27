@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Default KYC Source of Funds -->
+        <record id="source_funds_salary" model="kyc.source.funds">
+            <field name="name">Salary</field>
+        </record>
+        
+        <record id="source_funds_business" model="kyc.source.funds">
+            <field name="name">Business Income</field>
+        </record>
+        
+        <record id="source_funds_investment" model="kyc.source.funds">
+            <field name="name">Investment Returns</field>
+        </record>
+        
+        <record id="source_funds_savings" model="kyc.source.funds">
+            <field name="name">Savings</field>
+        </record>
+        
+        <record id="source_funds_loan" model="kyc.source.funds">
+            <field name="name">Loan/Financing</field>
+        </record>
+        
+        <record id="source_funds_inheritance" model="kyc.source.funds">
+            <field name="name">Inheritance</field>
+        </record>
+        
+        <record id="source_funds_gift" model="kyc.source.funds">
+            <field name="name">Gift</field>
+        </record>
+        
+        <record id="source_funds_sale" model="kyc.source.funds">
+            <field name="name">Sale of Property/Assets</field>
+        </record>
+        
+        <record id="source_funds_other" model="kyc.source.funds">
+            <field name="name">Other</field>
+        </record>
+
+        <!-- Default KYC Source of Wealth -->
+        <record id="source_wealth_employment" model="kyc.source.wealth">
+            <field name="name">Employment</field>
+        </record>
+        
+        <record id="source_wealth_business" model="kyc.source.wealth">
+            <field name="name">Business Ownership</field>
+        </record>
+        
+        <record id="source_wealth_inheritance" model="kyc.source.wealth">
+            <field name="name">Inheritance</field>
+        </record>
+        
+        <record id="source_wealth_investments" model="kyc.source.wealth">
+            <field name="name">Investments</field>
+        </record>
+        
+        <record id="source_wealth_property" model="kyc.source.wealth">
+            <field name="name">Property Income</field>
+        </record>
+        
+        <record id="source_wealth_family" model="kyc.source.wealth">
+            <field name="name">Family Wealth</field>
+        </record>
+        
+        <record id="source_wealth_other" model="kyc.source.wealth">
+            <field name="name">Other</field>
+        </record>
+        
+    </data>
+</odoo>

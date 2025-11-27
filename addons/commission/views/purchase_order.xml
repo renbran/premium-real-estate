@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_purchase_order_form_inherit" model="ir.ui.view">
+            <field name="name">purchase.order.form.inherit</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//header" position="inside">
+                    <button 
+                        name="action_force_post" 
+                        string="Force Post Commission" 
+                        type="object" 
+                        class="oe_highlight" 
+                        invisible="not origin_so_id or commission_posted"
+                        help="Manually post this commission purchase order"
+                    />
+                </xpath>
+
+                <xpath expr="//sheet" position="inside">
+                    <group name="commission_details_group" string="Commission Details" invisible="not origin_so_id">
+                        <field name="origin_so_id" readonly="1" string="Source Sale Order"/>
+                        <field name="description" readonly="1" string="Commission Description"/>
+                        <field name="commission_posted" readonly="1" string="Commission Posted"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- List view enhancement to show commission info -->
+        <record id="purchase_order_tree_inherit_commission" model="ir.ui.view">
+            <field name="name">purchase.order.tree.inherit.commission</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_tree"/>
+            <field name="arch" type="xml">
+                <field name="partner_id" position="after">
+                    <field name="origin_so_id" string="Source SO" optional="hide"/>
+                    <field name="commission_posted" string="Posted" optional="hide"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

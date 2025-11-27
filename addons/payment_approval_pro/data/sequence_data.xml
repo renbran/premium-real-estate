@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Sequence for Payment Voucher Numbers -->
+    <record id="sequence_payment_voucher" model="ir.sequence">
+        <field name="name">Payment Voucher</field>
+        <field name="code">payment.voucher</field>
+        <field name="prefix">PV</field>
+        <field name="suffix">%(year)s</field>
+        <field name="padding">4</field>
+        <field name="number_next">1</field>
+        <field name="number_increment">1</field>
+        <field name="implementation">standard</field>
+        <field name="company_id" eval="False"/>
+    </record>
+</odoo>

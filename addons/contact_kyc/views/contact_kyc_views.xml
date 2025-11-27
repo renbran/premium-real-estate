@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Partner Form View with KYC Information -->
+        <record id="view_partner_form_kyc" model="ir.ui.view">
+            <field name="name">res.partner.form.kyc</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='internal_notes']" position="after">
+                    <page string="KYC Information" groups="base.group_user">
+                        <group>
+                            <group string="Personal Information">
+                                <field name="x_date_of_birth"/>
+                                <field name="x_place_of_birth"/>
+                                <field name="x_gender" widget="radio"/>
+                                <field name="x_aliases"/>
+                            </group>
+                            <group string="Passport Information">
+                                <field name="x_passport_number"/>
+                                <field name="x_passport_country_id"/>
+                                <field name="x_passport_issue_date"/>
+                                <field name="x_passport_expiry_date"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group string="UAE Residency">
+                                <field name="x_residency_visa_no"/>
+                                <field name="x_emirates_id"/>
+                                <field name="x_residency_expiry_date"/>
+                            </group>
+                            <group string="Employment Details">
+                                <field name="x_years_in_role"/>
+                                <field name="x_employer_address"/>
+                            </group>
+                        </group>
+                        <group string="Financial Information">
+                            <field name="x_source_of_funds" widget="many2many_checkboxes"/>
+                            <field name="x_source_of_wealth" widget="many2many_checkboxes"/>
+                            <field name="x_annual_income"/>
+                            <field name="x_purpose_of_purchase"/>
+                            <field name="x_payment_method"/>
+                            <field name="x_politically_exposed_person" widget="radio"/>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- KYC Source of Funds Tree View -->
+        <record id="view_kyc_source_funds_tree" model="ir.ui.view">
+            <field name="name">kyc.source.funds.tree</field>
+            <field name="model">kyc.source.funds</field>
+            <field name="arch" type="xml">
+                <tree string="KYC Source of Funds" editable="bottom">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- KYC Source of Funds Form View -->
+        <record id="view_kyc_source_funds_form" model="ir.ui.view">
+            <field name="name">kyc.source.funds.form</field>
+            <field name="model">kyc.source.funds</field>
+            <field name="arch" type="xml">
+                <form string="KYC Source of Funds">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- KYC Source of Wealth Tree View -->
+        <record id="view_kyc_source_wealth_tree" model="ir.ui.view">
+            <field name="name">kyc.source.wealth.tree</field>
+            <field name="model">kyc.source.wealth</field>
+            <field name="arch" type="xml">
+                <tree string="KYC Source of Wealth" editable="bottom">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- KYC Source of Wealth Form View -->
+        <record id="view_kyc_source_wealth_form" model="ir.ui.view">
+            <field name="name">kyc.source.wealth.form</field>
+            <field name="model">kyc.source.wealth</field>
+            <field name="arch" type="xml">
+                <form string="KYC Source of Wealth">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Actions for KYC Source of Funds -->
+        <record id="action_kyc_source_funds" model="ir.actions.act_window">
+            <field name="name">KYC Source of Funds</field>
+            <field name="res_model">kyc.source.funds</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first KYC source of funds option
+                </p>
+            </field>
+        </record>
+
+        <!-- Actions for KYC Source of Wealth -->
+        <record id="action_kyc_source_wealth" model="ir.actions.act_window">
+            <field name="name">KYC Source of Wealth</field>
+            <field name="res_model">kyc.source.wealth</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first KYC source of wealth option
+                </p>
+            </field>
+        </record>
+
+        <!-- Menu Items -->
+        <menuitem id="menu_kyc_main"
+                  name="KYC"
+                  parent="base.menu_administration"
+                  sequence="60"/>
+
+        <menuitem id="menu_kyc_configuration"
+                  name="KYC Configuration"
+                  parent="menu_kyc_main"
+                  sequence="10"/>
+
+        <menuitem id="menu_kyc_source_funds"
+                  name="Source of Funds"
+                  parent="menu_kyc_configuration"
+                  action="action_kyc_source_funds"
+                  sequence="10"/>
+
+        <menuitem id="menu_kyc_source_wealth"
+                  name="Source of Wealth"
+                  parent="menu_kyc_configuration"
+                  action="action_kyc_source_wealth"
+                  sequence="20"/>
+
+    </data>
+</odoo>

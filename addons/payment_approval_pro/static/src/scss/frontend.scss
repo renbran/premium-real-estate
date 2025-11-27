@@ -1,0 +1,171 @@
+/* Frontend styles for Payment Approval Pro */
+
+/* Public QR verification page styles */
+.payment_verification_page {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #1f4788 0%, #007bff 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+    .verification-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        padding: 2rem;
+        max-width: 500px;
+        width: 90%;
+        text-align: center;
+
+        .osus-logo {
+            max-width: 150px;
+            margin-bottom: 1.5rem;
+        }
+
+        .verification-title {
+            color: #1f4788;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .verification-content {
+            .voucher-info {
+                background: #f8f9fa;
+                border-radius: 8px;
+                padding: 1rem;
+                margin: 1rem 0;
+
+                .info-row {
+                    display: flex;
+                    justify-content: space-between;
+                    margin-bottom: 0.5rem;
+
+                    &:last-child {
+                        margin-bottom: 0;
+                    }
+
+                    .label {
+                        font-weight: 500;
+                        color: #6c757d;
+                    }
+
+                    .value {
+                        font-weight: 600;
+                        color: #1f4788;
+                    }
+                }
+            }
+
+            .verification-status {
+                padding: 1rem;
+                border-radius: 8px;
+                margin: 1rem 0;
+
+                &.valid {
+                    background: rgba(40, 167, 69, 0.1);
+                    border: 1px solid #28a745;
+                    color: #28a745;
+                }
+
+                &.invalid {
+                    background: rgba(220, 53, 69, 0.1);
+                    border: 1px solid #dc3545;
+                    color: #dc3545;
+                }
+
+                .status-icon {
+                    font-size: 2rem;
+                    margin-bottom: 0.5rem;
+                }
+
+                .status-message {
+                    font-weight: 500;
+                }
+            }
+        }
+
+        .verification-actions {
+            margin-top: 1.5rem;
+
+            .btn {
+                margin: 0 0.25rem;
+                border-radius: 6px;
+                font-weight: 500;
+                text-decoration: none;
+                display: inline-block;
+                padding: 0.75rem 1.5rem;
+                transition: all 0.3s ease;
+
+                &.btn-primary {
+                    background: #1f4788;
+                    border-color: #1f4788;
+                    color: white;
+
+                    &:hover {
+                        background: darken(#1f4788, 10%);
+                        transform: translateY(-1px);
+                    }
+                }
+
+                &.btn-secondary {
+                    background: #6c757d;
+                    border-color: #6c757d;
+                    color: white;
+
+                    &:hover {
+                        background: darken(#6c757d, 10%);
+                        transform: translateY(-1px);
+                    }
+                }
+            }
+        }
+    }
+}
+
+/* Responsive design for mobile */
+@media (max-width: 768px) {
+    .payment_verification_page {
+        padding: 1rem;
+
+        .verification-card {
+            padding: 1.5rem;
+
+            .verification-title {
+                font-size: 1.25rem;
+            }
+
+            .voucher-info .info-row {
+                flex-direction: column;
+                text-align: left;
+
+                .label {
+                    margin-bottom: 0.25rem;
+                }
+            }
+
+            .verification-actions .btn {
+                width: 100%;
+                margin: 0.25rem 0;
+            }
+        }
+    }
+}
+
+/* Print styles for verification page */
+@media print {
+    .payment_verification_page {
+        background: white !important;
+        min-height: auto;
+
+        .verification-card {
+            box-shadow: none !important;
+            border: 1px solid #ddd;
+
+            .verification-actions {
+                display: none !important;
+            }
+        }
+    }
+}

@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <!-- Payment Verification Success Template -->
+        <template id="payment_verification_success" name="Payment Verification Success">
+            <t t-call="website.layout">
+                <div id="wrap" class="oe_structure oe_empty">
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-md-8">
+                                <div class="card mt-5">
+                                    <div class="card-header bg-success text-white">
+                                        <h4 class="mb-0">
+                                            <i class="fa fa-check-circle"/>
+ Payment Verification Successful
+                                        </h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <h5>Payment Details Verified</h5>
+                                                <table class="table table-borderless">
+                                                    <tr>
+                                                        <th width="150">Payment Number:</th>
+                                                        <td>
+                                                            <span t-field="payment.name"/>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Partner:</th>
+                                                        <td>
+                                                            <span t-field="payment.partner_id.name"/>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Amount:</th>
+                                                        <td>
+                                                            <span t-field="payment.amount" t-options="{'widget': 'monetary', 'display_currency': payment.currency_id}"/>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Payment Type:</th>
+                                                        <td>
+                                                            <span t-if="payment.payment_type == 'inbound'" class="badge bg-success">Money Received</span>
+                                                            <span t-else="" class="badge bg-info">Money Sent</span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Payment Date:</th>
+                                                        <td>
+                                                            <span t-field="payment.date" t-options="{'widget': 'date'}"/>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Status:</th>
+                                                        <td>
+                                                            <span t-if="payment.state == 'posted'" class="badge bg-success">Confirmed</span>
+                                                            <span t-elif="payment.state == 'draft'" class="badge bg-secondary">Draft</span>
+                                                            <span t-else="" class="badge bg-warning" t-field="payment.state"/>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Payment Method:</th>
+                                                        <td>
+                                                            <span t-field="payment.journal_id.name"/>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Reference:</th>
+                                                        <td>
+                                                            <span t-field="payment.ref"/>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mt-3">
+                                            <div class="col-md-12">
+                                                <div class="alert alert-success">
+                                                    <strong>Verification Completed:</strong>
+                                                    <span t-esc="verification_time.strftime('%Y-%m-%d %H:%M:%S')"/>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mt-3">
+                                            <div class="col-md-12 text-center">
+                                                <p class="text-muted">
+                                                    <strong>
+                                                        <span t-field="company.name"/>
+                                                    </strong>
+                                                    <br/>
+                                                    This payment has been verified through our secure system.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <!-- Payment Verification Error Template -->
+        <template id="payment_verification_error" name="Payment Verification Error">
+            <t t-call="website.layout">
+                <div id="wrap" class="oe_structure oe_empty">
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-md-6">
+                                <div class="card mt-5">
+                                    <div class="card-header bg-danger text-white">
+                                        <h4 class="mb-0">
+                                            <i class="fa fa-exclamation-triangle"/>
+ Verification Failed
+                                        </h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="alert alert-danger">
+                                            <strong t-esc="error"/>
+                                        </div>
+                                        <p t-esc="message"/>
+
+                                        <div class="mt-3">
+                                            <a href="/payment/verify" class="btn btn-primary">
+                                                <i class="fa fa-search"/>
+ Try Another Verification
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <!-- Payment Verification Form Template -->
+        <template id="payment_verification_form" name="Payment Verification Form">
+            <t t-call="website.layout">
+                <div id="wrap" class="oe_structure oe_empty">
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-md-6">
+                                <div class="card mt-5">
+                                    <div class="card-header bg-primary text-white">
+                                        <h4 class="mb-0">
+                                            <i class="fa fa-qrcode"/>
+ Payment Verification
+                                        </h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <p>Enter the verification token from your payment QR code to verify the payment details.</p>
+
+                                        <form action="/payment/verify/check" method="post">
+                                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                                            <div class="form-group mb-3">
+                                                <label for="token" class="form-label">Verification Token:</label>
+                                                <input type="text" name="token" id="token" class="form-control" placeholder="Enter verification token" required="true"/>
+                                            </div>
+
+                                            <button type="submit" class="btn btn-primary btn-block">
+                                                <i class="fa fa-check"/>
+ Verify Payment
+                                            </button>
+                                        </form>
+
+                                        <div class="mt-3">
+                                            <small class="text-muted">
+                                                <strong>How to find your verification token:</strong>
+                                                <br/>
+                                                Scan the QR code on your payment voucher or find the token in the payment document.
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+        <!-- Payment Not Found Template -->
+        <template id="payment_not_found" name="Payment Not Found">
+            <t t-call="website.layout">
+                <div id="wrap" class="oe_structure oe_empty">
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-md-6">
+                                <div class="card mt-5">
+                                    <div class="card-header bg-warning text-dark">
+                                        <h4 class="mb-0">
+                                            <i class="fa fa-exclamation-triangle me-2"></i>
+                                            <span t-esc="error_message"/>
+                                        </h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="alert alert-warning">
+                                            <span t-esc="error_details"/>
+                                        </div>
+                                        <div class="mt-3">
+                                            <a href="/web" class="btn btn-primary">
+                                                <i class="fa fa-home me-2"></i>Return to Main System
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <!-- Bulk Verification Form Template -->
+        <template id="bulk_verification_form" name="Bulk Verification Form">
+            <t t-call="website.layout">
+                <div id="wrap" class="oe_structure oe_empty">
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-md-8">
+                                <div class="card mt-5">
+                                    <div class="card-header bg-primary text-white">
+                                        <h4 class="mb-0">
+                                            <i class="fa fa-list-check me-2"></i>
+                                            Bulk Payment Verification
+                                        </h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <p>Enter voucher numbers (one per line) to verify multiple payments at once.</p>
+
+                                        <form method="post">
+                                            <div class="form-group mb-3">
+                                                <label for="voucher_numbers" class="form-label">Voucher Numbers:</label>
+                                                <textarea name="voucher_numbers" id="voucher_numbers" 
+                                                         class="form-control" rows="10" 
+                                                         placeholder="Enter voucher numbers, one per line..."></textarea>
+                                            </div>
+
+                                            <button type="submit" class="btn btn-primary">
+                                                <i class="fa fa-search me-2"></i>Verify Payments
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <!-- Bulk Verification Results Template -->
+        <template id="bulk_verification_results" name="Bulk Verification Results">
+            <t t-call="website.layout">
+                <div id="wrap" class="oe_structure oe_empty">
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-md-10">
+                                <div class="card mt-5">
+                                    <div class="card-header bg-success text-white">
+                                        <h4 class="mb-0">
+                                            <i class="fa fa-check-circle me-2"></i>
+                                            Bulk Verification Results
+                                        </h4>
+                                        <p class="mb-0 mt-2">
+                                            Checked: <span t-esc="total_checked"/> | Found: <span t-esc="found_count"/>
+                                        </p>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Voucher Number</th>
+                                                        <th>Status</th>
+                                                        <th>Partner</th>
+                                                        <th>Amount</th>
+                                                        <th>Date</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr t-foreach="results" t-as="result">
+                                                        <td><span t-esc="result.get('voucher_number')"/></td>
+                                                        <td>
+                                                            <span t-if="result.get('found')" class="badge bg-success">Found</span>
+                                                            <span t-else="" class="badge bg-danger">Not Found</span>
+                                                        </td>
+                                                        <td><span t-esc="result.get('partner', 'N/A')"/></td>
+                                                        <td><span t-esc="result.get('amount', 'N/A')"/></td>
+                                                        <td><span t-esc="result.get('date', 'N/A')"/></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div class="mt-3">
+                                            <a href="/payment/bulk-verify" class="btn btn-primary">
+                                                <i class="fa fa-search me-2"></i>Verify More Payments
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+
+</odoo>

@@ -1,0 +1,77 @@
+/* Order Status Override Module - Commission Report Styling */
+/* Namespace: .o_order_status_override to prevent conflicts */
+
+.o_order_status_override .osus-commission-report {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.o_order_status_override .osus-status-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.8em;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.o_order_status_override .osus-status-draft {
+  background-color: #f8f9fa;
+  color: #495057;
+}
+
+.o_order_status_override .osus-status-document-review {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.o_order_status_override .osus-status-allocation {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.o_order_status_override .osus-status-approved {
+  background-color: #d1ecf1;
+  color: #0c5460;
+}
+
+.o_order_status_override .osus-status-post {
+  background-color: #d1f2eb;
+  color: #0e6655;
+}
+
+/* Report formatting */
+.o_order_status_override .osus-report-header {
+  border-bottom: 2px solid #1f4788;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+}
+
+.o_order_status_override .osus-report-title {
+  color: #1f4788;
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+.o_order_status_override .osus-commission-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.o_order_status_override .osus-commission-table th,
+.o_order_status_override .osus-commission-table td {
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.o_order_status_override .osus-commission-table th {
+  background-color: #f8f9fa;
+  font-weight: bold;
+  color: #495057;
+}
+
+.o_order_status_override .osus-commission-amount {
+  font-weight: bold;
+  color: #28a745;
+}

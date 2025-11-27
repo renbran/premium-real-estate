@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Account Payment Form View Enhancement - Simplified Approach -->
+    <record id="view_account_payment_form_inherit_osus" model="ir.ui.view">
+        <field name="name">account.payment.form.osus.voucher</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="arch" type="xml">
+            <!-- Add Print Voucher button to header -->
+            <xpath expr="//header" position="inside">
+                <button name="action_print_voucher" 
+                        string="Print Voucher" 
+                        type="object" 
+                        class="btn-primary" 
+                        invisible="state != 'posted'" 
+                        icon="fa-print"/>
+            </xpath>
+            
+            <!-- Force name field to be always visible -->
+            <xpath expr="//field[@name='name']" position="replace">
+                <field name="name" 
+                       string="Reference Number" 
+                       required="1"
+                       readonly="0"
+                       help="Payment/Receipt reference number that will appear on the voucher"/>
+            </xpath>
+            
+            <!-- Enhance ref field if it exists -->
+            <xpath expr="//field[@name='ref']" position="attributes">
+                <attribute name="string">Payment Memo</attribute>
+                <attribute name="placeholder">Enter additional payment reference or memo...</attribute>
+            </xpath>
+            
+            <!-- Add notebook for additional information -->
+            <xpath expr="//sheet" position="inside">
+                <notebook>
+                    <page string="Voucher Details" name="voucher_details">
+                        <group string="Voucher Information">
+                            <group>
+                                <field name="name" string="Voucher Number" readonly="1"/>
+                                <field name="date" string="Voucher Date"/>
+                                <field name="payment_type" string="Voucher Type"/>
+                            </group>
+                            <group>
+                                <field name="amount" string="Voucher Amount"/>
+                                <field name="currency_id" string="Currency"/>
+                                <field name="state" string="Status"/>
+                            </group>
+                        </group>
+                        
+                        <!-- QR Code Settings for Customer Receipts -->
+                        <group string="QR Code Settings" invisible="payment_type != 'inbound'">
+                            <group>
+                                <field name="display_qr_code" string="Show QR Code on Receipt"/>
+                            </group>
+                            <group>
+                                <field name="qr_code_urls" string="QR Code Preview" readonly="1" invisible="not qr_code_urls"/>
+                            </group>
+                        </group>
+                        
+                        <group string="Print Options">
+                            <button name="action_print_voucher" 
+                                    string="Preview/Print Voucher" 
+                                    type="object" 
+                                    class="btn-info" 
+                                    invisible="state not in ['posted', 'sent']"
+                                    icon="fa-eye"/>
+                        </group>
+                    </page>
+                </notebook>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Account Payment Tree View Enhancement -->
+    <record id="view_account_payment_tree_inherit_osus" model="ir.ui.view">
+        <field name="name">account.payment.tree.osus.voucher</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_tree"/>
+        <field name="arch" type="xml">
+            <!-- Ensure reference number is visible in tree view -->
+            <xpath expr="//field[@name='name']" position="attributes">
+                <attribute name="string">Reference Number</attribute>
+                <attribute name="optional">show</attribute>
+            </xpath>
+            
+            <!-- Add payment memo after date if date exists -->
+            <xpath expr="//field[@name='date']" position="after">
+                <field name="ref" string="Payment Memo" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

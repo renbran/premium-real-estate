@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Payment Approval Dashboard Component Templates -->
+<templates>
+    <!-- Main Dashboard Template -->
+    <t t-name="account_payment_approval.PaymentApprovalDashboard" owl="1">
+        <div class="payment-approval-dashboard">
+            <!-- Dashboard Header -->
+            <div class="dashboard-header">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h1 class="page-title">
+                            <i class="fa fa-tachometer-alt me-2"></i>
+                            Payment Approval Dashboard
+                        </h1>
+                        <p class="page-subtitle text-muted">
+                            Real-time overview of payment approval workflow
+                        </p>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <div class="dashboard-actions">
+                            <button class="btn btn-primary me-2" t-on-click="refreshDashboard">
+                                <i class="fa fa-refresh me-1"></i>
+                                Refresh
+                            </button>
+                            <button class="btn btn-outline-secondary" t-on-click="openSettings">
+                                <i class="fa fa-cog me-1"></i>
+                                Settings
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KPI Cards -->
+            <div class="dashboard-kpis">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="kpi-card pending">
+                            <div class="kpi-icon">
+                                <i class="fa fa-clock"></i>
+                            </div>
+                            <div class="kpi-content">
+                                <h3 t-esc="state.kpis.pendingCount"></h3>
+                                <p>Pending Approvals</p>
+                                <small class="kpi-change" t-att-class="getChangeClass(state.kpis.pendingChange)">
+                                    <i t-att-class="getChangeIcon(state.kpis.pendingChange)"></i>
+                                    <span t-esc="Math.abs(state.kpis.pendingChange) + '%'"></span>
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="kpi-card approved">
+                            <div class="kpi-icon">
+                                <i class="fa fa-check-circle"></i>
+                            </div>
+                            <div class="kpi-content">
+                                <h3 t-esc="state.kpis.approvedToday"></h3>
+                                <p>Approved Today</p>
+                                <small class="kpi-target">
+                                    Target: <span t-esc="state.kpis.dailyTarget"></span>
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="kpi-card amount">
+                            <div class="kpi-icon">
+                                <i class="fa fa-dollar-sign"></i>
+                            </div>
+                            <div class="kpi-content">
+                                <h3 t-esc="formatCurrency(state.kpis.totalAmount)"></h3>
+                                <p>Total Amount</p>
+                                <small class="kpi-period">This Month</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="kpi-card efficiency">
+                            <div class="kpi-icon">
+                                <i class="fa fa-chart-line"></i>
+                            </div>
+                            <div class="kpi-content">
+                                <h3 t-esc="state.kpis.efficiency + '%'"></h3>
+                                <p>Efficiency Rate</p>
+                                <small class="kpi-benchmark">
+                                    Benchmark: 95%
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content Area -->
+            <div class="dashboard-content">
+                <div class="row">
+                    <!-- Left Column -->
+                    <div class="col-lg-8">
+                        <!-- Workflow Chart -->
+                        <div class="dashboard-widget">
+                            <div class="widget-header">
+                                <h4>
+                                    <i class="fa fa-chart-bar me-2"></i>
+                                    Approval Workflow Overview
+                                </h4>
+                                <div class="widget-actions">
+                                    <select class="form-select form-select-sm" t-on-change="changeChartPeriod">
+                                        <option value="today">Today</option>
+                                        <option value="week">This Week</option>
+                                        <option value="month" selected="selected">This Month</option>
+                                        <option value="quarter">This Quarter</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="widget-content">
+                                <canvas t-ref="workflowChart" height="300"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Recent Activities -->
+                        <div class="dashboard-widget">
+                            <div class="widget-header">
+                                <h4>
+                                    <i class="fa fa-history me-2"></i>
+                                    Recent Activities
+                                </h4>
+                                <a href="#" class="widget-link" t-on-click="viewAllActivities">View All</a>
+                            </div>
+                            <div class="widget-content">
+                                <div class="activity-timeline">
+                                    <div t-foreach="state.recentActivities" t-as="activity" t-key="activity.id" class="activity-item">
+                                        <div class="activity-icon" t-att-class="getActivityIconClass(activity.type)">
+                                            <i t-att-class="getActivityIcon(activity.type)"></i>
+                                        </div>
+                                        <div class="activity-content">
+                                            <div class="activity-header">
+                                                <span class="activity-title" t-esc="activity.title"></span>
+                                                <span class="activity-time" t-esc="formatTime(activity.timestamp)"></span>
+                                            </div>
+                                            <div class="activity-details">
+                                                <p t-esc="activity.description"></p>
+                                                <div class="activity-meta">
+                                                    <span class="activity-user" t-esc="activity.user"></span>
+                                                    <span class="activity-amount" t-esc="formatCurrency(activity.amount)"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column -->
+                    <div class="col-lg-4">
+                        <!-- Quick Actions -->
+                        <div class="dashboard-widget">
+                            <div class="widget-header">
+                                <h4>
+                                    <i class="fa fa-bolt me-2"></i>
+                                    Quick Actions
+                                </h4>
+                            </div>
+                            <div class="widget-content">
+                                <div class="quick-actions">
+                                    <button class="quick-action-btn" t-on-click="createPayment">
+                                        <i class="fa fa-plus"></i>
+                                        <span>New Payment</span>
+                                    </button>
+                                    <button class="quick-action-btn" t-on-click="bulkApproval">
+                                        <i class="fa fa-check-double"></i>
+                                        <span>Bulk Approval</span>
+                                    </button>
+                                    <button class="quick-action-btn" t-on-click="generateReport">
+                                        <i class="fa fa-file-alt"></i>
+                                        <span>Generate Report</span>
+                                    </button>
+                                    <button class="quick-action-btn" t-on-click="exportData">
+                                        <i class="fa fa-download"></i>
+                                        <span>Export Data</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Status Distribution -->
+                        <div class="dashboard-widget">
+                            <div class="widget-header">
+                                <h4>
+                                    <i class="fa fa-pie-chart me-2"></i>
+                                    Status Distribution
+                                </h4>
+                            </div>
+                            <div class="widget-content">
+                                <canvas t-ref="statusChart" height="250"></canvas>
+                                <div class="status-legend">
+                                    <div t-foreach="state.statusDistribution" t-as="status" t-key="status.state" class="legend-item">
+                                        <span class="legend-color" t-att-style="'background-color: ' + status.color"></span>
+                                        <span class="legend-label" t-esc="status.label"></span>
+                                        <span class="legend-value" t-esc="status.count"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Urgent Payments -->
+                        <div class="dashboard-widget" t-if="state.urgentPayments.length > 0">
+                            <div class="widget-header">
+                                <h4>
+                                    <i class="fa fa-exclamation-triangle me-2 text-warning"></i>
+                                    Urgent Payments
+                                </h4>
+                            </div>
+                            <div class="widget-content">
+                                <div class="urgent-payments-list">
+                                    <div t-foreach="state.urgentPayments" t-as="payment" t-key="payment.id" class="urgent-payment-item">
+                                        <div class="payment-info">
+                                            <div class="payment-ref" t-esc="payment.name"></div>
+                                            <div class="payment-partner" t-esc="payment.partner"></div>
+                                            <div class="payment-amount" t-esc="formatCurrency(payment.amount)"></div>
+                                        </div>
+                                        <div class="payment-actions">
+                                            <button class="btn btn-sm btn-primary" t-on-click="approvePayment" t-att-data-payment-id="payment.id">
+                                                <i class="fa fa-check"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-secondary" t-on-click="viewPayment" t-att-data-payment-id="payment.id">
+                                                <i class="fa fa-eye"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Performance Metrics -->
+                        <div class="dashboard-widget">
+                            <div class="widget-header">
+                                <h4>
+                                    <i class="fa fa-chart-line me-2"></i>
+                                    Performance Metrics
+                                </h4>
+                            </div>
+                            <div class="widget-content">
+                                <div class="performance-metrics">
+                                    <div class="metric-item">
+                                        <div class="metric-label">Average Processing Time</div>
+                                        <div class="metric-value" t-esc="state.metrics.avgProcessingTime"></div>
+                                        <div class="metric-progress">
+                                            <div class="progress">
+                                                <div class="progress-bar bg-success" t-att-style="'width: ' + state.metrics.processingTimeProgress + '%'"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="metric-item">
+                                        <div class="metric-label">SLA Compliance</div>
+                                        <div class="metric-value" t-esc="state.metrics.slaCompliance + '%'"></div>
+                                        <div class="metric-progress">
+                                            <div class="progress">
+                                                <div class="progress-bar bg-info" t-att-style="'width: ' + state.metrics.slaCompliance + '%'"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="metric-item">
+                                        <div class="metric-label">First-Time Approval Rate</div>
+                                        <div class="metric-value" t-esc="state.metrics.firstTimeApproval + '%'"></div>
+                                        <div class="metric-progress">
+                                            <div class="progress">
+                                                <div class="progress-bar bg-warning" t-att-style="'width: ' + state.metrics.firstTimeApproval + '%'"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loading Overlay -->
+            <div class="dashboard-loading-overlay" t-if="state.loading">
+                <div class="loading-content">
+                    <div class="spinner-border text-primary mb-3" role="status"></div>
+                    <p>Loading dashboard data...</p>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <!-- Mobile Dashboard Template -->
+    <t t-name="account_payment_approval.MobileDashboard" owl="1">
+        <div class="mobile-dashboard">
+            <div class="mobile-header">
+                <h2>Payment Dashboard</h2>
+                <button class="mobile-menu-btn" t-on-click="toggleMobileMenu">
+                    <i class="fa fa-bars"></i>
+                </button>
+            </div>
+
+            <div class="mobile-kpis">
+                <div class="kpi-carousel">
+                    <div class="kpi-slide active">
+                        <div class="kpi-content">
+                            <div class="kpi-value" t-esc="state.kpis.pendingCount"></div>
+                            <div class="kpi-label">Pending</div>
+                        </div>
+                    </div>
+                    <div class="kpi-slide">
+                        <div class="kpi-content">
+                            <div class="kpi-value" t-esc="state.kpis.approvedToday"></div>
+                            <div class="kpi-label">Approved Today</div>
+                        </div>
+                    </div>
+                    <div class="kpi-slide">
+                        <div class="kpi-content">
+                            <div class="kpi-value" t-esc="formatCurrency(state.kpis.totalAmount)"></div>
+                            <div class="kpi-label">Total Amount</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="kpi-indicators">
+                    <span class="indicator active"></span>
+                    <span class="indicator"></span>
+                    <span class="indicator"></span>
+                </div>
+            </div>
+
+            <div class="mobile-actions">
+                <div class="action-grid">
+                    <button class="action-item" t-on-click="createPayment">
+                        <i class="fa fa-plus"></i>
+                        <span>New</span>
+                    </button>
+                    <button class="action-item" t-on-click="bulkApproval">
+                        <i class="fa fa-check"></i>
+                        <span>Approve</span>
+                    </button>
+                    <button class="action-item" t-on-click="scanQR">
+                        <i class="fa fa-qrcode"></i>
+                        <span>Scan QR</span>
+                    </button>
+                    <button class="action-item" t-on-click="generateReport">
+                        <i class="fa fa-file"></i>
+                        <span>Reports</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="mobile-content">
+                <div class="content-tabs">
+                    <button class="tab-btn active" t-on-click="showTab" data-tab="recent">Recent</button>
+                    <button class="tab-btn" t-on-click="showTab" data-tab="urgent">Urgent</button>
+                    <button class="tab-btn" t-on-click="showTab" data-tab="chart">Charts</button>
+                </div>
+
+                <div class="tab-content" id="recent-tab">
+                    <div class="payment-list">
+                        <div t-foreach="state.recentPayments" t-as="payment" t-key="payment.id" class="payment-item">
+                            <div class="payment-header">
+                                <span class="payment-ref" t-esc="payment.name"></span>
+                                <span class="payment-status" t-att-class="'status-' + payment.state" t-esc="payment.state"></span>
+                            </div>
+                            <div class="payment-details">
+                                <div class="payment-partner" t-esc="payment.partner"></div>
+                                <div class="payment-amount" t-esc="formatCurrency(payment.amount)"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <!-- Widget Container Template -->
+    <t t-name="account_payment_approval.DashboardWidget" owl="1">
+        <div class="dashboard-widget" t-att-class="props.className">
+            <div class="widget-header" t-if="props.title">
+                <h4>
+                    <i t-att-class="props.icon + ' me-2'" t-if="props.icon"></i>
+                    <span t-esc="props.title"></span>
+                </h4>
+                <div class="widget-actions" t-if="props.actions">
+                    <t t-foreach="props.actions" t-as="action" t-key="action.id">
+                        <button t-att-class="action.className || 'btn btn-sm btn-outline-secondary'" t-on-click="action.handler">
+                            <i t-att-class="action.icon + ' me-1'" t-if="action.icon"></i>
+                            <span t-esc="action.label"></span>
+                        </button>
+                    </t>
+                </div>
+            </div>
+            <div class="widget-content">
+                <t t-slot="default"/>
+            </div>
+        </div>
+    </t>
+</templates>

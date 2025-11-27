@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <!-- Security Groups for HR Greetings System -->
+
+        <!-- HR Greeting Coordinator Group -->
+        <record id="group_osus_hr_greeting_coordinator" model="res.groups">
+            <field name="name">OSUS HR Greeting Coordinator</field>
+            <field name="comment">Can manage birthday and anniversary greetings for employees</field>
+            <field name="category_id" ref="base.module_category_human_resources"/>
+            <field name="implied_ids" eval="[(4, ref('hr.group_hr_user'))]"/>
+        </record>
+
+    </data>
+</odoo>

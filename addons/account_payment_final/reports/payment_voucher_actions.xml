@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Standard Payment Voucher Report Action -->
+        <record id="action_report_payment_voucher" model="ir.actions.report">
+            <field name="name">Payment Voucher</field>
+            <field name="model">account.payment</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">account_payment_final.report_payment_voucher_osus</field>
+            <field name="print_report_name">(object.voucher_number or 'Voucher')</field>
+            <field name="binding_model_id" ref="account.model_account_payment"/>
+            <field name="binding_type">report</field>
+            <field name="paperformat_id" ref="base.paperformat_euro"/>
+        </record>
+
+        <!-- Professional Payment Voucher Report Action -->
+        <record id="action_report_payment_voucher_professional" model="ir.actions.report">
+            <field name="name">Professional Payment Voucher</field>
+            <field name="model">account.payment</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">account_payment_final.payment_voucher_professional</field>
+            <field name="print_report_name">
+                ('Receipt Voucher - %s' if object.payment_type == 'inbound' else 'Payment Voucher - %s') % (object.voucher_number or object.name)
+            </field>
+            <field name="binding_model_id" ref="account.model_account_payment"/>
+            <field name="binding_type">report</field>
+            <field name="paperformat_id" ref="base.paperformat_euro"/>
+        </record>
+
+        <!-- Enhanced Professional Payment Voucher Report Action -->
+        <record id="action_report_payment_voucher_enhanced" model="ir.actions.report">
+            <field name="name">Enhanced Professional Payment Voucher</field>
+            <field name="model">account.payment</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">account_payment_final.payment_voucher_enhanced_professional</field>
+            <field name="print_report_name">
+                ('Enhanced Receipt Voucher - %s' if object.payment_type == 'inbound' else 'Enhanced Payment Voucher - %s') % (object.voucher_number or object.name)
+            </field>
+            <field name="binding_model_id" ref="account.model_account_payment"/>
+            <field name="binding_type">report</field>
+            <field name="paperformat_id" ref="base.paperformat_euro"/>
+        </record>
+
+        <!-- OSUS Branded Payment Voucher Report Action -->
+        <record id="action_report_payment_voucher_osus" model="ir.actions.report">
+            <field name="name">OSUS Payment Voucher</field>
+            <field name="model">account.payment</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">account_payment_final.report_payment_voucher_osus</field>
+            <field name="print_report_name">
+                ('Receipt Voucher - %s' if object.payment_type == 'inbound' else 'Payment Voucher - %s') % (object.voucher_number or object.name)
+            </field>
+            <field name="binding_model_id" ref="account.model_account_payment"/>
+            <field name="binding_type">report</field>
+            <field name="paperformat_id" ref="base.paperformat_euro"/>
+        </record>
+    </data>
+</odoo>

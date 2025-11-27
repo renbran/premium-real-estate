@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <!-- Security Groups for Order Net Commission Workflow -->
+
+        <!-- 1. Documentation Officer Group -->
+        <record id="group_documentation_officer" model="res.groups">
+            <field name="name">Sales / Documentation Officer</field>
+            <field name="category_id" ref="base.module_category_sales_sales"/>
+            <field name="comment">Can move sales orders from draft to documentation stage</field>
+            <field name="implied_ids" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+        </record>
+
+        <!-- 2. Commission Analyst Group -->
+        <record id="group_commission_analyst" model="res.groups">
+            <field name="name">Sales / Commission Analyst</field>
+            <field name="category_id" ref="base.module_category_sales_sales"/>
+            <field name="comment">Can move sales orders from documentation to commission stage and calculate commissions</field>
+            <field name="implied_ids" eval="[(4, ref('order_net_commission.group_documentation_officer'))]"/>
+        </record>
+
+        <!-- 3. Sales Approver Group -->
+        <record id="group_sales_approver" model="res.groups">
+            <field name="name">Sales / Sales Approver</field>
+            <field name="category_id" ref="base.module_category_sales_sales"/>
+            <field name="comment">Can approve commission calculations and move to final sale confirmation</field>
+            <field name="implied_ids" eval="[(4, ref('order_net_commission.group_commission_analyst'))]"/>
+        </record>
+
+        <!-- Record Rules for Enhanced Security -->
+
+        <!-- Documentation Officer can only access draft and documentation stages -->
+        <record id="sale_order_documentation_officer_rule" model="ir.rule">
+            <field name="name">Sales Order: Documentation Officer Access</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="domain_force">[('state', 'in', ['draft', 'documentation'])]</field>
+            <field name="groups" eval="[(4, ref('group_documentation_officer'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <!-- Commission Analyst can access documentation and commission stages -->
+        <record id="sale_order_commission_analyst_rule" model="ir.rule">
+            <field name="name">Sales Order: Commission Analyst Access</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="domain_force">[('state', 'in', ['draft', 'documentation', 'commission'])]</field>
+            <field name="groups" eval="[(4, ref('group_commission_analyst'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <!-- Sales Approver can access all stages -->
+        <record id="sale_order_sales_approver_rule" model="ir.rule">
+            <field name="name">Sales Order: Sales Approver Full Access</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_sales_approver'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <!-- QR Verification Widget Template -->
+    <t t-name="payment_approval_pro.QRVerificationWidget">
+        <div class="o_qr_verification_widget">
+            <div class="qr-header">
+                <span class="qr-title">
+                    <i class="fa fa-qrcode"/> QR Code Verification
+                </span>
+                <button class="qr-toggle" t-on-click="onToggleQRCode">
+                    <i t-att-class="state.showQRCode ? 'fa fa-chevron-up' : 'fa fa-chevron-down'"/>
+                </button>
+            </div>
+            
+            <div class="qr-content" t-if="state.showQRCode">
+                <div t-if="state.qrCodeData">
+                    <img class="qr-image" 
+                         t-att-src="getQRCodeSrc()" 
+                         alt="QR Code"
+                         t-if="getQRCodeSrc()"/>
+                    
+                    <div class="qr-actions">
+                        <button class="btn btn-sm btn-primary" 
+                                t-on-click="onVerifyQRCode"
+                                t-att-disabled="state.isVerifying">
+                            <i t-att-class="state.isVerifying ? 'fa fa-spinner fa-spin' : 'fa fa-check'"/>
+                            <span t-if="state.isVerifying">Verifying...</span>
+                            <span t-else="">Verify</span>
+                        </button>
+                        
+                        <button class="btn btn-sm btn-info" 
+                                t-on-click="onOpenVerificationURL">
+                            <i class="fa fa-external-link"/>
+                            Open URL
+                        </button>
+                        
+                        <button class="btn btn-sm btn-secondary" 
+                                t-on-click="onCopyVerificationURL">
+                            <i class="fa fa-copy"/>
+                            Copy URL
+                        </button>
+                        
+                        <button class="btn btn-sm btn-success" 
+                                t-on-click="onDownloadQRCode">
+                            <i class="fa fa-download"/>
+                            Download
+                        </button>
+                    </div>
+                    
+                    <div class="qr-verification-result" 
+                         t-if="state.verificationResult"
+                         t-att-class="state.verificationResult.valid ? 'verification-success' : 'verification-error'">
+                        <i t-att-class="getVerificationStatusIcon()"/>
+                        <span t-esc="getVerificationStatusText()"/>
+                    </div>
+                </div>
+                
+                <div t-else="" class="text-center">
+                    <i class="fa fa-spinner fa-spin"/>
+                    Loading QR code...
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <!-- QR Code Field Template -->
+    <t t-name="payment_approval_pro.QRCodeField">
+        <div class="o_qr_code_field">
+            <div t-if="hasQRCode()" class="text-center">
+                <img t-att-src="getQRCodeSrc()" 
+                     alt="QR Code" 
+                     class="qr-image"
+                     style="max-width: 150px; border: 1px solid #ddd; border-radius: 4px;"/>
+            </div>
+            <div t-else="" class="text-muted text-center">
+                <i class="fa fa-qrcode"/>
+                No QR code generated
+            </div>
+        </div>
+    </t>
+</templates>

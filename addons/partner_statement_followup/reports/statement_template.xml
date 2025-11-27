@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Partner Statement QWeb Templates -->
+
+    <!-- Main Statement Template -->
+    <template id="report_partner_statement_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="partner">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <!-- Header Section -->
+                        <div class="row">
+                            <div class="col-6">
+                                <h2>Statement of Account</h2>
+                                <p>
+                                    <strong>Statement Date:</strong>
+                                    <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%B %d, %Y')"/>
+                                </p>
+                                <p>
+                                    <strong>Account #:</strong>
+                                    <span t-esc="partner.ref or partner.id"/>
+                                </p>
+                            </div>
+                            <div class="col-6 text-right">
+                                <div t-if="partner.image_1920" class="d-inline-block">
+                                    <img t-att-src="image_data_uri(partner.image_1920)" style="max-height: 60px;" class="img-fluid"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Customer Information -->
+                        <div class="row mt-4">
+                            <div class="col-6">
+                                <h4>Customer Information</h4>
+                                <div>
+                                    <strong t-esc="partner.name"/>
+                                    <br/>
+                                    <span t-esc="partner.street" t-if="partner.street"/>
+                                    <br/>
+                                    <span t-esc="partner.street2" t-if="partner.street2"/>
+                                    <br/>
+                                    <span t-esc="partner.city" t-if="partner.city"/>
+                                    <span t-esc="partner.state_id.name" t-if="partner.state_id"/>
+                                    <span t-esc="partner.zip" t-if="partner.zip"/>
+                                    <br/>
+                                    <span t-esc="partner.country_id.name" t-if="partner.country_id"/>
+                                    <br/>
+
+                                    <div class="mt-2">
+                                        <span t-if="partner.phone">Phone: <span t-esc="partner.phone"/>
+                                        <br/>
+                                    </span>
+                                    <span t-if="partner.email">Email: <span t-esc="partner.email"/>
+                                    <br/>
+                                </span>
+                                <span t-if="partner.vat">Tax ID: <span t-esc="partner.vat"/>
+                                <br/>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6">
+                    <h4>Account Summary</h4>
+                    <t t-set="statement_data" t-value="partner._get_statement_data()"/>
+                    <table class="table table-sm">
+                        <tr>
+                            <td>
+                                <strong>Current Balance:</strong>
+                            </td>
+                            <td class="text-right">
+                                <span t-esc="statement_data['current_balance']" t-options="{'widget': 'monetary', 'display_currency': partner.currency_id or company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>Past Due Amount:</strong>
+                            </td>
+                            <td class="text-right" style="color: red;">
+                                <span t-esc="statement_data['overdue_balance']" t-options="{'widget': 'monetary', 'display_currency': partner.currency_id or company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>Credit Limit:</strong>
+                            </td>
+                            <td class="text-right">
+                                <span t-esc="partner.credit_limit or 0" t-options="{'widget': 'monetary', 'display_currency': partner.currency_id or company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr class="border-top">
+                            <td>
+                                <strong>Total Amount Due:</strong>
+                            </td>
+                            <td class="text-right">
+                                <strong>
+                                    <span t-esc="statement_data['total_due']" t-options="{'widget': 'monetary', 'display_currency': partner.currency_id or company.currency_id}"/>
+                                </strong>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Ageing Analysis -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <h4>Ageing Analysis</h4>
+                    <t t-set="ageing_data" t-value="partner._get_ageing_analysis()"/>
+                    <table class="table table-bordered table-sm">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Current</th>
+                                <th>1-30 Days</th>
+                                <th>31-60 Days</th>
+                                <th>61-90 Days</th>
+                                <th>Over 90 Days</th>
+                                <th class="text-right">
+                                    <strong>Total</strong>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-right">
+                                    <span t-esc="ageing_data.get('current', 0)" t-options="{'widget': 'monetary', 'display_currency': partner.currency_id or company.currency_id}"/>
+                                </td>
+                                <td class="text-right">
+                                    <span t-esc="ageing_data.get('days_1_30', 0)" t-options="{'widget': 'monetary', 'display_currency': partner.currency_id or company.currency_id}"/>
+                                </td>
+                                <td class="text-right">
+                                    <span t-esc="ageing_data.get('days_31_60', 0)" t-options="{'widget': 'monetary', 'display_currency': partner.currency_id or company.currency_id}"/>
+                                </td>
+                                <td class="text-right">
+                                    <span t-esc="ageing_data.get('days_61_90', 0)" t-options="{'widget': 'monetary', 'display_currency': partner.currency_id or company.currency_id}"/>
+                                </td>
+                                <td class="text-right" style="color: red;">
+                                    <span t-esc="ageing_data.get('over_90', 0)" t-options="{'widget': 'monetary', 'display_currency': partner.currency_id or company.currency_id}"/>
+                                </td>
+                                <td class="text-right border-left">
+                                    <strong>
+                                        <span t-esc="ageing_data.get('total', 0)" t-options="{'widget': 'monetary', 'display_currency': partner.currency_id or company.currency_id}"/>
+                                    </strong>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Outstanding Transactions -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <h4>Outstanding Transactions</h4>
+                    <t t-set="transactions" t-value="partner._get_outstanding_transactions()"/>
+                    <table class="table table-sm table-striped">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Date</th>
+                                <th>Reference</th>
+                                <th>Description</th>
+                                <th>Due Date</th>
+                                <th class="text-right">Original Amount</th>
+                                <th class="text-right">Outstanding</th>
+                                <th class="text-center">Days</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="transactions" t-as="line">
+                                <tr t-att-class="'text-danger' if line.get('days_overdue', 0) > 0 else ''">
+                                    <td>
+                                        <span t-esc="line['date']" t-options="{'widget': 'date'}"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="line['move_name']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="line['name']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="line['date_maturity']" t-options="{'widget': 'date'}" t-if="line['date_maturity']"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="line['amount_total']" t-options="{'widget': 'monetary', 'display_currency': partner.currency_id or company.currency_id}"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="line['amount_residual']" t-options="{'widget': 'monetary', 'display_currency': partner.currency_id or company.currency_id}"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <span t-esc="line.get('days_overdue', 0)" t-att-class="'badge badge-danger' if line.get('days_overdue', 0) > 0 else 'badge badge-success'"/>
+                                    </td>
+                                </tr>
+                            </t>
+                            <t t-if="not transactions">
+                                <tr>
+                                    <td colspan="7" class="text-center text-muted">
+                                                    No outstanding transactions found.
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                        <tfoot t-if="transactions">
+                            <tr class="border-top">
+                                <th colspan="5" class="text-right">Total Outstanding:</th>
+                                <th class="text-right">
+                                    <span t-esc="sum(t['amount_residual'] for t in transactions)" t-options="{'widget': 'monetary', 'display_currency': partner.currency_id or company.currency_id}"/>
+                                </th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Payment Information -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="alert alert-info">
+                        <h5>Payment Information</h5>
+                        <p>
+                            <strong>Remit To:</strong>
+                            <span t-esc="company.name"/>
+                        </p>
+                        <p t-if="company.street">
+                            <span t-esc="company.street"/>
+                            <span t-esc="company.street2" t-if="company.street2"/>
+                            <br/>
+                            <span t-esc="company.city"/>
+                            <span t-esc="company.state_id.name" t-if="company.state_id"/>
+                            <span t-esc="company.zip"/>
+                            <br/>
+                            <span t-esc="company.country_id.name" t-if="company.country_id"/>
+                        </p>
+
+                        <div class="row mt-3">
+                            <div class="col-6" t-if="company.phone or company.email">
+                                <p t-if="company.phone">
+                                    <strong>Phone:</strong>
+                                    <span t-esc="company.phone"/>
+                                </p>
+                                <p t-if="company.email">
+                                    <strong>Email:</strong>
+                                    <span t-esc="company.email"/>
+                                </p>
+                            </div>
+                            <div class="col-6" t-if="partner.property_payment_term_id">
+                                <p>
+                                    <strong>Payment Terms:</strong>
+                                    <span t-esc="partner.property_payment_term_id.name"/>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Notice -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="text-center small text-muted">
+                        <p>This statement reflects your account balance as of the statement date. 
+                                       Please retain for your records.</p>
+                        <p>If you have any questions, please contact us immediately.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</t>
+</t>
+</template>
+
+<!-- Ageing Analysis Report Template -->
+<template id="report_partner_ageing_template">
+<t t-call="web.html_container">
+<t t-foreach="docs" t-as="partner">
+    <t t-call="web.external_layout">
+        <div class="page">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h2>Customer Ageing Analysis</h2>
+                    <h4 t-esc="partner.name"/>
+                    <p>As of <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%B %d, %Y')"/>
+                    </p>
+                </div>
+            </div>
+
+            <t t-set="ageing_details" t-value="partner._get_detailed_ageing()"/>
+
+            <div class="row mt-4">
+                <div class="col-12">
+                    <table class="table table-bordered">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Invoice</th>
+                                <th>Date</th>
+                                <th>Due Date</th>
+                                <th class="text-right">Amount</th>
+                                <th class="text-center">Days Overdue</th>
+                                <th class="text-center">Bucket</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="ageing_details" t-as="detail">
+                                <tr>
+                                    <td>
+                                        <span t-esc="detail['move_name']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="detail['date']" t-options="{'widget': 'date'}"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="detail['date_maturity']" t-options="{'widget': 'date'}"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="detail['amount_residual']" t-options="{'widget': 'monetary', 'display_currency': partner.currency_id or company.currency_id}"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <span t-esc="detail['days_overdue']"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <span t-esc="detail['bucket']" t-att-class="'badge badge-danger' if detail['days_overdue'] > 0 else 'badge badge-success'"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </t>
+</t>
+</t>
+</template>
+
+<!-- Follow-up Letter Template -->
+<template id="report_followup_letter_template">
+<t t-call="web.html_container">
+<t t-foreach="docs" t-as="partner">
+    <t t-call="web.external_layout">
+        <div class="page">
+            <div class="row">
+                <div class="col-12">
+                    <p class="text-right">
+                        <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%B %d, %Y')"/>
+                    </p>
+
+                    <div class="mt-4">
+                        <strong t-esc="partner.name"/>
+                        <br/>
+                        <span t-esc="partner.street" t-if="partner.street"/>
+                        <br/>
+                        <span t-esc="partner.street2" t-if="partner.street2"/>
+                        <br/>
+                        <span t-esc="partner.city" t-if="partner.city"/>
+                        <span t-esc="partner.state_id.name" t-if="partner.state_id"/>
+                        <span t-esc="partner.zip" t-if="partner.zip"/>
+                        <br/>
+                        <span t-esc="partner.country_id.name" t-if="partner.country_id"/>
+                    </div>
+
+                    <div class="mt-4">
+                        <p>
+                            <strong>RE: Past Due Account - Immediate Attention Required</strong>
+                        </p>
+
+                        <p>Dear <span t-esc="partner.name"/>
+,</p>
+
+                        <p>Our records indicate that your account has an outstanding balance that is past due. 
+                                       We value our business relationship and want to work with you to resolve this matter promptly.</p>
+
+                        <t t-set="overdue_amount" t-value="partner._get_total_overdue()"/>
+                        <p>
+                            <strong>Amount Past Due: 
+                                <span t-esc="overdue_amount" t-options="{'widget': 'monetary', 'display_currency': partner.currency_id or company.currency_id}"/>
+                            </strong>
+                        </p>
+
+                        <p>Please remit payment immediately to avoid any interruption in service or additional collection activities. 
+                                       If you have already sent payment, please disregard this notice.</p>
+
+                        <p>If you are experiencing financial difficulties or have questions about your account, 
+                                       please contact us immediately at <span t-esc="company.phone" t-if="company.phone"/>
+ 
+                                       or <span t-esc="company.email" t-if="company.email"/>
+ to discuss payment arrangements.</p>
+
+                    <p>Thank you for your immediate attention to this matter.</p>
+
+                    <div class="mt-4">
+                        <p>Sincerely,</p>
+                        <p>
+                            <strong t-esc="company.name"/>
+                            <br/>
+                                           Accounts Receivable Department
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</t>
+</t>
+</t>
+</template>
+
+<!-- Batch Statement Template -->
+<template id="report_batch_statement_template">
+<t t-call="web.html_container">
+<t t-foreach="docs" t-as="wizard">
+<t t-foreach="wizard.partner_ids" t-as="partner">
+    <t t-call="partner_statement_followup.report_partner_statement_template">
+        <t t-set="docs" t-value="[partner]"/>
+    </t>
+</t>
+</t>
+</t>
+</template>
+</odoo>

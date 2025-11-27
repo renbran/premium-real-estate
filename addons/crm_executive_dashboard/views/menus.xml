@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- CRM Executive Dashboard Main Menu -->
+        <menuitem id="menu_crm_executive_dashboard_root"
+                  name="CRM Executive"
+                  sequence="10"
+                  groups="sales_team.group_sale_salesman"
+                  web_icon="crm_executive_dashboard,static/description/icon.png"/>
+
+        <!-- Main Dashboard Menu -->
+        <menuitem id="menu_crm_executive_dashboard_main"
+                  name="Executive Dashboard"
+                  parent="menu_crm_executive_dashboard_root"
+                  action="action_crm_executive_dashboard_main"
+                  sequence="10"
+                  groups="sales_team.group_sale_salesman"/>
+
+        <!-- Strategic Dashboard Menu -->
+        <menuitem id="menu_crm_strategic_dashboard_main"
+                  name="Strategic Dashboard"
+                  parent="menu_crm_executive_dashboard_root"
+                  action="action_crm_strategic_dashboard_view"
+                  sequence="15"
+                  groups="sales_team.group_sale_manager"/>
+
+        <!-- Dashboard Configuration Menu -->
+        <menuitem id="menu_crm_executive_dashboard_config"
+                  name="Dashboard Settings"
+                  parent="menu_crm_executive_dashboard_root"
+                  action="action_crm_executive_dashboard"
+                  sequence="20"
+                  groups="crm_executive_dashboard.group_crm_executive_dashboard_manager"/>
+
+        <!-- Strategic Dashboard Configuration -->
+        <menuitem id="menu_crm_strategic_dashboard_config"
+                  name="Strategic Settings"
+                  parent="menu_crm_executive_dashboard_root"
+                  action="action_crm_strategic_dashboard"
+                  sequence="25"
+                  groups="crm_executive_dashboard.group_crm_executive_dashboard_manager"/>
+
+        <!-- Reports Submenu -->
+        <menuitem id="menu_crm_executive_reports"
+                  name="Reports"
+                  parent="menu_crm_executive_dashboard_root"
+                  sequence="30"
+                  groups="sales_team.group_sale_salesman"/>
+
+        <!-- CRM Pipeline Report -->
+        <menuitem id="menu_crm_pipeline_report"
+                  name="Pipeline Analysis"
+                  parent="menu_crm_executive_reports"
+                  action="crm.crm_lead_action_pipeline"
+                  sequence="10"
+                  groups="sales_team.group_sale_salesman"/>
+
+        <!-- CRM Team Performance Report -->
+        <menuitem id="menu_crm_team_performance"
+                  name="Team Performance"
+                  parent="menu_crm_executive_reports"
+                  action="sales_team.crm_team_action_config"
+                  sequence="20"
+                  groups="sales_team.group_sale_manager"/>
+
+        <!-- Alternative access from CRM module -->
+        <menuitem id="menu_crm_executive_dashboard_in_crm"
+                  name="Executive Dashboard"
+                  parent="crm.crm_menu_report"
+                  action="action_crm_executive_dashboard_main"
+                  sequence="5"
+                  groups="sales_team.group_sale_salesman"/>
+
+    </data>
+</odoo>

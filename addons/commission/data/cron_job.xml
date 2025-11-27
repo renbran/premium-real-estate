@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Commission Configuration Parameters -->
+        <record id="commission_auto_process_on_confirm" model="ir.config_parameter">
+            <field name="key">commission_ax.auto_process_on_confirm</field>
+            <field name="value">false</field>
+        </record>
+
+        <record id="commission_auto_process_on_payment" model="ir.config_parameter">
+            <field name="key">commission_ax.auto_process_on_payment</field>
+            <field name="value">true</field>
+        </record>
+
+        <record id="commission_require_invoices" model="ir.config_parameter">
+            <field name="key">commission_ax.require_invoices_for_commissions</field>
+            <field name="value">true</field>
+        </record>
+
+        <record id="commission_expense_account_id" model="ir.config_parameter">
+            <field name="key">commission_ax.commission_expense_account_id</field>
+            <field name="value"></field>
+        </record>
+
+        <!-- Enhanced Commission Processing Cron Job -->
+        <record id="ir_cron_commission_processing_enhanced" model="ir.cron">
+            <field name="name">Commission Processing (Enhanced)</field>
+            <field name="model_id" ref="model_purchase_order"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_monitor_commission_payments()</field>
+            <field name="interval_number">4</field>
+            <field name="interval_type">hours</field>
+            <field name="numbercall">-1</field>
+            <field name="active">True</field>
+            <field name="user_id" ref="base.user_root"/>
+        </record>
+
+        <!-- Vendor Bill Auto-Creation Cron Job -->
+        <record id="ir_cron_vendor_bill_creation" model="ir.cron">
+            <field name="name">Auto Create Commission Vendor Bills</field>
+            <field name="model_id" ref="model_purchase_order"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_auto_create_vendor_bills()</field>
+            <field name="interval_number">6</field>
+            <field name="interval_type">hours</field>
+            <field name="numbercall">-1</field>
+            <field name="active">True</field>
+            <field name="user_id" ref="base.user_root"/>
+        </record>
+
+        <!-- Commission Validation Cron Job -->
+        <record id="ir_cron_commission_validation" model="ir.cron">
+            <field name="name">Commission Data Validation</field>
+            <field name="model_id" ref="model_sale_order"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_validate_commission_consistency()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="active">True</field>
+            <field name="user_id" ref="base.user_root"/>
+        </record>
+
+        <!-- Commission Reconciliation Cron Job -->
+        <record id="ir_cron_commission_reconciliation" model="ir.cron">
+            <field name="name">Commission Data Reconciliation</field>
+            <field name="model_id" ref="model_purchase_order"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_commission_reconciliation()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">weeks</field>
+            <field name="numbercall">-1</field>
+            <field name="active">True</field>
+            <field name="user_id" ref="base.user_root"/>
+        </record>
+
+        <!-- Commission Status Cleanup Cron Job -->
+        <record id="ir_cron_commission_cleanup" model="ir.cron">
+            <field name="name">Commission Status Cleanup</field>
+            <field name="model_id" ref="model_sale_order"/>
+            <field name="state">code</field>
+            <field name="code">
+# Clean up orphaned commission statuses
+orders = model.search([
+    ('commission_status', '!=', 'draft'),
+    ('commission_processed', '=', False)
+])
+for order in orders:
+    order.commission_status = 'draft'
+    order.message_post(body="Commission status reset due to inconsistency")
+            </field>
+            <field name="interval_number">2</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="active">True</field>
+            <field name="user_id" ref="base.user_root"/>
+        </record>
+
+    </data>
+
+    <!-- Regular data (can be updated) -->
+    <data>
+        
+        <!-- Commission Configuration Menu -->
+        <record id="action_commission_config" model="ir.actions.act_window">
+            <field name="name">Commission Configuration</field>
+            <field name="res_model">ir.config_parameter</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('key', 'like', 'commission_ax.%')]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Commission Configuration
+                </p>
+                <p>
+                    Configure commission automation settings and parameters.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_commission_config" 
+                  name="Commission Configuration" 
+                  parent="base.menu_administration" 
+                  action="action_commission_config" 
+                  sequence="100"
+                  groups="base.group_system"/>
+
+        <!-- Enhanced Purchase Order Form View -->
+        <record id="view_purchase_order_form_inherit_enhanced" model="ir.ui.view">
+            <field name="name">purchase.order.form.inherit.enhanced</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="commission_ax.view_purchase_order_form_inherit"/>
+            <field name="arch" type="xml">
+                
+                <!-- Add vendor bill creation button -->
+                <xpath expr="//button[@name='action_force_post']" position="after">
+                    <button 
+                        name="action_create_vendor_bill" 
+                        string="Create Vendor Bill" 
+                        type="object" 
+                        class="btn-primary" 
+                        invisible="not origin_so_id or vendor_bill_count > 0 or not payment_received"
+                        help="Create vendor bill for commission payment"
+                    />
+                </xpath>
+
+                <!-- Add smart button for vendor bills -->
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button type="object" 
+                            name="action_view_vendor_bills" 
+                            class="oe_stat_button" 
+                            icon="fa-pencil-square-o"
+                            invisible="not origin_so_id">
+                        <field name="vendor_bill_count" widget="statinfo" string="Vendor Bills"/>
+                    </button>
+                </xpath>
+
+                <!-- Add payment monitoring fields -->
+                <xpath expr="//field[@name='commission_posted']" position="after">
+                    <field name="payment_received" readonly="1" string="Customer Paid"/>
+                    <field name="payment_amount" readonly="1" string="Payment Amount"/>
+                    <field name="auto_create_bill" string="Auto Create Bill"/>
+                </xpath>
+
+            </field>
+        </record>
+
+        <!-- Enhanced Sale Order Form View -->
+        <record id="view_order_form_inherit_commission_monitoring" model="ir.ui.view">
+            <field name="name">sale.order.form.inherit.commission.monitoring</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="commission_ax.view_order_form_inherit_commission_validation"/>
+            <field name="arch" type="xml">
+                
+                <!-- Add commission monitoring section -->
+                <xpath expr="//group[@name='commission_details_group']" position="inside">
+                    <group string="Commission Monitoring" col="4">
+                        <field name="commission_last_modified" readonly="1"/>
+                        <field name="commission_modified_by" readonly="1"/>
+                        <field name="purchase_order_count" readonly="1"/>
+                        <field name="commission_processed" readonly="1"/>
+                    </group>
+                </xpath>
+
+            </field>
+        </record>
+
+        <!-- Commission Activity Types for better tracking -->
+        <record id="mail_activity_type_commission_review" model="mail.activity.type">
+            <field name="name">Commission Review Required</field>
+            <field name="summary">Review commission calculation</field>
+            <field name="icon">fa-calculator</field>
+            <field name="category">default</field>
+            <field name="delay_count">1</field>
+            <field name="delay_unit">days</field>
+        </record>
+
+        <record id="mail_activity_type_commission_payment" model="mail.activity.type">
+            <field name="name">Commission Payment Due</field>
+            <field name="summary">Process commission payment</field>
+            <field name="icon">fa-money</field>
+            <field name="category">default</field>
+            <field name="delay_count">3</field>
+            <field name="delay_unit">days</field>
+        </record>
+
+        <!-- Server Actions for Manual Triggers -->
+        <record id="action_server_process_all_pending_commissions" model="ir.actions.server">
+            <field name="name">Process All Pending Commissions</field>
+            <field name="model_id" ref="model_sale_order"/>
+            <field name="binding_model_id" ref="model_sale_order"/>
+            <field name="state">code</field>
+            <field name="code">
+for record in records:
+    if not record.commission_processed and record.state in ['sale', 'done']:
+        try:
+            record._create_commission_purchase_orders()
+        except Exception as e:
+            raise UserError(f"Failed to process commissions for {record.name}: {str(e)}")
+            </field>
+        </record>
+
+        <record id="action_server_validate_commission_setup" model="ir.actions.server">
+            <field name="name">Validate Commission Setup</field>
+            <field name="model_id" ref="model_sale_order"/>
+            <field name="binding_model_id" ref="model_sale_order"/>
+            <field name="state">code</field>
+            <field name="code">
+for record in records:
+    record.action_validate_commission_setup()
+            </field>
+        </record>
+
+        <!-- Security Rules for Commission Data -->
+        <record id="commission_purchase_order_rule" model="ir.rule">
+            <field name="name">Commission Purchase Orders: Own Company</field>
+            <field name="model_id" ref="model_purchase_order"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record id="commission_sale_order_rule" model="ir.rule">
+            <field name="name">Commission Sale Orders: Own Company</field>
+            <field name="model_id" ref="model_sale_order"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+    </data>
+</odoo>

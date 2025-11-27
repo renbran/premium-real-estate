@@ -1,0 +1,559 @@
+/* Frontend Enhancement Module - Public/Portal CSS */
+
+/* OSUS Properties Portal Branding */
+:root {
+    --osus-portal-primary: #1f4788;
+    --osus-portal-secondary: #f8f9fa;
+    --osus-portal-accent: #007bff;
+    --osus-portal-success: #28a745;
+    --osus-portal-warning: #ffc107;
+    --osus-portal-danger: #dc3545;
+    --osus-portal-light: #f8f9fa;
+    --osus-portal-dark: #343a40;
+    --osus-portal-gradient: linear-gradient(135deg, #1f4788 0%, #2d5aa0 100%);
+}
+
+/* Portal Layout Enhancements */
+.o_portal_wrap {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Portal Header Styling */
+.o_portal_navbar {
+    background: var(--osus-portal-gradient);
+    box-shadow: 0 2px 12px rgba(31, 71, 136, 0.2);
+    border: none;
+}
+
+.o_portal_navbar .navbar-brand {
+    font-weight: 700;
+    color: white !important;
+    font-size: 1.25rem;
+}
+
+.o_portal_navbar .nav-link {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border-radius: 4px;
+    margin: 0 2px;
+}
+
+.o_portal_navbar .nav-link:hover {
+    color: white !important;
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: translateY(-1px);
+}
+
+/* Portal Card Styling */
+.portal-card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.portal-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.portal-card .card-header {
+    background: var(--osus-portal-gradient);
+    color: white;
+    border: none;
+    padding: 20px;
+    font-weight: 600;
+}
+
+.portal-card .card-header h4,
+.portal-card .card-header h5 {
+    margin: 0;
+    font-weight: 600;
+}
+
+.portal-card .card-body {
+    padding: 25px;
+}
+
+/* File Upload Portal Styling */
+.file-upload-form {
+    background-color: white;
+    border-radius: 8px;
+}
+
+.file-upload-area {
+    border: 2px dashed #dee2e6;
+    border-radius: 8px;
+    padding: 40px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: #fafbfc;
+    min-height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.file-upload-area:hover {
+    border-color: var(--osus-portal-primary);
+    background-color: rgba(31, 71, 136, 0.02);
+    transform: scale(1.01);
+}
+
+.file-upload-area.dragging {
+    border-color: var(--osus-portal-accent);
+    background-color: rgba(0, 123, 255, 0.05);
+    transform: scale(1.02);
+    box-shadow: 0 0 20px rgba(0, 123, 255, 0.2);
+}
+
+.upload-placeholder {
+    width: 100%;
+}
+
+.upload-progress {
+    width: 100%;
+}
+
+.upload-progress .progress {
+    height: 25px;
+    border-radius: 12px;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.upload-progress .progress-bar {
+    background: linear-gradient(45deg, var(--osus-portal-primary), var(--osus-portal-accent));
+    border-radius: 12px;
+    transition: width 0.4s ease;
+}
+
+/* File List Table Styling */
+.table-enhanced {
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+}
+
+.table-enhanced thead th {
+    background: var(--osus-portal-gradient);
+    color: white;
+    border: none;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.85rem;
+    padding: 15px 12px;
+}
+
+.table-enhanced tbody tr {
+    transition: all 0.2s ease;
+}
+
+.table-enhanced tbody tr:hover {
+    background-color: rgba(31, 71, 136, 0.03);
+    transform: scale(1.01);
+}
+
+.table-enhanced tbody td {
+    border-color: #f0f0f0;
+    padding: 12px;
+    vertical-align: middle;
+}
+
+/* File Icons */
+.file-icon {
+    font-size: 1.5rem;
+    margin-right: 8px;
+    width: 24px;
+    text-align: center;
+}
+
+.file-icon.pdf {
+    color: #dc3545;
+}
+.file-icon.word {
+    color: #0078d4;
+}
+.file-icon.excel {
+    color: #107c41;
+}
+.file-icon.powerpoint {
+    color: #d04423;
+}
+.file-icon.image {
+    color: #6f42c1;
+}
+.file-icon.archive {
+    color: #fd7e14;
+}
+.file-icon.text {
+    color: #6c757d;
+}
+.file-icon.video {
+    color: #e83e8c;
+}
+.file-icon.audio {
+    color: #20c997;
+}
+
+/* Button Enhancements */
+.btn-portal-primary {
+    background: var(--osus-portal-gradient);
+    border: none;
+    color: white;
+    font-weight: 500;
+    padding: 10px 20px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-portal-primary:hover {
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(31, 71, 136, 0.3);
+    text-decoration: none;
+}
+
+.btn-portal-secondary {
+    background-color: var(--osus-portal-secondary);
+    border: 1px solid #dee2e6;
+    color: var(--osus-portal-dark);
+    font-weight: 500;
+    padding: 10px 20px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-portal-secondary:hover {
+    background-color: #e2e6ea;
+    border-color: #dae0e5;
+    color: var(--osus-portal-dark);
+    transform: translateY(-1px);
+    text-decoration: none;
+}
+
+.btn-sm-portal {
+    padding: 6px 12px;
+    font-size: 0.875rem;
+    border-radius: 4px;
+}
+
+/* Alert Enhancements */
+.alert-enhanced {
+    border: none;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.alert-enhanced.alert-info {
+    background: linear-gradient(135deg, rgba(31, 71, 136, 0.1), rgba(31, 71, 136, 0.05));
+    border-left: 4px solid var(--osus-portal-primary);
+    color: var(--osus-portal-primary);
+}
+
+.alert-enhanced.alert-success {
+    background: linear-gradient(135deg, rgba(40, 167, 69, 0.1), rgba(40, 167, 69, 0.05));
+    border-left: 4px solid var(--osus-portal-success);
+    color: var(--osus-portal-success);
+}
+
+.alert-enhanced.alert-warning {
+    background: linear-gradient(135deg, rgba(255, 193, 7, 0.1), rgba(255, 193, 7, 0.05));
+    border-left: 4px solid var(--osus-portal-warning);
+    color: #856404;
+}
+
+.alert-enhanced.alert-danger {
+    background: linear-gradient(135deg, rgba(220, 53, 69, 0.1), rgba(220, 53, 69, 0.05));
+    border-left: 4px solid var(--osus-portal-danger);
+    color: var(--osus-portal-danger);
+}
+
+.alert-enhanced .alert-heading {
+    font-weight: 600;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Badge Enhancements */
+.badge-enhanced {
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-weight: 500;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.badge-enhanced.badge-success {
+    background-color: var(--osus-portal-success);
+    color: white;
+}
+
+.badge-enhanced.badge-warning {
+    background-color: var(--osus-portal-warning);
+    color: #212529;
+}
+
+.badge-enhanced.badge-danger {
+    background-color: var(--osus-portal-danger);
+    color: white;
+}
+
+.badge-enhanced.badge-info {
+    background-color: var(--osus-portal-accent);
+    color: white;
+}
+
+.badge-enhanced.badge-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+/* Reference Information Cards */
+.reference-info-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(248, 249, 250, 0.9));
+    border: 1px solid rgba(31, 71, 136, 0.1);
+    border-radius: 8px;
+    padding: 20px;
+    margin: 15px 0;
+    box-shadow: 0 2px 8px rgba(31, 71, 136, 0.05);
+}
+
+.reference-info-card.order-reference {
+    border-left: 4px solid var(--osus-portal-primary);
+}
+
+.reference-info-card.invoice-reference {
+    border-left: 4px solid var(--osus-portal-accent);
+}
+
+.reference-info-card .card-title {
+    color: var(--osus-portal-primary);
+    font-weight: 600;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.reference-value {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--osus-portal-primary);
+    margin: 5px 0;
+}
+
+.reference-meta {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-top: 5px;
+}
+
+/* Empty State Styling */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.empty-state-icon {
+    font-size: 4rem;
+    color: #dee2e6;
+    margin-bottom: 20px;
+}
+
+.empty-state h5 {
+    color: #6c757d;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.empty-state p {
+    color: #6c757d;
+    margin-bottom: 25px;
+}
+
+/* Form Enhancements */
+.form-enhanced .form-group {
+    margin-bottom: 20px;
+}
+
+.form-enhanced .form-label {
+    font-weight: 600;
+    color: var(--osus-portal-dark);
+    margin-bottom: 8px;
+    display: block;
+}
+
+.form-enhanced .form-control {
+    border-radius: 6px;
+    border: 1px solid #dee2e6;
+    padding: 10px 15px;
+    transition: all 0.2s ease;
+    font-size: 0.95rem;
+}
+
+.form-enhanced .form-control:focus {
+    border-color: var(--osus-portal-primary);
+    box-shadow: 0 0 0 0.2rem rgba(31, 71, 136, 0.25);
+}
+
+.form-enhanced .form-control::placeholder {
+    color: #adb5bd;
+    font-style: italic;
+}
+
+/* Loading States */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .portal-card .card-body {
+        padding: 15px;
+    }
+
+    .file-upload-area {
+        padding: 30px 15px;
+        min-height: 140px;
+    }
+
+    .table-enhanced {
+        font-size: 0.9rem;
+    }
+
+    .btn-portal-primary,
+    .btn-portal-secondary {
+        padding: 8px 15px;
+        font-size: 0.9rem;
+    }
+
+    .reference-info-card {
+        padding: 15px;
+        margin: 10px 0;
+    }
+
+    .empty-state {
+        padding: 40px 15px;
+    }
+
+    .empty-state-icon {
+        font-size: 3rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .portal-card .card-header {
+        padding: 15px;
+    }
+
+    .table-enhanced thead th {
+        padding: 10px 8px;
+        font-size: 0.8rem;
+    }
+
+    .table-enhanced tbody td {
+        padding: 8px;
+    }
+
+    .btn-portal-primary,
+    .btn-portal-secondary {
+        width: 100%;
+        justify-content: center;
+        margin-bottom: 10px;
+    }
+
+    .reference-info-card .row > div {
+        margin-bottom: 15px;
+    }
+}
+
+/* Accessibility Enhancements */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.focus-visible:focus {
+    outline: 2px solid var(--osus-portal-accent);
+    outline-offset: 2px;
+}
+
+/* Print Styles */
+@media print {
+    .o_portal_navbar,
+    .btn,
+    .file-upload-area,
+    .empty-state {
+        display: none !important;
+    }
+
+    .portal-card {
+        box-shadow: none;
+        border: 1px solid #000;
+    }
+
+    .portal-card .card-header {
+        background: #f8f9fa !important;
+        color: #000 !important;
+    }
+
+    .badge-enhanced {
+        color: #000 !important;
+        background-color: transparent !important;
+        border: 1px solid #000 !important;
+    }
+}

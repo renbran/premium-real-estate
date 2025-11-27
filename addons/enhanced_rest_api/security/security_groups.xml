@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        
+        <!-- Enhanced API Manager Group -->
+        <record model="res.groups" id="group_enhanced_api_manager">
+            <field name="name">Enhanced API Manager</field>
+            <field name="category_id" ref="base.module_category_tools"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="comment">Users who can configure and manage enhanced REST API endpoints</field>
+        </record>
+        
+        <!-- Enhanced API User Group -->
+        <record model="res.groups" id="group_enhanced_api_user">
+            <field name="name">Enhanced API User</field>
+            <field name="category_id" ref="base.module_category_tools"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="comment">Users who can access enhanced REST API endpoints</field>
+        </record>
+        
+        <!-- Enhanced API Admin Group -->
+        <record model="res.groups" id="group_enhanced_api_admin">
+            <field name="name">Enhanced API Administrator</field>
+            <field name="category_id" ref="base.module_category_administration"/>
+            <field name="implied_ids" eval="[(4, ref('group_enhanced_api_manager'))]"/>
+            <field name="comment">Administrators who have full access to enhanced REST API system</field>
+        </record>
+
+    </data>
+</odoo>

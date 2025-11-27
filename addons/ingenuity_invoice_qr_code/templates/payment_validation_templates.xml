@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Payment Validation Page Template -->
+    <template id="payment_validation_page" name="Payment Validation">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure oe_empty">
+                <div class="container mt-5">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-8 col-md-10">
+                            <div class="card shadow-lg">
+                                <div class="card-header bg-success text-white text-center">
+                                    <h2 class="mb-0">
+                                        <i class="fa fa-check-circle mr-2"></i>
+                                        Payment Validation
+                                    </h2>
+                                </div>
+                                <div class="card-body p-4">
+                                    <!-- Validation Success Banner -->
+                                    <div class="alert alert-success mb-4" role="alert">
+                                        <h4 class="alert-heading">
+                                            <i class="fa fa-shield-alt mr-2"></i>
+                                            Payment Verified Successfully!
+                                        </h4>
+                                        <p class="mb-0">This payment has been confirmed and validated.</p>
+                                    </div>
+
+                                    <!-- Payment Details -->
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h5 class="text-primary mb-3">
+                                                <i class="fa fa-receipt mr-2"></i>
+                                                Payment Details
+                                            </h5>
+                                            <table class="table table-borderless">
+                                                <tr>
+                                                    <td><strong>Reference:</strong></td>
+                                                    <td><span t-field="payment.name" class="badge badge-primary"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Type:</strong></td>
+                                                    <td>
+                                                        <span t-if="is_receipt" class="badge badge-success">Customer Receipt</span>
+                                                        <span t-if="not is_receipt" class="badge badge-info">Vendor Payment</span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Amount:</strong></td>
+                                                    <td class="h5 text-success">
+                                                        <span t-field="payment.amount" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Date:</strong></td>
+                                                    <td><span t-field="payment.date"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Status:</strong></td>
+                                                    <td><span class="badge badge-success" t-esc="payment_status"/></td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        
+                                        <div class="col-md-6">
+                                            <h5 class="text-primary mb-3">
+                                                <i class="fa fa-building mr-2"></i>
+                                                Company &amp; Partner
+                                            </h5>
+                                            <table class="table table-borderless">
+                                                <tr>
+                                                    <td><strong>Company:</strong></td>
+                                                    <td><span t-field="company.name"/></td>
+                                                </tr>
+                                                <tr t-if="is_receipt">
+                                                    <td><strong>Received From:</strong></td>
+                                                    <td><span t-field="partner.name"/></td>
+                                                </tr>
+                                                <tr t-if="not is_receipt">
+                                                    <td><strong>Paid To:</strong></td>
+                                                    <td><span t-field="partner.name"/></td>
+                                                </tr>
+                                                <tr t-if="partner.email">
+                                                    <td><strong>Email:</strong></td>
+                                                    <td><span t-field="partner.email"/></td>
+                                                </tr>
+                                                <tr t-if="partner.phone">
+                                                    <td><strong>Phone:</strong></td>
+                                                    <td><span t-field="partner.phone"/></td>
+                                                </tr>
+                                                <tr t-if="payment.ref">
+                                                    <td><strong>Reference:</strong></td>
+                                                    <td><span t-field="payment.ref"/></td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                    <!-- Payment Method -->
+                                    <div class="row mt-4">
+                                        <div class="col-12">
+                                            <h5 class="text-primary mb-3">
+                                                <i class="fa fa-credit-card mr-2"></i>
+                                                Payment Method
+                                            </h5>
+                                            <div class="alert alert-light">
+                                                <strong><span t-field="payment.journal_id.name"/></strong>
+                                                <span t-if="payment.journal_id.bank_id"> - <span t-field="payment.journal_id.bank_id.name"/></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Related Documents -->
+                                    <div class="row mt-4" t-if="related_documents">
+                                        <div class="col-12">
+                                            <h5 class="text-primary mb-3">
+                                                <i class="fa fa-file-alt mr-2"></i>
+                                                Related Documents
+                                            </h5>
+                                            <div class="table-responsive">
+                                                <table class="table table-sm table-striped">
+                                                    <thead class="thead-light">
+                                                        <tr>
+                                                            <th>Document</th>
+                                                            <th>Reference</th>
+                                                            <th>Date</th>
+                                                            <th>Amount</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr t-foreach="related_documents" t-as="doc">
+                                                            <td><span t-esc="doc.get('type', 'Document')"/></td>
+                                                            <td><span t-esc="doc.get('name', 'N/A')"/></td>
+                                                            <td><span t-esc="doc.get('date', 'N/A')"/></td>
+                                                            <td><span t-esc="doc.get('amount', 'N/A')"/></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Validation Info -->
+                                    <div class="row mt-4">
+                                        <div class="col-12">
+                                            <div class="card bg-light">
+                                                <div class="card-body">
+                                                    <h6 class="card-title text-muted">
+                                                        <i class="fa fa-info-circle mr-2"></i>
+                                                        Validation Information
+                                                    </h6>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <small class="text-muted">
+                                                                <strong>Validation Token:</strong><br/>
+                                                                <code t-esc="validation_token"/>
+                                                            </small>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <small class="text-muted">
+                                                                <strong>Verified On:</strong><br/>
+                                                                <span t-esc="context_today()"/>
+                                                            </small>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mt-2">
+                                                        <div class="col-12">
+                                                            <small class="text-muted">
+                                                                <strong>Validation URL:</strong><br/>
+                                                                <code t-esc="validation_url"/>
+                                                            </small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Action Buttons -->
+                                    <div class="row mt-4">
+                                        <div class="col-12 text-center">
+                                            <a href="#" onclick="window.print(); return false;" class="btn btn-outline-primary mr-2">
+                                                <i class="fa fa-print mr-1"></i>
+                                                Print Validation
+                                            </a>
+                                            <a t-att-href="'/payment/validate/info'" class="btn btn-outline-info">
+                                                <i class="fa fa-question-circle mr-1"></i>
+                                                About Validation
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Footer -->
+                                <div class="card-footer bg-light text-center">
+                                    <small class="text-muted">
+                                        <i class="fa fa-lock mr-1"></i>
+                                        This payment validation is cryptographically secured and tamper-proof.
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Payment Validation Error Page -->
+    <template id="payment_validation_error" name="Payment Validation Error">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure oe_empty">
+                <div class="container mt-5">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-6 col-md-8">
+                            <div class="card shadow">
+                                <div class="card-header bg-danger text-white text-center">
+                                    <h2 class="mb-0">
+                                        <i class="fa fa-exclamation-triangle mr-2"></i>
+                                        Validation Error
+                                    </h2>
+                                </div>
+                                <div class="card-body p-4 text-center">
+                                    <div class="alert alert-danger" role="alert">
+                                        <h4 class="alert-heading" t-esc="error_title"/>
+                                        <p class="mb-0" t-esc="error_message"/>
+                                    </div>
+                                    
+                                    <div class="mt-4">
+                                        <p class="text-muted">
+                                            <strong>Token:</strong> <code t-esc="token"/>
+                                        </p>
+                                    </div>
+                                    
+                                    <div class="mt-4">
+                                        <a href="/" class="btn btn-primary">
+                                            <i class="fa fa-home mr-1"></i>
+                                            Return to Home
+                                        </a>
+                                        <a t-att-href="'/payment/validate/info'" class="btn btn-outline-info ml-2">
+                                            <i class="fa fa-question-circle mr-1"></i>
+                                            Learn More
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Payment Validation Info Page -->
+    <template id="payment_validation_info" name="Payment Validation Information">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure oe_empty">
+                <div class="container mt-5">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-10">
+                            <div class="card shadow">
+                                <div class="card-header bg-info text-white text-center">
+                                    <h2 class="mb-0">
+                                        <i class="fa fa-shield-alt mr-2"></i>
+                                        Payment Validation System
+                                    </h2>
+                                </div>
+                                <div class="card-body p-4">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h4 class="text-primary">
+                                                <i class="fa fa-qrcode mr-2"></i>
+                                                How It Works
+                                            </h4>
+                                            <ul class="list-unstyled">
+                                                <li class="mb-2">
+                                                    <i class="fa fa-check-circle text-success mr-2"></i>
+                                                    Each payment receipt contains a unique QR code
+                                                </li>
+                                                <li class="mb-2">
+                                                    <i class="fa fa-check-circle text-success mr-2"></i>
+                                                    QR codes link to secure validation pages
+                                                </li>
+                                                <li class="mb-2">
+                                                    <i class="fa fa-check-circle text-success mr-2"></i>
+                                                    Cryptographic tokens prevent tampering
+                                                </li>
+                                                <li class="mb-2">
+                                                    <i class="fa fa-check-circle text-success mr-2"></i>
+                                                    Real-time payment status verification
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h4 class="text-primary">
+                                                <i class="fa fa-lock mr-2"></i>
+                                                Security Features
+                                            </h4>
+                                            <ul class="list-unstyled">
+                                                <li class="mb-2">
+                                                    <i class="fa fa-shield-alt text-warning mr-2"></i>
+                                                    SHA-256 encrypted validation tokens
+                                                </li>
+                                                <li class="mb-2">
+                                                    <i class="fa fa-shield-alt text-warning mr-2"></i>
+                                                    Time-limited validation links
+                                                </li>
+                                                <li class="mb-2">
+                                                    <i class="fa fa-shield-alt text-warning mr-2"></i>
+                                                    Tamper-proof payment records
+                                                </li>
+                                                <li class="mb-2">
+                                                    <i class="fa fa-shield-alt text-warning mr-2"></i>
+                                                    Audit trail for all validations
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    
+                                    <hr/>
+                                    
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <h4 class="text-primary">
+                                                <i class="fa fa-mobile-alt mr-2"></i>
+                                                How to Validate a Payment
+                                            </h4>
+                                            <div class="row">
+                                                <div class="col-md-4 text-center">
+                                                    <div class="mb-3">
+                                                        <i class="fa fa-camera fa-3x text-primary"></i>
+                                                    </div>
+                                                    <h6>1. Scan QR Code</h6>
+                                                    <p class="text-muted">Use your smartphone camera to scan the QR code on the payment receipt.</p>
+                                                </div>
+                                                <div class="col-md-4 text-center">
+                                                    <div class="mb-3">
+                                                        <i class="fa fa-globe fa-3x text-success"></i>
+                                                    </div>
+                                                    <h6>2. Visit Validation Page</h6>
+                                                    <p class="text-muted">The QR code will redirect you to this secure validation page.</p>
+                                                </div>
+                                                <div class="col-md-4 text-center">
+                                                    <div class="mb-3">
+                                                        <i class="fa fa-check-circle fa-3x text-info"></i>
+                                                    </div>
+                                                    <h6>3. Verify Payment</h6>
+                                                    <p class="text-muted">View complete payment details and confirmation status.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="alert alert-info mt-4">
+                                        <h5 class="alert-heading">
+                                            <i class="fa fa-lightbulb mr-2"></i>
+                                            Need Help?
+                                        </h5>
+                                        <p class="mb-0">
+                                            If you have questions about payment validation or encounter any issues, 
+                                            please contact our support team. We're here to help ensure your payment 
+                                            verification process is smooth and secure.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

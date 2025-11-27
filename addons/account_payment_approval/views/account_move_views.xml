@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherit form view of account.move model for vendor bills -->
+    <record id="view_move_form_inherit_payment_approval" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.payment.approval</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <!-- Modify cancel button visibility - show for bills/invoices that can be cancelled -->
+            <xpath expr="//header//button[@name='button_cancel']" position="attributes">
+                <attribute name="invisible">state in ['cancel'] or (move_type in ['in_invoice', 'in_refund'] and state not in ['draft', 'waiting_approval', 'approved', 'posted']) or (move_type in ['out_invoice', 'out_refund'] and state not in ['draft', 'posted'])</attribute>
+            </xpath>
+            
+            <!-- Ensure draft button is visible - show for bills/invoices that can be reset to draft -->
+            <xpath expr="//header//button[@name='button_draft']" position="attributes">
+                <attribute name="invisible">state in ['draft'] or (move_type in ['in_invoice', 'in_refund'] and state not in ['cancel', 'rejected', 'posted']) or (move_type in ['out_invoice', 'out_refund'] and state not in ['cancel', 'posted'])</attribute>
+            </xpath>
+            
+            <!-- Add approval-specific buttons for vendor bills with improved visibility -->
+            <xpath expr="//header//button[@name='button_cancel']" position="before">
+                <!-- Submit for Review button - only for draft vendor bills -->
+                <button name="action_submit_review" string="Submit for Review" type="object"
+                        class="oe_highlight" 
+                        invisible="state != 'draft' or move_type not in ['in_invoice', 'in_refund']"/>
+                
+                <!-- Approve button - only for bills waiting approval -->
+                <button name="approve_transfer" string="Approve" type="object"
+                        class="oe_highlight"
+                        invisible="state != 'waiting_approval' or move_type not in ['in_invoice', 'in_refund']"/>
+                
+                <!-- Reject button - only for bills waiting approval -->
+                <button name="reject_transfer" string="Reject" type="object"
+                        class="btn-secondary" 
+                        invisible="state != 'waiting_approval' or move_type not in ['in_invoice', 'in_refund']"/>
+                
+                <!-- Post button - only for approved bills -->
+                <button name="action_post" string="Post" type="object"
+                        class="oe_highlight"
+                        invisible="state != 'approved' or move_type not in ['in_invoice', 'in_refund']"/>
+            </xpath>
+            
+            <!-- Add helpful information about journal restrictions -->
+            <xpath expr="//form//field[@name='journal_id']" position="after">
+                <div class="alert alert-warning" role="alert" 
+                     invisible="not journal_id or not journal_id.restrict_mode_hash_table or state != 'posted'"
+                     style="margin-top: 8px;">
+                    <i class="fa fa-warning"/> <strong>Strict Mode Journal:</strong> 
+                    This entry is from a journal with strict mode enabled. 
+                    Posted entries cannot be modified directly. 
+                    <br/>Use <strong>Credit Note</strong> to reverse this entry if changes are needed.
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit tree view of account.move model to show approval states -->
+    <record id="view_move_tree_inherit_payment_approval" model="ir.ui.view">
+        <field name="name">account.move.tree.inherit.payment.approval</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_tree"/>
+        <field name="arch" type="xml">
+            <!-- Modify state field to show new approval states -->
+            <xpath expr="//field[@name='state']" position="attributes">
+                <attribute name="widget">badge</attribute>
+                <attribute name="decoration-info">state in ('waiting_approval', 'submit_review')</attribute>
+                <attribute name="decoration-success">state == 'approved'</attribute>
+                <attribute name="decoration-danger">state == 'rejected'</attribute>
+            </xpath>
+            
+            <!-- Add journal restriction info in tree view -->
+            <xpath expr="//tree//field[@name='journal_id']" position="after">
+                <field name="journal_restrict_mode" string="🔒" 
+                       invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Add search filters for vendor bills with approval states -->
+    <record id="view_account_move_filter_inherit_payment_approval" model="ir.ui.view">
+        <field name="name">account.move.search.inherit.payment.approval</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <!-- Add filters for approval states on vendor bills -->
+                <separator/>
+                <filter string="Waiting For Approval" name="state_waiting_approval"
+                        domain="[('state', '=', 'waiting_approval'), ('move_type', 'in', ['in_invoice', 'in_refund'])]"/>
+                <filter string="Approved" name="state_approved"
+                        domain="[('state', '=', 'approved'), ('move_type', 'in', ['in_invoice', 'in_refund'])]"/>
+                <filter string="Rejected" name="state_rejected"
+                        domain="[('state', '=', 'rejected'), ('move_type', 'in', ['in_invoice', 'in_refund'])]"/>
+                
+                <!-- Group by state for bills -->
+                <group expand="0" string="Group By">
+                    <filter string="Approval State" name="group_by_state" 
+                            context="{'group_by': 'state'}"
+                            domain="[('move_type', 'in', ['in_invoice', 'in_refund'])]"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

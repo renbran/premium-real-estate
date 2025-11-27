@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- CRM Strategic Dashboard Form View -->
+        <record id="view_crm_strategic_dashboard_form" model="ir.ui.view">
+            <field name="name">crm.strategic.dashboard.form</field>
+            <field name="model">crm.strategic.dashboard</field>
+            <field name="arch" type="xml">
+                <form string="CRM Strategic Dashboard">
+                    <header>
+                        <button name="create_default_dashboard" type="object" 
+                                string="Reset to Default" class="btn-secondary"
+                                confirm="This will reset the dashboard to default settings. Continue?"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Strategic Dashboard Name"/>
+                            </h1>
+                        </div>
+                        
+                        <group>
+                            <group name="basic_info">
+                                <field name="active"/>
+                                <field name="user_id"/>
+                                <field name="currency_id"/>
+                            </group>
+                            <group name="date_range">
+                                <field name="date_from"/>
+                                <field name="date_to"/>
+                            </group>
+                        </group>
+                        
+                        <group string="Filters">
+                            <field name="team_ids" widget="many2many_tags"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- CRM Strategic Dashboard Tree View -->
+        <record id="view_crm_strategic_dashboard_tree" model="ir.ui.view">
+            <field name="name">crm.strategic.dashboard.tree</field>
+            <field name="model">crm.strategic.dashboard</field>
+            <field name="arch" type="xml">
+                <tree string="CRM Strategic Dashboards">
+                    <field name="name"/>
+                    <field name="user_id"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                    <field name="team_ids" widget="many2many_tags"/>
+                    <field name="active"/>
+                    <field name="create_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- CRM Strategic Dashboard Action -->
+        <record id="action_crm_strategic_dashboard" model="ir.actions.act_window">
+            <field name="name">Strategic Dashboard Configurations</field>
+            <field name="res_model">crm.strategic.dashboard</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first strategic dashboard!
+                </p>
+                <p>
+                    Strategic dashboards provide comprehensive business intelligence
+                    and decision-making insights for executives and managers.
+                </p>
+            </field>
+        </record>
+
+        <!-- Strategic Dashboard Client Action -->
+        <record id="action_crm_strategic_dashboard_view" model="ir.actions.client">
+            <field name="name">Strategic Dashboard</field>
+            <field name="tag">crm_strategic_dashboard</field>
+        </record>
+
+    </data>
+</odoo>

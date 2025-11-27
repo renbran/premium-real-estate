@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+
+    <!-- Enhanced Sales Dashboard Template -->
+    <t t-name="oe_sale_dashboard_17.enhanced_sales_dashboard" owl="1">
+        <div class="o_sales_dashboard">
+            <!-- Header Section -->
+            <div class="dashboard_header bg-white border-bottom p-3 mb-4">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <h2 class="text-osus-burgundy mb-1">Enhanced Sales Dashboard</h2>
+                        <p class="text-muted mb-0">Professional sales analytics with OSUS branding</p>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row g-2">
+                            <div class="col-md-4">
+                                <label class="form-label">Start Date</label>
+                                <input type="date" class="form-control" t-model="state.filters.start_date" t-on-change="(ev) => this.onFilterChange('start_date', ev.target.value)"/>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">End Date</label>
+                                <input type="date" class="form-control" t-model="state.filters.end_date" t-on-change="(ev) => this.onFilterChange('end_date', ev.target.value)"/>
+                            </div>
+                            <div class="col-md-4 d-flex align-items-end">
+                                <button class="btn btn-osus-primary me-2" t-on-click="onApplyFilters">
+                                    <i class="fa fa-refresh"/>
+ Apply Filters
+                                </button>
+                                <button class="btn btn-outline-secondary" t-on-click="onRefreshDashboard">
+                                    <i class="fa fa-sync"/>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loading State -->
+            <div t-if="state.isLoading" class="text-center p-5">
+                <div class="spinner-border text-osus-burgundy" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-3 text-muted">Loading dashboard data...</p>
+            </div>
+
+            <!-- Dashboard Content -->
+            <div t-else="" class="dashboard_content">
+
+                <!-- KPI Cards Section -->
+                <div class="row mb-4">
+                    <div class="col-md-3 mb-3">
+                        <div class="card osus-kpi-card border-0 shadow-sm">
+                            <div class="card-body text-center">
+                                <div class="kpi-icon mb-2">
+                                    <i class="fa fa-file-text-o fa-2x text-osus-burgundy"/>
+                                </div>
+                                <h3 class="fw-bold text-osus-burgundy mb-1" t-esc="formatNumber(state.data.performance.total_quotations)"/>
+                                <p class="text-muted mb-0">Total Quotations</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <div class="card osus-kpi-card border-0 shadow-sm">
+                            <div class="card-body text-center">
+                                <div class="kpi-icon mb-2">
+                                    <i class="fa fa-shopping-cart fa-2x text-osus-gold"/>
+                                </div>
+                                <h3 class="fw-bold text-osus-gold mb-1" t-esc="formatNumber(state.data.performance.total_sales)"/>
+                                <p class="text-muted mb-0">Sales Orders</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <div class="card osus-kpi-card border-0 shadow-sm">
+                            <div class="card-body text-center">
+                                <div class="kpi-icon mb-2">
+                                    <i class="fa fa-check-circle fa-2x text-success"/>
+                                </div>
+                                <h3 class="fw-bold text-success mb-1" t-esc="formatNumber(state.data.performance.total_invoiced)"/>
+                                <p class="text-muted mb-0">Invoiced Sales</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <div class="card osus-kpi-card border-0 shadow-sm">
+                            <div class="card-body text-center">
+                                <div class="kpi-icon mb-2">
+                                    <i class="fa fa-money fa-2x text-osus-burgundy"/>
+                                </div>
+                                <h3 class="fw-bold text-osus-burgundy mb-1" t-esc="formatCurrency(state.data.performance.total_amount)"/>
+                                <p class="text-muted mb-0">Total Revenue</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="row mb-4">
+                    <!-- Monthly Trend Chart -->
+                    <div class="col-md-8 mb-3">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-osus-light">
+                                <h5 class="card-title text-osus-burgundy mb-0">
+                                    <i class="fa fa-line-chart me-2"/>
+                                    Monthly Sales Trend
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container" style="height: 300px;">
+                                    <canvas id="monthly_trend_chart"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pipeline Chart -->
+                    <div class="col-md-4 mb-3">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-osus-light">
+                                <h5 class="card-title text-osus-burgundy mb-0">
+                                    <i class="fa fa-pie-chart me-2"/>
+                                    Sales Pipeline
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container" style="height: 300px;">
+                                    <canvas id="pipeline_chart"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rankings Section -->
+                <div class="row" t-if="state.data.agent_rankings.rankings and state.data.agent_rankings.rankings.length > 0">
+                    <!-- Agent Rankings -->
+                    <div class="col-md-6 mb-3">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-osus-light">
+                                <h5 class="card-title text-osus-burgundy mb-0">
+                                    <i class="fa fa-user me-2"/>
+                                    Top Agents
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Name</th>
+                                                <th>Deals</th>
+                                                <th>Amount</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr t-foreach="state.data.agent_rankings.rankings.slice(0, 5)" t-as="agent" t-key="agent.agent_id">
+                                                <td class="fw-bold text-osus-burgundy" t-esc="agent.rank"/>
+                                                <td t-esc="agent.name"/>
+                                                <td t-esc="agent.deal_count"/>
+                                                <td class="fw-bold" t-esc="agent.formatted_amount"/>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Broker Rankings -->
+                    <div class="col-md-6 mb-3" t-if="state.data.broker_rankings.rankings and state.data.broker_rankings.rankings.length > 0">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-osus-light">
+                                <h5 class="card-title text-osus-burgundy mb-0">
+                                    <i class="fa fa-users me-2"/>
+                                    Top Brokers
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Name</th>
+                                                <th>Deals</th>
+                                                <th>Amount</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr t-foreach="state.data.broker_rankings.rankings.slice(0, 5)" t-as="broker" t-key="broker.broker_id">
+                                                <td class="fw-bold text-osus-gold" t-esc="broker.rank"/>
+                                                <td t-esc="broker.name"/>
+                                                <td t-esc="broker.deal_count"/>
+                                                <td class="fw-bold" t-esc="broker.formatted_amount"/>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Info Messages -->
+                <div class="row" t-if="!state.data.agent_rankings.rankings or state.data.agent_rankings.rankings.length === 0">
+                    <div class="col-12">
+                        <div class="alert alert-info">
+                            <i class="fa fa-info-circle me-2"/>
+                            <strong>Optional Features:</strong> Agent and broker rankings are available when commission_ax module is installed.
+                            Sale type filtering is available when le_sale_type module is installed.
+                            All features work independently and gracefully degrade when modules are not available.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

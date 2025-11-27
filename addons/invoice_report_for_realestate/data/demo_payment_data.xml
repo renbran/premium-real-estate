@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Demo Customer for Receipt Testing -->
+    <record id="demo_customer_osus" model="res.partner">
+        <field name="name">OSUS Demo Customer</field>
+        <field name="email">demo@osus.ae</field>
+        <field name="phone">+971 50 123 4567</field>
+        <field name="mobile">+971 50 123 4567</field>
+        <field name="street">Business Bay</field>
+        <field name="street2">Single Tower, 29th Floor</field>
+        <field name="city">Dubai</field>
+        <field name="zip">00000</field>
+        <field name="country_id" ref="base.ae"/>
+        <field name="is_company">False</field>
+        <field name="customer_rank">1</field>
+        <field name="supplier_rank">0</field>
+    </record>
+
+    <!-- Demo Vendor for Payment Testing -->
+    <record id="demo_vendor_osus" model="res.partner">
+        <field name="name">OSUS Demo Vendor</field>
+        <field name="email">vendor@demo.ae</field>
+        <field name="phone">+971 4 123 4567</field>
+        <field name="street">DIFC</field>
+        <field name="city">Dubai</field>
+        <field name="country_id" ref="base.ae"/>
+        <field name="is_company">True</field>
+        <field name="customer_rank">0</field>
+        <field name="supplier_rank">1</field>
+    </record>
+
+    <!-- Demo Customer Receipt (Posted) -->
+    <record id="demo_customer_receipt_1" model="account.payment">
+        <field name="name">RCP/2025/0001</field>
+        <field name="payment_type">inbound</field>
+        <field name="partner_type">customer</field>
+        <field name="partner_id" ref="demo_customer_osus"/>
+        <field name="amount">2500.00</field>
+        <field name="currency_id" ref="base.AED"/>
+        <field name="date" eval="(DateTime.today() - timedelta(days=5)).strftime('%Y-%m-%d')"/>
+        <field name="ref">Property commission payment for Q1 2025</field>
+        <field name="display_qr_code">True</field>
+        <field name="state">posted</field>
+    </record>
+
+    <!-- Demo Customer Receipt (Large Amount) -->
+    <record id="demo_customer_receipt_2" model="account.payment">
+        <field name="name">RCP/2025/0002</field>
+        <field name="payment_type">inbound</field>
+        <field name="partner_type">customer</field>
+        <field name="partner_id" ref="demo_customer_osus"/>
+        <field name="amount">15750.00</field>
+        <field name="currency_id" ref="base.AED"/>
+        <field name="date" eval="(DateTime.today() - timedelta(days=2)).strftime('%Y-%m-%d')"/>
+        <field name="ref">Final property settlement - Unit #2901</field>
+        <field name="display_qr_code">True</field>
+        <field name="state">posted</field>
+    </record>
+
+    <!-- Demo Supplier Payment (No QR Code) -->
+    <record id="demo_supplier_payment_1" model="account.payment">
+        <field name="name">PAY/2025/0001</field>
+        <field name="payment_type">outbound</field>
+        <field name="partner_type">supplier</field>
+        <field name="partner_id" ref="demo_vendor_osus"/>
+        <field name="amount">1200.00</field>
+        <field name="currency_id" ref="base.AED"/>
+        <field name="date" eval="(DateTime.today() - timedelta(days=1)).strftime('%Y-%m-%d')"/>
+        <field name="ref">Office supplies and maintenance</field>
+        <field name="display_qr_code">False</field>
+        <field name="state">posted</field>
+    </record>
+</odoo>

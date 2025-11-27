@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Payment Approval Pro Menu Structure -->
+    
+    <!-- Main Payment Menu -->
+    <menuitem id="menu_payment_approval_root" 
+              name="Payment Approval" 
+              sequence="50" 
+              web_icon="payment_approval_pro,static/description/icon.png"/>
+    
+    <!-- Payment Vouchers Menu Group -->
+    <menuitem id="menu_payment_vouchers" 
+              name="Payment Vouchers" 
+              parent="menu_payment_approval_root" 
+              sequence="10"/>
+    
+    <!-- Payment Voucher Actions -->
+    <record id="action_payment_voucher" model="ir.actions.act_window">
+        <field name="name">Payment Vouchers</field>
+        <field name="res_model">payment.voucher</field>
+        <field name="view_mode">tree,form,kanban,activity</field>
+        <field name="search_view_id" ref="view_payment_voucher_search"/>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first payment voucher
+            </p>
+            <p>
+                Payment vouchers allow you to request payments with a structured approval workflow.
+                Create a voucher, submit it for review, and track it through the approval process.
+            </p>
+        </field>
+    </record>
+    
+    <!-- All Payment Vouchers -->
+    <menuitem id="menu_payment_voucher_all" 
+              name="All Vouchers" 
+              parent="menu_payment_vouchers" 
+              action="action_payment_voucher" 
+              sequence="10"/>
+    
+    <!-- My Payment Vouchers -->
+    <record id="action_payment_voucher_my" model="ir.actions.act_window">
+        <field name="name">My Payment Vouchers</field>
+        <field name="res_model">payment.voucher</field>
+        <field name="view_mode">tree,form,kanban</field>
+        <field name="search_view_id" ref="view_payment_voucher_search"/>
+        <field name="domain">[('creator_id', '=', uid)]</field>
+        <field name="context">{'search_default_my_vouchers': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first payment voucher
+            </p>
+            <p>
+                This shows payment vouchers that you have created.
+                Click "Create" to start a new payment request.
+            </p>
+        </field>
+    </record>
+    
+    <menuitem id="menu_payment_voucher_my" 
+              name="My Vouchers" 
+              parent="menu_payment_vouchers" 
+              action="action_payment_voucher_my" 
+              sequence="20"/>
+    
+    <!-- Pending Reviews -->
+    <record id="action_payment_voucher_pending_review" model="ir.actions.act_window">
+        <field name="name">Pending Reviews</field>
+        <field name="res_model">payment.voucher</field>
+        <field name="view_mode">tree,form,kanban</field>
+        <field name="search_view_id" ref="view_payment_voucher_search"/>
+        <field name="domain">[('state', '=', 'review'), ('reviewer_id', '=', uid)]</field>
+        <field name="context">{'search_default_pending_review': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No vouchers pending your review
+            </p>
+            <p>
+                Payment vouchers assigned to you for review will appear here.
+                You can approve or send them back for revision.
+            </p>
+        </field>
+    </record>
+    
+    <menuitem id="menu_payment_voucher_pending_review" 
+              name="Pending Reviews" 
+              parent="menu_payment_vouchers" 
+              action="action_payment_voucher_pending_review" 
+              sequence="30"
+              groups="payment_approval_pro.group_payment_reviewer"/>
+    
+    <!-- Pending Approvals -->
+    <record id="action_payment_voucher_pending_approval" model="ir.actions.act_window">
+        <field name="name">Pending Approvals</field>
+        <field name="res_model">payment.voucher</field>
+        <field name="view_mode">tree,form,kanban</field>
+        <field name="search_view_id" ref="view_payment_voucher_search"/>
+        <field name="domain">[('state', '=', 'approve')]</field>
+        <field name="context">{'search_default_pending_approval': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No vouchers pending approval
+            </p>
+            <p>
+                Reviewed payment vouchers ready for approval will appear here.
+                You can authorize them to proceed to payment processing.
+            </p>
+        </field>
+    </record>
+    
+    <menuitem id="menu_payment_voucher_pending_approval" 
+              name="Pending Approvals" 
+              parent="menu_payment_vouchers" 
+              action="action_payment_voucher_pending_approval" 
+              sequence="40"
+              groups="payment_approval_pro.group_payment_approver"/>
+    
+    <!-- Pending Authorizations -->
+    <record id="action_payment_voucher_pending_authorization" model="ir.actions.act_window">
+        <field name="name">Pending Authorizations</field>
+        <field name="res_model">payment.voucher</field>
+        <field name="view_mode">tree,form,kanban</field>
+        <field name="search_view_id" ref="view_payment_voucher_search"/>
+        <field name="domain">[('state', '=', 'authorize')]</field>
+        <field name="context">{'search_default_authorized': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No vouchers pending authorization
+            </p>
+            <p>
+                Approved payment vouchers ready for final authorization will appear here.
+                Authorization creates the actual payment in the accounting system.
+            </p>
+        </field>
+    </record>
+    
+    <menuitem id="menu_payment_voucher_pending_authorization" 
+              name="Pending Authorizations" 
+              parent="menu_payment_vouchers" 
+              action="action_payment_voucher_pending_authorization" 
+              sequence="50"
+              groups="payment_approval_pro.group_payment_authorizer"/>
+    
+    <!-- Reports Menu Group -->
+    <menuitem id="menu_payment_reports" 
+              name="Reports" 
+              parent="menu_payment_approval_root" 
+              sequence="20"
+              groups="payment_approval_pro.group_payment_manager"/>
+    
+    <!-- Payment Summary Report -->
+    <record id="action_payment_voucher_report" model="ir.actions.act_window">
+        <field name="name">Payment Summary</field>
+        <field name="res_model">payment.voucher</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_payment_voucher_search"/>
+        <field name="domain">[]</field>
+        <field name="context">{'search_default_group_state': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No payment data to display
+            </p>
+            <p>
+                This report shows a summary of all payment vouchers grouped by status.
+                Use the filters to analyze payment patterns and workflow performance.
+            </p>
+        </field>
+    </record>
+    
+    <menuitem id="menu_payment_voucher_report" 
+              name="Payment Summary" 
+              parent="menu_payment_reports" 
+              action="action_payment_voucher_report" 
+              sequence="10"/>
+    
+    <!-- Configuration Menu Group -->
+    <menuitem id="menu_payment_configuration" 
+              name="Configuration" 
+              parent="menu_payment_approval_root" 
+              sequence="30"
+              groups="payment_approval_pro.group_payment_admin"/>
+    
+    <!-- Workflow History -->
+    <record id="action_payment_workflow_history" model="ir.actions.act_window">
+        <field name="name">Workflow History</field>
+        <field name="res_model">payment.workflow.history</field>
+        <field name="view_mode">tree</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No workflow history available
+            </p>
+            <p>
+                This shows the complete audit trail of all payment voucher workflow transitions.
+                Use this for compliance reporting and workflow analysis.
+            </p>
+        </field>
+    </record>
+    
+    <menuitem id="menu_payment_workflow_history" 
+              name="Workflow History" 
+              parent="menu_payment_configuration" 
+              action="action_payment_workflow_history" 
+              sequence="10"/>
+    
+    <!-- Payment Workflow Configuration -->
+    <record id="action_payment_workflow_config" model="ir.actions.act_window">
+        <field name="name">Workflow Configuration</field>
+        <field name="res_model">payment.workflow</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Workflow engine configuration
+            </p>
+            <p>
+                Configure workflow rules, validation settings, and approval thresholds.
+                Advanced users can customize the payment approval process here.
+            </p>
+        </field>
+    </record>
+    
+    <menuitem id="menu_payment_workflow_config" 
+              name="Workflow Engine" 
+              parent="menu_payment_configuration" 
+              action="action_payment_workflow_config" 
+              sequence="20"/>
+
+</odoo>

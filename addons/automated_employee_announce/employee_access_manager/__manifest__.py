@@ -1,0 +1,22 @@
+{
+    'name': 'Employee Access Manager',
+    'version': '1.0',
+    'category': 'Human Resources',
+    'summary': 'Simplifies the creation of access rights for employees based on their positions.',
+    'author': 'Your Name',
+    'depends': ['base', 'hr', 'web'],
+    'data': [
+        'security/security.xml',
+        'security/ir.model.access.csv',
+        'data/default_positions.xml',
+        'data/default_access_templates.xml',
+        'views/hr_employee_position_views.xml',
+        'views/position_access_template_views.xml',
+        'views/res_users_views.xml',
+        'reports/position_access_report.xml',
+        'reports/employee_access_summary.xml',
+    ],
+    'installable': True,
+    'application': True,
+    'auto_install': False,
+}

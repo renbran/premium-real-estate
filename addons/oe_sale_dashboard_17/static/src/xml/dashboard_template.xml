@@ -1,0 +1,564 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="oe_sale_dashboard_17.yearly_sales_dashboard_template">
+        <div class="o_oe_sale_dashboard_17_container" t-att-class="state.isLoading ? 'dashboard-loading' : ''">
+            
+            <!-- Enhanced Loading Overlay with Progress Indicator -->
+            <div t-if="state.isLoading" class="loading-overlay">
+                <div class="loading-indicator">
+                    <div class="spinner-ring"></div>
+                    <div class="loading-text">Loading Dashboard Data...</div>
+                    <div class="loading-details">Please wait while we process your data</div>
+                </div>
+            </div>
+
+            <!-- Enhanced Sample Data Warning Banner -->
+            <div t-if="state.showSampleDataWarning" class="alert alert-info alert-dismissible fade show sample-data-banner" role="alert">
+                <div class="d-flex align-items-center">
+                    <i class="fa fa-info-circle me-3" style="font-size: 1.5rem;"></i>
+                    <div class="flex-grow-1">
+                        <strong>Sample Data Mode:</strong> 
+                        No sales data found for the selected date range. Displaying sample data for demonstration purposes.
+                        <br/>
+                        <small class="text-muted">Try adjusting your date range or check your sales data.</small>
+                    </div>
+                    <button type="button" class="btn-close" t-on-click="closeSampleDataBanner" aria-label="Close"></button>
+                </div>
+            </div>
+
+            <!-- Enhanced Error State with Recovery Options -->
+            <div t-if="state.hasError and !state.isLoading" class="error-container">
+                <div class="error-message">
+                    <i class="fa fa-exclamation-triangle fa-2x mb-3"></i>
+                    <h4 class="alert-heading">Dashboard Error</h4>
+                    <p t-esc="state.errorMessage"></p>
+                    <hr/>
+                    <div class="error-actions">
+                        <button type="button" class="btn btn-primary retry-btn" t-on-click="refreshDashboard">
+                            <i class="fa fa-refresh me-2"></i>Retry
+                        </button>
+                        <small class="text-muted d-block mt-2">
+                            If the problem persists, please contact your system administrator.
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Dashboard Content -->
+            <div t-if="!state.hasError" class="dashboard-content">
+                
+                <!-- Enhanced Header Section -->
+                <div class="dashboard-header">
+                    <div class="header-title">
+                        <h1>Executive Sales Dashboard</h1>
+                        <div class="header-subtitle">
+                            <span>Real-time sales performance and analytics</span>
+                            <div class="data-quality-indicator" t-if="state.lastRefresh">
+                                <i class="fa fa-clock-o me-1"></i>
+                                <span class="refresh-info">Last updated: <t t-esc="new Date(state.lastRefresh).toLocaleString()"/></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-controls">
+                        <div class="control-group">
+                            <button type="button" class="btn btn-secondary" t-on-click="refreshDashboard" t-att-disabled="state.isLoading">
+                                <i class="fa fa-refresh me-2"></i>Refresh
+                            </button>
+                            <button type="button" class="btn btn-outline-primary" t-on-click="exportDashboardData">
+                                <i class="fa fa-download me-2"></i>Export
+                            </button>
+                            <button type="button" class="btn btn-info" t-on-click="testDataAvailability">
+                                <i class="fa fa-database me-2"></i>Test Data
+                            </button>
+                            <button type="button" class="btn btn-success" t-if="!state.autoRefresh" t-on-click="() => this.enableAutoRefresh(5)">
+                                <i class="fa fa-play me-2"></i>Auto-refresh
+                            </button>
+                            <button type="button" class="btn btn-warning" t-if="state.autoRefresh" t-on-click="disableAutoRefresh">
+                                <i class="fa fa-pause me-2"></i>Stop Auto-refresh
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Enhanced Filters Section -->
+                <div class="filters-section">
+                    <!-- Date Range Controls -->
+                    <div class="filter-group">
+                        <label class="filter-label">Date Range</label>
+                        <div class="date-inputs">
+                            <input 
+                                type="date" 
+                                id="startDate" 
+                                t-model="state.startDate" 
+                                t-on-change="onStartDateChange"
+                                class="form-control"
+                                t-att-max="state.endDate"/>
+                            <span class="date-separator">to</span>
+                            <input 
+                                type="date" 
+                                id="endDate" 
+                                t-model="state.endDate" 
+                                t-on-change="onEndDateChange"
+                                class="form-control"
+                                t-att-min="state.startDate"
+                                t-att-max="new Date().toISOString().split('T')[0]"/>
+                        </div>
+                    </div>
+
+                    <!-- Enhanced Sales Type Filter -->
+                    <div class="filter-group" t-if="state.salesTypes.length > 0">
+                        <label class="filter-label">Sales Types</label>
+                        <div class="sales-type-checkboxes">
+                            <t t-foreach="state.salesTypes" t-as="salesType" t-key="salesType.id">
+                                <div class="checkbox-item">
+                                    <input 
+                                        type="checkbox" 
+                                        t-att-id="'salesType_' + salesType.id"
+                                        t-att-value="salesType.id"
+                                        t-on-change="onSalesTypeFilterChange"/>
+                                    <label t-att-for="'salesType_' + salesType.id" t-esc="salesType.name"/>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+
+                    <!-- Quick Date Range Presets -->
+                    <div class="filter-group">
+                        <label class="filter-label">Quick Ranges</label>
+                        <div class="quick-range-buttons">
+                            <button type="button" class="btn btn-sm btn-outline-secondary" t-on-click="() => this.setDateRange('7days')">
+                                Last 7 Days
+                            </button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary" t-on-click="() => this.setDateRange('30days')">
+                                Last 30 Days
+                            </button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary" t-on-click="() => this.setDateRange('90days')">
+                                Last 90 Days
+                            </button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary" t-on-click="() => this.setDateRange('year')">
+                                This Year
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Enhanced KPI Section -->
+                <div class="kpi-section">
+                    <!-- Primary KPI Row -->
+                    <div class="kpi-row">
+                        <!-- Total Quotations KPI -->
+                        <div class="kpi-card warning">
+                            <div class="kpi-icon">📋</div>
+                            <div class="kpi-content">
+                                <div class="kpi-label">Total Quotations</div>
+                                <div class="kpi-value" t-esc="state.summaryData.totalQuotations.formatted"/>
+                                <div class="kpi-subtext" t-esc="state.summaryData.totalQuotations.count + ' quotes'"/>
+                                <div class="kpi-amount" t-if="state.summaryData.totalQuotations.count > 0">
+                                    Avg: <t t-esc="formatDashboardValue(state.summaryData.totalQuotations.amount / state.summaryData.totalQuotations.count)"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sales Orders KPI -->
+                        <div class="kpi-card info">
+                            <div class="kpi-icon">📊</div>
+                            <div class="kpi-content">
+                                <div class="kpi-label">Sales Orders</div>
+                                <div class="kpi-value" t-esc="state.summaryData.totalSalesOrders.formatted"/>
+                                <div class="kpi-subtext" t-esc="state.summaryData.totalSalesOrders.count + ' orders'"/>
+                                <div class="kpi-amount" t-if="state.summaryData.totalSalesOrders.count > 0">
+                                    Avg: <t t-esc="formatDashboardValue(state.summaryData.totalSalesOrders.amount / state.summaryData.totalSalesOrders.count)"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Invoiced Sales KPI -->
+                        <div class="kpi-card success">
+                            <div class="kpi-icon">💰</div>
+                            <div class="kpi-content">
+                                <div class="kpi-label">Invoiced Sales</div>
+                                <div class="kpi-value" t-esc="state.summaryData.totalInvoiced.formatted"/>
+                                <div class="kpi-subtext" t-esc="state.summaryData.totalInvoiced.count + ' invoiced'"/>
+                                <div class="kpi-amount" t-if="state.summaryData.totalInvoiced.count > 0">
+                                    Avg: <t t-esc="formatDashboardValue(state.summaryData.totalInvoiced.amount / state.summaryData.totalInvoiced.count)"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Secondary KPI Row -->
+                    <div class="kpi-row secondary">
+                        <!-- Conversion Rate KPI -->
+                        <div class="kpi-card primary outline">
+                            <div class="kpi-icon">🎯</div>
+                            <div class="kpi-content">
+                                <div class="kpi-label">Conversion Rate</div>
+                                <div class="kpi-value" t-esc="state.summaryData.conversionRate"/>
+                                <div class="kpi-subtext">Quote to Invoice</div>
+                            </div>
+                        </div>
+
+                        <!-- Average Deal Size KPI -->
+                        <div class="kpi-card primary outline">
+                            <div class="kpi-icon">💎</div>
+                            <div class="kpi-content">
+                                <div class="kpi-label">Average Deal Size</div>
+                                <div class="kpi-value" t-esc="state.summaryData.avgDealSize"/>
+                                <div class="kpi-subtext">Per Transaction</div>
+                            </div>
+                        </div>
+
+                        <!-- Revenue Growth KPI -->
+                        <div class="kpi-card primary outline">
+                            <div class="kpi-icon">📈</div>
+                            <div class="kpi-content">
+                                <div class="kpi-label">Revenue Growth</div>
+                                <div class="kpi-value" t-esc="state.summaryData.revenueGrowth"/>
+                                <div class="kpi-subtext">vs Previous Period</div>
+                            </div>
+                        </div>
+
+                        <!-- Pipeline Velocity KPI -->
+                        <div class="kpi-card primary outline">
+                            <div class="kpi-icon">⚡</div>
+                            <div class="kpi-content">
+                                <div class="kpi-label">Pipeline Velocity</div>
+                                <div class="kpi-value" t-esc="state.summaryData.pipelineVelocity"/>
+                                <div class="kpi-subtext">Quote to Close</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Enhanced Charts Section -->
+                <div class="charts-section">
+                    
+                    <!-- Full-width Sales Trends Chart -->
+                    <div class="chart-container full-width">
+                        <div class="chart-header">
+                            <h3 class="chart-title">
+                                <i class="fa fa-line-chart"></i>
+                                Sales Trends Over Time
+                            </h3>
+                            <p class="chart-subtitle">Monthly fluctuation in quotations, sales orders, and invoiced sales</p>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="trendsLineChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Two-column chart layout -->
+                    <div class="charts-grid">
+                        <div class="chart-container">
+                            <div class="chart-header">
+                                <h3 class="chart-title">
+                                    <i class="fa fa-pie-chart"></i>
+                                    Revenue by Category
+                                </h3>
+                                <p class="chart-subtitle">Distribution of revenue across sales types</p>
+                            </div>
+                            <div class="chart-wrapper">
+                                <canvas id="enhancedPieChart"></canvas>
+                            </div>
+                        </div>
+                        
+                        <div class="chart-container">
+                            <div class="chart-header">
+                                <h3 class="chart-title">
+                                    <i class="fa fa-bar-chart"></i>
+                                    Orders by Status
+                                </h3>
+                                <p class="chart-subtitle">Count of orders in each stage</p>
+                            </div>
+                            <div class="chart-wrapper">
+                                <canvas id="comparisonBarChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Enhanced Categories Overview -->
+                <div class="categories-section" t-if="state.categoryNames.length > 0">
+                    <h2 class="section-title">
+                        <i class="fa fa-tags"></i>
+                        Sales Performance by Category
+                    </h2>
+                    
+                    <div class="category-grid">
+                        <t t-foreach="state.categoryNames" t-as="categoryName" t-key="categoryName">
+                            <t t-set="categoryData" t-value="state.categoriesData[categoryName]"/>
+                            <div class="category-card">
+                                <div class="category-header">
+                                    <h4 t-esc="categoryName"/>
+                                    <div class="category-total" t-esc="categoryData.formatted_total_amount"/>
+                                </div>
+                                
+                                <div class="category-breakdown">
+                                    <div class="breakdown-item">
+                                        <div class="breakdown-dot draft"></div>
+                                        <div class="breakdown-label">Quotations</div>
+                                        <div class="breakdown-count" t-esc="categoryData.draft_count"/>
+                                        <div class="breakdown-amount" t-esc="categoryData.formatted_draft_amount"/>
+                                    </div>
+                                    
+                                    <div class="breakdown-item">
+                                        <div class="breakdown-dot sales"></div>
+                                        <div class="breakdown-label">Sales Orders</div>
+                                        <div class="breakdown-count" t-esc="categoryData.sales_order_count"/>
+                                        <div class="breakdown-amount" t-esc="categoryData.formatted_sales_order_amount"/>
+                                    </div>
+                                    
+                                    <div class="breakdown-item">
+                                        <div class="breakdown-dot invoice"></div>
+                                        <div class="breakdown-label">Invoiced</div>
+                                        <div class="breakdown-count" t-esc="categoryData.invoice_count"/>
+                                        <div class="breakdown-amount" t-esc="categoryData.formatted_invoice_amount"/>
+                                    </div>
+                                </div>
+                                
+                                <div class="summary-metrics">
+                                    <div class="metric-item">
+                                        <div class="metric-label">Conversion Rate</div>
+                                        <div class="metric-value">
+                                            <t t-if="categoryData.draft_count > 0">
+                                                <t t-esc="Math.round((categoryData.invoice_count / categoryData.draft_count) * 100)"/>%
+                                            </t>
+                                            <t t-else="">0%</t>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="metric-item">
+                                        <div class="metric-label">Avg Deal Size</div>
+                                        <div class="metric-value">
+                                            <t t-if="categoryData.total_count > 0">
+                                                <t t-esc="formatDashboardValue(categoryData.total_amount / categoryData.total_count)"/>
+                                            </t>
+                                            <t t-else="">AED 0</t>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+
+                <!-- Enhanced Tables Section -->
+                <div class="tables-section">
+                    
+                    <!-- Top Agents Table -->
+                    <div t-if="state.topAgentsData.length > 0" class="table-container">
+                        <h3 class="table-title">
+                            <i class="fa fa-trophy"></i>
+                            Top Sales Agents
+                            <span class="badge success" t-esc="state.topAgentsData.length + ' agents'"/>
+                        </h3>
+                        
+                        <div class="table-wrapper">
+                            <table class="ranking-table">
+                                <thead>
+                                    <tr>
+                                        <th>Rank</th>
+                                        <th>Agent Name</th>
+                                        <th>Sales Count</th>
+                                        <th>Total Sales Value</th>
+                                        <th>Total Commission</th>
+                                        <th>Invoiced Sales</th>
+                                        <th>Performance</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="state.topAgentsData" t-as="agent" t-key="agent.partner_id">
+                                        <tr>
+                                            <td class="rank-cell">
+                                                <div class="rank-number" t-esc="agent_index + 1"/>
+                                                <t t-if="agent_index === 0">
+                                                    <div class="rank-badge">🏆</div>
+                                                </t>
+                                                <t t-elif="agent_index === 1">
+                                                    <div class="rank-badge">🥈</div>
+                                                </t>
+                                                <t t-elif="agent_index === 2">
+                                                    <div class="rank-badge">🥉</div>
+                                                </t>
+                                            </td>
+                                            <td class="category-name" t-esc="agent.partner_name"/>
+                                            <td class="count-cell" t-esc="agent.count"/>
+                                            <td class="amount-cell" t-esc="formatDashboardValue(agent.total_sales_value)"/>
+                                            <td class="amount-cell" t-esc="formatDashboardValue(agent.total_commission)"/>
+                                            <td class="amount-cell" t-esc="formatDashboardValue(agent.invoiced_sales_value)"/>
+                                            <td class="avg-cell">
+                                                <t t-if="agent.count > 0">
+                                                    <t t-esc="formatDashboardValue(agent.total_sales_value / agent.count)"/>
+                                                </t>
+                                                <t t-else="">AED 0</t>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Top Agencies Table -->
+                    <div t-if="state.topAgenciesData.length > 0" class="table-container">
+                        <h3 class="table-title">
+                            <i class="fa fa-building"></i>
+                            Top Agencies
+                            <span class="badge success" t-esc="state.topAgenciesData.length + ' agencies'"/>
+                        </h3>
+                        
+                        <div class="table-wrapper">
+                            <table class="ranking-table">
+                                <thead>
+                                    <tr>
+                                        <th>Rank</th>
+                                        <th>Agency Name</th>
+                                        <th>Sales Count</th>
+                                        <th>Total Sales Value</th>
+                                        <th>Total Commission</th>
+                                        <th>Invoiced Sales</th>
+                                        <th>Performance</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="state.topAgenciesData" t-as="agency" t-key="agency.partner_id">
+                                        <tr>
+                                            <td class="rank-cell">
+                                                <div class="rank-number" t-esc="agency_index + 1"/>
+                                                <t t-if="agency_index === 0">
+                                                    <div class="rank-badge">🏆</div>
+                                                </t>
+                                                <t t-elif="agency_index === 1">
+                                                    <div class="rank-badge">🥈</div>
+                                                </t>
+                                                <t t-elif="agency_index === 2">
+                                                    <div class="rank-badge">🥉</div>
+                                                </t>
+                                            </td>
+                                            <td class="category-name" t-esc="agency.partner_name"/>
+                                            <td class="count-cell" t-esc="agency.count"/>
+                                            <td class="amount-cell" t-esc="formatDashboardValue(agency.total_sales_value)"/>
+                                            <td class="amount-cell" t-esc="formatDashboardValue(agency.total_commission)"/>
+                                            <td class="amount-cell" t-esc="formatDashboardValue(agency.invoiced_sales_value)"/>
+                                            <td class="avg-cell">
+                                                <t t-if="agency.count > 0">
+                                                    <t t-esc="formatDashboardValue(agency.total_sales_value / agency.count)"/>
+                                                </t>
+                                                <t t-else="">AED 0</t>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Recent Orders Table -->
+                    <div t-if="state.recentOrders.length > 0" class="table-container">
+                        <h3 class="table-title">
+                            <i class="fa fa-clock-o"></i>
+                            Recent Orders
+                            <span class="badge success" t-esc="state.recentOrders.length + ' orders'"/>
+                        </h3>
+                        
+                        <div class="table-wrapper">
+                            <table class="ranking-table">
+                                <thead>
+                                    <tr>
+                                        <th>Order Number</th>
+                                        <th>Customer</th>
+                                        <th>Date</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="state.recentOrders" t-as="order" t-key="order.id">
+                                        <tr>
+                                            <td class="category-name" t-esc="order.name"/>
+                                            <td t-esc="order.partner_name"/>
+                                            <td t-esc="order.date"/>
+                                            <td class="amount-cell" t-esc="order.amount_formatted"/>
+                                            <td>
+                                                <span t-att-class="'badge ' + order.status_class" 
+                                                      t-esc="order.status_text"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- No Data State for Tables -->
+                    <div t-if="state.topAgentsData.length === 0 and state.topAgenciesData.length === 0 and state.recentOrders.length === 0" 
+                         class="table-container">
+                        <div class="no-data">
+                            <div class="no-data-icon">📊</div>
+                            <h3>No Performance Data Available</h3>
+                            <p>No sales performance data found for the selected date range and filters.</p>
+                            <div class="no-data-actions">
+                                <button type="button" class="btn btn-primary" t-on-click="() => this.setDateRange('90days')">
+                                    Try Last 90 Days
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary" t-on-click="refreshDashboard">
+                                    Refresh Data
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Enhanced Dashboard Footer -->
+                <div class="dashboard-footer">
+                    <div class="footer-content">
+                        <div class="footer-item">
+                            <i class="fa fa-database"></i>
+                            <span>Data Source: Sales Orders</span>
+                        </div>
+                        
+                        <div class="footer-item" t-if="state.lastRefresh">
+                            <i class="fa fa-refresh"></i>
+                            <span>Last Updated: <t t-esc="new Date(state.lastRefresh).toLocaleString()"/></span>
+                        </div>
+                        
+                        <div class="footer-item">
+                            <i class="fa fa-calendar"></i>
+                            <span>Period: <t t-esc="state.startDate"/> to <t t-esc="state.endDate"/></span>
+                        </div>
+                        
+                        <div class="footer-item" t-if="state.selectedSalesTypes.length > 0">
+                            <i class="fa fa-filter"></i>
+                            <span>Filtered: <t t-esc="state.selectedSalesTypes.length"/> sales types</span>
+                        </div>
+                        
+                        <div class="footer-item" t-if="state.autoRefresh">
+                            <i class="fa fa-play-circle text-success"></i>
+                            <span>Auto-refresh: Active</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Enhanced Scroll to Top Button -->
+            <button class="scroll-to-top-btn" 
+                    onclick="window.scrollTo({top: 0, behavior: 'smooth'})" 
+                    title="Scroll to top"
+                    style="display: none;"
+                    onscroll="this.style.display = window.pageYOffset > 300 ? 'block' : 'none'">
+                <i class="fa fa-arrow-up"></i>
+            </button>
+
+            <!-- Performance Indicator (Development/Debug Mode) -->
+            <div t-if="state.showSampleDataWarning" class="performance-indicator">
+                <small class="text-muted">
+                    <i class="fa fa-cog"></i>
+                    Dashboard Mode: Development (Sample Data)
+                </small>
+            </div>
+
+        </div>
+    </t>
+</templates>

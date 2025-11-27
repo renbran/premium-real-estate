@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Main Menu -->
+    <menuitem id="menu_payment_approval_root"
+              name="Payment Approval"
+              parent="account.menu_finance"
+              sequence="20"/>
+
+    <!-- Payments Menu -->
+    <menuitem id="menu_payment_approval_payments"
+              name="Payments"
+              parent="menu_payment_approval_root"
+              sequence="10"/>
+
+    <!-- Payment Approvals -->
+    <menuitem id="menu_payment_approval_list"
+              name="Payment Approvals"
+              parent="menu_payment_approval_payments"
+              action="action_payment_approval_tree"
+              sequence="10"/>
+
+    <!-- Pending Approvals -->
+    <menuitem id="menu_payment_approval_pending"
+              name="Pending Approvals"
+              parent="menu_payment_approval_payments"
+              action="action_payment_pending_approval"
+              sequence="20"/>
+
+    <!-- My Approvals -->
+    <menuitem id="menu_payment_approval_my"
+              name="My Approvals"
+              parent="menu_payment_approval_payments"
+              action="action_payment_my_approval"
+              sequence="30"/>
+
+    <!-- Configuration Menu -->
+    <menuitem id="menu_payment_approval_config"
+              name="Configuration"
+              parent="menu_payment_approval_root"
+              sequence="90"/>
+
+    <!-- Approval Settings -->
+    <menuitem id="menu_payment_approval_settings"
+              name="Approval Settings"
+              parent="menu_payment_approval_config"
+              action="action_payment_approval_config"
+              sequence="10"/>
+
+    <!-- Reports Menu -->
+    <menuitem id="menu_payment_approval_reports"
+              name="Reports"
+              parent="menu_payment_approval_root"
+              sequence="80"/>
+
+    <!-- Payment Approval Report -->
+    <menuitem id="menu_payment_approval_report"
+              name="Payment Approval Analysis"
+              parent="menu_payment_approval_reports"
+              action="action_payment_approval_report"
+              sequence="10"/>
+
+    <!-- Performance Report -->
+    <menuitem id="menu_payment_approval_performance"
+              name="Performance Analysis"
+              parent="menu_payment_approval_reports"
+              action="action_payment_approval_performance_report"
+              sequence="20"/>
+
+    <!-- Dashboard -->
+    <menuitem id="menu_payment_approval_dashboard"
+              name="Dashboard"
+              parent="menu_payment_approval_root"
+              action="action_payment_approval_dashboard"
+              sequence="5"/>
+</odoo>

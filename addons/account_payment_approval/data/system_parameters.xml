@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Payment Approval Thresholds -->
+        <record id="param_outbound_approval_threshold" model="ir.config_parameter">
+            <field name="key">account_payment_approval.outbound_approval_threshold</field>
+            <field name="value">1000.0</field>
+        </record>
+
+        <record id="param_inbound_approval_threshold" model="ir.config_parameter">
+            <field name="key">account_payment_approval.inbound_approval_threshold</field>
+            <field name="value">5000.0</field>
+        </record>
+
+        <!-- Multi-tier Approval Thresholds -->
+        <record id="param_tier_2_threshold" model="ir.config_parameter">
+            <field name="key">account_payment_approval.tier_2_threshold</field>
+            <field name="value">10000.0</field>
+        </record>
+
+        <record id="param_tier_3_threshold" model="ir.config_parameter">
+            <field name="key">account_payment_approval.tier_3_threshold</field>
+            <field name="value">50000.0</field>
+        </record>
+
+        <!-- Workflow Settings -->
+        <record id="param_auto_submit_on_create" model="ir.config_parameter">
+            <field name="key">account_payment_approval.auto_submit_on_create</field>
+            <field name="value">False</field>
+        </record>
+
+        <record id="param_require_signature_all_stages" model="ir.config_parameter">
+            <field name="key">account_payment_approval.require_signature_all_stages</field>
+            <field name="value">True</field>
+        </record>
+
+        <record id="param_enable_qr_verification" model="ir.config_parameter">
+            <field name="key">account_payment_approval.enable_qr_verification</field>
+            <field name="value">True</field>
+        </record>
+
+        <record id="param_auto_post_after_qr_validation" model="ir.config_parameter">
+            <field name="key">account_payment_approval.auto_post_after_qr_validation</field>
+            <field name="value">False</field>
+        </record>
+
+        <!-- Email Notification Settings -->
+        <record id="param_send_email_notifications" model="ir.config_parameter">
+            <field name="key">account_payment_approval.send_email_notifications</field>
+            <field name="value">True</field>
+        </record>
+
+        <record id="param_notification_email_template" model="ir.config_parameter">
+            <field name="key">account_payment_approval.notification_email_template</field>
+            <field name="value">account_payment_approval.email_template_payment_submitted</field>
+        </record>
+
+        <!-- QR Code Settings -->
+        <record id="param_qr_code_expiry_days" model="ir.config_parameter">
+            <field name="key">account_payment_approval.qr_code_expiry_days</field>
+            <field name="value">30</field>
+        </record>
+
+        <record id="param_qr_max_scan_attempts" model="ir.config_parameter">
+            <field name="key">account_payment_approval.qr_max_scan_attempts</field>
+            <field name="value">10</field>
+        </record>
+
+        <!-- Security Settings -->
+        <record id="param_require_2fa_for_authorization" model="ir.config_parameter">
+            <field name="key">account_payment_approval.require_2fa_for_authorization</field>
+            <field name="value">False</field>
+        </record>
+
+        <record id="param_log_all_workflow_actions" model="ir.config_parameter">
+            <field name="key">account_payment_approval.log_all_workflow_actions</field>
+            <field name="value">True</field>
+        </record>
+
+        <!-- Company Specific Settings -->
+        <record id="param_company_logo_in_reports" model="ir.config_parameter">
+            <field name="key">account_payment_approval.company_logo_in_reports</field>
+            <field name="value">True</field>
+        </record>
+
+        <record id="param_default_payment_journal" model="ir.config_parameter">
+            <field name="key">account_payment_approval.default_payment_journal</field>
+            <field name="value"></field>
+        </record>
+
+        <!-- Bulk Operations Settings -->
+        <record id="param_max_bulk_operations" model="ir.config_parameter">
+            <field name="key">account_payment_approval.max_bulk_operations</field>
+            <field name="value">50</field>
+        </record>
+
+        <record id="param_enable_bulk_approvals" model="ir.config_parameter">
+            <field name="key">account_payment_approval.enable_bulk_approvals</field>
+            <field name="value">True</field>
+        </record>
+
+    </data>
+</odoo>

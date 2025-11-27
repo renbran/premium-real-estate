@@ -1,0 +1,489 @@
+/* Strategic CRM Dashboard Styles */
+
+.o_crm_strategic_dashboard {
+    padding: 20px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
+}
+
+.o_strategic_header {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    margin-bottom: 24px;
+}
+
+.o_dashboard_title h2 {
+    color: #2c3e50;
+    font-weight: 700;
+    font-size: 1.8rem;
+}
+
+.o_dashboard_title p {
+    color: #7f8c8d;
+    font-size: 1rem;
+}
+
+/* Strategic KPI Cards */
+.o_strategic_kpis .section-title {
+    color: #2c3e50;
+    font-weight: 600;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 3px solid #3498db;
+}
+
+.o_kpi_card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border-left: 4px solid transparent;
+    height: 140px;
+    display: flex;
+    align-items: center;
+}
+
+.o_kpi_card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.o_kpi_card.o_kpi_pipeline {
+    border-left-color: #3498db;
+}
+
+.o_kpi_card.o_kpi_growth {
+    border-left-color: #2ecc71;
+}
+
+.o_kpi_card.o_kpi_cycle {
+    border-left-color: #e74c3c;
+}
+
+.o_kpi_card.o_kpi_market {
+    border-left-color: #9b59b6;
+}
+
+.o_kpi_card.o_kpi_customers {
+    border-left-color: #f39c12;
+}
+
+.o_kpi_card.o_kpi_retention {
+    border-left-color: #1abc9c;
+}
+
+.o_kpi_icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    font-size: 24px;
+    color: white;
+}
+
+.o_kpi_pipeline .o_kpi_icon {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+}
+
+.o_kpi_growth .o_kpi_icon {
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+}
+
+.o_kpi_cycle .o_kpi_icon {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+}
+
+.o_kpi_market .o_kpi_icon {
+    background: linear-gradient(135deg, #9b59b6, #8e44ad);
+}
+
+.o_kpi_customers .o_kpi_icon {
+    background: linear-gradient(135deg, #f39c12, #e67e22);
+}
+
+.o_kpi_retention .o_kpi_icon {
+    background: linear-gradient(135deg, #1abc9c, #16a085);
+}
+
+.o_kpi_content {
+    flex: 1;
+}
+
+.o_kpi_content h3 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+    color: #2c3e50;
+}
+
+.o_kpi_content p {
+    margin: 5px 0 0 0;
+    color: #7f8c8d;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.o_kpi_trend {
+    margin-top: 8px;
+}
+
+.o_kpi_trend i {
+    margin-right: 5px;
+    font-size: 14px;
+}
+
+/* Risk Alerts */
+.o_risk_alerts .alert {
+    border-radius: 12px;
+    border: none;
+    box-shadow: 0 4px 15px rgba(255, 193, 7, 0.2);
+}
+
+/* Consider using BEM methodology: .o_module_name__risk-metric */
+.o_module_risk-metric {
+    text-align: center;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.risk-metric:hover {
+    background: rgba(255, 255, 255, 1);
+    transform: translateY(-2px);
+}
+
+.risk-metric strong {
+    display: block;
+    font-size: 1.5rem;
+    color: #dc3545;
+    margin-bottom: 5px;
+}
+
+.risk-metric span {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+/* Consider using BEM methodology: .o_module_name__risk-value */
+.o_module_risk-value {
+    font-size: 0.85rem;
+    color: #dc3545;
+    font-weight: 600;
+    margin-top: 5px;
+}
+
+/* Charts Section */
+.o_charts_section .card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+.o_charts_section .card:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.o_charts_section .card-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 12px 12px 0 0 !important;
+    border-bottom: none;
+    padding: 15px 20px;
+}
+
+.o_charts_section .card-title {
+    font-weight: 600;
+    margin: 0;
+}
+
+.o_charts_section .card-body {
+    padding: 20px;
+}
+
+/* Forecast Metrics */
+/* Consider using BEM methodology: .o_module_name__forecast-metric */
+.o_module_forecast-metric {
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.forecast-metric h6 {
+    margin-bottom: 5px;
+    color: #6c757d;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.forecast-metric strong {
+    font-size: 1.1rem;
+    color: #2c3e50;
+}
+
+/* Business Intelligence Tables */
+.o_business_intelligence .card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.o_business_intelligence .card-header {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
+    border-radius: 12px 12px 0 0 !important;
+    border-bottom: none;
+    padding: 15px 20px;
+}
+
+.o_business_intelligence .table {
+    margin-bottom: 0;
+}
+
+.o_business_intelligence .table th {
+    border-top: none;
+    font-weight: 600;
+    color: #2c3e50;
+    background: #f8f9fa;
+    padding: 12px;
+}
+
+.o_business_intelligence .table td {
+    padding: 12px;
+    vertical-align: middle;
+}
+
+.o_business_intelligence .table-hover tbody tr:hover {
+    background-color: rgba(116, 75, 162, 0.05);
+}
+
+/* Progress bars */
+/* Consider using BEM methodology: .o_module_name__progress */
+.o_module_progress {
+    background-color: #e9ecef;
+    border-radius: 10px;
+}
+
+/* Consider using BEM methodology: .o_module_name__progress-bar */
+.o_module_progress-bar {
+    border-radius: 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+/* Badges */
+/* Consider using BEM methodology: .o_module_name__badge */
+.o_module_badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 6px 10px;
+    border-radius: 6px;
+}
+
+/* Quick Actions */
+.d-grid .btn {
+    border-radius: 8px;
+    font-weight: 500;
+    padding: 10px 15px;
+    transition: all 0.3s ease;
+}
+
+.d-grid .btn:hover {
+    transform: translateY(-1px);
+}
+
+/* Operational Metrics */
+/* Consider using BEM methodology: .o_module_name__operational-metrics */
+.o_module_operational-metrics {
+    margin-top: 20px;
+}
+
+.operational-metrics h6 {
+    color: #2c3e50;
+    font-weight: 600;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #e9ecef;
+}
+
+/* Consider using BEM methodology: .o_module_name__metric-item */
+.o_module_metric-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #f1f3f4;
+}
+
+.metric-item:last-child {
+    border-bottom: none;
+}
+
+.metric-item span {
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.metric-item strong {
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+/* Loading Overlay */
+.o_loading_overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.o_loading_overlay .text-center h4 {
+    color: #2c3e50;
+    margin-top: 20px;
+}
+
+.o_loading_overlay .text-center p {
+    color: #7f8c8d;
+}
+
+/* Dashboard Controls */
+.o_dashboard_controls .btn {
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.o_dashboard_controls .btn:hover {
+    transform: translateY(-1px);
+}
+
+.o_dashboard_controls .btn.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-color: #667eea;
+    color: white;
+}
+
+/* Filters */
+.o_dashboard_filters {
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 8px;
+    padding: 15px;
+}
+
+.o_dashboard_filters .form-label {
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 8px;
+}
+
+.o_dashboard_filters .form-control,
+.o_dashboard_filters .form-select {
+    border-radius: 6px;
+    border: 1px solid #d1d3e2;
+    transition: all 0.3s ease;
+}
+
+.o_dashboard_filters .form-control:focus,
+.o_dashboard_filters .form-select:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .o_crm_strategic_dashboard {
+        padding: 10px;
+    }
+    
+    .o_strategic_header {
+        padding: 15px;
+    }
+    
+    .o_dashboard_title h2 {
+        font-size: 1.4rem;
+    }
+    
+    .o_kpi_card {
+        height: auto;
+        min-height: 120px;
+        margin-bottom: 15px;
+    }
+    
+    .o_kpi_content h3 {
+        font-size: 1.4rem;
+    }
+    
+    .o_kpi_icon {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+    }
+    
+/* Consider using BEM methodology: .o_module_name__risk-metric */
+    .o_module_risk-metric {
+        margin-bottom: 10px;
+    }
+    
+    .o_charts_section .card-body {
+        padding: 15px;
+    }
+    
+/* Consider using BEM methodology: .o_module_name__metric-item */
+    .o_module_metric-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .o_crm_strategic_dashboard {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    }
+    
+    .o_strategic_header,
+    .o_kpi_card,
+    .o_charts_section .card,
+    .o_business_intelligence .card {
+        background: #34495e;
+        color: #ecf0f1;
+    }
+    
+    .o_dashboard_title h2,
+    .o_kpi_content h3,
+    .metric-item strong {
+        color: #ecf0f1;
+    }
+    
+    .o_dashboard_title p,
+    .o_kpi_content p,
+    .metric-item span {
+        color: #bdc3c7;
+    }
+    
+    .o_business_intelligence .table th {
+        background: #2c3e50;
+        color: #ecf0f1;
+    }
+    
+    .o_business_intelligence .table-hover tbody tr:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+}

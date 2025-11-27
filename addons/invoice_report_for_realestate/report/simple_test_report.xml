@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Simplified Test Invoice Report Template -->
+    <template id="report_osus_invoice_document_simple">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-set="o" t-value="doc"/>
+                <div class="page" style="font-family: Arial, sans-serif; font-size: 14px; padding: 20px;">
+                    <div style="text-align: center; margin-bottom: 30px;">
+                        <h1 style="color: #800020; font-size: 24px;">TAX INVOICE</h1>
+                        <h2 style="color: #800020;"><span t-field="o.name"/></h2>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <div style="float: left; width: 50%;">
+                            <h3>From:</h3>
+                            <div t-field="o.company_id.partner_id" 
+                                 t-options-widget="contact"
+                                 t-options-fields="['name', 'address', 'vat']"/>
+                        </div>
+                        <div style="float: right; width: 45%;">
+                            <h3>To:</h3>
+                            <div t-field="o.partner_id" 
+                                 t-options-widget="contact"
+                                 t-options-fields="['name', 'address', 'vat']"/>
+                        </div>
+                        <div style="clear: both;"/>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <strong>Invoice Date:</strong> <span t-field="o.invoice_date"/><br/>
+                        <strong>Due Date:</strong> <span t-field="o.invoice_date_due"/><br/>
+                        <t t-if="o.payment_reference">
+                            <strong>Payment Reference:</strong> <span t-field="o.payment_reference"/><br/>
+                        </t>
+                    </div>
+                    
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+                        <thead>
+                            <tr style="background-color: #800020; color: white;">
+                                <th style="border: 1px solid #800020; padding: 8px;">Description</th>
+                                <th style="border: 1px solid #800020; padding: 8px;">Quantity</th>
+                                <th style="border: 1px solid #800020; padding: 8px;">Unit Price</th>
+                                <th style="border: 1px solid #800020; padding: 8px;">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="o.invoice_line_ids" t-as="line">
+                                <tr t-if="line.display_type == False">
+                                    <td style="border: 1px solid #ddd; padding: 8px;">
+                                        <span t-field="line.name"/>
+                                    </td>
+                                    <td style="border: 1px solid #ddd; padding: 8px; text-align: right;">
+                                        <span t-field="line.quantity"/>
+                                    </td>
+                                    <td style="border: 1px solid #ddd; padding: 8px; text-align: right;">
+                                        <span t-field="line.price_unit"/>
+                                    </td>
+                                    <td style="border: 1px solid #ddd; padding: 8px; text-align: right;">
+                                        <span t-field="line.price_subtotal"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                    
+                    <div style="float: right; width: 300px;">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <tr>
+                                <td style="padding: 5px; font-weight: bold;">Subtotal:</td>
+                                <td style="padding: 5px; text-align: right;">
+                                    <span t-field="o.amount_untaxed" t-options-widget="monetary"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 5px; font-weight: bold;">Tax:</td>
+                                <td style="padding: 5px; text-align: right;">
+                                    <span t-field="o.amount_tax" t-options-widget="monetary"/>
+                                </td>
+                            </tr>
+                            <tr style="border-top: 2px solid #800020;">
+                                <td style="padding: 10px; font-weight: bold; font-size: 16px;">Total:</td>
+                                <td style="padding: 10px; text-align: right; font-weight: bold; font-size: 16px;">
+                                    <span t-field="o.amount_total" t-options-widget="monetary"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <div style="clear: both; margin-top: 40px;">
+                        <div style="text-align: center; color: #666; font-size: 12px;">
+                            This is a computer generated document. No signature required.
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <!-- Simple Test Report Action -->
+    <record id="action_report_osus_invoice_simple" model="ir.actions.report">
+        <field name="name">OSUS Invoice (Simple)</field>
+        <field name="model">account.move</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">osus_invoice_report.report_osus_invoice_document_simple</field>
+        <field name="report_file">osus_invoice_report.report_osus_invoice_document_simple</field>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="base.paperformat_euro"/>
+        <field name="print_report_name">'OSUS Invoice Simple - %s' % (object.name)</field>
+    </record>
+</odoo>

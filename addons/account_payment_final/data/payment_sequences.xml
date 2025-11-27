@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Sequence for Payment Voucher Numbers -->
+        <record id="seq_payment_voucher" model="ir.sequence">
+            <field name="name">Payment Voucher</field>
+            <field name="code">payment.voucher</field>
+            <field name="prefix">PV</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+            <field name="use_date_range">False</field>
+        </record>
+        
+        <!-- Sequence for Receipt Voucher Numbers -->
+        <record id="seq_receipt_voucher" model="ir.sequence">
+            <field name="name">Receipt Voucher</field>
+            <field name="code">receipt.voucher</field>
+            <field name="prefix">RV</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+            <field name="use_date_range">False</field>
+        </record>
+        
+        <!-- Specific Sequences for Payment Types -->
+        <record id="seq_payment_voucher_payment" model="ir.sequence">
+            <field name="name">Payment Voucher (Outbound)</field>
+            <field name="code">payment.voucher.payment</field>
+            <field name="prefix">PV</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+            <field name="use_date_range">False</field>
+        </record>
+        
+        <record id="seq_payment_voucher_receipt" model="ir.sequence">
+            <field name="name">Receipt Voucher (Inbound)</field>
+            <field name="code">payment.voucher.receipt</field>
+            <field name="prefix">RV</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+            <field name="use_date_range">False</field>
+        </record>
+    </data>
+</odoo>

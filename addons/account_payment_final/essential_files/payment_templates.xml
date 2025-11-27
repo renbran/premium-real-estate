@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+
+    <!-- Payment Approval Widget Template -->
+    <t t-name="account_payment_final.PaymentApprovalWidget" owl="1">
+        <div class="o_payment_approval_widget" t-att-class="props.readonly ? 'o_readonly' : ''">
+            <div class="approval-workflow-container">
+                <h6 class="text-primary mb-3">
+                    <i class="fa fa-check-circle me-2"></i>
+                    Approval Workflow
+                </h6>
+
+                <t t-if="state.isLoading">
+                    <div class="text-center py-3">
+                        <i class="fa fa-spinner fa-spin me-2"></i>
+                        Loading workflow data...
+                    </div>
+                </t>
+
+                <t t-else="">
+                    <div class="workflow-stages">
+                        <t t-foreach="state.approvalHistory" t-as="stage" t-key="stage.id">
+                            <div class="workflow-stage d-flex align-items-center mb-2">
+                                <div t-attf-class="stage-icon me-3 {{ stage.status }}">
+                                    <i t-attf-class="fa {{ getStageIcon(stage.stage) }}"></i>
+                                </div>
+                                <div class="stage-info flex-grow-1">
+                                    <div class="stage-name fw-bold" t-esc="stage.stage_name"></div>
+                                    <div class="stage-description small text-muted" t-esc="stage.description"></div>
+                                    <div t-if="stage.user_name" class="stage-user small">
+                                        <i class="fa fa-user me-1"></i>
+                                        <span t-esc="stage.user_name"></span>
+                                    </div>
+                                    <div t-if="stage.comments" class="stage-comments small text-info mt-1">
+                                        <i class="fa fa-comment me-1"></i>
+                                        <span t-esc="stage.comments"></span>
+                                    </div>
+                                </div>
+                                <div t-if="stage.date" class="stage-date small text-muted">
+                                    <t t-esc="stage.date"></t>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+
+                    <div t-if="!props.readonly and (state.canApprove or state.canReject)" class="workflow-actions mt-3 text-end">
+                        <button t-if="state.canReject" class="btn btn-outline-danger btn-sm me-2" t-on-click="onReject" title="Reject this payment">
+                            <i class="fa fa-times me-1"></i>
+                            Reject
+                        </button>
+                        <button t-if="state.canApprove" class="btn btn-primary btn-sm" t-on-click="onApprove" title="Approve this payment">
+                            <i class="fa fa-check me-1"></i>
+                            Approve
+                        </button>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+
+    <!-- QR Code Field Template -->
+    <t t-name="account_payment_final.QRCodeField" owl="1">
+        <div class="o_qr_code_field">
+            <t t-if="state.isLoading">
+                <div class="qr-code-loading">
+                    <i class="fa fa-spinner fa-spin"></i>
+                    Generating QR Code...
+                </div>
+            </t>
+
+            <t t-elif="state.error">
+                <div class="alert alert-warning text-center">
+                    <i class="fa fa-exclamation-triangle me-2"></i>
+                    <span t-esc="state.error"></span>
+                </div>
+            </t>
+
+            <t t-elif="state.qrCode">
+                <div class="qr-code-container">
+                    <img t-att-src="state.qrCode" alt="Payment QR Code" />
+                </div>
+
+                <div t-if="!props.readonly" class="qr-code-actions mt-3">
+                    <button class="btn btn-outline-primary btn-sm" t-on-click="onDownload" title="Download QR Code">
+                        <i class="fa fa-download me-1"></i>
+                        Download
+                    </button>
+                    <button class="btn btn-outline-primary btn-sm" t-on-click="onVerify" title="Open Verification Portal">
+                        <i class="fa fa-external-link me-1"></i>
+                        Verify
+                    </button>
+                    <button class="btn btn-outline-primary btn-sm" t-on-click="onPrint" title="Print QR Code">
+                        <i class="fa fa-print me-1"></i>
+                        Print
+                    </button>
+                </div>
+            </t>
+
+            <t t-else="">
+                <div class="text-center text-muted">
+                    <i class="fa fa-qrcode fa-2x mb-2"></i>
+                    <p>QR code will be generated after payment confirmation</p>
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>

@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Alternative Compact Report Template -->
+        <template id="report_payment_voucher_compact">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <style>
+                                @page { margin: 10mm; size: A4; }
+                                
+                                .compact-voucher {
+                                    font-family: 'Arial', sans-serif;
+                                    font-size: 10px;
+                                    line-height: 1.2;
+                                    color: #333;
+                                }
+                                
+                                .compact-header {
+                                    background: linear-gradient(135deg, #1f4788, #2980b9);
+                                    color: white;
+                                    padding: 8px 12px;
+                                    margin-bottom: 15px;
+                                    border-radius: 4px;
+                                    text-align: center;
+                                    position: relative;
+                                }
+                                
+                                .compact-title {
+                                    font-size: 18px;
+                                    font-weight: bold;
+                                    margin: 0;
+                                }
+                                
+                                .osus-compact-branding {
+                                    position: absolute;
+                                    top: 5px;
+                                    left: 10px;
+                                    font-size: 8px;
+                                    background: rgba(255,255,255,0.9);
+                                    color: #1f4788;
+                                    padding: 2px 6px;
+                                    border-radius: 3px;
+                                    font-weight: 600;
+                                }
+                                
+                                .compact-grid {
+                                    display: grid;
+                                    grid-template-columns: 1fr 1fr 1fr;
+                                    gap: 10px;
+                                    margin-bottom: 15px;
+                                }
+                                
+                                .compact-section {
+                                    border: 1px solid #ddd;
+                                    padding: 8px;
+                                    border-radius: 3px;
+                                }
+                                
+                                .compact-section-title {
+                                    font-weight: bold;
+                                    color: #1f4788;
+                                    font-size: 9px;
+                                    text-transform: uppercase;
+                                    margin-bottom: 5px;
+                                    border-bottom: 1px solid #eee;
+                                    padding-bottom: 2px;
+                                }
+                                
+                                .compact-field {
+                                    display: flex;
+                                    margin-bottom: 3px;
+                                }
+                                
+                                .compact-label {
+                                    font-weight: 500;
+                                    width: 60px;
+                                    font-size: 8px;
+                                    color: #666;
+                                }
+                                
+                                .compact-value {
+                                    flex: 1;
+                                    border-bottom: 1px dotted #ccc;
+                                    font-size: 9px;
+                                }
+                                
+                                .compact-amount {
+                                    background: linear-gradient(135deg, #1f4788, #2980b9);
+                                    color: white;
+                                    text-align: center;
+                                    padding: 10px;
+                                    font-size: 16px;
+                                    font-weight: bold;
+                                    margin: 10px 0;
+                                    border-radius: 4px;
+                                }
+                                
+                                .compact-signatures {
+                                    display: grid;
+                                    grid-template-columns: 1fr 1fr 1fr 1fr;
+                                    gap: 8px;
+                                    margin-top: 15px;
+                                    border-top: 1px solid #ddd;
+                                    padding-top: 10px;
+                                }
+                                
+                                .compact-sig-box {
+                                    text-align: center;
+                                    font-size: 8px;
+                                }
+                                
+                                .compact-sig-line {
+                                    border-bottom: 1px solid #1f4788;
+                                    height: 20px;
+                                    margin-bottom: 3px;
+                                }
+                                
+                                .compact-receipt {
+                                    background: #f8f9fa;
+                                    border: 1px solid #1f4788;
+                                    padding: 8px;
+                                    margin-top: 10px;
+                                    border-radius: 3px;
+                                }
+                                
+                                .compact-receipt-title {
+                                    font-weight: bold;
+                                    text-align: center;
+                                    margin-bottom: 5px;
+                                    font-size: 10px;
+                                    color: #1f4788;
+                                }
+                            </style>
+                            
+                            <div class="compact-voucher">
+                                <div class="compact-header">
+                                    <div class="osus-compact-branding">OSUS</div>
+                                    <div class="compact-title">
+                                        <t t-if="o.payment_type == 'inbound'">RECEIPT</t>
+                                        <t t-else="">VOUCHER</t>
+                                    </div>
+                                    <div style="font-size: 10px; margin-top: 3px;">
+                                        No: <span t-field="o.name"/> | Date: <span t-field="o.date"/>
+                                    </div>
+                                </div>
+                                
+                                <div class="compact-grid">
+                                    <div class="compact-section">
+                                        <div class="compact-section-title">Party Details</div>
+                                        <div class="compact-field">
+                                            <span class="compact-label">Name:</span>
+                                            <span class="compact-value" t-field="o.partner_id.name"/>
+                                        </div>
+                                        <div class="compact-field">
+                                            <span class="compact-label">Phone:</span>
+                                            <span class="compact-value" t-field="o.partner_id.mobile"/>
+                                        </div>
+                                        <div class="compact-field">
+                                            <span class="compact-label">Email:</span>
+                                            <span class="compact-value" t-field="o.partner_id.email"/>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="compact-section">
+                                        <div class="compact-section-title">Payment Info</div>
+                                        <div class="compact-field">
+                                            <span class="compact-label">Method:</span>
+                                            <span class="compact-value" t-field="o.journal_id.name"/>
+                                        </div>
+                                        <div class="compact-field">
+                                            <span class="compact-label">Currency:</span>
+                                            <span class="compact-value" t-field="o.currency_id.name"/>
+                                        </div>
+                                        <div class="compact-field">
+                                            <span class="compact-label">State:</span>
+                                            <span class="compact-value" t-field="o.state"/>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="compact-section">
+                                        <div class="compact-section-title">Reference</div>
+                                        <div class="compact-field">
+                                            <span class="compact-label">Ref:</span>
+                                            <span class="compact-value" t-field="o.ref"/>
+                                        </div>
+                                        <div class="compact-field">
+                                            <span class="compact-label">Created:</span>
+                                            <span class="compact-value" t-field="o.create_date" t-options="{'widget': 'date'}"/>
+                                        </div>
+                                        <div class="compact-field">
+                                            <span class="compact-label">By:</span>
+                                            <span class="compact-value" t-field="o.create_uid.name"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="compact-amount">
+                                    AMOUNT: <span t-field="o.amount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                </div>
+                                
+                                <div style="font-size: 9px; font-style: italic; text-align: center; margin: 8px 0;">
+                                    Amount in Words: <span t-esc="o.currency_id.amount_to_text(o.amount)"/>
+                                </div>
+                                
+                                <div class="compact-signatures">
+                                    <div class="compact-sig-box">
+                                        <div class="compact-sig-line"></div>
+                                        <div>Prepared By</div>
+                                        <div style="font-size: 7px;" t-field="o.create_uid.name"/>
+                                    </div>
+                                    <div class="compact-sig-box">
+                                        <div class="compact-sig-line"></div>
+                                        <div>Reviewed By</div>
+                                        <div style="font-size: 7px;">_______</div>
+                                    </div>
+                                    <div class="compact-sig-box">
+                                        <div class="compact-sig-line"></div>
+                                        <div>Approved By</div>
+                                        <div style="font-size: 7px;">_______</div>
+                                    </div>
+                                    <div class="compact-sig-box">
+                                        <div class="compact-sig-line"></div>
+                                        <div>Authorized By</div>
+                                        <div style="font-size: 7px;">_______</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="compact-receipt">
+                                    <div class="compact-receipt-title">Receipt Acknowledgment</div>
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                                        <div>
+                                            <div class="compact-field">
+                                                <span class="compact-label">Received By:</span>
+                                                <span class="compact-value"></span>
+                                            </div>
+                                            <div class="compact-field">
+                                                <span class="compact-label">Signature:</span>
+                                                <span class="compact-value"></span>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="compact-field">
+                                                <span class="compact-label">Date:</span>
+                                                <span class="compact-value"></span>
+                                            </div>
+                                            <div class="compact-field">
+                                                <span class="compact-label">ID Check:</span>
+                                                <span class="compact-value">☐ Yes ☐ No</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div style="text-align: center; margin-top: 10px; font-size: 8px; color: #666;">
+                                    <span t-field="o.company_id.name"/> | Computer Generated Document
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

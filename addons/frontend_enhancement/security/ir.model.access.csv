@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_file_attachment_enhancement_user,file.attachment.enhancement.user,model_file_attachment_enhancement,base.group_user,1,1,1,1
+access_file_attachment_enhancement_portal,file.attachment.enhancement.portal,model_file_attachment_enhancement,base.group_portal,1,1,1,0
+access_file_attachment_enhancement_public,file.attachment.enhancement.public,model_file_attachment_enhancement,base.group_public,1,0,0,0
+access_sale_order_enhanced,sale.order.enhanced,sale.model_sale_order,base.group_user,1,1,1,1
+access_account_move_enhanced,account.move.enhanced,account.model_account_move,base.group_user,1,1,1,1
+access_res_users_enhanced,res.users.enhanced,base.model_res_users,base.group_user,1,1,1,0

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Statement and Follow-up Menu Structure -->
+
+    <!-- Main Menu -->
+    <menuitem id="statement_followup_main_menu" name="Partner Statements" sequence="85" web_icon="partner_statement_followup,static/description/icon.png"/>
+
+    <!-- Sub Menus -->
+    <menuitem id="statement_submenu" name="Statements" parent="statement_followup_main_menu" sequence="10"/>
+
+    <menuitem id="followup_submenu" name="Follow-up" parent="statement_followup_main_menu" sequence="20"/>
+
+    <menuitem id="configuration_submenu" name="Configuration" parent="statement_followup_main_menu" sequence="90"/>
+
+    <!-- Statement Menu Items -->
+    <menuitem id="menu_partner_statement_wizard" name="Generate Statements" parent="statement_submenu" action="action_partner_statement_wizard" sequence="10"/>
+
+    <menuitem id="menu_partner_ageing_report" name="Ageing Analysis" parent="statement_submenu" action="action_partner_ageing_report" sequence="20"/>
+
+    <menuitem id="menu_statement_history" name="Statement History" parent="statement_submenu" action="action_statement_history" sequence="30"/>
+
+    <!-- Follow-up Menu Items -->
+    <menuitem id="menu_followup_wizard" name="Send Follow-ups" parent="followup_submenu" action="action_followup_wizard" sequence="10"/>
+
+    <menuitem id="menu_followup_history" name="Follow-up History" parent="followup_submenu" action="action_followup_history" sequence="20"/>
+
+    <menuitem id="menu_batch_followup" name="Batch Follow-up" parent="followup_submenu" action="action_batch_followup_wizard" sequence="30"/>
+
+    <!-- Configuration Menu Items -->
+    <menuitem id="menu_statement_config" name="Statement Configuration" parent="configuration_submenu" action="action_res_partner_statement_config" sequence="10"/>
+
+    <menuitem id="menu_followup_levels" name="Follow-up Levels" parent="configuration_submenu" action="action_followup_levels" sequence="20"/>
+
+    <menuitem id="menu_ageing_periods" name="Ageing Periods" parent="configuration_submenu" action="action_ageing_periods" sequence="30"/>
+
+    <!-- Actions for the menus -->
+    <record id="action_partner_statement_wizard" model="ir.actions.act_window">
+        <field name="name">Partner Statement Wizard</field>
+        <field name="res_model">partner.statement.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="base.model_res_partner"/>
+    </record>
+
+    <record id="action_partner_ageing_report" model="ir.actions.act_window">
+        <field name="name">Partner Ageing Analysis</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_customer': 1}</field>
+        <field name="domain">[('customer_rank', '>', 0)]</field>
+    </record>
+
+    <record id="action_statement_history" model="ir.actions.act_window">
+        <field name="name">Statement History</field>
+        <field name="res_model">statement.history</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_followup_wizard" model="ir.actions.act_window">
+        <field name="name">Send Follow-ups</field>
+        <field name="res_model">followup.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="action_ageing_periods" model="ir.actions.act_window">
+        <field name="name">Ageing Periods</field>
+        <field name="res_model">statement.ageing.period</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Font Enhancement Configuration View -->
+    <record id="view_report_font_settings_form" model="ir.ui.view">
+        <field name="name">report.font.settings.form</field>
+        <field name="model">report.font.settings</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="apply_settings" type="object" string="Apply Settings" 
+                            class="oe_highlight"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name" placeholder="Font Setting Name..."/></h1>
+                    </div>
+                    
+                    <group>
+                        <group string="Basic Settings">
+                            <field name="report_type"/>
+                            <field name="active"/>
+                            <field name="apply_to_existing_reports"/>
+                        </group>
+                        <group string="Font Configuration">
+                            <field name="font_family"/>
+                            <field name="font_weight"/>
+                            <field name="line_height"/>
+                            <field name="letter_spacing"/>
+                        </group>
+                    </group>
+                    
+                    <group>
+                        <group string="Font Sizes">
+                            <field name="base_font_size"/>
+                            <field name="header_font_size"/>
+                            <field name="title_font_size"/>
+                        </group>
+                        <group string="Colors &amp; Contrast">
+                            <field name="text_color" widget="color"/>
+                            <field name="background_color" widget="color"/>
+                            <field name="high_contrast_mode"/>
+                        </group>
+                    </group>
+                    
+                    <group>
+                        <group string="Transparency Settings">
+                            <field name="adaptive_transparency"/>
+                            <field name="transparency_level" 
+                                   invisible="adaptive_transparency == False"/>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Custom CSS">
+                            <field name="css_custom" widget="code" 
+                                   options="{'mode': 'css'}" 
+                                   placeholder="/* Add custom CSS rules here */"/>
+                        </page>
+                        <page string="Preview">
+                            <div class="alert alert-info">
+                                <strong>Preview:</strong> Changes will be applied when you save and click "Apply Settings".
+                            </div>
+                            <div class="report-enhanced" style="padding: 20px; border: 1px solid #ddd;">
+                                <h1>Sample Report Title</h1>
+                                <h3>Sample Header</h3>
+                                <p>This is a sample paragraph showing how the font enhancement will look.</p>
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Description</th>
+                                            <th>Quantity</th>
+                                            <th class="text-right">Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Sample Item 1</td>
+                                            <td>2.00</td>
+                                            <td class="text-right amount">$100.00</td>
+                                        </tr>
+                                        <tr class="total">
+                                            <td><strong>Total</strong></td>
+                                            <td><strong>2.00</strong></td>
+                                            <td class="text-right"><strong>$100.00</strong></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree View -->
+    <record id="view_report_font_settings_tree" model="ir.ui.view">
+        <field name="name">report.font.settings.tree</field>
+        <field name="model">report.font.settings</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="report_type"/>
+                <field name="font_family"/>
+                <field name="base_font_size"/>
+                <field name="high_contrast_mode" widget="boolean_toggle"/>
+                <field name="adaptive_transparency" widget="boolean_toggle"/>
+                <field name="active" widget="boolean_toggle"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_report_font_settings_search" model="ir.ui.view">
+        <field name="name">report.font.settings.search</field>
+        <field name="model">report.font.settings</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="report_type"/>
+                <field name="font_family"/>
+                <filter name="active" string="Active" domain="[('active', '=', True)]"/>
+                <filter name="inactive" string="Inactive" domain="[('active', '=', False)]"/>
+                <filter name="high_contrast" string="High Contrast" domain="[('high_contrast_mode', '=', True)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Report Type" name="group_report_type" domain="[]" context="{'group_by': 'report_type'}"/>
+                    <filter string="Font Family" name="group_font_family" domain="[]" context="{'group_by': 'font_family'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_report_font_settings" model="ir.actions.act_window">
+        <field name="name">Report Font Enhancement</field>
+        <field name="res_model">report.font.settings</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first font enhancement setting!
+            </p>
+            <p>
+                Configure font settings to improve report readability with high contrast
+                and adaptive transparency features.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem id="menu_report_font_enhancement_root"
+              name="Report Enhancement"
+              sequence="110"/>
+    
+    <menuitem id="menu_report_font_settings"
+              name="Font Settings"
+              parent="menu_report_font_enhancement_root"
+              action="action_report_font_settings"
+              sequence="10"/>
+
+    <!-- Create default settings -->
+    <record id="default_font_settings" model="report.font.settings">
+        <field name="name">Default High Contrast</field>
+        <field name="report_type">all</field>
+        <field name="font_family">system</field>
+        <field name="base_font_size">12</field>
+        <field name="header_font_size">16</field>
+        <field name="title_font_size">20</field>
+        <field name="font_weight">normal</field>
+        <field name="text_color">#212529</field>
+        <field name="background_color">#ffffff</field>
+        <field name="high_contrast_mode">True</field>
+        <field name="adaptive_transparency">True</field>
+        <field name="transparency_level">0.95</field>
+        <field name="line_height">1.4</field>
+        <field name="letter_spacing">0.02</field>
+        <field name="active">True</field>
+        <field name="apply_to_existing_reports">True</field>
+    </record>
+
+    <!-- Invoice Reports Settings -->
+    <record id="invoice_font_settings" model="report.font.settings">
+        <field name="name">Invoice Reports Enhanced</field>
+        <field name="report_type">invoice</field>
+        <field name="font_family">roboto</field>
+        <field name="base_font_size">12</field>
+        <field name="header_font_size">16</field>
+        <field name="title_font_size">22</field>
+        <field name="font_weight">normal</field>
+        <field name="text_color">#1a1a1a</field>
+        <field name="background_color">#fefefe</field>
+        <field name="high_contrast_mode">True</field>
+        <field name="adaptive_transparency">True</field>
+        <field name="transparency_level">0.98</field>
+        <field name="line_height">1.5</field>
+        <field name="letter_spacing">0.01</field>
+        <field name="active">True</field>
+        <field name="apply_to_existing_reports">True</field>
+    </record>
+
+    <!-- Financial Reports Settings -->
+    <record id="financial_font_settings" model="report.font.settings">
+        <field name="name">Financial Reports Enhanced</field>
+        <field name="report_type">financial</field>
+        <field name="font_family">georgia</field>
+        <field name="base_font_size">11</field>
+        <field name="header_font_size">14</field>
+        <field name="title_font_size">18</field>
+        <field name="font_weight">normal</field>
+        <field name="text_color">#2c3e50</field>
+        <field name="background_color">#f8f9fa</field>
+        <field name="high_contrast_mode">True</field>
+        <field name="adaptive_transparency">True</field>
+        <field name="transparency_level">0.96</field>
+        <field name="line_height">1.3</field>
+        <field name="letter_spacing">0.0</field>
+        <field name="active">True</field>
+        <field name="apply_to_existing_reports">True</field>
+    </record>
+
+</odoo>

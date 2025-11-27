@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Receipt Voucher Report Template -->
+    <template id="report_receipt_voucher_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <!-- OSUS Header Styling -->
+                        <style>
+                            .osus-header {
+                                background: linear-gradient(135deg, #6B2B47 0%, #8B1538 100%);
+                                color: white;
+                                padding: 20px;
+                                margin: -20px -20px 20px -20px;
+                                text-align: center;
+                                border-radius: 0;
+                            }
+                            .osus-title {
+                                font-size: 28px;
+                                font-weight: bold;
+                                margin: 0;
+                                text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+                            }
+                            .osus-subtitle {
+                                color: #D4AF37;
+                                font-size: 16px;
+                                margin: 5px 0 0 0;
+                                font-weight: 500;
+                            }
+                            .voucher-header {
+                                background-color: #2E7D32;
+                                color: white;
+                                padding: 15px;
+                                margin: 20px 0;
+                                text-align: center;
+                                border-radius: 5px;
+                            }
+                            .voucher-number {
+                                font-size: 24px;
+                                font-weight: bold;
+                                color: #81C784;
+                            }
+                            .signature-section {
+                                border: 2px solid #2E7D32;
+                                padding: 15px;
+                                margin: 10px 0;
+                                border-radius: 5px;
+                                background-color: #f8f9fa;
+                            }
+                            .signature-title {
+                                color: #2E7D32;
+                                font-weight: bold;
+                                border-bottom: 1px solid #81C784;
+                                padding-bottom: 5px;
+                                margin-bottom: 10px;
+                            }
+                            .signature-line {
+                                border-bottom: 1px solid #333;
+                                min-height: 40px;
+                                margin: 10px 0;
+                                position: relative;
+                            }
+                            .signature-label {
+                                font-size: 12px;
+                                color: #666;
+                                margin-top: 5px;
+                            }
+                            .amount-section {
+                                background-color: #E8F5E8;
+                                border: 2px solid #81C784;
+                                padding: 15px;
+                                border-radius: 5px;
+                                margin: 20px 0;
+                            }
+                            .qr-section {
+                                text-align: center;
+                                border: 1px solid #dee2e6;
+                                padding: 15px;
+                                margin: 20px 0;
+                                border-radius: 5px;
+                            }
+                            .workflow-badge {
+                                background-color: #81C784;
+                                color: #2E7D32;
+                                padding: 5px 15px;
+                                border-radius: 20px;
+                                font-weight: bold;
+                                display: inline-block;
+                            }
+                            table.voucher-details {
+                                width: 100%;
+                                border-collapse: collapse;
+                                margin: 20px 0;
+                            }
+                            table.voucher-details th {
+                                background-color: #2E7D32;
+                                color: white;
+                                padding: 12px;
+                                text-align: left;
+                                border: 1px solid #1B5E20;
+                            }
+                            table.voucher-details td {
+                                padding: 12px;
+                                border: 1px solid #dee2e6;
+                                background-color: white;
+                            }
+                            table.voucher-details tr:nth-child(even) td {
+                                background-color: #f8f9fa;
+                            }
+                            .footer-note {
+                                font-size: 12px;
+                                color: #666;
+                                text-align: center;
+                                margin-top: 30px;
+                                padding-top: 20px;
+                                border-top: 1px solid #dee2e6;
+                            }
+                            .receipt-specific {
+                                background-color: #E8F5E8;
+                                border-left: 4px solid #2E7D32;
+                                padding: 15px;
+                                margin: 20px 0;
+                            }
+                        </style>
+
+                        <!-- OSUS Header -->
+                        <div class="osus-header">
+                            <h1 class="osus-title">OSUS PROPERTIES</h1>
+                            <p class="osus-subtitle">Real Estate Excellence Since 2010</p>
+                        </div>
+
+                        <!-- Voucher Header -->
+                        <div class="voucher-header">
+                            <h2 style="margin: 0; font-size: 20px;">RECEIPT VOUCHER</h2>
+                            <div class="voucher-number">
+                                <t t-esc="doc.voucher_number or 'RV-DRAFT'"/>
+                            </div>
+                            <div class="workflow-badge">
+                                <t t-esc="doc.voucher_state.upper().replace('_', ' ') if doc.voucher_state else 'DRAFT'"/>
+                            </div>
+                        </div>
+
+                        <!-- Receipt Details Table -->
+                        <table class="voucher-details">
+                            <tr>
+                                <th style="width: 25%;">Date</th>
+                                <td><span t-field="doc.date" t-options='{"widget": "date"}'/></td>
+                                <th style="width: 25%;">Company</th>
+                                <td><t t-esc="doc.company_id.name"/></td>
+                            </tr>
+                            <tr>
+                                <th>Received From</th>
+                                <td><strong><t t-esc="doc.partner_id.name"/></strong></td>
+                                <th>Payment Method</th>
+                                <td><t t-esc="doc.payment_method_id.name"/></td>
+                            </tr>
+                            <tr>
+                                <th>Payer Address</th>
+                                <td>
+                                    <t t-if="doc.partner_id.street">
+                                        <t t-esc="doc.partner_id.street"/><br/>
+                                    </t>
+                                    <t t-if="doc.partner_id.street2">
+                                        <t t-esc="doc.partner_id.street2"/><br/>
+                                    </t>
+                                    <t t-if="doc.partner_id.city">
+                                        <t t-esc="doc.partner_id.city"/>
+                                    </t>
+                                    <t t-if="doc.partner_id.state_id">
+                                        , <t t-esc="doc.partner_id.state_id.name"/>
+                                    </t>
+                                    <t t-if="doc.partner_id.zip">
+                                        <t t-esc="doc.partner_id.zip"/>
+                                    </t>
+                                </td>
+                                <th>Journal</th>
+                                <td><t t-esc="doc.journal_id.name"/></td>
+                            </tr>
+                            <tr t-if="doc.ref">
+                                <th>Reference</th>
+                                <td><t t-esc="doc.ref"/></td>
+                                <th>Currency</th>
+                                <td><t t-esc="doc.currency_id.name"/></td>
+                            </tr>
+                            <tr t-if="doc.related_document_number">
+                                <th>Related Document</th>
+                                <td>
+                                    <t t-esc="doc.related_document_type"/> - <t t-esc="doc.related_document_number"/>
+                                    <t t-if="doc.related_document_date">
+                                        (<span t-field="doc.related_document_date" t-options='{"widget": "date"}'/>)
+                                    </t>
+                                </td>
+                                <th></th>
+                                <td></td>
+                            </tr>
+                        </table>
+
+                        <!-- Receipt-specific information -->
+                        <div class="receipt-specific">
+                            <h4 style="color: #2E7D32; margin: 0 0 10px 0;">Receipt Information</h4>
+                            <p style="margin: 5px 0;">
+                                <strong>Receipt Type:</strong> 
+                                <t t-esc="'Customer Payment' if doc.payment_type == 'inbound' else 'Other Income'"/>
+                            </p>
+                            <p style="margin: 5px 0;" t-if="doc.ref">
+                                <strong>Purpose:</strong> <t t-esc="doc.ref"/>
+                            </p>
+                        </div>
+
+                        <!-- Amount Section -->
+                        <div class="amount-section">
+                            <table style="width: 100%; border: none;">
+                                <tr>
+                                    <td style="border: none; padding: 0;">
+                                        <h3 style="color: #2E7D32; margin: 0;">Amount Received</h3>
+                                        <table style="width: 100%; margin-top: 10px;">
+                                            <tr>
+                                                <td style="border: none; padding: 5px 0;"><strong>Amount in Figures:</strong></td>
+                                                <td style="border: none; padding: 5px 0; text-align: right;">
+                                                    <span style="font-size: 24px; color: #2E7D32; font-weight: bold;">
+                                                        <span t-field="doc.amount" t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border: none; padding: 5px 0;"><strong>Amount in Words:</strong></td>
+                                                <td style="border: none; padding: 5px 0; text-align: right; font-style: italic;">
+                                                    <t t-esc="doc.amount_in_words"/>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <!-- Received For -->
+                        <div t-if="doc.ref or doc.communication" style="margin: 20px 0;">
+                            <h4 style="color: #2E7D32; border-bottom: 1px solid #81C784; padding-bottom: 5px;">Received For</h4>
+                            <p style="padding: 10px; background-color: #E8F5E8; border-left: 4px solid #81C784;">
+                                <t t-esc="doc.ref or doc.communication"/>
+                            </p>
+                        </div>
+
+                        <!-- Digital Signatures Section -->
+                        <div style="margin-top: 30px;">
+                            <h3 style="color: #2E7D32; text-align: center; margin-bottom: 20px;">RECEIPT AUTHORIZATION</h3>
+                            
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <!-- First Row: Creator and Reviewer -->
+                                <tr>
+                                    <td style="width: 50%; padding: 15px; vertical-align: top;">
+                                        <div class="signature-section">
+                                            <div class="signature-title">1. RECEIVED BY</div>
+                                            <div class="signature-line">
+                                                <t t-if="doc.creator_signature">
+                                                    <img t-att-src="image_data_uri(doc.creator_signature)" style="max-height: 30px;"/>
+                                                </t>
+                                            </div>
+                                            <div class="signature-label">
+                                                <strong><t t-esc="doc.creator_name"/></strong><br/>
+                                                <t t-if="doc.creator_signature_date">
+                                                    Signed: <span t-field="doc.creator_signature_date" t-options='{"widget": "datetime"}'/>
+                                                </t>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td style="width: 50%; padding: 15px; vertical-align: top;">
+                                        <div class="signature-section">
+                                            <div class="signature-title">2. VERIFIED BY</div>
+                                            <div class="signature-line">
+                                                <t t-if="doc.reviewer_signature">
+                                                    <img t-att-src="image_data_uri(doc.reviewer_signature)" style="max-height: 30px;"/>
+                                                </t>
+                                            </div>
+                                            <div class="signature-label">
+                                                <strong><t t-esc="doc.reviewer_name or '________________'"/></strong><br/>
+                                                <t t-if="doc.reviewer_signature_date">
+                                                    Signed: <span t-field="doc.reviewer_signature_date" t-options='{"widget": "datetime"}'/>
+                                                </t>
+                                                <t t-if="not doc.reviewer_signature_date">
+                                                    Date: ________________
+                                                </t>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                
+                                <!-- Second Row: Authorizer only for Receipt -->
+                                <tr>
+                                    <td colspan="2" style="padding: 15px;">
+                                        <div class="signature-section">
+                                            <div class="signature-title">3. AUTHORIZED BY</div>
+                                            <div class="signature-line">
+                                                <t t-if="doc.authorizer_signature">
+                                                    <img t-att-src="image_data_uri(doc.authorizer_signature)" style="max-height: 30px;"/>
+                                                </t>
+                                            </div>
+                                            <div class="signature-label">
+                                                <strong><t t-esc="doc.authorizer_name or '________________'"/></strong><br/>
+                                                <t t-if="doc.authorizer_signature_date">
+                                                    Signed: <span t-field="doc.authorizer_signature_date" t-options='{"widget": "datetime"}'/>
+                                                </t>
+                                                <t t-if="not doc.authorizer_signature_date">
+                                                    Date: ________________
+                                                </t>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <!-- QR Code Section -->
+                        <div class="qr-section">
+                            <h4 style="color: #2E7D32; margin-bottom: 10px;">Receipt Verification</h4>
+                            <t t-if="doc.qr_code">
+                                <img t-att-src="image_data_uri(doc.qr_code)" style="max-width: 150px; max-height: 150px;"/>
+                                <p style="margin: 10px 0 0 0; font-size: 12px; color: #666;">
+                                    Scan QR code to verify receipt authenticity<br/>
+                                    Token: <t t-esc="doc.verification_token"/>
+                                </p>
+                            </t>
+                        </div>
+
+                        <!-- Footer -->
+                        <div class="footer-note">
+                            <p>
+                                <strong>OSUS Properties</strong> - Professional Real Estate Management<br/>
+                                This is a computer-generated receipt. Digital signatures are legally binding.<br/>
+                                Generated on <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%B %d, %Y at %I:%M %p')"/>
+                            </p>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Single Invoice Report -->
+    <record id="action_report_osus_invoice" model="ir.actions.report">
+        <field name="name">OSUS Invoice</field>
+        <field name="model">account.move</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">invoice_report_for_realestate.report_osus_invoice_document</field>
+        <field name="report_file">invoice_report_for_realestate.report_osus_invoice_document</field>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="base.paperformat_euro"/>
+        <field name="print_report_name">'OSUS Invoice - %s' % (object.name)</field>
+    </record>
+
+    <!-- Bulk Invoice Report -->
+    <record id="action_report_osus_invoice_bulk" model="ir.actions.report">
+        <field name="name">OSUS Invoices (Bulk)</field>
+        <field name="model">account.move</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">invoice_report_for_realestate.report_osus_invoice_bulk_document</field>
+        <field name="report_file">invoice_report_for_realestate.report_osus_invoice_bulk_document</field>
+        <field name="paperformat_id" ref="base.paperformat_euro"/>
+        <field name="print_report_name">'OSUS Invoices Bulk - %s documents' % (len(objects))</field>
+    </record>
+
+    <!-- Bulk Bill Report -->
+    <record id="action_report_osus_bill_bulk" model="ir.actions.report">
+        <field name="name">OSUS Bills (Bulk)</field>
+        <field name="model">account.move</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">invoice_report_for_realestate.report_osus_bill_bulk_document</field>
+        <field name="report_file">invoice_report_for_realestate.report_osus_bill_bulk_document</field>
+        <field name="paperformat_id" ref="base.paperformat_euro"/>
+        <field name="print_report_name">'OSUS Bills Bulk - %s documents' % (len(objects))</field>
+    </record>
+
+    <!-- Bulk Mixed Documents Report -->
+    <record id="action_report_osus_mixed_bulk" model="ir.actions.report">
+        <field name="name">OSUS Documents (Bulk)</field>
+        <field name="model">account.move</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">invoice_report_for_realestate.report_osus_mixed_bulk_document</field>
+        <field name="report_file">invoice_report_for_realestate.report_osus_mixed_bulk_document</field>
+        <field name="paperformat_id" ref="base.paperformat_euro"/>
+        <field name="print_report_name">'OSUS Documents Bulk - %s items' % (len(objects))</field>
+    </record>
+</odoo>

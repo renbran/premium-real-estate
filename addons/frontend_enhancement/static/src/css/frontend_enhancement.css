@@ -1,0 +1,507 @@
+/* Frontend Enhancement Module - Backend CSS */
+
+/* OSUS Properties Branding Colors */
+:root {
+    --osus-primary: #1f4788;
+    --osus-secondary: #f8f9fa;
+    --osus-accent: #007bff;
+    --osus-success: #28a745;
+    --osus-warning: #ffc107;
+    --osus-danger: #dc3545;
+    --osus-light: #f8f9fa;
+    --osus-dark: #343a40;
+}
+
+/* Enhanced Field Styling */
+.o_field_highlight {
+    border: 2px solid var(--osus-primary) !important;
+    border-radius: 4px;
+    background-color: rgba(31, 71, 136, 0.05);
+    font-weight: 500;
+}
+
+.o_field_computed {
+    background-color: var(--osus-light);
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 6px 12px;
+    color: var(--osus-dark);
+    font-style: italic;
+}
+
+.o_field_text {
+    min-height: 80px;
+    resize: vertical;
+}
+
+/* Sale Order Reference Enhancements */
+.o_sale_order_ref_section {
+    background: linear-gradient(135deg, rgba(31, 71, 136, 0.1), rgba(31, 71, 136, 0.05));
+    border-left: 4px solid var(--osus-primary);
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 0 6px 6px 0;
+}
+
+.o_reference_priority_badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.o_reference_priority_badge.urgent {
+    background-color: var(--osus-danger);
+    color: white;
+}
+
+.o_reference_priority_badge.high {
+    background-color: var(--osus-warning);
+    color: #212529;
+}
+
+.o_reference_priority_badge.normal {
+    background-color: var(--osus-accent);
+    color: white;
+}
+
+.o_reference_priority_badge.low {
+    background-color: #6c757d;
+    color: white;
+}
+
+/* Invoice Reference Enhancements */
+.o_invoice_ref_section {
+    background: linear-gradient(135deg, rgba(0, 123, 255, 0.1), rgba(0, 123, 255, 0.05));
+    border-left: 4px solid var(--osus-accent);
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 0 6px 6px 0;
+}
+
+.o_reference_validation_badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.o_reference_validation_badge.validated {
+    background-color: var(--osus-success);
+    color: white;
+}
+
+.o_reference_validation_badge.unvalidated {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+/* File Upload Widget Styling */
+.o_file_upload_widget {
+    width: 100%;
+    margin: 15px 0;
+}
+
+.o_file_upload_area {
+    border: 2px dashed #dee2e6;
+    border-radius: 8px;
+    padding: 30px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: #fafbfc;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.o_file_upload_area:hover {
+    border-color: var(--osus-primary);
+    background-color: rgba(31, 71, 136, 0.02);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(31, 71, 136, 0.15);
+}
+
+.o_file_upload_area.o_file_upload_dragging {
+    border-color: var(--osus-accent);
+    background-color: rgba(0, 123, 255, 0.05);
+    transform: scale(1.02);
+    box-shadow: 0 6px 20px rgba(0, 123, 255, 0.2);
+}
+
+.o_file_upload_area.o_file_upload_uploading {
+    border-color: var(--osus-success);
+    background-color: rgba(40, 167, 69, 0.05);
+}
+
+.o_file_upload_area.o_file_upload_readonly {
+    cursor: not-allowed;
+    opacity: 0.6;
+    background-color: #f8f9fa;
+}
+
+.o_upload_placeholder {
+    width: 100%;
+}
+
+.o_upload_progress {
+    width: 100%;
+}
+
+.o_upload_stats {
+    background-color: white;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 15px;
+}
+
+.o_stat_card {
+    padding: 10px;
+    border-radius: 6px;
+    background-color: #f8f9fa;
+    margin: 5px;
+    transition: all 0.2s ease;
+}
+
+.o_stat_card:hover {
+    background-color: #e9ecef;
+    transform: translateY(-1px);
+}
+
+.o_stat_number {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.o_stat_label {
+    font-size: 0.75rem;
+    color: #6c757d;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* File Attachment List Styling */
+.o_file_attachment_item {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    background-color: white;
+    transition: all 0.2s ease;
+}
+
+.o_file_attachment_item:hover {
+    border-color: var(--osus-primary);
+    box-shadow: 0 2px 8px rgba(31, 71, 136, 0.1);
+    transform: translateX(4px);
+}
+
+.o_file_attachment_item.inactive {
+    opacity: 0.6;
+    background-color: #f8f9fa;
+}
+
+.o_file_icon {
+    font-size: 1.5rem;
+    margin-right: 12px;
+    width: 30px;
+    text-align: center;
+}
+
+.o_file_icon.pdf {
+    color: #dc3545;
+}
+.o_file_icon.word {
+    color: #0078d4;
+}
+.o_file_icon.excel {
+    color: #107c41;
+}
+.o_file_icon.image {
+    color: #6f42c1;
+}
+.o_file_icon.archive {
+    color: #fd7e14;
+}
+.o_file_icon.text {
+    color: #6c757d;
+}
+
+.o_file_details {
+    flex: 1;
+    min-width: 0;
+}
+
+.o_file_name {
+    font-weight: 600;
+    color: var(--osus-dark);
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.o_file_meta {
+    font-size: 0.8rem;
+    color: #6c757d;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.o_file_actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+/* Enhanced Button Styling */
+.btn-osus-primary {
+    background-color: var(--osus-primary);
+    border-color: var(--osus-primary);
+    color: white;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.btn-osus-primary:hover {
+    background-color: #1a3f7a;
+    border-color: #1a3f7a;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(31, 71, 136, 0.3);
+}
+
+.btn-osus-secondary {
+    background-color: var(--osus-secondary);
+    border-color: #dee2e6;
+    color: var(--osus-dark);
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.btn-osus-secondary:hover {
+    background-color: #e2e6ea;
+    border-color: #dae0e5;
+    transform: translateY(-1px);
+}
+
+/* Kanban Card Enhancements */
+.o_kanban_card.o_enhanced_reference {
+    border-left: 4px solid var(--osus-primary);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+}
+
+.o_kanban_card.o_enhanced_reference:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.o_kanban_reference_info {
+    background-color: rgba(31, 71, 136, 0.05);
+    padding: 8px;
+    margin: 8px -12px -12px -12px;
+    border-radius: 0 0 6px 6px;
+    border-top: 1px solid rgba(31, 71, 136, 0.1);
+}
+
+/* List View Enhancements */
+.o_list_view .o_list_table thead th {
+    background-color: var(--osus-primary);
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.8rem;
+    padding: 12px 8px;
+}
+
+.o_list_view .o_data_row:hover {
+    background-color: rgba(31, 71, 136, 0.03);
+}
+
+.o_list_view .o_data_row.o_selected_row {
+    background-color: rgba(31, 71, 136, 0.08);
+}
+
+/* Form View Enhancements */
+.o_form_view .o_form_sheet {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.o_form_view .o_form_sheet .oe_title h1 {
+    color: var(--osus-primary);
+    font-weight: 700;
+}
+
+/* Search View Enhancements */
+.o_searchview .o_searchview_input {
+    border-radius: 20px;
+    padding: 8px 16px;
+    border: 2px solid #dee2e6;
+    transition: all 0.2s ease;
+}
+
+.o_searchview .o_searchview_input:focus {
+    border-color: var(--osus-primary);
+    box-shadow: 0 0 0 0.2rem rgba(31, 71, 136, 0.25);
+}
+
+/* Progress Bars */
+.progress-bar {
+    background-color: var(--osus-primary);
+    transition: width 0.3s ease;
+}
+
+.progress-bar.bg-success {
+    background-color: var(--osus-success) !important;
+}
+
+.progress-bar.bg-warning {
+    background-color: var(--osus-warning) !important;
+}
+
+.progress-bar.bg-danger {
+    background-color: var(--osus-danger) !important;
+}
+
+/* Notification Styling */
+.o_notification {
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.o_notification.o_notification_success {
+    border-left: 4px solid var(--osus-success);
+}
+
+.o_notification.o_notification_warning {
+    border-left: 4px solid var(--osus-warning);
+}
+
+.o_notification.o_notification_danger {
+    border-left: 4px solid var(--osus-danger);
+}
+
+/* Modal Enhancements */
+.modal-header {
+    background-color: var(--osus-primary);
+    color: white;
+    border-radius: 8px 8px 0 0;
+}
+
+.modal-header .modal-title {
+    font-weight: 600;
+}
+
+.modal-content {
+    border-radius: 8px;
+    border: none;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .o_file_upload_area {
+        padding: 20px 15px;
+        min-height: 150px;
+    }
+
+    .o_stat_card {
+        margin: 2px;
+        padding: 8px;
+    }
+
+    .o_stat_number {
+        font-size: 1rem;
+    }
+
+    .o_file_meta {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .o_file_actions {
+        flex-direction: column;
+        gap: 4px;
+    }
+}
+
+/* Animation Utilities */
+.animate-fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.animate-slide-up {
+    animation: slideUp 0.3s ease-out;
+}
+
+.animate-pulse {
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .o_file_upload_widget,
+    .o_file_actions,
+    .btn {
+        display: none !important;
+    }
+
+    .o_reference_priority_badge,
+    .o_reference_validation_badge {
+        color: #000 !important;
+        background-color: transparent !important;
+        border: 1px solid #000 !important;
+    }
+}

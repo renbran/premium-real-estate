@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Purchase Order Form View Extension -->
+    <record id="view_purchase_order_form_commission" model="ir.ui.view">
+        <field name="name">purchase.order.form.commission</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <!-- Add commission fields in the main form -->
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="description" string="Commission Description" invisible="not is_commission_po"/>
+                <field name="origin_so_id" readonly="1" invisible="not is_commission_po" options="{'no_create': True, 'no_open': True}"/>
+                <field name="commission_posted" readonly="1" invisible="not is_commission_po"/>
+                <field name="is_commission_po" invisible="1"/>
+            </xpath>
+
+            <!-- Add button to view origin sale order -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button type="object" name="action_view_origin_sale_order" class="oe_stat_button" icon="fa-shopping-cart" invisible="not origin_so_id">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_text">Origin</span>
+                        <span class="o_stat_text">Sale Order</span>
+                    </div>
+                </button>
+                <!-- Valid Post Button -->
+                <button name="action_force_post" string="Force Post" type="object" class="oe_highlight" invisible="state not in ('draft', 'sent')"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Purchase Order Tree View Extension -->
+    <record id="view_purchase_order_tree_commission" model="ir.ui.view">
+        <field name="name">purchase.order.tree.commission</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="description" optional="hide"/>
+                <field name="origin_so_id" optional="hide"/>
+                <field name="is_commission_po" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Commission Purchase Orders Filter - Define our own search view -->
+    <record id="view_purchase_order_search_commission" model="ir.ui.view">
+        <field name="name">purchase.order.search.commission</field>
+        <field name="model">purchase.order</field>
+        <field name="arch" type="xml">
+            <search string="Purchase Orders">
+                <field name="name" string="Purchase Order"/>
+                <field name="partner_id"/>
+                <field name="description" string="Description"/>
+                <field name="origin_so_id" string="Origin Sale Order"/>
+
+                <filter string="Commission POs" name="commission_pos" domain="[('is_commission_po', '=', True)]"/>
+                <filter string="Regular POs" name="regular_pos" domain="[('is_commission_po', '=', False)]"/>
+
+                <group expand="0" string="Group By">
+                    <filter string="Commission Type" name="group_by_commission_type" domain="[]" context="{'group_by': 'is_commission_po'}"/>
+                    <filter string="Origin Sale Order" name="group_by_origin_so" domain="[('origin_so_id', '!=', False)]" context="{'group_by': 'origin_so_id'}"/>
+                    <filter string="Vendor" name="group_by_vendor" context="{'group_by': 'partner_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+</odoo>

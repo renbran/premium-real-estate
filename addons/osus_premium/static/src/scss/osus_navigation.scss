@@ -1,0 +1,943 @@
+// OSUS Properties - Luxury Navigation Styles
+// Premium navigation components for Odoo17
+// =========================================
+
+@import "osus_variables";
+
+// LUXURY MAIN NAVIGATION
+// =======================
+.osus-main-nav {
+  background: $osus-burgundy-gradient;
+  box-shadow: $osus-shadow-lg;
+  position: relative;
+  z-index: $osus-z-sticky;
+
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: $osus-gold-gradient;
+  }
+
+  .nav-container {
+    max-width: $osus-content-max-width;
+    margin: 0 auto;
+    padding: 0 $osus-spacing-lg;
+  }
+
+  .nav-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: $osus-navbar-height;
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+
+      .brand-logo {
+        width: 40px;
+        height: 40px;
+        margin-right: $osus-spacing-md;
+        border-radius: $osus-border-radius-lg;
+        background: $osus-white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        img {
+          max-width: 100%;
+          max-height: 100%;
+        }
+      }
+
+      .brand-text {
+        color: $osus-white;
+        font-size: $osus-font-size-xl;
+        font-weight: $osus-font-weight-bold;
+        margin: 0;
+      }
+    }
+
+    .nav-menu {
+      display: flex;
+      align-items: center;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      gap: $osus-spacing-sm;
+
+      .nav-item {
+        position: relative;
+
+        .nav-link {
+          display: flex;
+          align-items: center;
+          padding: $osus-spacing-md $osus-spacing-lg;
+          color: $osus-white;
+          text-decoration: none;
+          font-weight: $osus-font-weight-medium;
+          border-radius: $osus-border-radius-lg;
+          transition: all $osus-transition-standard;
+          position: relative;
+          overflow: hidden;
+
+          &::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+              90deg,
+              transparent,
+              rgba($osus-white, 0.1),
+              transparent
+            );
+            transition: left $osus-transition-luxury;
+          }
+
+          &:hover {
+            background: rgba($osus-white, 0.1);
+            transform: translateY(-2px);
+
+            &::before {
+              left: 100%;
+            }
+          }
+
+          &.active {
+            background: $osus-gold-medium;
+            color: $osus-burgundy-primary;
+            font-weight: $osus-font-weight-semibold;
+            box-shadow: $osus-shadow-sm;
+          }
+
+          .nav-icon {
+            margin-right: $osus-spacing-sm;
+            font-size: 18px;
+          }
+
+          .nav-badge {
+            margin-left: $osus-spacing-sm;
+            background: $osus-danger;
+            color: $osus-white;
+            border-radius: $osus-border-radius-curved;
+            padding: 2px 6px;
+            font-size: $osus-font-size-xs;
+            font-weight: $osus-font-weight-bold;
+          }
+        }
+
+        // Dropdown menu styling
+        .nav-dropdown {
+          position: absolute;
+          top: 100%;
+          left: 0;
+          min-width: 220px;
+          background: $osus-white;
+          border-radius: $osus-border-radius-lg;
+          box-shadow: $osus-shadow-luxury;
+          border: 1px solid rgba($osus-gold-medium, 0.3);
+          opacity: 0;
+          visibility: hidden;
+          transform: translateY(-10px);
+          transition: all $osus-transition-standard;
+          z-index: $osus-z-dropdown;
+          overflow: hidden;
+
+          &::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: $osus-burgundy-gradient;
+          }
+
+          .dropdown-item {
+            display: block;
+            padding: $osus-spacing-md $osus-spacing-lg;
+            color: $osus-dark-gray;
+            text-decoration: none;
+            font-weight: $osus-font-weight-medium;
+            transition: all $osus-transition-fast;
+            border-bottom: 1px solid rgba($osus-gold-medium, 0.1);
+
+            &:hover {
+              background: $osus-offwhite-burgundy-gradient;
+              color: $osus-burgundy-primary;
+              transform: translateX(4px);
+            }
+
+            &:last-child {
+              border-bottom: none;
+            }
+
+            .item-icon {
+              margin-right: $osus-spacing-sm;
+              color: $osus-burgundy-medium;
+            }
+
+            .item-description {
+              font-size: $osus-font-size-sm;
+              color: $osus-gray;
+              margin-top: 2px;
+            }
+          }
+        }
+
+        &:hover .nav-dropdown {
+          opacity: 1;
+          visibility: visible;
+          transform: translateY(0);
+        }
+      }
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: $osus-spacing-sm;
+
+      .nav-search {
+        position: relative;
+
+        .search-input {
+          width: 200px;
+          padding: $osus-spacing-sm $osus-spacing-md $osus-spacing-sm
+            $osus-spacing-2xl;
+          border: none;
+          border-radius: $osus-border-radius-curved;
+          background: rgba($osus-white, 0.1);
+          color: $osus-white;
+          -webkit-backdrop-filter: $osus-backdrop-blur;
+          backdrop-filter: $osus-backdrop-blur;
+          transition: all $osus-transition-standard;
+
+          &::placeholder {
+            color: rgba($osus-white, 0.7);
+          }
+
+          &:focus {
+            width: 300px;
+            background: rgba($osus-white, 0.2);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba($osus-white, 0.3);
+          }
+        }
+
+        .search-icon {
+          position: absolute;
+          left: $osus-spacing-md;
+          top: 50%;
+          transform: translateY(-50%);
+          color: rgba($osus-white, 0.7);
+          pointer-events: none;
+        }
+      }
+
+      .nav-notifications {
+        position: relative;
+
+        .notifications-trigger {
+          background: rgba($osus-white, 0.1);
+          border: none;
+          color: $osus-white;
+          padding: $osus-spacing-sm;
+          border-radius: $osus-border-radius-lg;
+          cursor: pointer;
+          transition: all $osus-transition-fast;
+
+          &:hover {
+            background: rgba($osus-white, 0.2);
+            transform: translateY(-1px);
+          }
+
+          .notification-count {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: $osus-danger;
+            color: $osus-white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: $osus-font-size-xs;
+            font-weight: $osus-font-weight-bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+        }
+
+        .notifications-panel {
+          position: absolute;
+          top: 100%;
+          right: 0;
+          width: 320px;
+          background: $osus-white;
+          border-radius: $osus-border-radius-lg;
+          box-shadow: $osus-shadow-luxury;
+          border: 1px solid rgba($osus-gold-medium, 0.3);
+          opacity: 0;
+          visibility: hidden;
+          transform: translateY(-10px);
+          transition: all $osus-transition-standard;
+          z-index: $osus-z-dropdown;
+          margin-top: $osus-spacing-sm;
+
+          &.open {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+          }
+
+          .panel-header {
+            padding: $osus-spacing-lg;
+            border-bottom: 1px solid rgba($osus-gold-medium, 0.3);
+            background: $osus-offwhite-burgundy-gradient;
+            border-radius: $osus-border-radius-lg $osus-border-radius-lg 0 0;
+
+            .panel-title {
+              font-weight: $osus-font-weight-semibold;
+              color: $osus-burgundy-primary;
+              margin: 0;
+            }
+          }
+
+          .notifications-list {
+            max-height: 300px;
+            overflow-y: auto;
+
+            .notification-item {
+              padding: $osus-spacing-md $osus-spacing-lg;
+              border-bottom: 1px solid rgba($osus-gold-medium, 0.1);
+              cursor: pointer;
+              transition: background-color $osus-transition-fast;
+
+              &:hover {
+                background: lighten($osus-gold-primary, 5%);
+              }
+
+              &.unread {
+                background: lighten($osus-burgundy-light, 40%);
+                border-left: 3px solid $osus-burgundy-medium;
+              }
+
+              .notification-content {
+                .notification-title {
+                  font-weight: $osus-font-weight-semibold;
+                  color: $osus-dark-gray;
+                  margin-bottom: $osus-spacing-xs;
+                  font-size: $osus-font-size-sm;
+                }
+
+                .notification-message {
+                  color: $osus-gray;
+                  font-size: $osus-font-size-xs;
+                  line-height: 1.4;
+                }
+
+                .notification-time {
+                  color: $osus-gray;
+                  font-size: $osus-font-size-xs;
+                  margin-top: $osus-spacing-xs;
+                }
+              }
+            }
+          }
+
+          .panel-footer {
+            padding: $osus-spacing-md $osus-spacing-lg;
+            text-align: center;
+            border-top: 1px solid rgba($osus-gold-medium, 0.3);
+
+            .view-all-link {
+              color: $osus-burgundy-medium;
+              text-decoration: none;
+              font-weight: $osus-font-weight-semibold;
+              font-size: $osus-font-size-sm;
+
+              &:hover {
+                color: $osus-burgundy-primary;
+              }
+            }
+          }
+        }
+      }
+
+      .nav-user {
+        .user-trigger {
+          display: flex;
+          align-items: center;
+          background: rgba($osus-white, 0.1);
+          padding: $osus-spacing-sm $osus-spacing-md;
+          border-radius: $osus-border-radius-lg;
+          border: none;
+          cursor: pointer;
+          transition: all $osus-transition-fast;
+
+          &:hover {
+            background: rgba($osus-white, 0.2);
+          }
+
+          .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: $osus-gold-medium;
+            color: $osus-burgundy-primary;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: $osus-font-weight-bold;
+            margin-right: $osus-spacing-sm;
+          }
+
+          .user-info {
+            .user-name {
+              color: $osus-white;
+              font-weight: $osus-font-weight-semibold;
+              font-size: $osus-font-size-sm;
+              margin: 0;
+            }
+
+            .user-role {
+              color: rgba($osus-white, 0.8);
+              font-size: $osus-font-size-xs;
+              margin: 0;
+            }
+          }
+
+          .dropdown-arrow {
+            color: $osus-white;
+            margin-left: $osus-spacing-sm;
+          }
+        }
+      }
+    }
+
+    .nav-mobile-toggle {
+      display: none;
+      background: rgba($osus-white, 0.1);
+      border: none;
+      color: $osus-white;
+      padding: $osus-spacing-sm;
+      border-radius: $osus-border-radius-md;
+      cursor: pointer;
+
+      .hamburger {
+        width: 24px;
+        height: 24px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+
+        span {
+          height: 3px;
+          background: currentColor;
+          border-radius: 2px;
+          transition: all $osus-transition-fast;
+        }
+
+        &.active {
+          span:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+          }
+
+          span:nth-child(2) {
+            opacity: 0;
+          }
+
+          span:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
+          }
+        }
+      }
+    }
+  }
+}
+
+// LUXURY BREADCRUMBS
+// ===================
+.osus-breadcrumbs {
+  background: lighten($osus-gold-primary, 5%);
+  padding: $osus-spacing-md $osus-spacing-lg;
+  border-bottom: 1px solid rgba($osus-gold-medium, 0.3);
+
+  .breadcrumb-container {
+    max-width: $osus-content-max-width;
+    margin: 0 auto;
+  }
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    .breadcrumb-item {
+      display: flex;
+      align-items: center;
+      color: $osus-gray;
+      font-weight: $osus-font-weight-medium;
+      font-size: $osus-font-size-sm;
+
+      &:not(:last-child)::after {
+        content: "/";
+        margin: 0 $osus-spacing-sm;
+        color: rgba($osus-gray, 0.5);
+      }
+
+      a {
+        color: $osus-burgundy-medium;
+        text-decoration: none;
+        transition: color $osus-transition-fast;
+
+        &:hover {
+          color: $osus-burgundy-primary;
+        }
+      }
+
+      &.active {
+        color: $osus-burgundy-primary;
+        font-weight: $osus-font-weight-semibold;
+      }
+
+      .breadcrumb-icon {
+        margin-right: $osus-spacing-xs;
+      }
+    }
+  }
+}
+
+// LUXURY PAGINATION
+// =================
+.osus-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: $osus-spacing-xl 0;
+
+  .pagination {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: $osus-spacing-xs;
+
+    .page-item {
+      .page-link {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border: 1px solid rgba($osus-burgundy-medium, 0.3);
+        border-radius: $osus-border-radius-lg;
+        color: $osus-burgundy-medium;
+        text-decoration: none;
+        font-weight: $osus-font-weight-semibold;
+        transition: all $osus-transition-standard;
+        background: $osus-white;
+
+        &:hover {
+          background: $osus-offwhite-burgundy-gradient;
+          border-color: $osus-burgundy-medium;
+          color: $osus-burgundy-primary;
+          transform: translateY(-2px);
+          box-shadow: $osus-shadow-sm;
+        }
+      }
+
+      &.active .page-link {
+        background: $osus-burgundy-gradient;
+        border-color: $osus-burgundy-primary;
+        color: $osus-white;
+        box-shadow: $osus-shadow-md;
+
+        &:hover {
+          transform: translateY(-1px);
+        }
+      }
+
+      &.disabled .page-link {
+        background: $osus-light-gray;
+        border-color: $osus-gray;
+        color: $osus-gray;
+        cursor: not-allowed;
+
+        &:hover {
+          transform: none;
+          box-shadow: none;
+        }
+      }
+
+      &.page-prev,
+      &.page-next {
+        .page-link {
+          width: 48px;
+          font-size: 18px;
+        }
+      }
+    }
+  }
+
+  .pagination-info {
+    margin-left: $osus-spacing-xl;
+    color: $osus-gray;
+    font-size: $osus-font-size-sm;
+  }
+}
+
+// LUXURY TABS NAVIGATION
+// =======================
+.osus-tabs {
+  .nav-tabs {
+    border-bottom: 2px solid $osus-gold-medium;
+    margin-bottom: $osus-spacing-xl;
+    display: flex;
+
+    .nav-item {
+      margin-bottom: -2px;
+
+      .nav-link {
+        border: none;
+        border-radius: $osus-border-radius-lg $osus-border-radius-lg 0 0;
+        padding: $osus-spacing-md $osus-spacing-xl;
+        color: $osus-gray;
+        font-weight: $osus-font-weight-semibold;
+        background: transparent;
+        transition: all $osus-transition-standard;
+        margin-right: $osus-spacing-sm;
+        position: relative;
+
+        &::after {
+          content: "";
+          position: absolute;
+          bottom: -2px;
+          left: 0;
+          right: 0;
+          height: 2px;
+          background: transparent;
+          transition: background-color $osus-transition-standard;
+        }
+
+        &:hover {
+          background: lighten($osus-gold-primary, 2%);
+          color: $osus-burgundy-medium;
+          transform: translateY(-2px);
+
+          &::after {
+            background: $osus-gold-medium;
+          }
+        }
+
+        &.active {
+          background: $osus-burgundy-gradient;
+          color: $osus-white;
+          box-shadow: $osus-shadow-md;
+
+          &::after {
+            background: $osus-gold-medium;
+          }
+
+          &:hover {
+            transform: translateY(-1px);
+          }
+        }
+
+        .tab-icon {
+          margin-right: $osus-spacing-sm;
+        }
+
+        .tab-badge {
+          margin-left: $osus-spacing-sm;
+          background: $osus-gold-medium;
+          color: $osus-burgundy-primary;
+          padding: 2px 6px;
+          border-radius: $osus-border-radius-curved;
+          font-size: $osus-font-size-xs;
+          font-weight: $osus-font-weight-bold;
+        }
+      }
+    }
+  }
+
+  .tab-content {
+    .tab-pane {
+      padding: $osus-spacing-lg 0;
+
+      &.fade {
+        opacity: 0;
+        transition: opacity $osus-transition-standard;
+
+        &.show {
+          opacity: 1;
+        }
+      }
+    }
+  }
+}
+
+// LUXURY VERTICAL NAVIGATION
+// ===========================
+.osus-vertical-nav {
+  background: linear-gradient(
+    180deg,
+    $osus-white 0%,
+    lighten($osus-gold-primary, 3%) 100%
+  );
+  border-right: 2px solid $osus-gold-medium;
+  padding: $osus-spacing-lg;
+  height: 100%;
+  min-height: 500px;
+
+  .nav-title {
+    font-size: $osus-font-size-lg;
+    font-weight: $osus-font-weight-bold;
+    color: $osus-burgundy-primary;
+    margin-bottom: $osus-spacing-lg;
+    padding-bottom: $osus-spacing-md;
+    border-bottom: 1px solid rgba($osus-gold-medium, 0.3);
+  }
+
+  .nav-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    .nav-item {
+      margin-bottom: $osus-spacing-sm;
+
+      .nav-link {
+        display: flex;
+        align-items: center;
+        padding: $osus-spacing-md;
+        color: $osus-dark-gray;
+        text-decoration: none;
+        font-weight: $osus-font-weight-medium;
+        border-radius: $osus-border-radius-lg;
+        transition: all $osus-transition-standard;
+
+        &:hover {
+          background: $osus-offwhite-burgundy-gradient;
+          color: $osus-burgundy-primary;
+          transform: translateX(4px);
+          box-shadow: $osus-shadow-sm;
+        }
+
+        &.active {
+          background: $osus-burgundy-gradient;
+          color: $osus-white;
+          box-shadow: $osus-shadow-md;
+        }
+
+        .nav-icon {
+          margin-right: $osus-spacing-md;
+          font-size: 18px;
+          width: 20px;
+          display: flex;
+          justify-content: center;
+        }
+
+        .nav-text {
+          flex: 1;
+        }
+
+        .nav-arrow {
+          margin-left: auto;
+          font-size: 12px;
+          transition: transform $osus-transition-fast;
+        }
+
+        &.has-children.expanded .nav-arrow {
+          transform: rotate(90deg);
+        }
+      }
+
+      // Submenu styling
+      .nav-submenu {
+        margin-left: $osus-spacing-xl;
+        margin-top: $osus-spacing-sm;
+        padding-left: $osus-spacing-md;
+        border-left: 2px solid rgba($osus-gold-medium, 0.3);
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height $osus-transition-standard;
+
+        &.expanded {
+          max-height: 500px;
+        }
+
+        .nav-item {
+          .nav-link {
+            padding: $osus-spacing-sm $osus-spacing-md;
+            font-size: $osus-font-size-sm;
+
+            .nav-icon {
+              font-size: 14px;
+              margin-right: $osus-spacing-sm;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// RESPONSIVE NAVIGATION ADJUSTMENTS
+// =================================
+@media (max-width: $osus-breakpoint-lg) {
+  .osus-main-nav {
+    .nav-content {
+      .nav-menu {
+        position: fixed;
+        top: $osus-navbar-height;
+        left: -100%;
+        width: 280px;
+        height: calc(100vh - #{$osus-navbar-height});
+        background: $osus-white;
+        flex-direction: column;
+        align-items: stretch;
+        padding: $osus-spacing-lg;
+        box-shadow: $osus-shadow-luxury;
+        transition: left $osus-transition-luxury;
+        z-index: $osus-z-modal;
+        overflow-y: auto;
+
+        &.mobile-open {
+          left: 0;
+        }
+
+        .nav-item {
+          .nav-link {
+            color: $osus-dark-gray;
+            justify-content: flex-start;
+
+            &:hover {
+              background: $osus-offwhite-burgundy-gradient;
+              color: $osus-burgundy-primary;
+            }
+
+            &.active {
+              background: $osus-burgundy-gradient;
+              color: $osus-white;
+            }
+          }
+
+          .nav-dropdown {
+            position: static;
+            opacity: 1;
+            visibility: visible;
+            transform: none;
+            box-shadow: none;
+            border: none;
+            background: lighten($osus-gold-primary, 5%);
+            margin-top: $osus-spacing-sm;
+            border-radius: $osus-border-radius-md;
+          }
+        }
+      }
+
+      .nav-mobile-toggle {
+        display: block;
+      }
+    }
+  }
+}
+
+@media (max-width: $osus-breakpoint-md) {
+  .osus-main-nav {
+    .nav-content {
+      .nav-actions {
+        .nav-search {
+          .search-input {
+            width: 150px;
+
+            &:focus {
+              width: 200px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .osus-pagination {
+    .pagination {
+      gap: $osus-spacing-xs / 2;
+
+      .page-item .page-link {
+        width: 36px;
+        height: 36px;
+        font-size: $osus-font-size-sm;
+      }
+    }
+
+    .pagination-info {
+      margin-left: $osus-spacing-md;
+      font-size: $osus-font-size-xs;
+    }
+  }
+}
+
+@media (max-width: $osus-breakpoint-sm) {
+  .osus-main-nav {
+    .nav-content {
+      flex-wrap: wrap;
+
+      .nav-actions {
+        order: 3;
+        width: 100%;
+        margin-top: $osus-spacing-md;
+        justify-content: center;
+
+        .nav-search {
+          flex: 1;
+          max-width: 300px;
+
+          .search-input {
+            width: 100%;
+
+            &:focus {
+              width: 100%;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .osus-breadcrumbs {
+    .breadcrumb {
+      flex-wrap: wrap;
+
+      .breadcrumb-item {
+        font-size: $osus-font-size-xs;
+      }
+    }
+  }
+
+  .osus-tabs {
+    .nav-tabs {
+      flex-wrap: wrap;
+
+      .nav-item {
+        .nav-link {
+          padding: $osus-spacing-sm $osus-spacing-md;
+          font-size: $osus-font-size-sm;
+        }
+      }
+    }
+  }
+}

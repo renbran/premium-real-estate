@@ -1,0 +1,10 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_account_payment_user,account.payment.user,account.model_account_payment,group_payment_voucher_user,1,1,1,0
+access_account_payment_reviewer,account.payment.reviewer,account.model_account_payment,group_payment_voucher_reviewer,1,1,0,0
+access_account_payment_approver,account.payment.approver,account.model_account_payment,group_payment_voucher_approver,1,1,0,0
+access_account_payment_authorizer,account.payment.authorizer,account.model_account_payment,group_payment_voucher_authorizer,1,1,0,0
+access_account_payment_poster,account.payment.poster,account.model_account_payment,group_payment_voucher_poster,1,1,0,0
+access_account_payment_manager,account.payment.manager,account.model_account_payment,group_payment_voucher_manager,1,1,1,1
+access_account_payment_register_user,account.payment.register.user,account.model_account_payment_register,group_payment_voucher_user,1,1,1,1
+access_account_payment_register_reviewer,account.payment.register.reviewer,account.model_account_payment_register,group_payment_voucher_reviewer,1,1,1,1
+access_account_payment_public,account.payment.public,account.model_account_payment,,1,0,0,0

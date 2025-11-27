@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Frontend Portal Template Extensions -->
+    <template id="portal_layout_enhanced" inherit_id="portal.portal_layout">
+        <xpath expr="//nav[@id='top_menu']" position="inside">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="file_dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-folder"/>
+ My Files
+                </a>
+                <div class="dropdown-menu" aria-labelledby="file_dropdown">
+                    <a class="dropdown-item" href="/my/files">
+                        <i class="fa fa-list"/>
+ View All Files
+                    </a>
+                    <a class="dropdown-item" href="/my/files/upload">
+                        <i class="fa fa-upload"/>
+ Upload File
+                    </a>
+                </div>
+            </li>
+        </xpath>
+    </template>
+
+    <!-- Portal File List Template -->
+    <template id="portal_my_files" name="My Files">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">My Files</t>
+            </t>
+
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h4 class="mb-0">
+                                    <i class="fa fa-folder text-primary"/>
+ My File Attachments
+                                </h4>
+                                <a href="/my/files/upload" class="btn btn-primary">
+                                    <i class="fa fa-upload"/>
+ Upload New File
+                                </a>
+                            </div>
+                            <div class="card-body">
+                                <t t-if="not files">
+                                    <div class="text-center py-5">
+                                        <i class="fa fa-folder-open fa-3x text-muted mb-3"/>
+                                        <h5 class="text-muted">No files uploaded yet</h5>
+                                        <p class="text-muted">Upload your first file to get started.</p>
+                                        <a href="/my/files/upload" class="btn btn-primary">
+                                            <i class="fa fa-upload"/>
+ Upload File
+                                        </a>
+                                    </div>
+                                </t>
+                                <t t-else="">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>File Name</th>
+                                                    <th>Description</th>
+                                                    <th>Size</th>
+                                                    <th>Upload Date</th>
+                                                    <th>Downloads</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <t t-foreach="files" t-as="file">
+                                                    <tr>
+                                                        <td>
+                                                            <i t-attf-class="fa #{file.get_file_icon()} mr-2"/>
+                                                            <t t-esc="file.name"/>
+                                                        </td>
+                                                        <td>
+                                                            <t t-esc="file.description or '-'"/>
+                                                        </td>
+                                                        <td>
+                                                            <t t-esc="file.get_human_readable_size()"/>
+                                                        </td>
+                                                        <td>
+                                                            <t t-esc="file.upload_date" t-options="{'widget': 'datetime'}"/>
+                                                        </td>
+                                                        <td>
+                                                            <span class="badge badge-info">
+                                                                <t t-esc="file.download_count"/>
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            <a t-attf-href="/my/files/download/#{file.id}" class="btn btn-sm btn-primary">
+                                                                <i class="fa fa-download"/>
+ Download
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Portal File Upload Template -->
+    <template id="portal_file_upload" name="Upload File">
+        <t t-call="portal.portal_layout">
+            <div class="container-fluid">
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="mb-0">
+                                    <i class="fa fa-upload text-primary"/>
+ Upload New File
+                                </h4>
+                            </div>
+                            <div class="card-body">
+                                <form method="post" enctype="multipart/form-data" action="/my/files/upload" class="file-upload-form">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                                    <div class="form-group">
+                                        <label for="file_data" class="form-label">Select File</label>
+                                        <div class="file-upload-area border-dashed p-4 text-center" id="file-upload-area">
+                                            <input type="file" id="file_data" name="file_data" class="form-control-file d-none" required="required"/>
+                                            <div class="upload-placeholder">
+                                                <i class="fa fa-cloud-upload fa-3x text-muted mb-3"/>
+                                                <h5 class="text-muted">Drag &amp; Drop files here</h5>
+                                                <p class="text-muted">or <a href="#" id="file-select-btn" class="text-primary">browse to select files</a>
+                                                </p>
+                                                <small class="text-muted">
+                                                    Supported formats: PDF, DOC, DOCX, XLS, XLSX, TXT, JPG, PNG, GIF, ZIP, RAR
+                                                </small>
+                                            </div>
+                                            <div class="upload-progress d-none">
+                                                <div class="progress mb-2">
+                                                    <div class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+                                                <p class="text-center mb-0">Uploading...</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="name" class="form-label">File Name</label>
+                                        <input type="text" id="name" name="name" class="form-control" placeholder="Enter file name..." required="required"/>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="description" class="form-label">Description</label>
+                                        <textarea id="description" name="description" class="form-control" rows="3" placeholder="Describe the file content..."></textarea>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="access_level" class="form-label">Access Level</label>
+                                        <select id="access_level" name="access_level" class="form-control">
+                                            <option value="internal">Internal Only</option>
+                                            <option value="public">Public</option>
+                                            <option value="restricted">Restricted</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group text-right">
+                                        <a href="/my/files" class="btn btn-secondary mr-2">
+                                            <i class="fa fa-arrow-left"/>
+ Back to Files
+                                        </a>
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fa fa-upload"/>
+ Upload File
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Portal File Upload Success Template -->
+    <template id="portal_file_upload_success" name="Upload Success">
+        <t t-call="portal.portal_layout">
+            <div class="container-fluid">
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <i class="fa fa-check-circle fa-4x text-success mb-3"/>
+                                <h4 class="text-success">File Uploaded Successfully!</h4>
+                                <p class="text-muted">Your file has been uploaded and is now available in your file list.</p>
+                                <div class="mt-4">
+                                    <a href="/my/files" class="btn btn-primary mr-2">
+                                        <i class="fa fa-list"/>
+ View All Files
+                                    </a>
+                                    <a href="/my/files/upload" class="btn btn-secondary">
+                                        <i class="fa fa-upload"/>
+ Upload Another File
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Enhanced Sale Order Portal Template -->
+    <template id="sale_order_portal_content_enhanced" inherit_id="sale.sale_order_portal_content">
+        <xpath expr="//div[@class='row']" position="before">
+            <t t-if="sale_order.client_order_ref or sale_order.reference_priority != 'normal'">
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <div class="alert alert-info">
+                            <h5 class="alert-heading">
+                                <i class="fa fa-info-circle"/>
+ Order Reference Information
+                            </h5>
+                            <div class="row">
+                                <div class="col-md-6" t-if="sale_order.client_order_ref">
+                                    <strong>Client Order Reference:</strong>
+                                    <br/>
+                                    <span class="text-primary">
+                                        <t t-esc="sale_order.client_order_ref"/>
+                                    </span>
+                                </div>
+                                <div class="col-md-6" t-if="sale_order.reference_priority != 'normal'">
+                                    <strong>Priority Level:</strong>
+                                    <br/>
+                                    <span t-if="sale_order.reference_priority == 'urgent'" class="badge badge-danger">
+                                        <i class="fa fa-exclamation-triangle"/>
+ Urgent
+                                    </span>
+                                    <span t-elif="sale_order.reference_priority == 'high'" class="badge badge-warning">
+                                        <i class="fa fa-exclamation"/>
+ High Priority
+                                    </span>
+                                    <span t-elif="sale_order.reference_priority == 'low'" class="badge badge-info">
+                                        <i class="fa fa-minus"/>
+ Low Priority
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="row mt-2" t-if="sale_order.order_reference_notes">
+                                <div class="col-12">
+                                    <strong>Reference Notes:</strong>
+                                    <br/>
+                                    <span>
+                                        <t t-esc="sale_order.order_reference_notes"/>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+    </template>
+
+    <!-- Enhanced Invoice Portal Template -->
+    <template id="account_invoice_portal_content_enhanced" inherit_id="account.account_invoice_portal_content">
+        <xpath expr="//div[@class='row']" position="before">
+            <t t-if="invoice.ref or invoice.invoice_origin or invoice.reference_validated">
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <div class="alert alert-success">
+                            <h5 class="alert-heading">
+                                <i class="fa fa-bookmark"/>
+ Reference Information
+                            </h5>
+                            <div class="row">
+                                <div class="col-md-6" t-if="invoice.ref">
+                                    <strong>Customer Reference:</strong>
+                                    <br/>
+                                    <span class="text-success">
+                                        <t t-esc="invoice.ref"/>
+                                        <span t-if="invoice.reference_validated" class="badge badge-success ml-2">
+                                            <i class="fa fa-check"/>
+ Validated
+                                        </span>
+                                    </span>
+                                </div>
+                                <div class="col-md-6" t-if="invoice.invoice_origin">
+                                    <strong>Origin Document:</strong>
+                                    <br/>
+                                    <span>
+                                        <t t-esc="invoice.invoice_origin"/>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+    </template>
+
+    <!-- Assets for Portal -->
+    <template id="portal_assets_frontend" inherit_id="portal.assets_frontend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" type="text/scss" href="/frontend_enhancement/static/src/css/frontend_public.css"/>
+            <script type="text/javascript" src="/frontend_enhancement/static/src/js/portal_file_upload.js"/>
+        </xpath>
+    </template>
+</odoo>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Settings menu for payment reference fix -->
+    <record id="action_fix_payment_references" model="ir.actions.server">
+        <field name="name">Fix Payment Reference Numbers</field>
+        <field name="model_id" ref="account.model_account_payment"/>
+        <field name="binding_model_id" ref="account.model_account_payment"/>
+        <field name="binding_type">action</field>
+        <field name="state">code</field>
+        <field name="code">
+# Fix missing payment reference numbers
+action = model._fix_missing_payment_references()
+        </field>
+    </record>
+
+    <!-- Menu item in Accounting for fixing references -->
+    <menuitem id="menu_fix_payment_references"
+              name="Fix Payment References"
+              parent="account.menu_finance_configuration"
+              action="action_fix_payment_references"
+              sequence="100"
+              groups="account.group_account_manager"/>
+</odoo>

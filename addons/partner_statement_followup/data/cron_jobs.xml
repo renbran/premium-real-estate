@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Daily Follow-up Cron Job -->
+        <record id="cron_partner_followup_daily" model="ir.cron">
+            <field name="name">Partner Follow-up: Daily Check</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_partner_followup_check()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="active" eval="True"/>
+            <field name="doall" eval="False"/>
+        </record>
+
+        <!-- Weekly Follow-up Report Cron Job -->
+        <record id="cron_followup_weekly_report" model="ir.cron">
+            <field name="name">Partner Follow-up: Weekly Report</field>
+            <field name="model_id" ref="model_res_partner_statement_config"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_weekly_followup_report()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">weeks</field>
+            <field name="numbercall">-1</field>
+            <field name="active" eval="True"/>
+            <field name="doall" eval="False"/>
+        </record>
+
+    </data>
+</odoo>

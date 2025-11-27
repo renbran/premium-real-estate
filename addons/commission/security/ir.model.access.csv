@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_sale_order_commission,sale.order.commission,sale.model_sale_order,,1,1,1,0
+access_purchase_order_commission,purchase.order.commission,purchase.model_purchase_order,,1,1,1,0

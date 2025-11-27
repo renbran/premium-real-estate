@@ -1,0 +1,566 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Complete Report Integration - Actions and Menu Updates -->
+
+    <!-- Enhanced Report Actions -->
+    <record id="action_report_payment_voucher_enhanced" model="ir.actions.report">
+        <field name="name">Enhanced Payment Voucher</field>
+        <field name="model">account.payment</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">account_payment_approval.report_payment_voucher_document_enhanced</field>
+        <field name="report_file">account_payment_approval.report_payment_voucher_document_enhanced</field>
+        <field name="binding_model_id" ref="account.model_account_payment"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'Payment_Voucher_' + (object.voucher_number or object.name).replace('/', '_')</field>
+    </record>
+
+    <!-- Compact Receipt Voucher Report -->
+    <record id="action_report_receipt_voucher_enhanced" model="ir.actions.report">
+        <field name="name">Enhanced Receipt Voucher</field>
+        <field name="model">account.payment</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">account_payment_approval.report_payment_voucher_document_enhanced</field>
+        <field name="report_file">account_payment_approval.report_payment_voucher_document_enhanced</field>
+        <field name="binding_model_id" ref="account.model_account_payment"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'Receipt_Voucher_' + (object.voucher_number or object.name).replace('/', '_')</field>
+        <field name="domain">[('payment_type', '=', 'inbound')]</field>
+    </record>
+
+    <!-- Audit Trail Report -->
+    <record id="action_report_voucher_audit_trail" model="ir.actions.report">
+        <field name="name">Payment Voucher Audit Trail</field>
+        <field name="model">account.payment</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">account_payment_approval.report_payment_audit_trail</field>
+        <field name="report_file">account_payment_approval.report_payment_audit_trail</field>
+        <field name="binding_model_id" ref="account.model_account_payment"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- Update existing report actions to set proper domains -->
+    <record id="action_report_payment_voucher" model="ir.actions.report">
+        <field name="domain">[('payment_type', '=', 'outbound')]</field>
+        <field name="name">OSUS Payment Voucher (Detailed)</field>
+    </record>
+
+    <record id="action_report_receipt_voucher" model="ir.actions.report">
+        <field name="domain">[('payment_type', '=', 'inbound')]</field>
+        <field name="name">OSUS Receipt Voucher (Detailed)</field>
+    </record>
+
+    <!-- Create Audit Trail Report Template -->
+    <template id="report_payment_audit_trail">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <style>
+                            .audit-header {
+                                background: linear-gradient(135deg, #1976D2, #1565C0);
+                                color: white;
+                                padding: 15px;
+                                margin: -20px -20px 20px -20px;
+                                text-align: center;
+                            }
+                            .audit-title {
+                                font-size: 24px;
+                                font-weight: bold;
+                                margin: 0;
+                            }
+                            .audit-section {
+                                margin: 20px 0;
+                                padding: 15px;
+                                border: 1px solid #ddd;
+                                border-radius: 5px;
+                            }
+                            .audit-section-title {
+                                color: #1976D2;
+                                font-weight: bold;
+                                font-size: 16px;
+                                margin-bottom: 10px;
+                                border-bottom: 1px solid #1976D2;
+                                padding-bottom: 5px;
+                            }
+                            .audit-trail-item {
+                                background-color: #f8f9fa;
+                                border-left: 4px solid #1976D2;
+                                padding: 10px;
+                                margin: 10px 0;
+                            }
+                            .audit-trail-action {
+                                font-weight: bold;
+                                color: #1976D2;
+                            }
+                            .audit-trail-date {
+                                font-size: 12px;
+                                color: #666;
+                                float: right;
+                            }
+                            table.audit-table {
+                                width: 100%;
+                                border-collapse: collapse;
+                                margin: 10px 0;
+                            }
+                            table.audit-table th,
+                            table.audit-table td {
+                                border: 1px solid #ddd;
+                                padding: 8px;
+                                text-align: left;
+                            }
+                            table.audit-table th {
+                                background-color: #1976D2;
+                                color: white;
+                            }
+                            .signature-status {
+                                padding: 3px 8px;
+                                border-radius: 10px;
+                                font-size: 11px;
+                                font-weight: bold;
+                            }
+                            .signature-signed {
+                                background-color: #4CAF50;
+                                color: white;
+                            }
+                            .signature-pending {
+                                background-color: #FF9800;
+                                color: white;
+                            }
+                        </style>
+
+                        <!-- Header -->
+                        <div class="audit-header">
+                            <h1 class="audit-title">PAYMENT VOUCHER AUDIT TRAIL</h1>
+                            <p style="margin: 5px 0;">OSUS Properties - Digital Verification System</p>
+                        </div>
+
+                        <!-- Basic Information -->
+                        <div class="audit-section">
+                            <div class="audit-section-title">Basic Information</div>
+                            <table class="audit-table">
+                                <tr>
+                                    <th style="width: 25%;">Voucher Number</th>
+                                    <td>
+                                        <t t-esc="doc.voucher_number or doc.name"/>
+                                    </td>
+                                    <th style="width: 25%;">Type</th>
+                                    <td>
+                                        <t t-if="doc.payment_type == 'outbound'">Payment Voucher</t>
+                                        <t t-else="">Receipt Voucher</t>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Partner</th>
+                                    <td>
+                                        <t t-esc="doc.partner_id.name"/>
+                                    </td>
+                                    <th>Amount</th>
+                                    <td>
+                                        <t t-esc="doc.currency_id.symbol"/>
+                                        <t t-esc="'{:,.2f}'.format(doc.amount)"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Current Status</th>
+                                    <td>
+                                        <t t-esc="doc.voucher_state.title().replace('_', ' ')"/>
+                                    </td>
+                                    <th>Date</th>
+                                    <td>
+                                        <t t-esc="doc.date.strftime('%B %d, %Y') if doc.date else ''"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <!-- Workflow Progress -->
+                        <div class="audit-section">
+                            <div class="audit-section-title">Workflow Progress</div>
+                            <t t-set="stage_info" t-value="doc.get_workflow_stage_info()"/>
+                            <p>
+                                <strong>Current Stage:</strong>
+                                <t t-esc="stage_info['display_name']"/>
+                            </p>
+                            <p>
+                                <strong>Progress:</strong>
+                                <t t-esc="'{:.1f}%'.format(stage_info['progress_percentage'])"/>
+                            </p>
+                            <p>
+                                <strong>Next Action:</strong>
+                                <t t-esc="stage_info['next_action']"/>
+                            </p>
+                        </div>
+
+                        <!-- Audit Trail -->
+                        <div class="audit-section">
+                            <div class="audit-section-title">Audit Trail</div>
+                            <t t-set="audit_trail" t-value="doc.get_audit_trail()"/>
+                            <t t-foreach="audit_trail" t-as="trail_item">
+                                <div class="audit-trail-item">
+                                    <span class="audit-trail-action">
+                                        <t t-esc="trail_item['action']"/>
+                                    </span>
+                                    <span class="audit-trail-date">
+                                        <t t-esc="trail_item['date'].strftime('%B %d, %Y at %I:%M %p') if trail_item['date'] else ''"/>
+                                    </span>
+                                    <br/>
+                                    <strong>User:</strong>
+                                    <t t-esc="trail_item['user']"/>
+                                    <br/>
+                                    <strong>Details:</strong>
+                                    <t t-esc="trail_item['details']"/>
+                                </div>
+                            </t>
+                        </div>
+
+                        <!-- Digital Signatures Status -->
+                        <div class="audit-section">
+                            <div class="audit-section-title">Digital Signatures</div>
+                            <table class="audit-table">
+                                <tr>
+                                    <th>Role</th>
+                                    <th>Name</th>
+                                    <th>Status</th>
+                                    <th>Date Signed</th>
+                                </tr>
+                                <t t-set="signatures" t-value="doc.get_signature_summary()"/>
+                                <t t-foreach="signatures" t-as="sig">
+                                    <tr>
+                                        <td>
+                                            <t t-esc="sig['role']"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="sig['name'] or 'Not Assigned'"/>
+                                        </td>
+                                        <td>
+                                            <span t-att-class="'signature-status ' + ('signature-signed' if sig['signed'] else 'signature-pending')">
+                                                <t t-if="sig['signed']">✓ Signed</t>
+                                                <t t-else="">⏳ Pending</t>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <t t-if="sig['date']">
+                                                <t t-esc="sig['date'].strftime('%B %d, %Y at %I:%M %p')"/>
+                                            </t>
+                                            <t t-else="">-</t>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </table>
+                        </div>
+
+                        <!-- Verification Information -->
+                        <div class="audit-section">
+                            <div class="audit-section-title">Verification Information</div>
+                            <t t-set="verification" t-value="doc.get_verification_info()"/>
+                            <p>
+                                <strong>Verification Token:</strong>
+                                <t t-esc="verification['token']"/>
+                            </p>
+                            <p>
+                                <strong>Verification URL:</strong>
+                                <t t-esc="verification['url']"/>
+                            </p>
+                            <p>
+                                <strong>QR Code Available:</strong>
+                                <t t-if="verification['qr_code']">✓ Yes</t>
+                                <t t-else="">✗ No</t>
+                            </p>
+                        </div>
+
+                        <!-- System Information -->
+                        <div class="audit-section">
+                            <div class="audit-section-title">System Information</div>
+                            <table class="audit-table">
+                                <tr>
+                                    <th>Created By</th>
+                                    <td>
+                                        <t t-esc="doc.create_uid.name"/>
+                                    </td>
+                                    <th>Created Date</th>
+                                    <td>
+                                        <t t-esc="doc.create_date.strftime('%B %d, %Y at %I:%M %p') if doc.create_date else ''"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Last Modified By</th>
+                                    <td>
+                                        <t t-esc="doc.write_uid.name"/>
+                                    </td>
+                                    <th>Last Modified Date</th>
+                                    <td>
+                                        <t t-esc="doc.write_date.strftime('%B %d, %Y at %I:%M %p') if doc.write_date else ''"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Company</th>
+                                    <td>
+                                        <t t-esc="doc.company_id.name"/>
+                                    </td>
+                                    <th>Database ID</th>
+                                    <td>
+                                        <t t-esc="doc.id"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <!-- Footer -->
+                        <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; font-size: 12px; color: #666;">
+                            <p>
+                                <strong>OSUS Properties</strong> - Digital Payment System Audit Trail<br/>
+                                Generated on <t t-esc="datetime.datetime.now().strftime('%B %d, %Y at %I:%M %p')"/>
+                        <br/>
+                                This audit trail is cryptographically secured and tamper-evident.
+                    </p>
+                </div>
+            </div>
+        </t>
+    </t>
+</t>
+</template>
+
+<!-- Enhanced Menu Structure -->
+<menuitem id="menu_payment_reports" name="Reports" parent="menu_payment_approval_main" sequence="35"/>
+
+<!-- Report Menu Items -->
+<menuitem id="menu_payment_voucher_reports" name="Payment Voucher Reports" parent="menu_payment_reports" sequence="10"/>
+
+<menuitem id="menu_enhanced_payment_report" name="Enhanced Payment Vouchers" parent="menu_payment_voucher_reports" action="action_report_payment_voucher_enhanced" sequence="10"/>
+
+<menuitem id="menu_enhanced_receipt_report" name="Enhanced Receipt Vouchers" parent="menu_payment_voucher_reports" action="action_report_receipt_voucher_enhanced" sequence="20"/>
+
+<menuitem id="menu_audit_trail_report" name="Audit Trail Reports" parent="menu_payment_voucher_reports" action="action_report_voucher_audit_trail" sequence="30"/>
+
+<!-- Report Tools Menu Items -->
+<menuitem id="menu_payment_report_tools" name="Report Tools" parent="menu_payment_reports" sequence="40"/>
+
+<menuitem id="menu_single_report_wizard" name="Single Report Generator" parent="menu_payment_report_tools" action="action_payment_report_wizard" sequence="10"/>
+
+<menuitem id="menu_bulk_report_wizard" name="Bulk Report Generator" parent="menu_payment_report_tools" action="action_payment_bulk_report_wizard" sequence="20"/>
+
+<!-- Quick Reports Menu Items -->
+<menuitem id="menu_quick_reports" name="Quick Reports" parent="menu_payment_reports" sequence="50"/>
+
+<menuitem id="menu_today_payments_report" name="Today's Payments" parent="menu_quick_reports" action="action_print_today_payments" sequence="10"/>
+
+<menuitem id="menu_pending_approvals_report" name="Pending Approvals" parent="menu_quick_reports" action="action_print_pending_approvals" sequence="20"/>
+
+<!-- Add server action for bulk report generation -->
+<record id="action_bulk_print_vouchers" model="ir.actions.server">
+<field name="name">Bulk Print Vouchers</field>
+<field name="model_id" ref="account.model_account_payment"/>
+<field name="binding_model_id" ref="account.model_account_payment"/>
+<field name="binding_view_types">list</field>
+<field name="state">code</field>
+<field name="code">
+if records:
+    # Filter records that can be printed
+    printable_records = records.filtered(lambda r: r.voucher_state in ['posted', 'authorized', 'approved'])
+    
+    if not printable_records:
+        raise UserError(_("No vouchers in printable state selected. Only vouchers that are approved, authorized, or posted can be printed."))
+    
+    # Generate report for selected records
+    report = env.ref('account_payment_approval.action_report_payment_voucher_enhanced')
+    
+    # Return report action
+    action = {
+        'type': 'ir.actions.report',
+        'report_name': 'account_payment_approval.report_payment_voucher_document_enhanced',
+        'report_type': 'qweb-pdf',
+        'data': {'ids': printable_records.ids},
+        'context': env.context,
+    }
+</field>
+</record>
+
+<!-- Add server action for bulk verification report -->
+<record id="action_bulk_verification_report" model="ir.actions.server">
+<field name="name">Bulk Verification Reports</field>
+<field name="model_id" ref="account.model_account_payment"/>
+<field name="binding_model_id" ref="account.model_account_payment"/>
+<field name="binding_view_types">list</field>
+<field name="state">code</field>
+<field name="code">
+if records:
+    # Generate verification report for selected records
+    report = env.ref('account_payment_approval.action_report_voucher_verification_web')
+    
+    # Return report action
+    action = {
+        'type': 'ir.actions.report',
+        'report_name': 'account_payment_approval.report_qr_verification_document',
+        'report_type': 'qweb-html',
+        'data': {'ids': records.ids},
+        'context': env.context,
+        'target': 'new'
+    }
+</field>
+</record>
+
+<!-- Enhanced form view with report buttons -->
+<record id="view_account_payment_form_with_reports" model="ir.ui.view">
+<field name="name">account.payment.form.with.reports</field>
+<field name="model">account.payment</field>
+<field name="inherit_id" ref="view_account_payment_form_enhanced"/>
+<field name="arch" type="xml">
+    <xpath expr="//header" position="inside">
+        <!-- Report Buttons -->
+        <button name="%(action_report_payment_voucher_enhanced)d" string="Print Enhanced Voucher" type="action" class="btn-secondary" invisible="voucher_state in ['draft']"/>
+
+        <button name="%(action_report_voucher_verification_web)d" string="View Verification" type="action" class="btn-info" invisible="not verification_token"/>
+
+        <button name="%(action_report_voucher_audit_trail)d" string="Audit Trail" type="action" class="btn-warning" groups="account_payment_approval.group_payment_voucher_manager"/>
+    </xpath>
+</field>
+</record>
+
+<!-- Add smart buttons to payment form -->
+<record id="view_account_payment_form_smart_buttons" model="ir.ui.view">
+<field name="name">account.payment.form.smart.buttons</field>
+<field name="model">account.payment</field>
+<field name="inherit_id" ref="account.view_account_payment_form"/>
+<field name="arch" type="xml">
+    <xpath expr="//div[@name='button_box']" position="inside">
+        <!-- QR Verification Smart Button -->
+        <button class="oe_stat_button" type="action" name="%(action_report_voucher_verification_web)d" icon="fa-qrcode" invisible="not verification_token">
+            <div class="o_field_widget o_stat_info">
+                <span class="o_stat_text">QR</span>
+                <span class="o_stat_text">Verify</span>
+            </div>
+        </button>
+
+        <!-- Signature Count Smart Button -->
+        <button class="oe_stat_button" type="object" name="action_view_signatures" icon="fa-pencil-square-o">
+            <field name="signature_count" widget="statinfo" string="Signatures"/>
+        </button>
+
+        <!-- Verification Count Smart Button -->
+        <button class="oe_stat_button" type="object" name="action_view_verifications" icon="fa-eye" invisible="not verification_token">
+            <field name="verification_count" widget="statinfo" string="Verifications"/>
+        </button>
+    </xpath>
+</field>
+</record>
+
+<!-- Add computed fields for smart buttons -->
+<record id="view_account_payment_computed_fields" model="ir.ui.view">
+<field name="name">account.payment.computed.fields</field>
+<field name="model">account.payment</field>
+<field name="inherit_id" ref="account.view_account_payment_form"/>
+<field name="arch" type="xml">
+    <xpath expr="//field[@name='partner_id']" position="after">
+        <field name="signature_count" invisible="1"/>
+        <field name="verification_count" invisible="1"/>
+    </xpath>
+</field>
+</record>
+
+<!-- Create dashboard action for payment reports -->
+<record id="action_payment_reports_dashboard" model="ir.actions.act_window">
+<field name="name">Payment Reports Dashboard</field>
+<field name="res_model">account.payment</field>
+<field name="view_mode">pivot,graph,tree,form</field>
+<field name="domain">[]</field>
+<field name="context">{
+            'search_default_group_by_state': 1,
+            'search_default_group_by_payment_type': 1,
+            'search_default_this_month': 1
+        }</field>
+<field name="help" type="html">
+    <p class="o_view_nocontent_smiling_face">
+                Payment Reports Dashboard
+    </p>
+    <p>
+                Here you can analyze payment voucher statistics, generate reports, and track workflow performance.
+    </p>
+</field>
+</record>
+
+<menuitem id="menu_payment_reports_dashboard" name="Reports Dashboard" parent="menu_payment_reports" action="action_payment_reports_dashboard" sequence="5"/>
+
+<!-- Update existing views to show report options -->
+<record id="view_account_payment_tree_with_report_buttons" model="ir.ui.view">
+<field name="name">account.payment.tree.with.report.buttons</field>
+<field name="model">account.payment</field>
+<field name="inherit_id" ref="account.view_account_payment_tree"/>
+<field name="arch" type="xml">
+    <xpath expr="//tree" position="attributes">
+        <attribute name="decoration-primary">voucher_state == 'posted'</attribute>
+        <attribute name="decoration-info">voucher_state in ['submitted', 'under_review']</attribute>
+        <attribute name="decoration-success">voucher_state in ['approved', 'authorized']</attribute>
+        <attribute name="decoration-warning">voucher_state == 'draft'</attribute>
+        <attribute name="decoration-danger">voucher_state == 'rejected'</attribute>
+        <attribute name="decoration-muted">voucher_state == 'cancelled'</attribute>
+    </xpath>
+
+    <!-- Add voucher state field to tree view -->
+    <xpath expr="//field[@name='state']" position="after">
+        <field name="voucher_state" string="Workflow Status" optional="show"/>
+        <field name="voucher_number" string="Voucher #" optional="show"/>
+        <field name="verification_token" string="QR Token" optional="hide"/>
+    </xpath>
+</field>
+</record>
+
+<!-- Create a comprehensive search view for reports -->
+<record id="view_account_payment_search_enhanced_reports" model="ir.ui.view">
+<field name="name">account.payment.search.enhanced.reports</field>
+<field name="model">account.payment</field>
+<field name="inherit_id" ref="account.view_account_payment_search"/>
+<field name="arch" type="xml">
+    <xpath expr="//search" position="inside">
+        <!-- Additional search filters for reports -->
+        <separator/>
+        <filter string="Has QR Code" name="has_qr_code" domain="[('verification_token', '!=', False)]"/>
+        <filter string="Digital Signatures Complete" name="signatures_complete" domain="[('creator_signature', '!=', False), ('reviewer_signature', '!=', False)]"/>
+        <filter string="Ready for Printing" name="ready_for_printing" domain="[('voucher_state', 'in', ['approved', 'authorized', 'posted'])]"/>
+
+        <!-- Date filters -->
+        <separator/>
+        <filter string="This Week" name="this_week" domain="[('date', '&gt;=', (context_today() - datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+        <filter string="This Month" name="this_month" domain="[('date', '&gt;=', (context_today().replace(day=1)).strftime('%Y-%m-%d'))]"/>
+        <filter string="This Quarter" name="this_quarter" domain="[('date', '&gt;=', (context_today() - datetime.timedelta(days=90)).strftime('%Y-%m-%d'))]"/>
+
+        <!-- Group by options for reports -->
+        <group expand="0" string="Group By">
+            <filter string="Voucher Status" name="group_by_voucher_state" context="{'group_by': 'voucher_state'}"/>
+            <filter string="Voucher Type" name="group_by_voucher_type" context="{'group_by': 'voucher_type'}"/>
+            <filter string="Creator" name="group_by_creator" context="{'group_by': 'create_uid'}"/>
+            <filter string="Reviewer" name="group_by_reviewer" context="{'group_by': 'reviewer_id'}"/>
+            <filter string="Week" name="group_by_week" context="{'group_by': 'date:week'}"/>
+            <filter string="Month" name="group_by_month" context="{'group_by': 'date:month'}"/>
+        </group>
+    </xpath>
+</field>
+</record>
+
+<!-- Add notification template for report generation -->
+<record id="mail_template_report_generated" model="mail.template">
+<field name="name">Payment Report Generated</field>
+<field name="model_id" ref="account.model_account_payment"/>
+<field name="subject">Payment Report Generated - ${object.voucher_number or object.name}</field>
+<field name="body_html"><![CDATA[
+<div style="margin: 0px; padding: 0px;">
+    <p>Hello,</p>
+    <p>A payment report has been generated for the following voucher:</p>
+    <ul>
+        <li><strong>Voucher Number:</strong> ${object.voucher_number or object.name}</li>
+        <li><strong>Partner:</strong> ${object.partner_id.name}</li>
+        <li><strong>Amount:</strong> ${object.currency_id.symbol}${object.amount}</li>
+        <li><strong>Status:</strong> ${object.voucher_state.title().replace('_', ' ')}</li>
+        <li><strong>Generated:</strong> ${ctx['timestamp']}</li>
+    </ul>
+    
+    % if object.verification_token:
+    <p><strong>Verification:</strong> You can verify this voucher at: ${object.verification_url}</p>
+    % endif
+    
+    <p>Best regards,<br/>OSUS Properties Payment System</p>
+</div>
+        ]]></field>
+<field name="auto_delete" eval="True"/>
+</record>
+
+</odoo>

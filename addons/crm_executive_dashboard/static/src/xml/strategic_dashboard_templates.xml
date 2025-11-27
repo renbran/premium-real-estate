@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="crm_strategic_dashboard.Dashboard" owl="1">
+        <div class="o_crm_strategic_dashboard">
+            <!-- Loading Overlay -->
+            <div t-if="state.isLoading" class="o_loading_overlay">
+                <div class="text-center">
+                    <i class="fa fa-spinner fa-spin fa-3x text-primary"/>
+                    <div class="mt-3">
+                        <h4>Loading Strategic Dashboard...</h4>
+                        <p class="text-muted">Analyzing business intelligence data</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Strategic Dashboard Header -->
+            <div class="o_strategic_header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="o_dashboard_title">
+                        <h2 class="mb-0">
+                            <i class="fa fa-bar-chart text-primary me-2"/>
+                            Strategic Business Intelligence Dashboard
+                        </h2>
+                        <p class="text-muted mb-0">Executive-level insights and predictive analytics</p>
+                    </div>
+                    
+                    <div class="o_dashboard_controls d-flex gap-2">
+                        <button class="btn btn-outline-secondary" 
+                                t-on-click="toggleAutoRefresh"
+                                t-att-class="state.autoRefresh ? 'active' : ''">
+                            <i class="fa fa-refresh"/>
+                            <span class="d-none d-md-inline ms-1">Auto Refresh</span>
+                        </button>
+                        
+                        <button class="btn btn-outline-primary" t-on-click="exportData">
+                            <i class="fa fa-download"/>
+                            <span class="d-none d-md-inline ms-1">Export</span>
+                        </button>
+                        
+                        <button class="btn btn-primary" t-on-click="onRefreshClick">
+                            <i class="fa fa-refresh"/>
+                            <span class="d-none d-md-inline ms-1">Refresh</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Filters Row -->
+                <div class="o_dashboard_filters mt-3">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Date Range:</label>
+                            <div class="input-group">
+                                <input type="date" 
+                                       class="form-control" 
+                                       t-model="state.dateRange.start"
+                                       t-on-change="onDateRangeChange"/>
+                                <span class="input-group-text">to</span>
+                                <input type="date" 
+                                       class="form-control" 
+                                       t-model="state.dateRange.end"
+                                       t-on-change="onDateRangeChange"/>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <label class="form-label">Sales Teams:</label>
+                            <select class="form-select" 
+                                    multiple="true" 
+                                    t-model="state.selectedTeams"
+                                    t-on-change="onTeamSelectionChange">
+                                <option value="">All Teams</option>
+                                <t t-foreach="availableTeams || []" t-as="team" t-key="team.id">
+                                    <option t-att-value="team.id" t-esc="team.name"/>
+                                </t>
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-4 d-flex align-items-end">
+                            <div class="text-muted small">
+                                <i class="fa fa-info-circle me-1"/>
+                                Last updated: <span t-esc="new Date().toLocaleString()"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Strategic KPIs Section -->
+            <div class="o_strategic_kpis mt-4">
+                <h3 class="section-title">
+                    <i class="fa fa-tachometer me-2"/>
+                    Strategic KPIs
+                </h3>
+                <div class="row g-3">
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <div class="o_kpi_card o_kpi_pipeline" t-on-click="() => onKPIClick('pipeline_value')">
+                            <div class="o_kpi_icon">
+                                <i class="fa fa-funnel-dollar"/>
+                            </div>
+                            <div class="o_kpi_content">
+                                <h3 t-esc="formatCurrency(state.dashboardData.strategic_kpis.total_pipeline_value || 0)"/>
+                                <p>Total Pipeline</p>
+                                <div class="o_kpi_trend">
+                                    <i class="fa fa-arrow-up text-success"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <div class="o_kpi_card o_kpi_growth">
+                            <div class="o_kpi_icon">
+                                <i class="fa fa-chart-line"/>
+                            </div>
+                            <div class="o_kpi_content">
+                                <h3 t-esc="formatPercentage(state.dashboardData.strategic_kpis.revenue_growth || 0)"/>
+                                <p>Revenue Growth</p>
+                                <div class="o_kpi_trend">
+                                    <i t-att-class="(state.dashboardData.strategic_kpis.revenue_growth || 0) >= 0 ? 'fa fa-arrow-up text-success' : 'fa fa-arrow-down text-danger'"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <div class="o_kpi_card o_kpi_cycle">
+                            <div class="o_kpi_icon">
+                                <i class="fa fa-clock"/>
+                            </div>
+                            <div class="o_kpi_content">
+                                <h3><span t-esc="Math.round(state.dashboardData.strategic_kpis.avg_sales_cycle || 0)"/> days</h3>
+                                <p>Avg Sales Cycle</p>
+                                <div class="o_kpi_trend">
+                                    <i class="fa fa-arrow-down text-success"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <div class="o_kpi_card o_kpi_market">
+                            <div class="o_kpi_icon">
+                                <i class="fa fa-globe"/>
+                            </div>
+                            <div class="o_kpi_content">
+                                <h3 t-esc="formatPercentage(state.dashboardData.strategic_kpis.market_penetration || 0)"/>
+                                <p>Market Penetration</p>
+                                <div class="o_kpi_trend">
+                                    <i class="fa fa-arrow-up text-success"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <div class="o_kpi_card o_kpi_customers">
+                            <div class="o_kpi_icon">
+                                <i class="fa fa-user-plus"/>
+                            </div>
+                            <div class="o_kpi_content">
+                                <h3 t-esc="formatNumber(state.dashboardData.strategic_kpis.new_customers || 0)"/>
+                                <p>New Customers</p>
+                                <div class="o_kpi_trend">
+                                    <i class="fa fa-arrow-up text-success"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <div class="o_kpi_card o_kpi_retention">
+                            <div class="o_kpi_icon">
+                                <i class="fa fa-heart"/>
+                            </div>
+                            <div class="o_kpi_content">
+                                <h3 t-esc="formatPercentage(state.dashboardData.customer_insights.customer_retention_rate || 0)"/>
+                                <p>Customer Retention</p>
+                                <div class="o_kpi_trend">
+                                    <i class="fa fa-arrow-up text-success"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Risk Indicators Alert Section -->
+            <div class="o_risk_alerts mt-4" t-if="(state.dashboardData.risk_indicators.overdue_opportunities_count || 0) > 0 or (state.dashboardData.risk_indicators.stagnant_opportunities_count || 0) > 0">
+                <div class="alert alert-warning">
+                    <h5 class="alert-heading">
+                        <i class="fa fa-exclamation-triangle me-2"/>
+                        Risk Alerts - Immediate Attention Required
+                    </h5>
+                    <div class="row">
+                        <div class="col-md-3" t-if="(state.dashboardData.risk_indicators.overdue_opportunities_count || 0) > 0">
+                            <div class="risk-metric" t-on-click="() => onKPIClick('overdue')">
+                                <strong t-esc="state.dashboardData.risk_indicators.overdue_opportunities_count"/>
+                                <span>Overdue Opportunities</span>
+                                <div class="risk-value" t-esc="formatCurrency(state.dashboardData.risk_indicators.overdue_value || 0)"/>
+                            </div>
+                        </div>
+                        <div class="col-md-3" t-if="(state.dashboardData.risk_indicators.stagnant_opportunities_count || 0) > 0">
+                            <div class="risk-metric">
+                                <strong t-esc="state.dashboardData.risk_indicators.stagnant_opportunities_count"/>
+                                <span>Stagnant Opportunities</span>
+                            </div>
+                        </div>
+                        <div class="col-md-3" t-if="(state.dashboardData.risk_indicators.at_risk_high_value_count || 0) > 0">
+                            <div class="risk-metric">
+                                <strong t-esc="state.dashboardData.risk_indicators.at_risk_high_value_count"/>
+                                <span>High-Value at Risk</span>
+                            </div>
+                        </div>
+                        <div class="col-md-3" t-if="(state.dashboardData.risk_indicators.pipeline_concentration_risk || 0) > 50">
+                            <div class="risk-metric">
+                                <strong t-esc="formatPercentage(state.dashboardData.risk_indicators.pipeline_concentration_risk || 0)"/>
+                                <span>Pipeline Concentration</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="o_charts_section mt-4">
+                <div class="row g-4">
+                    <!-- Financial Performance Chart -->
+                    <div class="col-lg-6">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">
+                                    <i class="fa fa-dollar-sign me-2"/>
+                                    Financial Performance
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="financialChart" height="250"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Risk Analysis Chart -->
+                    <div class="col-lg-6">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">
+                                    <i class="fa fa-shield-alt me-2"/>
+                                    Risk Analysis
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="riskChart" height="250"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Predictive Analytics Chart -->
+                    <div class="col-lg-6">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">
+                                    <i class="fa fa-crystal-ball me-2"/>
+                                    Revenue Forecast
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="predictiveChart" height="250"></canvas>
+                                <div class="mt-3">
+                                    <div class="row text-center">
+                                        <div class="col-4">
+                                            <div class="forecast-metric">
+                                                <h6>Next Month</h6>
+                                                <strong t-esc="formatCurrency(state.dashboardData.predictive_analytics.next_month_forecast || 0)"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="forecast-metric">
+                                                <h6>Next Quarter</h6>
+                                                <strong t-esc="formatCurrency(state.dashboardData.predictive_analytics.next_quarter_forecast || 0)"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="forecast-metric">
+                                                <h6>Confidence</h6>
+                                                <span t-att-class="'badge ' + (state.dashboardData.predictive_analytics.forecast_confidence === 'High' ? 'bg-success' : state.dashboardData.predictive_analytics.forecast_confidence === 'Medium' ? 'bg-warning' : 'bg-danger')" t-esc="state.dashboardData.predictive_analytics.forecast_confidence || 'Low'"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Team Performance Chart -->
+                    <div class="col-lg-6">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">
+                                    <i class="fa fa-users me-2"/>
+                                    Team Performance
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="teamChart" height="250"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Business Intelligence Tables -->
+            <div class="o_business_intelligence mt-4">
+                <div class="row">
+                    <!-- Team Overview Table -->
+                    <div class="col-lg-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">
+                                    <i class="fa fa-table me-2"/>
+                                    Team Performance Overview
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Team</th>
+                                                <th>Revenue</th>
+                                                <th>Opportunities</th>
+                                                <th>Win Rate</th>
+                                                <th>Target Achievement</th>
+                                                <th>Team Size</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="state.dashboardData.team_overview || []" t-as="team" t-key="team.team_name">
+                                                <tr>
+                                                    <td><strong t-esc="team.team_name"/></td>
+                                                    <td t-esc="formatCurrency(team.revenue)"/>
+                                                    <td><span class="badge bg-primary" t-esc="team.opportunities"/></td>
+                                                    <td>
+                                                        <div class="progress" style="height: 20px;">
+                                                            <div class="progress-bar" 
+                                                                 t-att-style="'width: ' + team.win_rate + '%'"
+                                                                 t-att-class="team.win_rate >= 50 ? 'bg-success' : team.win_rate >= 30 ? 'bg-warning' : 'bg-danger'">
+                                                                <span t-esc="formatPercentage(team.win_rate)"/>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <span t-att-class="'badge ' + (team.target_achievement >= 100 ? 'bg-success' : team.target_achievement >= 80 ? 'bg-warning' : 'bg-danger')" 
+                                                              t-esc="formatPercentage(team.target_achievement)"/>
+                                                    </td>
+                                                    <td><span class="badge bg-info" t-esc="team.team_size"/></td>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Actions -->
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">
+                                    <i class="fa fa-rocket me-2"/>
+                                    Quick Actions
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-outline-primary" t-on-click="() => onKPIClick('pipeline_value')">
+                                        <i class="fa fa-eye me-2"/>
+                                        View Pipeline
+                                    </button>
+                                    <button class="btn btn-outline-warning" t-on-click="() => onKPIClick('overdue')">
+                                        <i class="fa fa-exclamation-triangle me-2"/>
+                                        Review Overdue
+                                    </button>
+                                    <button class="btn btn-outline-info" t-on-click="exportData">
+                                        <i class="fa fa-download me-2"/>
+                                        Export Report
+                                    </button>
+                                    <button class="btn btn-outline-success" t-on-click="onRefreshClick">
+                                        <i class="fa fa-refresh me-2"/>
+                                        Refresh Data
+                                    </button>
+                                </div>
+                                
+                                <hr/>
+                                
+                                <div class="operational-metrics">
+                                    <h6>Operational Metrics</h6>
+                                    <div class="metric-item">
+                                        <span>Avg Response Time:</span>
+                                        <strong t-esc="Math.round(state.dashboardData.operational_efficiency.avg_response_time || 0)"/> hours
+                                    </div>
+                                    <div class="metric-item">
+                                        <span>Lead to Opp Rate:</span>
+                                        <strong t-esc="formatPercentage(state.dashboardData.operational_efficiency.lead_to_opportunity_rate || 0)"/>
+                                    </div>
+                                    <div class="metric-item">
+                                        <span>Forecast Accuracy:</span>
+                                        <strong t-esc="formatPercentage(state.dashboardData.financial_performance.forecast_accuracy || 0)"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

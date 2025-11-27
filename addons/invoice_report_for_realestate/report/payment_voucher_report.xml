@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="report_payment_voucher_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <!-- Custom CSS for the voucher -->
+                        <style>
+                            .voucher-header {
+                                background: linear-gradient(135deg, #6B2B47, #8B1538);
+                                color: white;
+                                padding: 15px;
+                                margin: -15px -15px 20px -15px;
+                                box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+                            }
+                            .voucher-title {
+                                text-align: center;
+                                font-size: 28px;
+                                font-weight: bold;
+                                letter-spacing: 2px;
+                                margin-bottom: 0;
+                                text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+                            }
+                            .voucher-subtitle {
+                                text-align: center;
+                                font-size: 16px;
+                                margin: 5px 0 0 0;
+                            }
+                            .company-info {
+                                font-size: 13px;
+                                line-height: 1.3;
+                                font-weight: 500;
+                                text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+                            }
+                            .field-label {
+                                color: #6b0632ff;
+                                font-weight: bold;
+                                font-size: 14px;
+                                margin-bottom: 5px;
+                            }
+                            .field-value {
+                                border-bottom: 2px solid #333;
+                                padding-bottom: 3px;
+                                margin-bottom: 15px;
+                                min-height: 20px;
+                                color: #000;
+                                font-weight: 500;
+                                font-size: 13px;
+                            }
+                            .amount-section {
+                                background: linear-gradient(135deg, #b19024ff, #8B6F00);
+                                color: white;
+                                padding: 15px;
+                                text-align: center;
+                                margin: 20px 0;
+                                font-size: 18px;
+                                font-weight: bold;
+                                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.81);
+                                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.76);
+                            }
+                            .signature-section {
+                                margin-top: 40px;
+                            }
+                            .signature-box {
+                                text-align: center;
+                                padding: 10px;
+                                margin-bottom: 10px;
+                            }
+                            .signature-line {
+                                border-bottom: 2px solid #000;
+                                margin-bottom: 5px;
+                                height: 30px;
+                            }
+                            .footer-note {
+                                background: linear-gradient(135deg, #6B2B47, #8B1538);
+                                color: white;
+                                text-align: center;
+                                padding: 12px;
+                                font-size: 13px;
+                                font-weight: 500;
+                                margin: 20px -15px -15px -15px;
+                                box-shadow: 0 -2px 4px rgba(0,0,0,0.3);
+                                text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+                            }
+                            .creator-info {
+                                font-size: 12px;
+                                color: #333;
+                                margin-top: 5px;
+                                font-style: italic;
+                                font-weight: 500;
+                            }
+                            .authorized-name {
+                                font-size: 14px;
+                                font-weight: bold;
+                                color: #000;
+                            }
+                            .signature-initials {
+                                font-size: 14px;
+                                font-weight: bold;
+                                color: #6B2B47;
+                                font-style: italic;
+                                margin-top: 10px;
+                                margin-bottom: 5px;
+                                letter-spacing: 1px;
+                                max-height: 60px;
+                                overflow: hidden;
+                            }
+                            .user-signature {
+                                font-family: cursive, 'Brush Script MT', fantasy;
+                                font-size: 16px;
+                                color: #6B2B47;
+                                margin-top: 5px;
+                                margin-bottom: 5px;
+                                max-height: 50px;
+                                overflow: hidden;
+                            }
+                        </style>
+
+                        <!-- Header Section -->
+                        <div class="voucher-header">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="company-info">
+                                        <strong>OSUS REAL ESTATE BROKERAGE LLC</strong><br/>
+                                        Single Tower<br/>
+                                        Business Bay<br/>
+                                        29th Floor<br/>
+                                        Dubai<br/>
+                                        United Arab Emirates
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <h2 class="voucher-title">
+                                        <t t-if="o.payment_type == 'inbound'">Receipt</t>
+                                        <t t-else="">Voucher</t>
+                                    </h2>
+                                    <div class="voucher-subtitle">
+                                        <strong>Reference: <span t-field="o.name"/></strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Main Content -->
+                        <div class="row">
+                            <!-- Left Column -->
+                            <div class="col-6">
+                                <!-- Issue To Section -->
+                                <div class="field-label">Issue to:</div>
+                                <div class="field-value">
+                                    <span t-field="o.partner_id.name"/>
+                                </div>
+
+                                <!-- Phone Section -->
+                                <div class="field-label">Phone</div>
+                                <div class="field-value">
+                                    <span t-field="o.partner_id.mobile"/>
+                                    <t t-if="not o.partner_id.mobile">-</t>
+                                </div>
+
+                                <!-- Payment Method Section -->
+                                <div class="field-label">Payment Method</div>
+                                <div class="field-value">
+                                    <span t-field="o.journal_id.name"/>
+                                </div>
+
+                                <!-- Related Invoice/Bill Section -->
+                                <t t-set="doc_info" t-value="o.get_related_document_info()"/>
+                                <div class="field-label">
+                                    <span t-esc="doc_info['label']"/>
+                                </div>
+                                <div class="field-value">
+                                    <span t-esc="doc_info['references']"/>
+                                </div>
+                            </div>
+
+                            <!-- Right Column -->
+                            <div class="col-6">
+                                <!-- Date Section -->
+                                <div class="field-label">Date:</div>
+                                <div class="field-value">
+                                    <span t-field="o.date" t-options='{"widget": "date"}'/>
+                                </div>
+
+                                <!-- Remarks Section -->
+                                <div class="field-label">Remarks</div>
+                                <div class="field-value" style="min-height: 60px;">
+                                    <span t-field="o.ref"/>
+                                    <t t-if="not o.ref">-</t>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Amount in Words Section -->
+                        <div class="field-label">Amount in words</div>
+                        <div class="field-value" style="min-height: 30px;">
+                            <span t-esc="o._get_amount_in_words()"/>
+                        </div>
+
+                        <!-- Detailed Document Information (when multiple documents) -->
+                        <t t-set="doc_info" t-value="o.get_related_document_info()"/>
+                        <t t-if="doc_info['count'] > 1">
+                            <div style="margin: 20px 0; padding: 15px; background-color: #f8f9fa; border-left: 4px solid #6b0632ff;">
+                                <div class="field-label" style="margin-bottom: 10px;">
+                                    Document Details (<t t-esc="doc_info['count']"/> documents)
+                                </div>
+                                <table style="width: 100%; font-size: 12px; border-collapse: collapse;">
+                                    <thead>
+                                        <tr style="background-color: #6b0632ff; color: white;">
+                                            <th style="padding: 8px; border: 1px solid #ccc; text-align: left;">Document #</th>
+                                            <th style="padding: 8px; border: 1px solid #ccc; text-align: left;">Type</th>
+                                            <th style="padding: 8px; border: 1px solid #ccc; text-align: center;">Date</th>
+                                            <th style="padding: 8px; border: 1px solid #ccc; text-align: right;">Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="doc_info['documents']" t-as="doc">
+                                            <tr>
+                                                <td style="padding: 6px; border: 1px solid #ddd;">
+                                                    <span t-esc="doc.name"/>
+                                                </td>
+                                                <td style="padding: 6px; border: 1px solid #ddd;">
+                                                    <t t-if="doc.move_type == 'out_invoice'">Customer Invoice</t>
+                                                    <t t-elif="doc.move_type == 'in_invoice'">Vendor Bill</t>
+                                                    <t t-elif="doc.move_type == 'out_refund'">Customer Credit Note</t>
+                                                    <t t-elif="doc.move_type == 'in_refund'">Vendor Credit Note</t>
+                                                    <t t-else=""><t t-esc="doc.move_type"/></t>
+                                                </td>
+                                                <td style="padding: 6px; border: 1px solid #ddd; text-align: center;">
+                                                    <span t-field="doc.invoice_date" t-options='{"widget": "date"}'/>
+                                                </td>
+                                                <td style="padding: 6px; border: 1px solid #ddd; text-align: right;">
+                                                    <span t-field="doc.amount_total" t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </t>
+
+                        <!-- Payment Summary Section (when there are related documents) -->
+                        <t t-if="doc_info['count'] > 0">
+                            <t t-set="payment_summary" t-value="o.get_payment_summary()"/>
+                            <div style="margin: 15px 0; padding: 10px; background-color: #fff3cd; border: 1px solid #ffeaa7; border-radius: 5px;">
+                                <div class="field-label" style="margin-bottom: 8px; color: #b8860b;">
+                                    Payment Summary
+                                </div>
+                                <div style="font-size: 13px;">
+                                    <div style="margin-bottom: 5px;">
+                                        <strong>Description:</strong> <span t-esc="o.get_voucher_description()"/>
+                                    </div>
+                                    <t t-if="payment_summary['total_invoice_amount'] > 0">
+                                        <div style="margin-bottom: 5px;">
+                                            <strong>Total Document Amount:</strong> 
+                                            <span t-esc="'{:,.2f}'.format(payment_summary['total_invoice_amount'])"/> 
+                                            <span t-esc="payment_summary['currency'].name"/>
+                                        </div>
+                                        <div style="margin-bottom: 5px;">
+                                            <strong>Payment Status:</strong>
+                                            <t t-if="payment_summary['is_full_payment']">
+                                                <span style="color: #28a745; font-weight: bold;">✓ Full Payment</span>
+                                            </t>
+                                            <t t-else="">
+                                                <span style="color: #dc3545; font-weight: bold;">⚠ Partial Payment</span>
+                                                <span style="margin-left: 10px;">
+                                                    (Remaining: <span t-esc="'{:,.2f}'.format(payment_summary['remaining_balance'])"/> 
+                                                    <span t-esc="payment_summary['currency'].name"/>)
+                                                </span>
+                                            </t>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                        </t>
+
+                        <!-- Total Price Section -->
+                        <div class="amount-section">
+                            <div class="row">
+                                <div class="col-6">
+                                    <strong>Total Price:</strong>
+                                </div>
+                                <div class="col-6">
+                                    <span t-field="o.amount" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Signature Section -->
+                        <div class="signature-section">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="signature-box">
+                                        <!-- User's actual signature or initials -->
+                                        <t t-if="o.create_uid.signature">
+                                            <div class="user-signature">
+                                                <span t-field="o.create_uid.signature" t-options='{"widget": "html"}'/>
+                                            </div>
+                                        </t>
+                                        <t t-else="">
+                                            <div class="signature-initials">
+                                                <t t-set="creator_name" t-value="o.create_uid.name or ''"/>
+                                                <t t-set="name_parts" t-value="creator_name.split()"/>
+                                                <t t-if="len(name_parts) >= 2">
+                                                    <span t-esc="name_parts[0][:1] + name_parts[-1][:1]"/>
+                                                </t>
+                                                <t t-elif="len(name_parts) == 1 and name_parts[0]">
+                                                    <span t-esc="name_parts[0][:2]"/>
+                                                </t>
+                                                <t t-else="">--</t>
+                                            </div>
+                                        </t>
+                                        <div class="signature-line"></div>
+                                        <strong>Authorized:</strong>
+                                        <br/>
+                                        <div class="authorized-name" style="margin-top: 8px;">
+                                            <span t-field="o.create_uid.name"/>
+                                        </div>
+                                        <div class="creator-info">
+                                            Created: <span t-field="o.create_date" t-options='{"widget": "datetime", "format": "dd/MM/yyyy HH:mm"}'/>
+                                        </div>
+                                        <div class="creator-info">
+                                            Printed: <span t-esc="datetime.datetime.now().strftime('%d/%m/%Y %H:%M')"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="signature-box">
+                                        <div class="signature-line"></div>
+                                        <strong>
+                                            <t t-if="o.payment_type == 'inbound'">Received by</t>
+                                            <t t-else="">Paid to</t>
+                                        </strong>
+                                        <br/>
+                                        <div style="margin-top: 10px;">
+                                            <span style="display: inline-block; width: 50px;">name</span>
+                                            <span style="display: inline-block; width: 100px; border-bottom: 1px solid #000; margin: 0 20px;"></span>
+                                            <span>Mob #:</span>
+                                            <span style="display: inline-block; width: 100px; border-bottom: 1px solid #000; margin-left: 10px;"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- QR Code Section - Only for Customer Receipts -->
+                        <t t-if="o.payment_type == 'inbound'">
+                            <div class="row mt-4" t-if="o.display_qr_code and o.amount > 0 and o.qr_code_urls">
+                                <div class="col-12 text-center">
+                                    <div class="field-label">Payment QR Code</div>
+                                    <div style="margin: 10px 0;">
+                                        <img class="border border-dark rounded" t-att-src="o.qr_code_urls" style="width:120px; height:120px;"/>
+                                    </div>
+                                    <p style="font-size: 12px; color: #666; margin: 5px 0;">Scan with your banking app for payment details</p>
+                                </div>
+                            </div>
+                        </t>
+
+                        <!-- Footer -->
+                        <div class="footer-note">
+                            Thank you for your business • Confirm payment at 0563905772
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_osus_invoice_report,access_osus_invoice_report,model_account_move,account.group_account_user,1,0,0,0
+access_account_move_osus,account.move.osus,model_account_move,account.group_account_invoice,1,1,1,1

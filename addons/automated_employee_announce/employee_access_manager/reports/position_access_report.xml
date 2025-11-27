@@ -1,0 +1,28 @@
+<odoo>
+    <report id="position_access_report" model="hr.employee.position" string="Position Access Report" report_type="qweb-pdf" name="employee_access_manager.position_access_report" file="employee_access_manager.position_access_report"/>
+    <template id="position_access_report_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <div class="page">
+                    <h2>Access Rights for Position: <t t-esc="doc.name"/></h2>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Access Right</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="doc.access_rights_ids" t-as="access_right">
+                                <tr>
+                                    <td><t t-esc="access_right.name"/></td>
+                                    <td><t t-esc="access_right.description"/></td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

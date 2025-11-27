@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Simple Reference Dashboard for Portal Users -->
+    <template id="portal_my_orders_reference_summary" inherit_id="sale.portal_my_orders">
+        <xpath expr="//div[@class='o_portal_docs_search_row']" position="after">
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="card bg-light">
+                        <div class="card-body py-2">
+                            <h6 class="card-title mb-1">
+                                <i class="fa fa-tag text-primary"/>
+ Quick Reference Guide
+                            </h6>
+                            <p class="card-text mb-0 small text-muted">
+                                Your orders are enhanced with client reference tracking for easy identification and priority management.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+
+        <!-- Add reference column to the table -->
+        <xpath expr="//table//th[contains(text(), 'Order')]" position="after">
+            <th class="text-left">Client Reference</th>
+        </xpath>
+
+        <xpath expr="//table//td[1]" position="after">
+            <td class="text-left">
+                <t t-if="order.client_order_ref">
+                    <span class="badge badge-info">
+                        <i class="fa fa-tag"/>
+                        <t t-esc="order.client_order_ref"/>
+                    </span>
+                </t>
+                <t t-else="">
+                    <span class="text-muted">-</span>
+                </t>
+            </td>
+        </xpath>
+    </template>
+
+    <!-- Simple Reference Dashboard for Backend Users -->
+    <template id="sale_order_reference_summary" name="Sale Order Reference Summary">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            <h4 class="mb-0">
+                                <i class="fa fa-clipboard-list"/>
+ Order Reference Summary
+                            </h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="border rounded p-3 bg-light">
+                                        <h6 class="text-primary">
+                                            <i class="fa fa-list"/>
+ Recent Orders with References
+                                        </h6>
+                                        <p class="small text-muted mb-0">
+                                            View your most recent orders that include client references
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="border rounded p-3 bg-light">
+                                        <h6 class="text-warning">
+                                            <i class="fa fa-exclamation-triangle"/>
+ Priority Orders
+                                        </h6>
+                                        <p class="small text-muted mb-0">
+                                            Orders marked as high or urgent priority
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="border rounded p-3 bg-light">
+                                        <h6 class="text-success">
+                                            <i class="fa fa-check-circle"/>
+ Validated References
+                                        </h6>
+                                        <p class="small text-muted mb-0">
+                                            Orders with validated client references
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+</odoo>

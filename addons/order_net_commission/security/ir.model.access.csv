@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_sale_order_documentation_officer,sale.order.documentation.officer,sale.model_sale_order,group_documentation_officer,1,1,1,0
+access_sale_order_commission_analyst,sale.order.commission.analyst,sale.model_sale_order,group_commission_analyst,1,1,1,0
+access_sale_order_sales_approver,sale.order.sales.approver,sale.model_sale_order,group_sales_approver,1,1,1,1
+access_sale_order_line_documentation_officer,sale.order.line.documentation.officer,sale.model_sale_order_line,group_documentation_officer,1,1,1,0
+access_sale_order_line_commission_analyst,sale.order.line.commission.analyst,sale.model_sale_order_line,group_commission_analyst,1,1,1,0
+access_sale_order_line_sales_approver,sale.order.line.sales.approver,sale.model_sale_order_line,group_sales_approver,1,1,1,1

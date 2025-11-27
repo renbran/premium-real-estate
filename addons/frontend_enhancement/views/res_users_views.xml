@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- File Attachment Enhancement Form View -->
+    <record id="view_file_attachment_form" model="ir.ui.view">
+        <field name="name">file.attachment.enhancement.form</field>
+        <field name="model">file.attachment.enhancement</field>
+        <field name="arch" type="xml">
+            <form string="File Attachment">
+                <header>
+                    <button name="action_download" string="Download" type="object" class="btn-primary" icon="fa-download"/>
+                    <button name="action_delete" string="Archive" type="object" class="btn-secondary" icon="fa-archive" attrs="{'invisible': [('is_active', '=', False)]}"/>
+                    <button name="action_permanent_delete" string="Delete Permanently" type="object" class="btn-danger" icon="fa-trash" groups="base.group_system" confirm="Are you sure you want to permanently delete this file?"/>
+                    <field name="is_active" widget="boolean_toggle"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="File name..."/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="description" placeholder="Describe the file content..."/>
+                            <field name="file_type" readonly="1"/>
+                            <field name="file_size" readonly="1" widget="integer"/>
+                            <field name="access_level"/>
+                        </group>
+                        <group>
+                            <field name="user_id" readonly="1"/>
+                            <field name="upload_date" readonly="1"/>
+                            <field name="download_count" readonly="1"/>
+                            <field name="related_model" readonly="1" groups="base.group_system"/>
+                            <field name="related_record_id" readonly="1" groups="base.group_system"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="File Content">
+                            <field name="file_data" widget="binary" filename="name"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- File Attachment Enhancement Tree View -->
+    <record id="view_file_attachment_tree" model="ir.ui.view">
+        <field name="name">file.attachment.enhancement.tree</field>
+        <field name="model">file.attachment.enhancement</field>
+        <field name="arch" type="xml">
+            <tree string="File Attachments" decoration-muted="not is_active">
+                <field name="name"/>
+                <field name="description"/>
+                <field name="file_type"/>
+                <field name="file_size" widget="integer"/>
+                <field name="user_id"/>
+                <field name="upload_date"/>
+                <field name="download_count"/>
+                <field name="access_level"/>
+                <field name="is_active"/>
+                <button name="action_download" string="Download" type="object" icon="fa-download" class="btn-link"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- File Upload Form View -->
+    <record id="view_file_attachment_form_upload" model="ir.ui.view">
+        <field name="name">file.attachment.enhancement.form.upload</field>
+        <field name="model">file.attachment.enhancement</field>
+        <field name="arch" type="xml">
+            <form string="Upload File">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Upload New File</h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name" placeholder="Enter file name..." required="1"/>
+                            <field name="description" placeholder="Describe the file..."/>
+                            <field name="access_level"/>
+                        </group>
+                        <group>
+                            <field name="user_id" readonly="1"/>
+                            <field name="related_model" invisible="1"/>
+                            <field name="related_record_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <group string="File Upload">
+                        <field name="file_data" widget="binary" filename="name" required="1"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Upload" name="create" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Enhanced User Form View with File Upload -->
+    <record id="view_users_form_enhanced" model="ir.ui.view">
+        <field name="name">res.users.form.enhanced</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <!-- Add file attachment page -->
+            <xpath expr="//notebook" position="inside">
+                <page string="File Attachments" name="file_attachments">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="o_horizontal_separator">File Upload Settings</div>
+                            <group>
+                                <group>
+                                    <field name="max_upload_size" widget="integer"/>
+                                    <field name="upload_notifications"/>
+                                </group>
+                                <group>
+                                    <field name="allowed_file_types"/>
+                                    <field name="attachment_count" readonly="1"/>
+                                </group>
+                            </group>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-12">
+                            <div class="o_horizontal_separator">File Attachments</div>
+                            <div class="text-right mb-2">
+                                <button name="action_upload_file" string="Upload File" type="object" class="btn btn-primary" icon="fa-upload"/>
+                                <button name="action_view_attachments" string="View All Files" type="object" class="btn btn-secondary" icon="fa-folder"/>
+                            </div>
+                            <field name="attachment_ids" nolabel="1">
+                                <tree limit="5" decoration-muted="not is_active">
+                                    <field name="name"/>
+                                    <field name="file_type"/>
+                                    <field name="file_size" widget="integer"/>
+                                    <field name="upload_date"/>
+                                    <field name="download_count"/>
+                                    <field name="is_active"/>
+                                    <button name="action_download" string="Download" type="object" icon="fa-download" class="btn-link"/>
+                                </tree>
+                            </field>
+                        </div>
+                    </div>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- User File Attachment Kanban View -->
+    <record id="view_file_attachment_kanban" model="ir.ui.view">
+        <field name="name">file.attachment.enhancement.kanban</field>
+        <field name="model">file.attachment.enhancement</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" create="false">
+                <field name="name"/>
+                <field name="file_type"/>
+                <field name="file_size"/>
+                <field name="upload_date"/>
+                <field name="download_count"/>
+                <field name="is_active"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click #{record.is_active.raw_value ? '' : 'o_kanban_color_3'}">
+                            <div class="o_kanban_content">
+                                <div class="o_kanban_record_title">
+                                    <field name="name"/>
+                                </div>
+                                <div class="o_kanban_record_subtitle">
+                                    <i class="fa fa-file"/>
+                                    <field name="file_type"/>
+                                    |                                    <field name="file_size"/>
+ bytes
+                                </div>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                        <field name="upload_date" widget="relative"/>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <span class="badge badge-pill badge-info">
+                                            <i class="fa fa-download"/>
+                                            <field name="download_count"/>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- File Attachment Actions -->
+    <record id="action_file_attachment_all" model="ir.actions.act_window">
+        <field name="name">All File Attachments</field>
+        <field name="res_model">file.attachment.enhancement</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No file attachments found!
+            </p>
+            <p>
+                Upload files to see them here.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_my_file_attachments" model="ir.actions.act_window">
+        <field name="name">My File Attachments</field>
+        <field name="res_model">file.attachment.enhancement</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('user_id', '=', uid), ('is_active', '=', True)]</field>
+        <field name="context">{'default_user_id': uid}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No files uploaded yet!
+            </p>
+            <p>
+                Click the upload button to add your first file.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem id="menu_file_attachments_root" name="File Attachments" parent="base.menu_administration" sequence="100"/>
+
+    <menuitem id="menu_my_file_attachments" name="My Files" parent="menu_file_attachments_root" action="action_my_file_attachments" sequence="10"/>
+
+    <menuitem id="menu_all_file_attachments" name="All Files" parent="menu_file_attachments_root" action="action_file_attachment_all" groups="base.group_system" sequence="20"/>
+
+    <!-- Search View for File Attachments -->
+    <record id="view_file_attachment_search" model="ir.ui.view">
+        <field name="name">file.attachment.enhancement.search</field>
+        <field name="model">file.attachment.enhancement</field>
+        <field name="arch" type="xml">
+            <search string="File Attachments">
+                <field name="name" string="File Name"/>
+                <field name="description"/>
+                <field name="user_id"/>
+                <field name="file_type"/>
+                <separator/>
+                <filter name="my_files" string="My Files" domain="[('user_id', '=', uid)]"/>
+                <filter name="active_files" string="Active Files" domain="[('is_active', '=', True)]"/>
+                <filter name="public_files" string="Public Files" domain="[('access_level', '=', 'public')]"/>
+                <separator/>
+                <filter name="pdf_files" string="PDF Files" domain="[('file_type', 'ilike', 'pdf')]"/>
+                <filter name="image_files" string="Image Files" domain="[('file_type', 'ilike', 'image')]"/>
+                <filter name="office_files" string="Office Files" domain="['|', ('file_type', 'ilike', 'word'), ('file_type', 'ilike', 'excel')]"/>
+                <group name="group_by">
+                    <filter name="group_by_user" string="User" context="{'group_by': 'user_id'}"/>
+                    <filter name="group_by_file_type" string="File Type" context="{'group_by': 'file_type'}"/>
+                    <filter name="group_by_access_level" string="Access Level" context="{'group_by': 'access_level'}"/>
+                    <filter name="group_by_upload_date" string="Upload Date" context="{'group_by': 'upload_date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,804 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Enhanced Professional Payment Voucher Template with 4 Signatories -->
+        <template id="payment_voucher_enhanced_professional" name="Enhanced Professional Payment Voucher">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <style>
+                                @page {
+                                    margin: 5mm;
+                                    size: A4;
+                                }
+                                
+                                .voucher-container {
+                                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                                    background: white;
+                                    font-size: 12px;
+                                    line-height: 1.5;
+                                    margin: 0;
+                                    padding: 0;
+                                    color: #333;
+                                }
+                                
+                                /* Enhanced Header with Logo Support */
+                                .voucher-header {
+                                    background: linear-gradient(135deg, #1f4788 0%, #1a3f7a 50%, #153766 100%);
+                                    color: white;
+                                    padding: 20px;
+                                    margin: 0 0 20px 0;
+                                    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+                                    border-radius: 8px 8px 0 0;
+                                    position: relative;
+                                    overflow: hidden;
+                                }
+                                
+                                .voucher-header::before {
+                                    content: '';
+                                    position: absolute;
+                                    top: 0;
+                                    left: 0;
+                                    right: 0;
+                                    bottom: 0;
+                                    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+                                <defs>
+                                    <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
+                                        <path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="0.5"/>
+                                    </pattern>
+                                </defs>
+                                <rect width="100" height="100" fill="url(%23grid)" />
+                            </svg>');
+                                    opacity: 0.3;
+                                }
+                                
+                                .header-content {
+                                    position: relative;
+                                    z-index: 2;
+                                }
+                                
+                                .company-logo-section {
+                                    text-align: left;
+                                    padding: 8px;
+                                }
+                                
+                                .company-logo {
+                                    max-height: 60px;
+                                    max-width: 120px;
+                                    background: white;
+                                    padding: 5px;
+                                    border-radius: 6px;
+                                    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+                                }
+                                
+                                .voucher-title {
+                                    text-align: center;
+                                    font-size: 32px;
+                                    font-weight: 700;
+                                    letter-spacing: 3px;
+                                    margin: 0;
+                                    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+                                    text-transform: uppercase;
+                                    background: linear-gradient(45deg, #ffffff, #f8f9fa);
+                                    -webkit-background-clip: text;
+                                    -webkit-text-fill-color: transparent;
+                                    background-clip: text;
+                                    position: relative;
+                                }
+                                
+                                .voucher-subtitle {
+                                    text-align: center;
+                                    font-size: 16px;
+                                    margin: 8px 0;
+                                    font-weight: 500;
+                                    opacity: 0.95;
+                                }
+                                
+                                .company-info {
+                                    text-align: right;
+                                    font-size: 10px;
+                                    opacity: 0.9;
+                                    line-height: 1.3;
+                                }
+                                
+                                /* Enhanced QR Code Section */
+                                .qr-code-container {
+                                    text-align: center;
+                                    padding: 10px;
+                                }
+                                
+                                .qr-code-box {
+                                    background: white;
+                                    padding: 8px;
+                                    border-radius: 8px;
+                                    display: inline-block;
+                                    border: 3px solid #1f4788;
+                                    box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+                                    position: relative;
+                                }
+                                
+                                .qr-code-box::after {
+                                    content: 'VERIFY';
+                                    position: absolute;
+                                    bottom: -2px;
+                                    left: 50%;
+                                    transform: translateX(-50%);
+                                    background: #1f4788;
+                                    color: white;
+                                    padding: 2px 8px;
+                                    font-size: 8px;
+                                    border-radius: 0 0 4px 4px;
+                                    font-weight: bold;
+                                    letter-spacing: 0.5px;
+                                }
+                                
+                                /* Content Sections */
+                                .content-section {
+                                    background: #f8f9fa;
+                                    border-radius: 8px;
+                                    padding: 20px;
+                                    margin-bottom: 20px;
+                                    border: 1px solid #e9ecef;
+                                    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+                                }
+                                
+                                .section-title {
+                                    background: linear-gradient(135deg, #1f4788, #153766);
+                                    color: white;
+                                    padding: 8px 15px;
+                                    margin: -20px -20px 15px -20px;
+                                    border-radius: 7px 7px 0 0;
+                                    font-weight: 600;
+                                    font-size: 14px;
+                                    letter-spacing: 0.5px;
+                                    text-transform: uppercase;
+                                }
+                                
+                                .field-section {
+                                    margin-bottom: 15px;
+                                    position: relative;
+                                }
+                                
+                                .field-label {
+                                    color: #1f4788;
+                                    font-weight: 600;
+                                    font-size: 11px;
+                                    margin-bottom: 5px;
+                                    text-transform: uppercase;
+                                    letter-spacing: 0.5px;
+                                    position: relative;
+                                }
+                                
+                                .field-label::after {
+                                    content: ':';
+                                    margin-left: 2px;
+                                }
+                                
+                                .field-value {
+                                    border-bottom: 2px solid #1f4788;
+                                    padding: 6px 8px;
+                                    margin-bottom: 8px;
+                                    min-height: 20px;
+                                    color: #333;
+                                    font-weight: 500;
+                                    font-size: 13px;
+                                    background: white;
+                                    border-radius: 4px 4px 0 0;
+                                    position: relative;
+                                    transition: all 0.3s ease;
+                                }
+                                
+                                .field-value:hover {
+                                    box-shadow: 0 2px 4px rgba(31, 71, 136, 0.1);
+                                }
+                                
+                                /* Enhanced Amount Section */
+                                .amount-section {
+                                    background: linear-gradient(135deg, #1f4788 0%, #153766 50%, #0f2347 100%);
+                                    color: white;
+                                    padding: 25px;
+                                    text-align: center;
+                                    margin: 25px 0;
+                                    font-size: 22px;
+                                    font-weight: 700;
+                                    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+                                    border-radius: 12px;
+                                    position: relative;
+                                    overflow: hidden;
+                                }
+                                
+                                .amount-section::before {
+                                    content: '';
+                                    position: absolute;
+                                    top: 0;
+                                    left: -100%;
+                                    width: 100%;
+                                    height: 100%;
+                                    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+                                    animation: shimmer 3s infinite;
+                                }
+                                
+                                @keyframes shimmer {
+                                    0% { left: -100%; }
+                                    100% { left: 100%; }
+                                }
+                                
+                                .amount-value {
+                                    font-size: 28px;
+                                    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+                                    margin: 5px 0;
+                                }
+                                
+                                .amount-words {
+                                    font-style: italic;
+                                    font-size: 16px;
+                                    opacity: 0.9;
+                                    margin-top: 10px;
+                                    font-weight: 400;
+                                }
+                                
+                                /* Enhanced Signature Section */
+                                .signature-section {
+                                    margin-top: 30px;
+                                    padding: 25px;
+                                    background: #f8f9fa;
+                                    border-radius: 12px;
+                                    border: 2px solid #e9ecef;
+                                }
+                                
+                                .signature-row {
+                                    margin-bottom: 20px;
+                                }
+                                
+                                .signature-box {
+                                    text-align: center;
+                                    padding: 15px;
+                                    background: white;
+                                    border-radius: 8px;
+                                    border: 2px solid #e9ecef;
+                                    margin: 0 5px;
+                                    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+                                    position: relative;
+                                    transition: all 0.3s ease;
+                                }
+                                
+                                .signature-box:hover {
+                                    transform: translateY(-2px);
+                                    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                                }
+                                
+                                .signature-line {
+                                    border-bottom: 3px solid #1f4788;
+                                    margin-bottom: 10px;
+                                    height: 50px;
+                                    display: flex;
+                                    align-items: flex-end;
+                                    justify-content: center;
+                                    position: relative;
+                                    background: linear-gradient(to bottom, transparent 85%, #f8f9fa 85%);
+                                }
+                                
+                                .signature-image {
+                                    max-height: 45px;
+                                    max-width: 150px;
+                                    object-fit: contain;
+                                    margin-bottom: 5px;
+                                }
+                                
+                                .signature-initials {
+                                    font-size: 18px;
+                                    font-weight: bold;
+                                    color: #1f4788;
+                                    font-style: italic;
+                                    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+                                }
+                                
+                                .signature-label {
+                                    font-weight: 700;
+                                    color: #1f4788;
+                                    font-size: 12px;
+                                    text-transform: uppercase;
+                                    letter-spacing: 1px;
+                                    margin-bottom: 5px;
+                                    border-bottom: 1px solid #e9ecef;
+                                    padding-bottom: 3px;
+                                }
+                                
+                                .signature-name {
+                                    font-size: 11px;
+                                    color: #666;
+                                    font-weight: 500;
+                                    margin-top: 5px;
+                                }
+                                
+                                .signature-date {
+                                    font-size: 10px;
+                                    color: #999;
+                                    margin-top: 3px;
+                                }
+                                
+                                /* Receiver Section Enhancement */
+                                .receiver-section {
+                                    background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+                                    border: 3px solid #1f4788;
+                                    border-radius: 12px;
+                                    padding: 20px;
+                                    margin-top: 20px;
+                                    position: relative;
+                                }
+                                
+                                .receiver-section::before {
+                                    content: 'RECEIVER ACKNOWLEDGMENT';
+                                    position: absolute;
+                                    top: -12px;
+                                    left: 20px;
+                                    background: #1f4788;
+                                    color: white;
+                                    padding: 5px 15px;
+                                    font-size: 11px;
+                                    font-weight: bold;
+                                    border-radius: 15px;
+                                    letter-spacing: 0.5px;
+                                }
+                                
+                                .receiver-signature-area {
+                                    border: 2px dashed #1f4788;
+                                    height: 60px;
+                                    border-radius: 8px;
+                                    background: white;
+                                    position: relative;
+                                    margin-bottom: 10px;
+                                }
+                                
+                                .receiver-signature-area::after {
+                                    content: 'Signature and Date';
+                                    position: absolute;
+                                    top: 50%;
+                                    left: 50%;
+                                    transform: translate(-50%, -50%);
+                                    color: #999;
+                                    font-size: 11px;
+                                    font-style: italic;
+                                }
+                                
+                                /* Footer Enhancement */
+                                .footer-note {
+                                    background: linear-gradient(135deg, #1f4788, #153766);
+                                    color: white;
+                                    text-align: center;
+                                    padding: 15px;
+                                    font-size: 12px;
+                                    margin: 25px 0 0 0;
+                                    border-radius: 8px;
+                                    box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+                                }
+                                
+                                .creator-info {
+                                    font-size: 10px;
+                                    color: #666;
+                                    margin-top: 10px;
+                                    text-align: center;
+                                    padding: 8px;
+                                    background: #f8f9fa;
+                                    border-radius: 6px;
+                                    border: 1px solid #e9ecef;
+                                }
+                                
+                                /* Status Indicator */
+                                .status-indicator {
+                                    position: absolute;
+                                    top: 10px;
+                                    right: 10px;
+                                    padding: 5px 12px;
+                                    border-radius: 15px;
+                                    font-size: 10px;
+                                    font-weight: bold;
+                                    text-transform: uppercase;
+                                    letter-spacing: 0.5px;
+                                }
+                                
+                                .status-posted {
+                                    background: #d4edda;
+                                    color: #155724;
+                                    border: 1px solid #c3e6cb;
+                                }
+                                
+                                .status-approved {
+                                    background: #cce5ff;
+                                    color: #004085;
+                                    border: 1px solid #99d6ff;
+                                }
+                                
+                                .status-draft {
+                                    background: #fff3cd;
+                                    color: #856404;
+                                    border: 1px solid #ffeaa7;
+                                }
+                                
+                                /* Print Optimization */
+                                @media print {
+                                    .page {
+                                        margin: 0;
+                                        padding: 5px;
+                                    }
+                                    .voucher-container {
+                                        margin: 0;
+                                        padding: 0;
+                                    }
+                                    .signature-box:hover {
+                                        transform: none;
+                                        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+                                    }
+                                    .amount-section::before {
+                                        display: none;
+                                    }
+                                }
+                                
+                                /* Responsive Design */
+                                @media (max-width: 768px) {
+                                    .voucher-title {
+                                        font-size: 24px;
+                                        letter-spacing: 1px;
+                                    }
+                                    .amount-section {
+                                        font-size: 18px;
+                                    }
+                                    .amount-value {
+                                        font-size: 22px;
+                                    }
+                                }
+                        </style>
+
+                        <div class="voucher-container">
+                            <!-- Status Indicator -->
+                            <div t-att-class="'status-indicator status-' + (o.state or 'draft')">
+                                <span t-esc="(o.state or 'draft').replace('_', ' ')"/>
+                            </div>
+
+                            <!-- Enhanced Header Section -->
+                            <div class="voucher-header">
+                                <div class="header-content">
+                                    <div class="row">
+                                        <!-- Company Logo Section -->
+                                        <div class="col-3">
+                                            <div class="company-logo-section">
+                                                <t t-if="o.company_id.logo">
+                                                    <img t-att-src="'data:image/png;base64,' + o.company_id.logo.decode('utf-8')" class="company-logo" alt="Company Logo"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <div class="company-logo" style="display: flex; align-items: center; justify-content: center; background: #1f4788; color: white; font-weight: bold; font-size: 14px;">
+                                                            OSUS
+                                                    </div>
+                                                </t>
+                                            </div>
+                                        </div>
+
+                                        <!-- QR Code Section -->
+                                        <div class="col-2">
+                                            <div class="qr-code-container">
+                                                <div class="qr-code-box">
+                                                    <t t-if="o.qr_code">
+                                                        <img t-att-src="'data:image/png;base64,' + o.qr_code.decode('utf-8')" style="width: 75px; height: 75px;"/>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <div style="width: 75px; height: 75px; background: white; border: 2px solid #1f4788; position: relative; border-radius: 4px;">
+                                                            <div style="position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; background: #1f4788; border-radius: 2px;"></div>
+                                                            <div style="position: absolute; top: 3px; right: 3px; width: 18px; height: 18px; background: #1f4788; border-radius: 2px;"></div>
+                                                            <div style="position: absolute; bottom: 3px; left: 3px; width: 18px; height: 18px; background: #1f4788; border-radius: 2px;"></div>
+                                                            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 15px; height: 15px; background: #1f4788; border-radius: 50%;"></div>
+                                                        </div>
+                                                    </t>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Title Section -->
+                                        <div class="col-5">
+                                            <h1 class="voucher-title">
+                                                <t t-if="o.payment_type == 'inbound'">Receipt Voucher</t>
+                                                <t t-else="">Payment Voucher</t>
+                                            </h1>
+                                            <div class="voucher-subtitle">
+                                                <strong>
+                                                        Ref: <span t-field="o.voucher_number"/>
+ | 
+                                                        Date: <span t-field="o.date" t-options="{'widget': 'date'}"/>
+                                            </strong>
+                                        </div>
+                                    </div>
+
+                                    <!-- Company Info Section -->
+                                    <div class="col-2">
+                                        <div class="company-info">
+                                            <div>
+                                                <strong>
+                                                    <span t-field="o.company_id.name"/>
+                                                </strong>
+                                            </div>
+                                            <div t-field="o.company_id.city" t-if="o.company_id.city"/>
+                                            <div t-field="o.company_id.phone" t-if="o.company_id.phone"/>
+                                            <div t-field="o.company_id.email" t-if="o.company_id.email"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Payment Details Section -->
+                        <div class="content-section">
+                            <div class="section-title">Payment Information</div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <!-- Left Column -->
+                                    <div class="field-section">
+                                        <div class="field-label">
+                                            <span t-if="o.payment_type == 'outbound'">Pay To</span>
+                                            <span t-if="o.payment_type == 'inbound'">Received From</span>
+                                        </div>
+                                        <div class="field-value">
+                                            <span t-field="o.partner_id.name"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="field-section">
+                                        <div class="field-label">Phone Number</div>
+                                        <div class="field-value">
+                                            <span t-field="o.partner_id.mobile" t-if="o.partner_id.mobile"/>
+                                            <span t-field="o.partner_id.phone" t-if="not o.partner_id.mobile and o.partner_id.phone"/>
+                                            <t t-if="not o.partner_id.mobile and not o.partner_id.phone">Not Provided</t>
+                                        </div>
+                                    </div>
+
+                                    <div class="field-section">
+                                        <div class="field-label">Email Address</div>
+                                        <div class="field-value">
+                                            <span t-field="o.partner_id.email" t-if="o.partner_id.email"/>
+                                            <t t-if="not o.partner_id.email">Not Provided</t>
+                                        </div>
+                                    </div>
+
+                                    <div class="field-section">
+                                        <div class="field-label">Payment Method</div>
+                                        <div class="field-value">
+                                            <span t-field="o.journal_id.name"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-6">
+                                    <!-- Right Column -->
+                                    <div class="field-section">
+                                        <div class="field-label">Related Invoice/Bill</div>
+                                        <div class="field-value">
+                                            <span t-field="o.ref" t-if="o.ref"/>
+                                            <t t-if="not o.ref">Not Specified</t>
+                                        </div>
+                                    </div>
+
+                                    <div class="field-section">
+                                        <div class="field-label">Transaction Type</div>
+                                        <div class="field-value">
+                                            <t t-if="o.payment_type == 'inbound'">
+                                                <span style="color: #28a745; font-weight: bold;">💰 Receipt (Money Received)</span>
+                                            </t>
+                                            <t t-else="">
+                                                <span style="color: #dc3545; font-weight: bold;">💳 Payment (Money Paid)</span>
+                                            </t>
+                                        </div>
+                                    </div>
+
+                                    <div class="field-section">
+                                        <div class="field-label">Currency</div>
+                                        <div class="field-value">
+                                            <span t-field="o.currency_id.name"/>
+ (                                            <span t-field="o.currency_id.symbol"/>
+)</div>
+                                    </div>
+
+                                    <div class="field-section">
+                                        <div class="field-label">Remarks/Memo</div>
+                                        <div class="field-value" style="min-height: 35px;">
+                                            <span t-field="o.memo" t-if="o.memo"/>
+                                            <t t-if="not o.memo">No additional remarks</t>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Enhanced Amount Section -->
+                        <div class="amount-section">
+                            <div>TOTAL AMOUNT</div>
+                            <div class="amount-value">
+                                <span t-field="o.amount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                            </div>
+                            <div class="amount-words">
+                                <strong>In Words: </strong>
+                                <span t-esc="o._amount_in_words()"/>
+                            </div>
+                        </div>
+
+                        <!-- Enhanced 4-Signatory Section -->
+                        <div class="signature-section">
+                            <div class="section-title">Authorization Signatures</div>
+
+                            <!-- First Row: Creator, Reviewer, Approver -->
+                            <div class="row signature-row">
+                                <div class="col-4">
+                                    <div class="signature-box">
+                                        <div class="signature-label">1. Created By</div>
+                                        <div class="signature-line">
+                                            <t t-if="o.creator_signature">
+                                                <img t-att-src="'data:image/png;base64,' + o.creator_signature.decode('utf-8')" class="signature-image" alt="Creator Signature"/>
+                                            </t>
+                                            <t t-elif="o.create_uid">
+                                                <div class="signature-initials">
+                                                    <span t-esc="''.join([word[0].upper() for word in o.create_uid.name.split()[:2]])"/>
+                                                </div>
+                                            </t>
+                                        </div>
+                                        <div class="signature-name">
+                                            <span t-field="o.create_uid.name" t-if="o.create_uid"/>
+                                            <span t-if="not o.create_uid">____________</span>
+                                        </div>
+                                        <div class="signature-date">
+                                            <span t-field="o.create_date" t-options="{'widget': 'datetime'}" t-if="o.create_date"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-4">
+                                    <div class="signature-box">
+                                        <div class="signature-label">2. Reviewed By</div>
+                                        <div class="signature-line">
+                                            <t t-if="o.reviewer_signature">
+                                                <img t-att-src="'data:image/png;base64,' + o.reviewer_signature.decode('utf-8')" class="signature-image" alt="Reviewer Signature"/>
+                                            </t>
+                                            <t t-elif="o.reviewer_id">
+                                                <div class="signature-initials">
+                                                    <span t-esc="''.join([word[0].upper() for word in o.reviewer_id.name.split()[:2]])"/>
+                                                </div>
+                                            </t>
+                                        </div>
+                                        <div class="signature-name">
+                                            <span t-field="o.reviewer_id.name" t-if="o.reviewer_id"/>
+                                            <span t-if="not o.reviewer_id">____________</span>
+                                        </div>
+                                        <div class="signature-date">
+                                            <span t-field="o.reviewer_date" t-options="{'widget': 'datetime'}" t-if="o.reviewer_date"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-4">
+                                    <div class="signature-box">
+                                        <div class="signature-label">3. Approved By</div>
+                                        <div class="signature-line">
+                                            <t t-if="o.approver_signature">
+                                                <img t-att-src="'data:image/png;base64,' + o.approver_signature.decode('utf-8')" class="signature-image" alt="Approver Signature"/>
+                                            </t>
+                                            <t t-elif="o.approver_id">
+                                                <div class="signature-initials">
+                                                    <span t-esc="''.join([word[0].upper() for word in o.approver_id.name.split()[:2]])"/>
+                                                </div>
+                                            </t>
+                                        </div>
+                                        <div class="signature-name">
+                                            <span t-field="o.approver_id.name" t-if="o.approver_id"/>
+                                            <span t-if="not o.approver_id">____________</span>
+                                        </div>
+                                        <div class="signature-date">
+                                            <span t-field="o.approver_date" t-options="{'widget': 'datetime'}" t-if="o.approver_date"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Second Row: Authorizer (Full Width) -->
+                            <div class="row signature-row">
+                                <div class="col-12">
+                                    <div class="signature-box">
+                                        <div class="signature-label">4. Authorized By (Final Authority)</div>
+                                        <div class="signature-line" style="height: 60px;">
+                                            <t t-if="o.authorizer_signature">
+                                                <img t-att-src="'data:image/png;base64,' + o.authorizer_signature.decode('utf-8')" class="signature-image" alt="Authorizer Signature"/>
+                                            </t>
+                                            <t t-elif="o.authorizer_id">
+                                                <div class="signature-initials" style="font-size: 24px;">
+                                                    <span t-esc="''.join([word[0].upper() for word in o.authorizer_id.name.split()[:2]])"/>
+                                                </div>
+                                            </t>
+                                        </div>
+                                        <div class="signature-name" style="font-size: 13px; font-weight: 600;">
+                                            <span t-field="o.authorizer_id.name" t-if="o.authorizer_id"/>
+                                            <span t-if="not o.authorizer_id">Name: ________________________ Signature: ________________________ Date: __________</span>
+                                        </div>
+                                        <div class="signature-date">
+                                            <span t-field="o.authorizer_date" t-options="{'widget': 'datetime'}" t-if="o.authorizer_date"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Enhanced Receiver Section -->
+                        <div class="receiver-section">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div style="margin-bottom: 15px;">
+                                        <div style="font-weight: bold; margin-bottom: 5px; font-size: 12px; color: #1f4788;">Receiver's Full Name:</div>
+                                        <div style="border-bottom: 2px solid #1f4788; height: 20px; font-size: 13px; padding-top: 2px; font-weight: 500;">
+                                            <span t-field="o.partner_id.name"/>
+                                        </div>
+                                    </div>
+                                    <div style="margin-bottom: 15px;">
+                                        <div style="font-weight: bold; margin-bottom: 5px; font-size: 12px; color: #1f4788;">Mobile Number:</div>
+                                        <div style="border-bottom: 2px solid #1f4788; height: 20px; font-size: 13px; padding-top: 2px;">
+                                            <span t-field="o.partner_id.mobile" t-if="o.partner_id.mobile"/>
+                                            <t t-if="not o.partner_id.mobile">_______________________</t>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div style="font-weight: bold; margin-bottom: 5px; font-size: 12px; color: #1f4788;">ID Document:</div>
+                                        <div style="font-size: 12px; margin-top: 5px;">
+                                            <span style="margin-right: 15px;">☐ National ID</span>
+                                            <span style="margin-right: 15px;">☐ Passport</span>
+                                            <span>☐ Driver's License</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div style="margin-bottom: 15px;">
+                                        <div style="font-weight: bold; margin-bottom: 5px; font-size: 12px; color: #1f4788;">Date Received:</div>
+                                        <div style="border-bottom: 2px solid #1f4788; height: 20px; font-size: 13px; padding-top: 2px;">
+                                            <span t-field="o.date" t-options="{'widget': 'date'}"/>
+                                        </div>
+                                    </div>
+                                    <div style="margin-bottom: 15px;">
+                                        <div style="font-weight: bold; margin-bottom: 5px; font-size: 12px; color: #1f4788;">Receiver's Signature:</div>
+                                        <div class="receiver-signature-area">
+                                            <t t-if="o.receiver_signature">
+                                                <img t-att-src="'data:image/png;base64,' + o.receiver_signature.decode('utf-8')" style="max-height: 55px; max-width: 180px; margin: 2px;" alt="Receiver Signature"/>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Enhanced Footer -->
+                        <div class="footer-note">
+                            <div style="font-size: 14px; font-weight: bold; margin-bottom: 5px;">
+                                        🏢 OSUS Properties - Professional Payment Solutions
+                            </div>
+                            <div style="font-size: 11px; opacity: 0.9;">
+                                        This is a computer-generated document • 
+                                <span t-field="o.company_id.name"/>
+ • 
+                                <span t-field="o.company_id.country_id.name"/>
+ • 
+                                        Verify authenticity via QR code
+                            </div>
+                        </div>
+
+                        <!-- Creator and Modification Info -->
+                        <div class="creator-info">
+                            <strong>Document Trail:</strong>
+                                    Created by <span t-field="o.create_uid.name"/>
+ on <span t-field="o.create_date" t-options="{'widget': 'datetime'}"/>
+                    <t t-if="o.write_uid != o.create_uid">
+                                        • Last modified by <span t-field="o.write_uid.name"/>
+ on <span t-field="o.write_date" t-options="{'widget': 'datetime'}"/>
+                </t>
+            </div>
+        </div>
+    </div>
+</t>
+</t>
+</t>
+</template>
+
+</data>
+</odoo>

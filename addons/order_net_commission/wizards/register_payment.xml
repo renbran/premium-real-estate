@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+
+        <!-- Enhanced Payment Register Form View -->
+        <record id="view_account_payment_register_form_enhanced" model="ir.ui.view">
+            <field name="name">account.payment.register.form.enhanced</field>
+            <field name="model">account.payment.register</field>
+            <field name="inherit_id" ref="account.view_account_payment_register_form"/>
+            <field name="arch" type="xml">
+
+                <!-- Add fields at the end of the sheet, which is always safe -->
+                <xpath expr="//form" position="inside">
+                    <group string="Payment Voucher Options" name="voucher_options">
+                        <field name="remarks" string="Payment Remarks" placeholder="Enter additional remarks for the payment voucher..."/>
+                        <field name="qr_in_report" string="Include QR Code in Voucher Report"/>
+                    </group>
+                </xpath>
+
+            </field>
+        </record>
+
+
+</odoo>

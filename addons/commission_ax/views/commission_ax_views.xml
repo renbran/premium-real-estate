@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Commission AX Form View -->
+        <record id="view_commission_ax_form" model="ir.ui.view">
+            <field name="name">commission.ax.form</field>
+            <field name="model">commission.ax</field>
+            <field name="arch" type="xml">
+                <form string="Commission Management">
+                    <header>
+                        <button name="action_calculate_commission" type="object" string="Calculate Commission" class="btn-info" invisible="state != 'draft'"/>
+
+                        <button name="action_confirm_commission" type="object" string="Confirm Commission" class="btn-primary" invisible="state != 'calculated'"/>
+
+                        <button name="action_manual_process" type="object" string="Process Manually" class="btn-secondary" invisible="state not in ('draft', 'calculated')"/>
+
+                        <button name="action_create_vendor_bill" type="object" string="Create Vendor Bills" class="btn-success" invisible="state != 'confirmed'"/>
+
+                        <button name="action_cancel_commission" type="object" string="Cancel" class="btn-danger" invisible="state in ('paid', 'cancelled')" confirm="Are you sure you want to cancel this commission? This will also cancel related purchase orders and vendor bills."/>
+
+                        <field name="state" widget="statusbar" statusbar_visible="draft,calculated,confirmed,paid"/>
+                    </header>
+
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button type="object" name="action_view_sale_order" class="oe_stat_button" icon="fa-shopping-cart" invisible="not sale_order_id">
+                                <field name="sale_order_id" string="Sale Order" widget="statinfo"/>
+                            </button>
+
+                            <button type="object" name="action_view_invoice" class="oe_stat_button" icon="fa-file-invoice" invisible="not invoice_id">
+                                <field name="invoice_id" string="Invoice" widget="statinfo"/>
+                            </button>
+
+                            <button type="object" name="action_view_vendor_bills" class="oe_stat_button" icon="fa-bill" invisible="vendor_bill_count == 0">
+                                <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_value">
+                                        <field name="vendor_bill_count"/>
+                                    </span>
+                                    <span class="o_stat_text">Vendor Bills</span>
+                                </div>
+                            </button>
+                        </div>
+
+                        <widget name="web_ribbon" title="Auto Process" bg_color="bg-info" invisible="commission_type != 'automatic'"/>
+
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+
+                        <group>
+                            <group name="main_info" string="Commission Information">
+                                <field name="commission_type"/>
+                                <field name="sale_order_id" readonly="state != 'draft'" options="{'no_create': True}"/>
+                                <field name="invoice_id" readonly="state != 'draft'" options="{'no_create': True}"/>
+                                <field name="currency_id" invisible="1"/>
+                            </group>
+
+                            <group name="status_info" string="Status Information">
+                                <field name="sale_confirmed" readonly="1"/>
+                                <field name="invoice_posted" readonly="1"/>
+                                <field name="auto_process_eligible" readonly="1"/>
+                                <field name="processed_by" readonly="1"/>
+                            </group>
+                        </group>
+
+                        <group>
+                            <group name="financial_info" string="Financial Information">
+                                <field name="sale_amount" readonly="1"/>
+                                <field name="total_commission_amount" readonly="1"/>
+                                <field name="paid_amount" readonly="1"/>
+                                <field name="outstanding_amount" readonly="1"/>
+                            </group>
+
+                            <group name="dates" string="Processing Dates">
+                                <field name="calculation_date" readonly="1"/>
+                                <field name="confirmation_date" readonly="1"/>
+                                <field name="payment_date" readonly="1"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page name="commission_summary" string="Commission Summary">
+                                <group string="Commission Details">
+                                    <field name="sale_order_id" readonly="1" string="Source Sale Order"/>
+                                    <field name="total_commission_amount" readonly="1" string="Total Commission Amount"/>
+                                    <button name="action_view_sale_order" type="object" string="View Sale Order Commission Details" class="btn-link" icon="fa-external-link"/>
+                                </group>
+
+                                <group string="Processing Information">
+                                    <field name="commission_type" readonly="state != 'draft'"/>
+                                    <field name="auto_process_eligible" readonly="1"/>
+                                    <field name="processed_by" readonly="1"/>
+                                </group>
+                            </page>
+
+                            <page name="payments" string="Payments">
+                                <field name="payment_ids" readonly="1">
+                                    <tree>
+                                        <field name="name"/>
+                                        <field name="date"/>
+                                        <field name="amount"/>
+                                        <field name="state"/>
+                                    </tree>
+                                </field>
+                            </page>
+
+                            <page name="vendor_bills" string="Vendor Bills">
+                                <field name="vendor_bill_ids" readonly="1">
+                                    <tree>
+                                        <field name="name"/>
+                                        <field name="partner_id"/>
+                                        <field name="invoice_date"/>
+                                        <field name="amount_total"/>
+                                        <field name="state"/>
+                                    </tree>
+                                </field>
+                            </page>
+
+                            <page name="notes" string="Notes">
+                                <field name="notes" nolabel="1" placeholder="Add your notes about this commission..."/>
+                            </page>
+                        </notebook>
+                    </sheet>
+
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Commission AX Tree View -->
+        <record id="view_commission_ax_tree" model="ir.ui.view">
+            <field name="name">commission.ax.tree</field>
+            <field name="model">commission.ax</field>
+            <field name="arch" type="xml">
+                <tree string="Commission Management" decoration-info="state == 'draft'" decoration-warning="state == 'calculated'" decoration-success="state == 'confirmed'" decoration-muted="state == 'cancelled'">
+                    <field name="name"/>
+                    <field name="sale_order_id"/>
+                    <field name="invoice_id"/>
+                    <field name="commission_type"/>
+                    <field name="total_commission_amount"/>
+                    <field name="paid_amount"/>
+                    <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state == 'calculated'" decoration-success="state == 'confirmed'" decoration-muted="state == 'cancelled'"/>
+                    <field name="auto_process_eligible"/>
+                    <field name="create_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Commission AX Search View -->
+        <record id="view_commission_ax_search" model="ir.ui.view">
+            <field name="name">commission.ax.search</field>
+            <field name="model">commission.ax</field>
+            <field name="arch" type="xml">
+                <search string="Commission Search">
+                    <field name="name" string="Commission Reference"/>
+                    <field name="sale_order_id" string="Sale Order"/>
+                    <field name="invoice_id" string="Invoice"/>
+
+                    <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]"/>
+                    <filter name="calculated" string="Calculated" domain="[('state', '=', 'calculated')]"/>
+                    <filter name="confirmed" string="Confirmed" domain="[('state', '=', 'confirmed')]"/>
+                    <filter name="paid" string="Paid" domain="[('state', '=', 'paid')]"/>
+
+                    <separator/>
+                    <filter name="auto_process" string="Auto Process" domain="[('commission_type', '=', 'automatic')]"/>
+                    <filter name="manual_process" string="Manual Process" domain="[('commission_type', '=', 'manual')]"/>
+                    <filter name="auto_eligible" string="Auto Process Eligible" domain="[('auto_process_eligible', '=', True)]"/>
+
+                    <separator/>
+                    <filter name="this_month" string="This Month" domain="[('create_date', '&gt;=', (context_today() - relativedelta(months=1)).strftime('%Y-%m-01'))]"/>
+
+                    <group expand="0" string="Group By">
+                        <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>
+                        <filter name="group_type" string="Commission Type" context="{'group_by': 'commission_type'}"/>
+                        <filter name="group_sale_order" string="Sale Order" context="{'group_by': 'sale_order_id'}"/>
+                        <filter name="group_create_date" string="Creation Date" context="{'group_by': 'create_date'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Commission AX Kanban View -->
+        <record id="view_commission_ax_kanban" model="ir.ui.view">
+            <field name="name">commission.ax.kanban</field>
+            <field name="model">commission.ax</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="state" class="o_kanban_small_column">
+                    <field name="name"/>
+                    <field name="sale_order_id"/>
+                    <field name="total_commission_amount"/>
+                    <field name="state"/>
+                    <field name="commission_type"/>
+                    <field name="auto_process_eligible"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_card oe_kanban_global_click">
+                                <div class="oe_kanban_content">
+                                    <div class="oe_kanban_details">
+                                        <strong class="o_kanban_record_title">
+                                            <field name="name"/>
+                                        </strong>
+                                        <div class="o_kanban_record_body">
+                                            <field name="sale_order_id"/>
+                                        </div>
+                                        <div class="o_kanban_record_bottom">
+                                            <div class="oe_kanban_bottom_left">
+                                                <span class="o_field_monetary">
+                                                    <field name="total_commission_amount"/>
+                                                </span>
+                                            </div>
+                                            <div class="oe_kanban_bottom_right">
+                                                <span t-if="record.commission_type.raw_value == 'automatic'" class="badge badge-info">Auto</span>
+                                                <span t-if="record.auto_process_eligible.raw_value" class="badge badge-success">Eligible</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Commission AX Action -->
+        <record id="action_commission_ax" model="ir.actions.act_window">
+            <field name="name">Commission Management</field>
+            <field name="res_model">commission.ax</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first commission record!
+                </p>
+                <p>
+                    Manage commission calculations, payments, and vendor bills for your sales team.
+                </p>
+            </field>
+        </record>
+
+        <!-- Commission AX Menu -->
+        <menuitem id="menu_commission_ax_root" name="Commission Management" sequence="100" web_icon="commission_ax,static/description/icon.png"/>
+
+        <menuitem id="menu_commission_ax" name="Commissions" parent="menu_commission_ax_root" action="action_commission_ax" sequence="10"/>
+
+        <menuitem id="menu_commission_config" name="Configuration" parent="menu_commission_ax_root" sequence="90"/>
+
+    </data>
+</odoo>

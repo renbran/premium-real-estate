@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- General Statement Wizard Views -->
+    <record id="view_statement_wizard_form" model="ir.ui.view">
+        <field name="name">statement.wizard.form</field>
+        <field name="model">statement.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Partner Statement">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="partner_id" placeholder="Select Partner..." required="1"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group name="filters">
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                        </group>
+                        <group name="options">
+                            <field name="include_reconciled"/>
+                            <field name="show_ageing"/>
+                            <field name="output_format"/>
+                        </group>
+                    </group>
+
+                    <group name="reconciliation" string="Reconciliation Options" attrs="{'invisible': [('output_format', '!=', 'html')]}">
+                        <field name="enable_reconciliation"/>
+                        <field name="reconcile_mode" attrs="{'invisible': [('enable_reconciliation', '=', False)]}"/>
+                    </group>
+
+                </sheet>
+                <footer>
+                    <button name="action_generate_statement" string="Generate Statement" type="object" class="btn-primary"/>
+                    <button name="action_print_statement" string="Print Statement" type="object" class="btn-secondary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Statement Configuration Views -->
+    <record id="view_statement_config_tree" model="ir.ui.view">
+        <field name="name">statement.config.tree</field>
+        <field name="model">statement.config</field>
+        <field name="arch" type="xml">
+            <tree string="Statement Configuration">
+                <field name="name"/>
+                <field name="frequency"/>
+                <field name="auto_send"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_statement_config_form" model="ir.ui.view">
+        <field name="name">statement.config.form</field>
+        <field name="model">statement.config</field>
+        <field name="arch" type="xml">
+            <form string="Statement Configuration">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Configuration Name"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group>
+                            <field name="frequency"/>
+                            <field name="auto_send"/>
+                            <field name="email_template_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="include_ageing"/>
+                            <field name="filter_by"/>
+                            <field name="exclude_zero_balance"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Actions -->
+    <record id="action_statement_config" model="ir.actions.act_window">
+        <field name="name">Statement Configuration</field>
+        <field name="res_model">statement.config</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_followup_levels" model="ir.actions.act_window">
+        <field name="name">Follow-up Levels</field>
+        <field name="res_model">followup.level</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>
