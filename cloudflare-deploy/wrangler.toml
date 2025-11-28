@@ -1,0 +1,18 @@
+name = "osus-properties"
+type = "javascript"
+account_id = ""
+workers_dev = true
+route = ""
+zone_id = ""
+
+[env.production]
+route = "properties.erposus.com"
+zone_id = ""
+
+[build]
+command = "npm run build"
+cwd = "./"
+watch_paths = []
+
+[build.upload]
+format = "service-worker"

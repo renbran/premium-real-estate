@@ -6,7 +6,7 @@
   "homepage": "https://properties.erposus.com",
   "repository": {
     "type": "git",
-    "url": "https://github.com/YOUR_USERNAME/premium-real-estate.git"
+    "url": "https://github.com/renbran/scholarix.git"
   },
   "keywords": [
     "real-estate",
@@ -15,5 +15,8 @@
     "website"
   ],
   "author": "OSUS Properties",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "build": "echo Static site - no build required"
+  }
 }

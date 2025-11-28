@@ -1,0 +1,18 @@
+# Cloudflare Pages Build Configuration
+# This file tells Cloudflare how to build and deploy your site
+
+## Build Settings
+command = "npm run build"
+functions_directory = ""
+output_directory = ""
+
+## Environment Variables
+[env]
+  NODE_VERSION = "18"
+
+## Build Caching
+[cache]
+  on_deployment = true
+
+## Triggers
+on_production_branch = true
