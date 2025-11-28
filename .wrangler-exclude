@@ -1,0 +1,14 @@
+dump.sql
+docker-compose.yml
+Dockerfile
+*.md
+config/
+custom/
+odoo_module/
+.git
+node_modules
+*.py
+*.sh
+*.bat
+test_webhook.py
+odoo_automation_code.py
