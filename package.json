@@ -17,7 +17,6 @@
   "author": "OSUS Properties",
   "license": "MIT",
   "scripts": {
-    "build": "node build.js",
-    "deploy": "echo 'Deployment via Cloudflare Pages'"
+    "build": "node build.js"
   }
 }
