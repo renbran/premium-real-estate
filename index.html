@@ -1825,14 +1825,6 @@
 
     <!-- Hero Section -->
     <div class="hero">
-        <video class="hero-video" id="heroVideo" autoplay playsinline>
-            <source src="/static/media/videos/hero-video-1.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
-        <video class="hero-video" id="heroVideo2" playsinline style="display: none;">
-            <source src="/static/media/videos/hero-video-2.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
         <div id="particles-js"></div>
         
         <div class="hero-content">
@@ -2454,66 +2446,6 @@
             initializeEmbedMode();
         }
 
-        // Continuous dual video playback with audio
-        const heroVideo1 = document.getElementById('heroVideo');
-        const heroVideo2 = document.getElementById('heroVideo2');
-        let currentVideoIndex = 1;
-
-        function setupContinuousPlayback() {
-            if (heroVideo1 && heroVideo2) {
-                // Set volume to 100%
-                heroVideo1.volume = 1.0;
-                heroVideo2.volume = 1.0;
-                heroVideo1.muted = false;
-                heroVideo2.muted = false;
-                
-                // Play first video
-                heroVideo1.style.display = 'block';
-                heroVideo2.style.display = 'none';
-                heroVideo1.play().catch(() => {
-                    console.log('Autoplay prevented by browser policy');
-                });
-                
-                // When first video ends, play second video
-                heroVideo1.addEventListener('ended', () => {
-                    heroVideo1.style.display = 'none';
-                    heroVideo2.style.display = 'block';
-                    heroVideo2.currentTime = 0;
-                    heroVideo2.volume = 1.0;
-                    heroVideo2.muted = false;
-                    heroVideo2.play();
-                    currentVideoIndex = 2;
-                });
-                
-                // When second video ends, loop back to first
-                heroVideo2.addEventListener('ended', () => {
-                    heroVideo2.style.display = 'none';
-                    heroVideo1.style.display = 'block';
-                    heroVideo1.currentTime = 0;
-                    heroVideo1.volume = 1.0;
-                    heroVideo1.muted = false;
-                    heroVideo1.play();
-                    currentVideoIndex = 1;
-                });
-                
-                // Resume on user interaction for browsers blocking autoplay
-                document.addEventListener('click', () => {
-                    const activeVideo = currentVideoIndex === 1 ? heroVideo1 : heroVideo2;
-                    if (activeVideo.paused) {
-                        activeVideo.muted = false;
-                        activeVideo.volume = 1.0;
-                        activeVideo.play();
-                    }
-                }, { once: true });
-            }
-        }
-        
-        // Initialize on load
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', setupContinuousPlayback);
-        } else {
-            setupContinuousPlayback();
-        }
         // Initialize Particles.js
         particlesJS("particles-js", {
             particles: {
