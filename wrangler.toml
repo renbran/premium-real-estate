@@ -1,6 +1,10 @@
 name = "osusrealestatepremium"
 compatibility_date = "2025-11-28"
 
+[build]
+command = "npm run build"
+cwd = "./"
+
 [env.production]
 routes = [
   { pattern = "erposus.com", zone_name = "erposus.com" }
