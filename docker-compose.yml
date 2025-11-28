@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   web:
-    image: odoo:17.0
+    image: odoo:18.0
     container_name: scholarix-odoo
     depends_on:
       - db
@@ -12,7 +12,7 @@ services:
     volumes:
       - odoo-web-data:/var/lib/odoo
       - ./config:/etc/odoo
-      - ./addons:/mnt/extra-addons
+      - ./custom:/mnt/extra-addons
     environment:
       - HOST=db
       - USER=odoo

@@ -1,0 +1,62 @@
+app = "n8n-automation"
+primary_region = "iad"
+kill_signal = "SIGINT"
+kill_timeout = "5s"
+
+[experimental]
+  auto_rollback = true
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  NODE_ENV = "production"
+  N8N_HOST = "0.0.0.0"
+  N8N_PORT = "5678"
+  N8N_PROTOCOL = "https"
+  N8N_BASIC_AUTH_ACTIVE = "true"
+  N8N_SECURE_COOKIE = "true"
+  N8N_LOG_LEVEL = "info"
+  N8N_METRICS = "true"
+  GENERIC_TIMEZONE = "UTC"
+  N8N_BLOCK_ENV_ACCESS_IN_NODE = "false"
+  N8N_GIT_NODE_DISABLE_BARE_REPOS = "true"
+  N8N_RUNNERS_ENABLED = "true"
+  DB_TYPE = "sqlite"
+  N8N_USER_FOLDER = "/app/.n8n"
+  DB_SQLITE_DATABASE = "/app/.n8n/database.sqlite"
+
+[[services]]
+  protocol = "tcp"
+  internal_port = 5678
+  processes = ["app"]
+
+  [[services.ports]]
+    port = 80
+    handlers = ["http"]
+    force_https = true
+
+  [[services.ports]]
+    port = 443
+    handlers = ["tls", "http"]
+
+  [services.concurrency]
+    type = "connections"
+    hard_limit = 25
+    soft_limit = 20
+
+  [[services.tcp_checks]]
+    interval = "15s"
+    timeout = "2s"
+    grace_period = "1s"
+
+  [[services.http_checks]]
+    interval = "10s"
+    timeout = "2s"
+    grace_period = "5s"
+    method = "get"
+    path = "/healthz"
+
+[mounts]
+  source = "n8n_data"
+  destination = "/app/.n8n"

@@ -1,0 +1,735 @@
+{
+  "name": "Bill Automation - Production Ready",
+  "nodes": [
+    {
+      "parameters": {
+        "folderId": "UPLOAD_FOLDER_ID_PLACEHOLDER",
+        "event": "fileCreated",
+        "options": {
+          "includeFileContent": true
+        }
+      },
+      "id": "google-drive-trigger",
+      "name": "Google Drive Trigger",
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "google-drive-bills",
+          "name": "Google Drive - Bills"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "file-type-filter",
+              "leftValue": "={{ $json.name.toLowerCase() }}",
+              "rightValue": "\\.(pdf|png|jpe?g|gif|tiff?|bmp)$",
+              "operator": {
+                "type": "string",
+                "operation": "regex"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "file-filter",
+      "name": "File Type Filter",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [460, 300],
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "jsCode": "// Validate file type and size\nconst fileName = $input.first().json.name.toLowerCase();\nconst fileSize = $input.first().json.size;\nconst maxSize = 10 * 1024 * 1024; // 10MB\n\n// Allowed file extensions\nconst allowedTypes = ['.pdf', '.png', '.jpg', '.jpeg', '.gif', '.tiff', '.bmp'];\n\n// Check file type\nconst isValidType = allowedTypes.some(ext => fileName.endsWith(ext));\n\n// Check file size\nconst isValidSize = fileSize <= maxSize;\n\nif (!isValidType) {\n  throw new Error(`Unsupported file type: ${fileName}. Allowed types: ${allowedTypes.join(', ')}`);\n}\n\nif (!isValidSize) {\n  throw new Error(`File too large: ${(fileSize / 1024 / 1024).toFixed(2)}MB. Max size: 10MB`);\n}\n\n// Return validated file data\nreturn {\n  fileName: $input.first().json.name,\n  fileId: $input.first().json.id,\n  fileSize: fileSize,\n  mimeType: $input.first().json.mimeType,\n  webContentLink: $input.first().json.webContentLink,\n  downloadUrl: $input.first().json.webContentLink.replace('/view?usp=drivesdk', '/export?format=pdf'),\n  uploadTime: new Date().toISOString(),\n  status: 'validated'\n};"
+      },
+      "id": "file-validator",
+      "name": "File Validator",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.webContentLink }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleDriveOAuth2Api",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          },
+          "timeout": 30000
+        }
+      },
+      "id": "download-file",
+      "name": "Download File",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [900, 300],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "google-drive-bills",
+          "name": "Google Drive - Bills"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "operation": "message",
+        "model": "gpt-4-vision-preview",
+        "messages": {
+          "messageValues": [
+            {
+              "role": "user",
+              "content": "You are an expert at extracting information from bills and invoices in ANY language.\n\nAnalyze the attached document and extract information in JSON format.\nIf the document is not in English, translate the extracted data to English for standardization.\n\nExtract these fields:\n{\n  \"vendor_name\": \"Company name (translated to English if needed)\",\n  \"invoice_number\": \"Invoice number (keep original format)\",\n  \"invoice_date\": \"Date in YYYY-MM-DD format\",\n  \"due_date\": \"Due date in YYYY-MM-DD format (if available)\",\n  \"amount\": \"Total amount as number only (no currency symbols)\",\n  \"currency\": \"ISO currency code (EUR, USD, GBP, etc.)\",\n  \"tax_amount\": \"Tax amount as number (if separately listed)\",\n  \"description\": \"Brief description of goods/services\",\n  \"vendor_address\": \"Vendor address (if available)\",\n  \"payment_terms\": \"Payment terms (if available)\",\n  \"original_language\": \"Detected language of the document\",\n  \"confidence\": \"Confidence level (1-10) in extraction accuracy\"\n}\n\nSpecial rules:\n- Detect language automatically\n- Translate vendor names to English\n- Keep original invoice numbers\n- Convert currency to ISO codes\n- Use standard date format YYYY-MM-DD\n- Return confidence score for quality control\n- Use null for missing information\n- Ensure amounts are numeric values only\n\nReturn ONLY the JSON object, no additional text.",
+              "inputType": "combined",
+              "imageUrl": "data:{{ $('Download File').item.binary.data.mimeType }};base64,{{ $('Download File').item.binary.data.data }}"
+            }
+          ]
+        },
+        "options": {
+          "maxTokens": 1000,
+          "temperature": 0.1
+        }
+      },
+      "id": "openai-ocr",
+      "name": "OpenAI OCR",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.3,
+      "position": [1120, 300],
+      "credentials": {
+        "openAiApi": {
+          "id": "openai-bills",
+          "name": "OpenAI - Bills"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Enhanced data validation and processing\nfunction validateBillData(ocrResult) {\n    let data;\n    \n    try {\n        // Parse OCR result\n        const content = ocrResult.choices[0].message.content;\n        \n        // Clean JSON response (remove markdown code blocks if present)\n        const cleanContent = content.replace(/```json\\n|```/g, '').trim();\n        data = JSON.parse(cleanContent);\n    } catch (error) {\n        throw new Error(`Failed to parse OCR result: ${error.message}`);\n    }\n    \n    const errors = [];\n    const warnings = [];\n    \n    // Required field validation\n    if (!data.vendor_name || data.vendor_name.trim().length < 2) {\n        errors.push(\"Vendor name is required and must be at least 2 characters\");\n    }\n    \n    if (!data.amount || isNaN(parseFloat(data.amount)) || parseFloat(data.amount) <= 0) {\n        errors.push(\"Amount must be a positive number\");\n    }\n    \n    if (!data.invoice_date) {\n        errors.push(\"Invoice date is required\");\n    }\n    \n    // Date validation\n    if (data.invoice_date && !isValidDate(data.invoice_date)) {\n        errors.push(\"Invoice date must be in YYYY-MM-DD format\");\n    }\n    \n    if (data.due_date && !isValidDate(data.due_date)) {\n        warnings.push(\"Due date format invalid, will be ignored\");\n        data.due_date = null;\n    }\n    \n    // Confidence check\n    const confidence = parseFloat(data.confidence) || 0;\n    if (confidence < 6) {\n        warnings.push(`Low OCR confidence: ${confidence}/10 - manual review recommended`);\n    }\n    \n    // Amount validation\n    const amount = parseFloat(data.amount);\n    if (amount > 50000) {\n        warnings.push(`High amount detected: ${amount} - manual review recommended`);\n    }\n    \n    // Clean and standardize data\n    const cleanedData = {\n        vendor_name: data.vendor_name ? data.vendor_name.trim() : null,\n        invoice_number: data.invoice_number ? data.invoice_number.trim() : null,\n        invoice_date: data.invoice_date,\n        due_date: data.due_date,\n        amount: amount,\n        currency: (data.currency || 'USD').toUpperCase(),\n        tax_amount: data.tax_amount ? parseFloat(data.tax_amount) : null,\n        description: data.description ? data.description.trim() : null,\n        vendor_address: data.vendor_address ? data.vendor_address.trim() : null,\n        payment_terms: data.payment_terms ? data.payment_terms.trim() : null,\n        original_language: data.original_language || 'Unknown',\n        confidence: confidence,\n        processing_timestamp: new Date().toISOString(),\n        file_info: {\n            name: $('File Validator').first().json.fileName,\n            size: $('File Validator').first().json.fileSize,\n            id: $('File Validator').first().json.fileId\n        }\n    };\n    \n    return {\n        isValid: errors.length === 0,\n        errors: errors,\n        warnings: warnings,\n        data: cleanedData,\n        needsReview: confidence < 7 || amount > 10000 || warnings.length > 0\n    };\n}\n\nfunction isValidDate(dateString) {\n    const regex = /^\\d{4}-\\d{2}-\\d{2}$/;\n    if (!regex.test(dateString)) return false;\n    \n    const date = new Date(dateString);\n    return date instanceof Date && !isNaN(date) && dateString === date.toISOString().split('T')[0];\n}\n\n// Process the OCR result\nconst ocrResponse = $input.first().json;\nconst validation = validateBillData(ocrResponse);\n\nif (validation.isValid) {\n    return {\n        success: true,\n        billData: validation.data,\n        warnings: validation.warnings,\n        needsReview: validation.needsReview,\n        processingStatus: 'validated'\n    };\n} else {\n    return {\n        success: false,\n        errors: validation.errors,\n        warnings: validation.warnings,\n        rawData: ocrResponse,\n        processingStatus: 'validation_failed'\n    };\n}"
+      },
+      "id": "data-validator",
+      "name": "Data Validator",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1340, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "validation-check",
+              "leftValue": "={{ $json.success }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equal"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "validation-check",
+      "name": "Validation Check",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1560, 300],
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "url": "https://your-odoo-domain.com/api/v1/bills/create",
+        "authentication": "none",
+        "httpMethod": "POST",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "User-Agent",
+              "value": "n8n-bill-automation/1.0"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "vendor_name",
+              "value": "={{ $json.billData.vendor_name }}"
+            },
+            {
+              "name": "invoice_number", 
+              "value": "={{ $json.billData.invoice_number }}"
+            },
+            {
+              "name": "invoice_date",
+              "value": "={{ $json.billData.invoice_date }}"
+            },
+            {
+              "name": "due_date",
+              "value": "={{ $json.billData.due_date }}"
+            },
+            {
+              "name": "amount",
+              "value": "={{ $json.billData.amount }}"
+            },
+            {
+              "name": "currency",
+              "value": "={{ $json.billData.currency }}"
+            },
+            {
+              "name": "tax_amount",
+              "value": "={{ $json.billData.tax_amount }}"
+            },
+            {
+              "name": "description", 
+              "value": "={{ $json.billData.description }}"
+            },
+            {
+              "name": "vendor_address",
+              "value": "={{ $json.billData.vendor_address }}"
+            },
+            {
+              "name": "payment_terms",
+              "value": "={{ $json.billData.payment_terms }}"
+            },
+            {
+              "name": "file_url",
+              "value": "={{ $('File Validator').first().json.webContentLink }}"
+            },
+            {
+              "name": "file_name",
+              "value": "={{ $('File Validator').first().json.fileName }}"
+            },
+            {
+              "name": "source",
+              "value": "n8n_automation"
+            },
+            {
+              "name": "ocr_confidence",
+              "value": "={{ $json.billData.confidence }}"
+            },
+            {
+              "name": "original_language",
+              "value": "={{ $json.billData.original_language }}"
+            },
+            {
+              "name": "processing_metadata",
+              "value": "={{ JSON.stringify({\n  workflow_id: $workflow.id,\n  execution_id: $execution.id,\n  processing_time: $json.billData.processing_timestamp,\n  file_size: $json.billData.file_info.size,\n  needs_review: $json.needsReview,\n  warnings: $json.warnings\n}) }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 30000,
+          "retry": {
+            "enabled": true,
+            "maxTries": 3,
+            "waitBetweenTries": 2000
+          },
+          "response": {
+            "response": {
+              "responseFormat": "json",
+              "outputPropertyName": "odoo_response"
+            }
+          }
+        }
+      },
+      "id": "send-to-odoo",
+      "name": "Send to Odoo",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1780, 180],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "odoo-success-check",
+              "leftValue": "={{ $json.odoo_response && ($json.odoo_response.success === true || $statusCode === 200) }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equal"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "odoo-success-check",
+      "name": "Odoo Success Check",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [2000, 180],
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleDriveOAuth2Api",
+        "resource": "file",
+        "operation": "move",
+        "fileId": "={{ $('File Validator').first().json.fileId }}",
+        "folderId": "PROCESSED_FOLDER_ID_PLACEHOLDER"
+      },
+      "id": "move-to-processed",
+      "name": "Move to Processed",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [2220, 80],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "google-drive-bills",
+          "name": "Google Drive - Bills"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Create success notification\nconst billData = $('Data Validator').first().json.billData;\nconst odooResponse = $('Send to Odoo').first().json.odoo_response;\n\nconst notification = {\n  type: 'success',\n  timestamp: new Date().toISOString(),\n  message: `✅ Bill processed successfully`,\n  details: {\n    vendor: billData.vendor_name,\n    amount: `${billData.amount} ${billData.currency}`,\n    invoice_number: billData.invoice_number,\n    file_name: billData.file_info.name,\n    odoo_bill_id: odooResponse.bill_id || 'Unknown',\n    processing_time: new Date() - new Date(billData.processing_timestamp),\n    confidence: billData.confidence,\n    warnings: $('Data Validator').first().json.warnings || []\n  },\n  actions_taken: [\n    'File validated and downloaded',\n    'OCR processing completed', \n    'Data validated successfully',\n    'Bill created in Odoo',\n    'File moved to processed folder'\n  ]\n};\n\nreturn notification;"
+      },
+      "id": "success-notification",
+      "name": "Success Notification",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2220, 180]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType", 
+        "nodeCredentialType": "googleDriveOAuth2Api",
+        "resource": "file",
+        "operation": "move",
+        "fileId": "={{ $('File Validator').first().json.fileId }}",
+        "folderId": "ERROR_FOLDER_ID_PLACEHOLDER"
+      },
+      "id": "move-to-error",
+      "name": "Move to Error Folder",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [2220, 280],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "google-drive-bills", 
+          "name": "Google Drive - Bills"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Create error notification with detailed context\nlet errorContext = {};\nlet errorSource = 'Unknown';\nlet errorDetails = [];\n\n// Determine error source and details\nif ($('Data Validator').first()?.json?.success === false) {\n  errorSource = 'Data Validation';\n  errorContext = $('Data Validator').first().json;\n  errorDetails = errorContext.errors || [];\n} else if ($('Send to Odoo').first()?.json?.error) {\n  errorSource = 'Odoo Integration';\n  errorContext = $('Send to Odoo').first().json;\n  errorDetails = [errorContext.error];\n} else {\n  errorSource = 'Processing Pipeline';\n  errorDetails = ['Unknown error in workflow execution'];\n}\n\nconst fileInfo = $('File Validator').first()?.json || { fileName: 'Unknown', fileSize: 0 };\n\nconst notification = {\n  type: 'error',\n  timestamp: new Date().toISOString(),\n  message: `❌ Bill processing failed: ${errorSource}`,\n  error_source: errorSource,\n  file_info: {\n    name: fileInfo.fileName,\n    size: fileInfo.fileSize,\n    id: fileInfo.fileId\n  },\n  errors: errorDetails,\n  warnings: errorContext.warnings || [],\n  raw_data: errorContext.rawData || null,\n  actions_taken: [\n    'File moved to error folder',\n    'Error logged for manual review',\n    'Notification sent to administrators'\n  ],\n  next_steps: [\n    'Review file manually',\n    'Check OCR accuracy',\n    'Verify Odoo connection',\n    'Update workflow if needed'\n  ]\n};\n\nreturn notification;"
+      },
+      "id": "error-notification",
+      "name": "Error Notification", 
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2220, 380]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "review-needed-check",
+              "leftValue": "={{ $('Data Validator').first().json.needsReview }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equal"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "review-needed-check",
+      "name": "Review Needed Check",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [2440, 80],
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleDriveOAuth2Api", 
+        "resource": "file",
+        "operation": "move",
+        "fileId": "={{ $('File Validator').first().json.fileId }}",
+        "folderId": "REVIEW_FOLDER_ID_PLACEHOLDER"
+      },
+      "id": "move-to-review",
+      "name": "Move to Review Folder",
+      "type": "n8n-nodes-base.googleDrive", 
+      "typeVersion": 3,
+      "position": [2660, 80],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "google-drive-bills",
+          "name": "Google Drive - Bills"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Create review notification\nconst billData = $('Data Validator').first().json.billData;\nconst warnings = $('Data Validator').first().json.warnings || [];\n\nconst notification = {\n  type: 'review_needed',\n  timestamp: new Date().toISOString(),\n  message: `⚠️ Bill requires manual review`,\n  details: {\n    vendor: billData.vendor_name,\n    amount: `${billData.amount} ${billData.currency}`,\n    invoice_number: billData.invoice_number,\n    file_name: billData.file_info.name,\n    confidence: billData.confidence,\n    reasons_for_review: [\n      ...(billData.confidence < 7 ? [`Low OCR confidence: ${billData.confidence}/10`] : []),\n      ...(billData.amount > 10000 ? [`High amount: ${billData.amount}`] : []),\n      ...warnings\n    ]\n  },\n  actions_taken: [\n    'Bill created in Odoo with review flag',\n    'File moved to review folder',\n    'Review notification sent'\n  ],\n  next_steps: [\n    'Review extracted data accuracy',\n    'Verify vendor information', \n    'Confirm amount and dates',\n    'Approve or correct in Odoo'\n  ]\n};\n\nreturn notification;"
+      },
+      "id": "review-notification",
+      "name": "Review Notification",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2660, 180]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Format notification message for Slack/Email\nconst data = $input.first().json;\n\n// Helper function to format object keys\nfunction formatKey(key) {\n  return key.replace(/_/g, ' ').replace(/\\b\\w/g, l => l.toUpperCase());\n}\n\n// Build notification message\nlet message = `🔔 **Bill Automation Notification**\\n\\n`;\nmessage += `**Type:** ${data.type.toUpperCase()}\\n`;\nmessage += `**Time:** ${data.timestamp}\\n`;\nmessage += `**Message:** ${data.message}\\n\\n`;\n\n// Add details if available\nif (data.details) {\n  message += `**Details:**\\n`;\n  for (const [key, value] of Object.entries(data.details)) {\n    message += `- **${formatKey(key)}:** ${value}\\n`;\n  }\n  message += `\\n`;\n}\n\n// Add errors if available\nif (data.errors && data.errors.length > 0) {\n  message += `**Errors:**\\n`;\n  data.errors.forEach(error => {\n    message += `- ${error}\\n`;\n  });\n  message += `\\n`;\n}\n\n// Add warnings if available\nif (data.warnings && data.warnings.length > 0) {\n  message += `**Warnings:**\\n`;\n  data.warnings.forEach(warning => {\n    message += `- ${warning}\\n`;\n  });\n  message += `\\n`;\n}\n\n// Add actions taken if available\nif (data.actions_taken && data.actions_taken.length > 0) {\n  message += `**Actions Taken:**\\n`;\n  data.actions_taken.forEach(action => {\n    message += `- ${action}\\n`;\n  });\n  message += `\\n`;\n}\n\n// Add next steps if available\nif (data.next_steps && data.next_steps.length > 0) {\n  message += `**Next Steps:**\\n`;\n  data.next_steps.forEach(step => {\n    message += `- ${step}\\n`;\n  });\n}\n\nreturn {\n  output: message,\n  formatted_notification: {\n    ...data,\n    formatted_message: message\n  }\n};"
+      },
+      "id": "format-notification",
+      "name": "Format Notification",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2880, 180]
+    },
+    {
+      "parameters": {
+        "url": "https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK",
+        "authentication": "none",
+        "httpMethod": "POST",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"text\": \"{{ $json.output }}\",\n  \"channel\": \"#bill-automation\",\n  \"username\": \"n8n-bill-bot\",\n  \"icon_emoji\": \":robot_face:\"\n}",
+        "options": {
+          "timeout": 10000
+        }
+      },
+      "id": "send-slack-notification",
+      "name": "Send Slack Notification",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [3100, 180],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "fromEmail": "noreply@yourcompany.com",
+        "toEmail": "admin@yourcompany.com",
+        "subject": "=Bill Automation: {{ $('Format Notification').first().json.type.toUpperCase() }}",
+        "emailType": "text",
+        "message": "={{ $('Format Notification').first().json.output }}",
+        "options": {}
+      },
+      "id": "send-email-notification",
+      "name": "Send Email Notification",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [3100, 280],
+      "continueOnFail": true,
+      "credentials": {
+        "smtp": {
+          "id": "email-notifications",
+          "name": "Email Notifications"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Drive Trigger": {
+      "main": [
+        [
+          {
+            "node": "File Type Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "File Type Filter": {
+      "main": [
+        [
+          {
+            "node": "File Validator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "File Validator": {
+      "main": [
+        [
+          {
+            "node": "Download File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download File": {
+      "main": [
+        [
+          {
+            "node": "OpenAI OCR",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI OCR": {
+      "main": [
+        [
+          {
+            "node": "Data Validator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data Validator": {
+      "main": [
+        [
+          {
+            "node": "Validation Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validation Check": {
+      "main": [
+        [
+          {
+            "node": "Send to Odoo",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Move to Error Folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send to Odoo": {
+      "main": [
+        [
+          {
+            "node": "Odoo Success Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Odoo Success Check": {
+      "main": [
+        [
+          {
+            "node": "Move to Processed",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Move to Error Folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move to Processed": {
+      "main": [
+        [
+          {
+            "node": "Success Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Success Notification": {
+      "main": [
+        [
+          {
+            "node": "Review Needed Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move to Error Folder": {
+      "main": [
+        [
+          {
+            "node": "Error Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error Notification": {
+      "main": [
+        [
+          {
+            "node": "Format Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Review Needed Check": {
+      "main": [
+        [
+          {
+            "node": "Move to Review Folder",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Format Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move to Review Folder": {
+      "main": [
+        [
+          {
+            "node": "Review Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Review Notification": {
+      "main": [
+        [
+          {
+            "node": "Format Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Notification": {
+      "main": [
+        [
+          {
+            "node": "Send Slack Notification",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send Email Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "production-v1.0",
+  "meta": {
+    "templateCreatedBy": "Bill Automation System",
+    "description": "Production-ready workflow for automated bill processing from Google Drive to Odoo ERP with comprehensive error handling, validation, and notifications.",
+    "categories": ["Productivity", "Finance", "Automation"],
+    "version": "1.0.0",
+    "created": "2024-10-28",
+    "updated": "2024-10-28"
+  },
+  "id": "bill-automation-production",
+  "tags": [
+    {
+      "createdAt": "2024-10-28T00:00:00.000Z",
+      "updatedAt": "2024-10-28T00:00:00.000Z",
+      "id": "finance",
+      "name": "finance"
+    },
+    {
+      "createdAt": "2024-10-28T00:00:00.000Z", 
+      "updatedAt": "2024-10-28T00:00:00.000Z",
+      "id": "automation",
+      "name": "automation"
+    },
+    {
+      "createdAt": "2024-10-28T00:00:00.000Z",
+      "updatedAt": "2024-10-28T00:00:00.000Z", 
+      "id": "ocr",
+      "name": "ocr"
+    }
+  ]
+}

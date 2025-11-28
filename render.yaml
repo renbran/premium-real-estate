@@ -1,0 +1,66 @@
+services:
+  - type: web
+    name: n8n-automation
+    env: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    healthCheckPath: /healthz
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: N8N_HOST
+        value: 0.0.0.0
+      - key: N8N_PORT
+        value: 5678
+      - key: N8N_PROTOCOL
+        value: https
+      - key: N8N_BASIC_AUTH_ACTIVE
+        value: true
+      - key: N8N_BASIC_AUTH_USER
+        value: admin
+      - key: N8N_BASIC_AUTH_PASSWORD
+        generateValue: true
+      - key: N8N_ENCRYPTION_KEY
+        generateValue: true
+      - key: N8N_SECURE_COOKIE
+        value: true
+      - key: N8N_LOG_LEVEL
+        value: info
+      - key: N8N_METRICS
+        value: true
+      - key: DB_TYPE
+        value: postgresdb
+      - key: DB_POSTGRESDB_HOST
+        fromDatabase:
+          name: n8n-database
+          property: host
+      - key: DB_POSTGRESDB_PORT
+        fromDatabase:
+          name: n8n-database
+          property: port
+      - key: DB_POSTGRESDB_DATABASE
+        fromDatabase:
+          name: n8n-database
+          property: database
+      - key: DB_POSTGRESDB_USER
+        fromDatabase:
+          name: n8n-database
+          property: user
+      - key: DB_POSTGRESDB_PASSWORD
+        fromDatabase:
+          name: n8n-database
+          property: password
+      - key: GENERIC_TIMEZONE
+        value: UTC
+      - key: N8N_BLOCK_ENV_ACCESS_IN_NODE
+        value: false
+      - key: N8N_GIT_NODE_DISABLE_BARE_REPOS
+        value: true
+      - key: N8N_RUNNERS_ENABLED
+        value: true
+
+databases:
+  - name: n8n-database
+    databaseName: n8n
+    user: n8n_user
+    plan: free

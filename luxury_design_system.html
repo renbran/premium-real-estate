@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium 3D Design System - Rose Gold & Burgundy</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --burgundy: #800020;
+            --wine-red: #722F37;
+            --rose-gold: #B76E79;
+            --champagne-gold: #F7E7CE;
+            --versace-gold: #C9B037;
+            --bronze: #CD7F32;
+            --copper-rose: #996666;
+            --antique-gold: #D4AF37;
+            --charcoal: #1A1A1D;
+            --graphite: #2E2E2E;
+            --warm-cream: #FAF0E6;
+            --pearl-white: #FFF9F0;
+            --champagne-beige: #EBE3D5;
+            --baroque-gold: #CFB53B;
+            --blush-pink: #E8C4C4;
+            --dusty-rose: #C9A9A6;
+            --midnight-plum: #4A1C40;
+        }
+
+        body {
+            font-family: 'Montserrat', 'Raleway', sans-serif;
+            background: linear-gradient(135deg, #1A1A1D 0%, #800020 50%, #4A1C40 100%);
+            color: var(--pearl-white);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            background: var(--charcoal);
+            padding: 2rem;
+            border-bottom: 2px solid var(--rose-gold);
+            box-shadow: 0 4px 20px rgba(128, 0, 32, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--champagne-gold);
+            text-shadow: 2px 2px 4px rgba(183, 110, 121, 0.5);
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            color: var(--blush-pink);
+            font-style: italic;
+        }
+
+        /* Navigation */
+        nav {
+            background: var(--graphite);
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0;
+            border-bottom: 1px solid var(--burgundy);
+            position: sticky;
+            top: 100px;
+            z-index: 50;
+        }
+
+        nav button {
+            flex: 1;
+            min-width: 150px;
+            padding: 1rem;
+            background: transparent;
+            border: none;
+            color: var(--warm-cream);
+            cursor: pointer;
+            font-weight: 600;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+
+        nav button:hover {
+            background: var(--burgundy);
+            border-bottom-color: var(--rose-gold);
+            color: var(--champagne-gold);
+        }
+
+        nav button.active {
+            background: var(--burgundy);
+            border-bottom-color: var(--baroque-gold);
+            color: var(--champagne-gold);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Sections */
+        section {
+            display: none;
+            animation: fadeIn 0.6s ease-in;
+        }
+
+        section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Section Headers */
+        section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--versace-gold);
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 8px rgba(128, 0, 32, 0.4);
+            border-bottom: 3px solid var(--rose-gold);
+            padding-bottom: 1rem;
+        }
+
+        /* Color Palette Grid */
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .color-card {
+            background: var(--graphite);
+            border: 2px solid var(--rose-gold);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(128, 0, 32, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .color-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 32px rgba(183, 110, 121, 0.5);
+            border-color: var(--versace-gold);
+        }
+
+        .color-swatch {
+            height: 120px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .color-swatch::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, transparent 0%, rgba(255, 255, 255, 0.1) 100%);
+        }
+
+        .color-info {
+            padding: 1.5rem;
+        }
+
+        .color-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            color: var(--champagne-gold);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .color-hex {
+            font-family: 'Courier New', monospace;
+            color: var(--rose-gold);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            padding: 0.5rem;
+            background: var(--charcoal);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .color-hex:hover {
+            background: var(--burgundy);
+            color: var(--champagne-gold);
+        }
+
+        .color-desc {
+            color: var(--blush-pink);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        /* Gradient Showcase */
+        .gradient-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .gradient-box {
+            height: 200px;
+            border-radius: 12px;
+            border: 2px solid var(--rose-gold);
+            box-shadow: 0 8px 24px rgba(128, 0, 32, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .gradient-box:hover {
+            transform: scale(1.05);
+            border-color: var(--champagne-gold);
+        }
+
+        .gradient-label {
+            background: rgba(26, 26, 29, 0.85);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            color: var(--champagne-gold);
+            text-shadow: 0 0 8px rgba(183, 110, 121, 0.8);
+            position: relative;
+            z-index: 2;
+            border: 1px solid var(--rose-gold);
+        }
+
+        /* Component Showcase */
+        .component-section {
+            background: var(--graphite);
+            border: 2px solid var(--rose-gold);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 24px rgba(128, 0, 32, 0.3);
+        }
+
+        .component-section h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--versace-gold);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--rose-gold);
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        button.btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--burgundy), var(--rose-gold));
+            color: var(--pearl-white);
+            box-shadow: 0 4px 12px rgba(128, 0, 32, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(183, 110, 121, 0.6);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--rose-gold);
+            border: 2px solid var(--rose-gold);
+        }
+
+        .btn-secondary:hover {
+            background: var(--wine-red);
+            color: var(--pearl-white);
+            border-color: var(--champagne-gold);
+        }
+
+        .btn-tertiary {
+            background: transparent;
+            color: var(--bronze);
+            border: none;
+            text-decoration: underline;
+        }
+
+        .btn-tertiary:hover {
+            color: var(--versace-gold);
+        }
+
+        /* Card Showcase */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .card {
+            background: var(--graphite);
+            border: 1px solid var(--rose-gold);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(128, 0, 32, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            border-color: var(--versace-gold);
+            box-shadow: 0 12px 32px rgba(183, 110, 121, 0.5);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--burgundy), var(--wine-red));
+            padding: 1.5rem;
+            border-bottom: 2px solid var(--rose-gold);
+        }
+
+        .card-header h4 {
+            font-family: 'Playfair Display', serif;
+            color: var(--champagne-gold);
+            font-size: 1.2rem;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .card-body p {
+            color: var(--warm-cream);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        /* Typography Samples */
+        .typography-sample {
+            background: var(--graphite);
+            border-left: 4px solid var(--rose-gold);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+
+        .typography-sample.h1-sample {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--pearl-white);
+            text-shadow: 2px 2px 4px rgba(183, 110, 121, 0.5);
+        }
+
+        .typography-sample.h2-sample {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            color: var(--champagne-gold);
+            letter-spacing: 0.05em;
+        }
+
+        .typography-sample.body-sample {
+            color: var(--warm-cream);
+            font-size: 1rem;
+            line-height: 1.8;
+        }
+
+        .typography-sample.price-sample {
+            font-size: 1.8rem;
+            color: var(--versace-gold);
+            font-weight: bold;
+        }
+
+        /* Code Block */
+        .code-block {
+            background: var(--charcoal);
+            border: 1px solid var(--rose-gold);
+            border-radius: 6px;
+            padding: 1rem;
+            font-family: 'Courier New', monospace;
+            color: var(--champagne-gold);
+            font-size: 0.85rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+            line-height: 1.5;
+        }
+
+        /* Badge & Tag System */
+        .badge-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin: 1.5rem 0;
+        }
+
+        .badge {
+            display: inline-block;
+            background: var(--burgundy);
+            color: var(--champagne-gold);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            border: 1px solid var(--rose-gold);
+            transition: all 0.3s ease;
+        }
+
+        .badge:hover {
+            background: var(--versace-gold);
+            color: var(--charcoal);
+            transform: scale(1.05);
+        }
+
+        .badge.premium {
+            background: linear-gradient(135deg, var(--rose-gold), var(--versace-gold));
+            border-color: var(--champagne-gold);
+        }
+
+        /* Input Styles */
+        .input-group {
+            margin: 1.5rem 0;
+        }
+
+        .input-group label {
+            display: block;
+            color: var(--blush-pink);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .input-group input,
+        .input-group textarea,
+        .input-group select {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--charcoal);
+            border: 2px solid var(--champagne-gold);
+            border-radius: 6px;
+            color: var(--pearl-white);
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus,
+        .input-group textarea:focus,
+        .input-group select:focus {
+            outline: none;
+            border-color: var(--rose-gold);
+            box-shadow: 0 0 12px rgba(183, 110, 121, 0.5);
+        }
+
+        .input-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(180deg, var(--wine-red), var(--charcoal));
+            border-top: 2px solid var(--rose-gold);
+            padding: 2rem;
+            text-align: center;
+            color: var(--warm-cream);
+            margin-top: 3rem;
+        }
+
+        footer p {
+            margin: 0.5rem 0;
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--charcoal);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--rose-gold), var(--bronze));
+            border-radius: 6px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, var(--versace-gold), var(--rose-gold));
+        }
+
+        /* Copy Feedback */
+        .copy-feedback {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--burgundy);
+            color: var(--champagne-gold);
+            padding: 1rem 1.5rem;
+            border-radius: 6px;
+            border: 1px solid var(--rose-gold);
+            display: none;
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+        }
+
+        .copy-feedback.show {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(400px); }
+            to { transform: translateX(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+
+            nav {
+                flex-direction: column;
+            }
+
+            nav button {
+                min-width: 100%;
+            }
+
+            section h2 {
+                font-size: 1.8rem;
+            }
+
+            .color-grid,
+            .gradient-showcase,
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            button.btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="copy-feedback" id="copyFeedback">Copied to clipboard!</div>
+
+    <header>
+        <h1>🎨 Premium 3D Design System</h1>
+        <p>Luxury Color Palette: Rose Gold, Burgundy & Versace-Inspired</p>
+    </header>
+
+    <nav>
+        <button class="nav-btn active" data-section="overview">Overview</button>
+        <button class="nav-btn" data-section="colors">Colors</button>
+        <button class="nav-btn" data-section="gradients">Gradients</button>
+        <button class="nav-btn" data-section="typography">Typography</button>
+        <button class="nav-btn" data-section="components">Components</button>
+        <button class="nav-btn" data-section="sections">Sections</button>
+        <button class="nav-btn" data-section="css-vars">CSS Variables</button>
+    </nav>
+
+    <div class="container">
+        <!-- Overview Section -->
+        <section id="overview" class="active">
+            <h2>🌟 Design System Overview</h2>
+            
+            <div class="component-section">
+                <h3>Golden Rules</h3>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="padding: 0.75rem 0; border-bottom: 1px solid var(--rose-gold);">
+                        <strong style="color: var(--versace-gold);">Never compromise on luxury:</strong>
+                        <span style="color: var(--warm-cream);"> Every element should feel premium and intentional</span>
+                    </li>
+                    <li style="padding: 0.75rem 0; border-bottom: 1px solid var(--rose-gold);">
+                        <strong style="color: var(--versace-gold);">Consistency is key:</strong>
+                        <span style="color: var(--warm-cream);"> Use the color palette uniformly across all sections</span>
+                    </li>
+                    <li style="padding: 0.75rem 0; border-bottom: 1px solid var(--rose-gold);">
+                        <strong style="color: var(--versace-gold);">Elevation matters:</strong>
+                        <span style="color: var(--warm-cream);"> Use shadows and layering to create depth</span>
+                    </li>
+                    <li style="padding: 0.75rem 0;">
+                        <strong style="color: var(--versace-gold);">Animation enhances:</strong>
+                        <span style="color: var(--warm-cream);"> Smooth transitions and subtle effects add luxury feel</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="component-section">
+                <h3>Quick Features</h3>
+                <div class="badge-group">
+                    <div class="badge premium">✨ 16 Premium Colors</div>
+                    <div class="badge premium">🎨 5 Gradient Combinations</div>
+                    <div class="badge premium">📝 Complete Typography System</div>
+                    <div class="badge premium">🧩 Reusable Components</div>
+                    <div class="badge premium">📱 Fully Responsive</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Colors Section -->
+        <section id="colors">
+            <h2>🎨 Color Palette</h2>
+
+            <div style="margin-bottom: 3rem;">
+                <h3 style="color: var(--versace-gold); margin-bottom: 1rem; font-family: 'Playfair Display', serif;">Primary Colors</h3>
+                <div class="color-grid">
+                    <div class="color-card">
+                        <div class="color-swatch" style="background-color: var(--burgundy);"></div>
+                        <div class="color-info">
+                            <div class="color-name">Deep Burgundy</div>
+                            <div class="color-hex" onclick="copyToClipboard('#800020')">--burgundy: #800020</div>
+                            <div class="color-desc">Main brand color - rich maroon for primary elements</div>
+                        </div>
+                    </div>
+
+                    <div class="color-card">
+                        <div class="color-swatch" style="background-color: var(--wine-red);"></div>
+                        <div class="color-info">
+                            <div class="color-name">Wine Red</div>
+                            <div class="color-hex" onclick="copyToClipboard('#722F37')">--wine-red: #722F37</div>
+                            <div class="color-desc">Sophisticated depth for accents and overlays</div>
+                        </div>
+                    </div>
+
+                    <div class="color-card">
+                        <div class="color-swatch" style="background-color: var(--rose-gold);"></div>
+                        <div class="color-info">
+                            <div class="color-name">Rose Gold</div>
+                            <div class="color-hex" onclick="copyToClipboard('#B76E79')">--rose-gold: #B76E79</div>
+                            <div class="color-desc">Elegant metallic accent - primary interactive color</div>
+                        </div>
+                    </div>
+
+                    <div class="color-card">
+                        <div class="color-swatch" style="background-color: var(--champagne-gold);"></div>
+                        <div class="color-info">
+                            <div class="color-name">Champagne Gold</div>
+                            <div class="color-hex" onclick="copyToClipboard('#F7E7CE')">--champagne-gold: #F7E7CE</div>
+                            <div class="color-desc">Soft luxury highlight for text and accents</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 3rem;">
+                <h3 style="color: var(--versace-gold); margin-bottom: 1rem; font-family: 'Playfair Display', serif;">Secondary Colors</h3>
+                <div class="color-grid">
+                    <div class="color-card">
+                        <div class="color-swatch" style="background-color: var(--versace-gold);"></div>
+                        <div class="color-info">
+                            <div class="color-name">Versace Gold</div>
+                            <div class="color-hex" onclick="copyToClipboard('#C9B037')">--versace-gold: #C9B037</div>
+                            <div class="color-desc">Iconic metallic - premium icon and text color</div>
+                        </div>
+                    </div>
+
+                    <div class="color-card">
+                        <div class="color-swatch" style="background-color: var(--bronze);"></div>
+                        <div class="color-info">
+                            <div class="color-name">Bronze</div>
+                            <div class="color-hex" onclick="copyToClipboard('#CD7F32')">--bronze: #CD7F32</div>
+                            <div class="color-desc">Warm metallic accent for secondary elements</div>
+                        </div>
+                    </div>
+
+                    <div class="color-card">
+                        <div class="color-swatch" style="background-color: var(--copper-rose);"></div>
+                        <div class="color-info">
+                            <div class="color-name">Copper Rose</div>
+                            <div class="color-hex" onclick="copyToClipboard('#996666')">--copper-rose: #996666</div>
+                            <div class="color-desc">Muted elegance for sophisticated layering</div>
+                        </div>
+                    </div>
+
+                    <div class="color-card">
+                        <div class="color-swatch" style="background-color: var(--antique-gold);"></div>
+                        <div class="color-info">
+                            <div class="color-name">Antique Gold</div>
+                            <div class="color-hex" onclick="copyToClipboard('#D4AF37')">--antique-gold: #D4AF37</div>
+                            <div class="color-desc">Classic luxury for premium accent elements</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 3rem;">
+                <h3 style="color: var(--versace-gold); margin-bottom: 1rem; font-family: 'Playfair Display', serif;">Neutral Base</h3>
+                <div class="color-grid">
+                    <div class="color-card">
+                        <div class="color-swatch" style="background-color: var(--charcoal);"></div>
+                        <div class="color-info">
+                            <div class="color-name">Charcoal Black</div>
+                            <div class="color-hex" onclick="copyToClipboard('#1A1A1D')">--charcoal: #1A1A1D</div>
+                            <div class="color-desc">Deep sophistication for backgrounds and text</div>
+                        </div>
+                    </div>
+
+                    <div class="color-card">
+                        <div class="color-swatch" style="background-color: var(--graphite);"></div>
+                        <div class="color-info">
+                            <div class="color-name">Graphite</div>
+                            <div class="color-hex" onclick="copyToClipboard('#2E2E2E')">--graphite: #2E2E2E</div>
+                            <div class="color-desc">Elegant darkness for elevated elements</div>
+                        </div>
+                    </div>
+
+                    <div class="color-card">
+                        <div class="color-swatch" style="background-color: var(--warm-cream);"></div>
+                        <div class="color-info">
+                            <div class="color-name">Warm Cream</div>
+                            <div class="color-hex" onclick="copyToClipboard('#FAF0E6')">--warm-cream: #FAF0E6</div>
+                            <div class="color-desc">Soft contrast for readable text on dark backgrounds</div>
+                        </div>
+                    </div>
+
+                    <div class="color-card">
+                        <div class="color-swatch" style="background-color: var(--pearl-white);"></div>
+                        <div class="color-info">
+                            <div class="color-name">Pearl White</div>
+                            <div class="color-hex" onclick="copyToClipboard('#FFF9F0')">--pearl-white: #FFF9F0</div>
+                            <div class="color-desc">Pristine luxury for premium headings and contrast</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h3 style="color: var(--versace-gold); margin-bottom: 1rem; font-family: 'Playfair Display', serif;">Accent Colors</h3>
+                <div class="color-grid">
+                    <div class="color-card">
+                        <div class="color-swatch" style="background-color: var(--baroque-gold);"></div>
+                        <div class="color-info">
+                            <div class="color-name">Baroque Gold</div>
+                            <div class="color-hex" onclick="copyToClipboard('#CFB53B')">--baroque-gold: #CFB53B</div>
+                            <div class="color-desc">Ornamental highlights for special elements</div>
+                        </div>
+                    </div>
+
+                    <div class="color-card">
+                        <div class="color-swatch" style="background-color: var(--blush-pink);"></div>
+                        <div class="color-info">
+                            <div class="color-name">Blush Pink</div>
+                            <div class="color-hex" onclick="copyToClipboard('#E8C4C4')">--blush-pink: #E8C4C4</div>
+                            <div class="color-desc">Soft feminine touch for delicate accents</div>
+                        </div>
+                    </div>
+
+                    <div class="color-card">
+                        <div class="color-swatch" style="background-color: var(--dusty-rose);"></div>
+                        <div class="color-info">
+                            <div class="color-name">Dusty Rose</div>
+                            <div class="color-hex" onclick="copyToClipboard('#C9A9A6')">--dusty-rose: #C9A9A6</div>
+                            <div class="color-desc">Muted elegance for secondary text</div>
+                        </div>
+                    </div>
+
+                    <div class="color-card">
+                        <div class="color-swatch" style="background-color: var(--midnight-plum);"></div>
+                        <div class="color-info">
+                            <div class="color-name">Midnight Plum</div>
+                            <div class="color-hex" onclick="copyToClipboard('#4A1C40')">--midnight-plum: #4A1C40</div>
+                            <div class="color-desc">Deep dramatic accent for special sections</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gradients Section -->
+        <section id="gradients">
+            <h2>🌈 Gradient Combinations</h2>
+
+            <div class="gradient-showcase">
+                <div class="gradient-box" style="background: linear-gradient(135deg, #1A1A1D 0%, #800020 50%, #4A1C40 100%);" onclick="copyToClipboard('linear-gradient(135deg, #1A1A1D 0%, #800020 50%, #4A1C40 100%)')">
+                    <div class="gradient-label">Hero Gradient</div>
+                </div>
+
+                <div class="gradient-box" style="background: linear-gradient(45deg, #B76E79 0%, #D4AF37 50%, #B76E79 100%);" onclick="copyToClipboard('linear-gradient(45deg, #B76E79 0%, #D4AF37 50%, #B76E79 100%)')">
+                    <div class="gradient-label">Rose Gold Shimmer</div>
+                </div>
+
+                <div class="gradient-box" style="background: linear-gradient(to right, #C9B037, #F7E7CE, #C9B037);" onclick="copyToClipboard('linear-gradient(to right, #C9B037, #F7E7CE, #C9B037)')">
+                    <div class="gradient-label">Versace Luxury</div>
+                </div>
+
+                <div class="gradient-box" style="background: linear-gradient(180deg, #2E2E2E 0%, #800020 70%, #722F37 100%);" onclick="copyToClipboard('linear-gradient(180deg, #2E2E2E 0%, #800020 70%, #722F37 100%)')">
+                    <div class="gradient-label">Burgundy Depth</div>
+                </div>
+
+                <div class="gradient-box" style="background: linear-gradient(90deg, #CD7F32, #B76E79, #D4AF37, #C9B037);" onclick="copyToClipboard('linear-gradient(90deg, #CD7F32, #B76E79, #D4AF37, #C9B037)')">
+                    <div class="gradient-label">Metallic Flow</div>
+                </div>
+
+                <div class="gradient-box" style="background: linear-gradient(135deg, var(--burgundy) 0%, var(--rose-gold) 50%, var(--wine-red) 100%);" onclick="copyToClipboard('linear-gradient(135deg, var(--burgundy) 0%, var(--rose-gold) 50%, var(--wine-red) 100%)')">
+                    <div class="gradient-label">Radial Luxury</div>
+                </div>
+            </div>
+
+            <p style="color: var(--blush-pink); text-align: center; margin-top: 2rem;">💡 Tip: Click any gradient to copy the CSS code</p>
+        </section>
+
+        <!-- Typography Section -->
+        <section id="typography">
+            <h2>📝 Typography System</h2>
+
+            <div class="component-section">
+                <h3>Heading Styles</h3>
+                <div class="typography-sample h1-sample">
+                    H1 - Playfair Display, 4-6rem, Pearl White
+                </div>
+                <div class="typography-sample h2-sample">
+                    H2 - Playfair Display, 3-4rem, Champagne Gold
+                </div>
+                <div style="font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--rose-gold); margin: 1rem 0; padding: 1rem 1.5rem; background: var(--graphite); border-left: 4px solid var(--rose-gold); border-radius: 4px;">
+                    H3 - Playfair Display, 2-3rem, Rose Gold
+                </div>
+            </div>
+
+            <div class="component-section">
+                <h3>Body Text & Accents</h3>
+                <div class="typography-sample body-sample">
+                    Body Text - Montserrat/Raleway, 1rem, Warm Cream. This is primary readable text that should be used for all body content throughout the design system.
+                </div>
+                <div style="color: var(--champagne-gold); padding: 1rem 1.5rem; background: var(--graphite); border-left: 4px solid var(--rose-gold); border-radius: 4px; margin: 1rem 0;">
+                    Secondary Text - Montserrat, 0.9rem, Champagne Gold (muted information)
+                </div>
+                <div class="typography-sample price-sample">
+                    $2,500,000 - Prices use Versace Gold, large, bold
+                </div>
+            </div>
+
+            <div class="component-section">
+                <h3>Text Effects</h3>
+                <div style="padding: 1rem; background: var(--graphite); border-radius: 6px; margin: 1rem 0;">
+                    <div style="font-size: 1.3rem; color: var(--pearl-white); text-shadow: 2px 2px 4px rgba(183, 110, 121, 0.5); margin-bottom: 1rem;">
+                        ✨ Text with Rose Gold Glow
+                    </div>
+                    <div style="font-size: 1.1rem; color: var(--champagne-gold); letter-spacing: 0.1em; margin-bottom: 1rem;">
+                        UPPERCASE WITH LETTER SPACING
+                    </div>
+                    <div style="font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--bronze); font-style: italic;">
+                        Elegant Italics - Playfair Display
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Components Section -->
+        <section id="components">
+            <h2>🧩 Component Library</h2>
+
+            <div class="component-section">
+                <h3>Buttons</h3>
+                <div class="button-group">
+                    <button class="btn btn-primary">Primary Button</button>
+                    <button class="btn btn-secondary">Secondary Button</button>
+                    <button class="btn btn-tertiary">Tertiary Link</button>
+                </div>
+                <div class="code-block">
+&lt;button class="btn btn-primary"&gt;Primary Button&lt;/button&gt;
+&lt;button class="btn btn-secondary"&gt;Secondary Button&lt;/button&gt;
+&lt;button class="btn btn-tertiary"&gt;Tertiary Link&lt;/button&gt;</div>
+            </div>
+
+            <div class="component-section">
+                <h3>Cards</h3>
+                <div class="card-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>Premium Card</h4>
+                        </div>
+                        <div class="card-body">
+                            <p>This is a standard card component with burgundy header and rose gold accents. Perfect for showcasing properties or services.</p>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>Featured Property</h4>
+                        </div>
+                        <div class="card-body">
+                            <p>Cards feature glass morphism effects and smooth hover animations that lift the card with layered shadows.</p>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>Luxury Service</h4>
+                        </div>
+                        <div class="card-body">
+                            <p>Use rose gold borders and burgundy headers to maintain consistency across all card implementations.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="component-section">
+                <h3>Badges & Tags</h3>
+                <div class="badge-group">
+                    <div class="badge">Featured</div>
+                    <div class="badge">Premium</div>
+                    <div class="badge premium">⭐ Exclusive</div>
+                    <div class="badge">New Listing</div>
+                    <div class="badge premium">✨ Limited</div>
+                    <div class="badge">Verified</div>
+                </div>
+            </div>
+
+            <div class="component-section">
+                <h3>Form Elements</h3>
+                <div class="input-group">
+                    <label for="name">Your Name</label>
+                    <input type="text" id="name" placeholder="Enter your full name">
+                </div>
+                <div class="input-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" placeholder="your@email.com">
+                </div>
+                <div class="input-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" placeholder="Tell us about your luxury property needs..."></textarea>
+                </div>
+                <div class="input-group">
+                    <label for="budget">Budget Range</label>
+                    <select id="budget">
+                        <option>Select a budget range</option>
+                        <option>$500k - $1M</option>
+                        <option>$1M - $2M</option>
+                        <option>$2M - $5M</option>
+                        <option>$5M+</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sections Guide -->
+        <section id="sections">
+            <h2>📑 Section Design Guide</h2>
+
+            <div class="component-section">
+                <h3>1. Hero Section</h3>
+                <p style="color: var(--warm-cream); margin-bottom: 1rem;">
+                    <strong style="color: var(--versace-gold);">Background:</strong> Charcoal with burgundy-to-plum gradient overlay
+                </p>
+                <p style="color: var(--warm-cream); margin-bottom: 1rem;">
+                    <strong style="color: var(--versace-gold);">Typography:</strong> Pearl White headlines, Champagne Gold subtext
+                </p>
+                <p style="color: var(--warm-cream); margin-bottom: 1rem;">
+                    <strong style="color: var(--versace-gold);">Elements:</strong> Rose gold particles, burgundy fog effects, premium CTAs
+                </p>
+                <div class="code-block">
+background: linear-gradient(135deg, #1A1A1D 0%, #800020 50%, #4A1C40 100%);
+h1 { color: #FFF9F0; text-shadow: 2px 2px rgba(183,110,121,0.5); }</div>
+            </div>
+
+            <div class="component-section">
+                <h3>2. Featured Properties Showcase</h3>
+                <p style="color: var(--warm-cream); margin-bottom: 1rem;">
+                    <strong style="color: var(--versace-gold);">Cards:</strong> Graphite base with 3px rose gold top border
+                </p>
+                <p style="color: var(--warm-cream); margin-bottom: 1rem;">
+                    <strong style="color: var(--versace-gold);">Hover:</strong> Burgundy glow with elevation effect
+                </p>
+                <p style="color: var(--warm-cream); margin-bottom: 1rem;">
+                    <strong style="color: var(--versace-gold);">Price:</strong> Large Versace Gold text, bold, prominent display
+                </p>
+            </div>
+
+            <div class="component-section">
+                <h3>3. Services/Expertise Section</h3>
+                <p style="color: var(--warm-cream); margin-bottom: 1rem;">
+                    <strong style="color: var(--versace-gold);">Background:</strong> Radial gradient from Midnight Plum (center) to Charcoal (edges)
+                </p>
+                <p style="color: var(--warm-cream); margin-bottom: 1rem;">
+                    <strong style="color: var(--versace-gold);">Cards:</strong> Wine Red with glass morphism, animated gradient borders
+                </p>
+                <p style="color: var(--warm-cream); margin-bottom: 1rem;">
+                    <strong style="color: var(--versace-gold);">Icons:</strong> Rose Gold on burgundy circles, continuous rotation animation
+                </p>
+            </div>
+
+            <div class="component-section">
+                <h3>4. Testimonials Section</h3>
+                <p style="color: var(--warm-cream); margin-bottom: 1rem;">
+                    <strong style="color: var(--versace-gold);">Background:</strong> Soft gradient from Warm Cream to Champagne Beige
+                </p>
+                <p style="color: var(--warm-cream); margin-bottom: 1rem;">
+                    <strong style="color: var(--versace-gold);">Cards:</strong> Wine Red with frosted glass, Pearl White text
+                </p>
+                <p style="color: var(--warm-cream); margin-bottom: 1rem;">
+                    <strong style="color: var(--versace-gold);">Accents:</strong> Oversized Baroque Gold quote marks, Star ratings in Versace Gold
+                </p>
+            </div>
+
+            <div class="component-section">
+                <h3>5. Premium CTA Section</h3>
+                <p style="color: var(--warm-cream); margin-bottom: 1rem;">
+                    <strong style="color: var(--versace-gold);">Background:</strong> Radial gradient with damask pattern overlay
+                </p>
+                <p style="color: var(--warm-cream); margin-bottom: 1rem;">
+                    <strong style="color: var(--versace-gold);">Primary Button:</strong> Rose Gold-to-Versace Gold gradient, animated border
+                </p>
+                <p style="color: var(--warm-cream); margin-bottom: 1rem;">
+                    <strong style="color: var(--versace-gold);">Effects:</strong> Floating geometric shapes, rotating crown, particle network
+                </p>
+            </div>
+
+            <div class="component-section">
+                <h3>6. Footer</h3>
+                <p style="color: var(--warm-cream); margin-bottom: 1rem;">
+                    <strong style="color: var(--versace-gold);">Background:</strong> Wine Red to Charcoal gradient with 1px rose gold top border
+                </p>
+                <p style="color: var(--warm-cream); margin-bottom: 1rem;">
+                    <strong style="color: var(--versace-gold);">Text Colors:</strong> Headers in Baroque Gold, links in Warm Cream (Rose Gold on hover)
+                </p>
+                <p style="color: var(--warm-cream); margin-bottom: 1rem;">
+                    <strong style="color: var(--versace-gold);">Social Icons:</strong> Bronze outlined, Versace Gold filled on hover with rotation
+                </p>
+            </div>
+        </section>
+
+        <!-- CSS Variables Section -->
+        <section id="css-vars">
+            <h2>💻 CSS Variables & Code</h2>
+
+            <div class="component-section">
+                <h3>Complete CSS Variables</h3>
+                <div class="code-block" style="height: 400px; overflow-y: auto;">
+:root {
+    --burgundy: #800020;
+    --wine-red: #722F37;
+    --rose-gold: #B76E79;
+    --champagne-gold: #F7E7CE;
+    --versace-gold: #C9B037;
+    --bronze: #CD7F32;
+    --copper-rose: #996666;
+    --antique-gold: #D4AF37;
+    --charcoal: #1A1A1D;
+    --graphite: #2E2E2E;
+    --warm-cream: #FAF0E6;
+    --pearl-white: #FFF9F0;
+    --champagne-beige: #EBE3D5;
+    --baroque-gold: #CFB53B;
+    --blush-pink: #E8C4C4;
+    --dusty-rose: #C9A9A6;
+    --midnight-plum: #4A1C40;
+}</div>
+            </div>
+
+            <div class="component-section">
+                <h3>Common CSS Patterns</h3>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <h4 style="color: var(--champagne-gold); margin-bottom: 0.75rem;">Premium Box Shadow</h4>
+                    <div class="code-block">box-shadow: 0 8px 24px rgba(128, 0, 32, 0.3);</div>
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <h4 style="color: var(--champagne-gold); margin-bottom: 0.75rem;">Rose Gold Glow Effect</h4>
+                    <div class="code-block">box-shadow: 0 0 20px rgba(183, 110, 121, 0.6);</div>
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <h4 style="color: var(--champagne-gold); margin-bottom: 0.75rem;">Premium Border Gradient</h4>
+                    <div class="code-block">border: 2px solid;
+border-image: linear-gradient(135deg, #B76E79, #C9B037) 1;</div>
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <h4 style="color: var(--champagne-gold); margin-bottom: 0.75rem;">Smooth Hover Lift</h4>
+                    <div class="code-block">transition: all 0.3s ease;
+&:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 32px rgba(183, 110, 121, 0.5);
+}</div>
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <h4 style="color: var(--champagne-gold); margin-bottom: 0.75rem;">Glass Morphism Effect</h4>
+                    <div class="code-block">background: rgba(114, 47, 55, 0.5);
+backdrop-filter: blur(10px);
+border: 1px solid rgba(183, 110, 121, 0.3);</div>
+                </div>
+            </div>
+
+            <div class="component-section">
+                <h3>Implementation Tips</h3>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="padding: 0.75rem 0; border-bottom: 1px solid var(--rose-gold); color: var(--warm-cream);">
+                        ✨ Use CSS variables for all colors - makes global changes easy
+                    </li>
+                    <li style="padding: 0.75rem 0; border-bottom: 1px solid var(--rose-gold); color: var(--warm-cream);">
+                        ✨ Always include transition effects (0.3s ease is standard)
+                    </li>
+                    <li style="padding: 0.75rem 0; border-bottom: 1px solid var(--rose-gold); color: var(--warm-cream);">
+                        ✨ Layer shadows for depth: burgundy + gold combinations work best
+                    </li>
+                    <li style="padding: 0.75rem 0; border-bottom: 1px solid var(--rose-gold); color: var(--warm-cream);">
+                        ✨ Use rose gold (#B76E79) as primary interactive color
+                    </li>
+                    <li style="padding: 0.75rem 0; border-bottom: 1px solid var(--rose-gold); color: var(--warm-cream);">
+                        ✨ Pearl White text on dark backgrounds for maximum luxury feel
+                    </li>
+                    <li style="padding: 0.75rem 0; color: var(--warm-cream);">
+                        ✨ Test all gradients on different viewport sizes for consistency
+                    </li>
+                </ul>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>🎨 Premium 3D Design System</p>
+        <p>Rose Gold, Burgundy & Versace-Inspired Luxury Palette</p>
+        <p style="color: var(--rose-gold); margin-top: 1rem;">Ready to embed? Copy this file into your project!</p>
+    </footer>
+
+    <script>
+        // Navigation
+        const navButtons = document.querySelectorAll('.nav-btn');
+        const sections = document.querySelectorAll('section');
+
+        navButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const targetSection = button.dataset.section;
+                
+                // Remove active class from all
+                navButtons.forEach(btn => btn.classList.remove('active'));
+                sections.forEach(section => section.classList.remove('active'));
+                
+                // Add active class to clicked button and corresponding section
+                button.classList.add('active');
+                document.getElementById(targetSection).classList.add('active');
+            });
+        });
+
+        // Copy to Clipboard Function
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const feedback = document.getElementById('copyFeedback');
+                feedback.classList.add('show');
+                setTimeout(() => {
+                    feedback.classList.remove('show');
+                }, 2000);
+            });
+        }
+
+        // Smooth Scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

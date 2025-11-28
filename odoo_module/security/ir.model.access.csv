@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_webhook_log_user,webhook_log_user,model_webhook_log,base.group_user,1,0,0,0
+access_webhook_log_manager,webhook_log_manager,model_webhook_log,account.group_account_manager,1,1,1,1
+access_bill_automation_config_user,bill_automation_config_user,model_bill_automation_config,base.group_user,1,0,0,0
+access_bill_automation_config_manager,bill_automation_config_manager,model_bill_automation_config,base.group_system,1,1,1,1

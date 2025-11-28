@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- OSUS Properties Homepage Override -->
+        <template id="website.homepage" name="OSUS Properties Homepage" inherit_id="website.homepage">
+            <xpath expr="//main" position="replace">
+                <main>
+                    <!-- OSUS Properties Landing Page Content -->
+                    <iframe 
+                        id="osus-properties-frame"
+                        src="/static/src/html/premium_real_estate.html" 
+                        style="width: 100%; border: none; margin: 0; padding: 0;"
+                        allow="autoplay; fullscreen; picture-in-picture; accelerometer; gyroscope; magnetometer">
+                    </iframe>
+                </main>
+            </xpath>
+        </template>
+    </data>
+</odoo>

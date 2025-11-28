@@ -1,0 +1,25 @@
+[build]
+builder = "dockerfile"
+
+[deploy]
+healthcheckPath = "/healthz"
+healthcheckTimeout = 300
+restartPolicyType = "on-failure"
+restartPolicyMaxRetries = 10
+
+[env]
+NODE_ENV = "production"
+N8N_PORT = "5678"
+N8N_HOST = "0.0.0.0"
+N8N_PROTOCOL = "https"
+GENERIC_TIMEZONE = "UTC"
+N8N_LOG_LEVEL = "info"
+N8N_METRICS = "true"
+DB_TYPE = "sqlite"
+N8N_USER_FOLDER = "/app/.n8n"
+DB_SQLITE_DATABASE = "/app/.n8n/database.sqlite"
+N8N_BASIC_AUTH_ACTIVE = "true"
+N8N_SECURE_COOKIE = "true"
+N8N_BLOCK_ENV_ACCESS_IN_NODE = "false"
+N8N_GIT_NODE_DISABLE_BARE_REPOS = "true"
+N8N_RUNNERS_ENABLED = "true"
