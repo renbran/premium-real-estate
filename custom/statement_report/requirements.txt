@@ -1,2 +1,0 @@
-# Python dependencies for statement_report module
-xlsxwriter>=3.0.0

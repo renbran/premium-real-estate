@@ -1,9 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_commission_ax_user,commission.ax.user,model_commission_ax,base.group_user,1,1,1,1
-access_commission_ax_manager,commission.ax.manager,model_commission_ax,base.group_system,1,1,1,1
-access_commission_ax_sale_user,commission.ax.sale.user,model_commission_ax,sales_team.group_sale_salesman,1,1,1,0
-access_commission_ax_sale_manager,commission.ax.sale.manager,model_commission_ax,sales_team.group_sale_manager,1,1,1,1
-access_commission_ax_account_user,commission.ax.account.user,model_commission_ax,account.group_account_user,1,1,1,0
-access_commission_ax_account_manager,commission.ax.account.manager,model_commission_ax,account.group_account_manager,1,1,1,1
-access_commission_ax_purchase_user,commission.ax.purchase.user,model_commission_ax,purchase.group_purchase_user,1,1,1,0
-access_commission_ax_purchase_manager,commission.ax.purchase.manager,model_commission_ax,purchase.group_purchase_manager,1,1,1,1

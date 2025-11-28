@@ -1,6 +1,0 @@
-<odoo>
-    <data noupdate="1">
-    <!-- Removed ir.config_parameter records. Set via Python hook only. -->
-        <!-- Add more parameters as needed -->
-    </data>
-</odoo>
