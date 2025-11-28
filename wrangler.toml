@@ -1,0 +1,18 @@
+name = "scholarix-properties"
+type = "javascript"
+compatibility_date = "2025-11-28"
+
+[env.production]
+routes = [
+  { pattern = "erposus.com", zone_name = "erposus.com" }
+]
+
+[build]
+command = ""
+cwd = "./"
+watch_paths = []
+
+[env.production.routes]
+
+[site]
+bucket = "."

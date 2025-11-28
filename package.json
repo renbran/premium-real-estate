@@ -17,6 +17,7 @@
   "author": "OSUS Properties",
   "license": "MIT",
   "scripts": {
-    "build": "echo Static site - no build required"
+    "build": "echo Static site - no build required",
+    "deploy": "wrangler pages deploy ."
   }
 }
