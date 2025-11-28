@@ -21,7 +21,6 @@
 import werkzeug
 from odoo import http
 from odoo.http import request
-from urllib.parse import quote_plus
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 
 
@@ -38,15 +37,3 @@ class WebsiteSale(WebsiteSale):
             '\nProduct Url: ' +
             request.website.get_base_url() +
             request.env['product.product'].browse(kw['product']).website_url))
-
-    @http.route(['/whatsapp/inquiry/<int:product>'], type='http', auth="public",
-                website=True)
-    def whatsapp_product_inquiry(self, product, **kw):
-        """Redirect to WhatsApp web page"""
-        company = request.website.get_current_website().company_id
-        product_obj = request.env['product.product'].browse(product)
-        message = (company.message + '\nProduct Url: ' +
-                   request.website.get_base_url() + product_obj.website_url)
-        encoded_message = quote_plus(message)
-        return werkzeug.utils.redirect("https://wa.me/%s?text=%s" % (
-            company.whatsapp_number, encoded_message))
