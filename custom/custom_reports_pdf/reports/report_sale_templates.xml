@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- Sales Order Report Template -->
+        <template id="report_scholarix_saleorder_document" name="SCHOLARIX Sales Order">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="web.external_layout">
+                        <!-- Include SCHOLARIX Styles -->
+                        <t t-call="custom_reports_pdf.scholarix_report_styles"/>
+                        
+                        <div class="o_report_layout_container">
+                            <!-- Header Section -->
+                            <div class="o_company_header">
+                                <div class="company_header_row">
+                                    <div class="company_logo_section">
+                                        <div class="o_company_logo">
+                                            <span>S</span>
+                                        </div>
+                                        <div class="company_info">
+                                            <div class="o_company_name">SCHOLARIX</div>
+                                            <div class="o_company_tagline">GLOBAL CONSULTANTS</div>
+                                            <div class="o_company_details">
+                                                Navigate • Transform • Accelerate<br/>
+                                                AI-Powered Business Transformation<br/>
+                                                <span class="o_footer_highlight">Dubai, UAE</span> | scholarixglobal.com
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="document_info">
+                                        <div class="o_report_title">SALES ORDER</div>
+                                        <div class="o_report_number">
+                                            #<span t-field="doc.name"/>
+                                        </div>
+                                        <div class="o_report_date">
+                                            Date: <span t-field="doc.date_order"/>
+                                        </div>
+                                        <t t-if="doc.state == 'draft'">
+                                            <div style="color: #FFD93D; margin-top: 5px; font-weight: bold;">QUOTATION</div>
+                                        </t>
+                                        <t t-if="doc.state == 'sent'">
+                                            <div style="color: #00FFFF; margin-top: 5px; font-weight: bold;">QUOTATION SENT</div>
+                                        </t>
+                                        <t t-if="doc.state == 'sale'">
+                                            <div style="color: #00FFFF; margin-top: 5px; font-weight: bold;">CONFIRMED ORDER</div>
+                                        </t>
+                                        <t t-if="doc.state == 'done'">
+                                            <div style="color: #00FF00; margin-top: 5px; font-weight: bold;">COMPLETED</div>
+                                        </t>
+                                        <t t-if="doc.state == 'cancel'">
+                                            <div style="color: #FF0000; margin-top: 5px; font-weight: bold;">CANCELLED</div>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Main Content Area -->
+                            <div class="o_report_content">
+                                <!-- Partner Information Section -->
+                                <div class="o_partner_section">
+                                    <div class="o_partner_block">
+                                        <div class="o_partner_title">Customer Information</div>
+                                        <div class="o_partner_details">
+                                            <span t-field="doc.partner_id"/><br/>
+                                            <span t-field="doc.partner_id.street"/><br/>
+                                            <span t-field="doc.partner_id.city"/>,
+                                            <span t-field="doc.partner_id.state_id" t-esc="doc.partner_id.state_id.name or ''"/>,
+                                            <span t-field="doc.partner_id.country_id"/><br/>
+                                            <span t-field="doc.partner_id.phone"/><br/>
+                                            <span t-field="doc.partner_id.email"/>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="o_partner_block">
+                                        <div class="o_partner_title">Order Details</div>
+                                        <div class="o_partner_details">
+                                            <strong>Order Date:</strong> <span t-field="doc.date_order"/><br/>
+                                            <strong>Salesperson:</strong> <span t-field="doc.user_id"/><br/>
+                                            <t t-if="doc.validity_date">
+                                                <strong>Expiration:</strong> <span t-field="doc.validity_date"/><br/>
+                                            </t>
+                                            <t t-if="doc.client_order_ref">
+                                                <strong>Your Reference:</strong> <span t-field="doc.client_order_ref"/><br/>
+                                            </t>
+                                            <strong>Payment Terms:</strong> <span t-field="doc.payment_term_id"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Order Lines Table -->
+                                <table class="o_report_table">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 10%;">Item #</th>
+                                            <th style="width: 40%;">Description</th>
+                                            <th style="width: 15%;">Qty</th>
+                                            <th style="width: 15%;">Unit Price</th>
+                                            <th style="width: 20%;">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="doc.order_line" t-as="line">
+                                            <tr>
+                                                <td><span t-esc="line_index + 1"/></td>
+                                                <td>
+                                                    <span t-field="line.name"/><br/>
+                                                    <t t-if="line.discount > 0">
+                                                        <small style="color: #64748B;">
+                                                            Discount: <span t-esc="line.discount"/>%
+                                                        </small>
+                                                    </t>
+                                                </td>
+                                                <td class="text-center">
+                                                    <span t-field="line.product_uom_qty"/>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span t-field="line.price_unit"/>
+                                                </td>
+                                                <td class="text-right font-weight-bold">
+                                                    <span t-field="line.price_subtotal"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+
+                                <!-- Summary Section -->
+                                <div class="o_report_summary">
+                                    <table class="o_summary_table">
+                                        <tr>
+                                            <td class="o_summary_label">Subtotal:</td>
+                                            <td class="o_summary_value">
+                                                <span t-field="doc.amount_untaxed"/>
+                                            </td>
+                                        </tr>
+                                        <t t-foreach="doc.amount_by_group" t-as="amount_by_group">
+                                            <tr>
+                                                <td class="o_summary_label">
+                                                    <span t-esc="amount_by_group[0]"/>:
+                                                </td>
+                                                <td class="o_summary_value">
+                                                    <span t-esc="amount_by_group[1]" t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                        <tr class="o_total_row">
+                                            <td>TOTAL:</td>
+                                            <td>
+                                                <span t-field="doc.amount_total"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+
+                                <!-- Notes Section -->
+                                <t t-if="doc.note">
+                                    <div class="o_report_notes">
+                                        <div class="o_notes_title">Terms &amp; Conditions / Notes</div>
+                                        <div class="o_notes_content">
+                                            <span t-field="doc.note"/>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+
+                            <!-- Footer Section -->
+                            <div class="o_report_footer">
+                                <div class="o_footer_section">
+                                    <h4>Contact Information</h4>
+                                    <p><strong>SCHOLARIX Global Consultants</strong></p>
+                                    <p>Al Quijada, Abu Saif Business Center 201</p>
+                                    <p>Metro Station - Hor Al Anz, Dubai</p>
+                                    <p>United Arab Emirates</p>
+                                    <p class="o_footer_highlight">info@scholarixglobal.com</p>
+                                    <p class="o_footer_highlight">+971 058 624 1100</p>
+                                </div>
+                                
+                                <div class="o_footer_section">
+                                    <h4>Digital &amp; Legal</h4>
+                                    <p class="o_footer_highlight">www.scholarixglobal.com</p>
+                                    <p>Trade License: [LICENSE NO.]</p>
+                                    <p>VAT Registration: [VAT NO.]</p>
+                                    <p>Bank: [BANK NAME]</p>
+                                    <p>IBAN: [IBAN NUMBER]</p>
+                                </div>
+                                
+                                <div class="o_footer_section">
+                                    <h4>Quality &amp; Compliance</h4>
+                                    <p>ISO 27001 Certified</p>
+                                    <p>GDPR Compliant</p>
+                                    <p>UAE Business Regulations</p>
+                                    <p class="o_footer_highlight">© 2025 SCHOLARIX Global</p>
+                                    <p>All rights reserved</p>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

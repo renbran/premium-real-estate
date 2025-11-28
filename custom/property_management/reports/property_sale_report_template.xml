@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- PDF report action for Property Sale -->
+    <record id="action_report_property_sale" model="ir.actions.report">
+        <field name="name">Property Sale Report</field>
+        <field name="model">property.sale</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">property_management.property_sale_report_template</field>
+        <field name="report_file">property_management.property_sale_report_template</field>
+        <field name="binding_model_id" ref="model_property_sale"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

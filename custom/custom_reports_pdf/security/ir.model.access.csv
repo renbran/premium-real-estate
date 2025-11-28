@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_scholarix_report_invoice,access_scholarix_report_invoice,model_report_custom_reports_pdf_report_scholarix_invoice,base.group_user,1,0,0,0
+access_scholarix_report_quotation,access_scholarix_report_quotation,model_report_custom_reports_pdf_report_scholarix_quotation,base.group_user,1,0,0,0
+access_account_move_scholarix,access_account_move_scholarix,account.model_account_move,base.group_user,1,0,0,0
+access_sale_order_scholarix,access_sale_order_scholarix,sale.model_sale_order,base.group_user,1,0,0,0

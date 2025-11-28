@@ -1,0 +1,11 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_medical_billing_user,medical.billing.user,model_medical_billing,group_hms_billing_user,1,1,1,0
+access_medical_billing_manager,medical.billing.manager,model_medical_billing,group_hms_billing_manager,1,1,1,1
+access_medical_billing_line_user,medical.billing.line.user,model_medical_billing_line,group_hms_billing_user,1,1,1,1
+access_medical_billing_line_manager,medical.billing.line.manager,model_medical_billing_line,group_hms_billing_manager,1,1,1,1
+access_medical_payment_user,medical.payment.user,model_medical_payment,group_hms_billing_user,1,1,1,0
+access_medical_payment_manager,medical.payment.manager,model_medical_payment,group_hms_billing_manager,1,1,1,1
+access_medical_payment_method_user,medical.payment.method.user,model_medical_payment_method,group_hms_billing_user,1,0,0,0
+access_medical_payment_method_manager,medical.payment.method.manager,model_medical_payment_method,group_hms_billing_manager,1,1,1,1
+access_medical_insurance_claim_user,medical.insurance.claim.user,model_medical_insurance_claim,group_hms_billing_user,1,1,1,0
+access_medical_insurance_claim_manager,medical.insurance.claim.manager,model_medical_insurance_claim,group_hms_billing_manager,1,1,1,1

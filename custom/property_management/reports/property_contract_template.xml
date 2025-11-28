@@ -1,0 +1,626 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Property Sale Contract Agreement Template -->
+    <template id="property_contract_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <style>
+                            @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&amp;display=swap');
+                            
+                            body {
+                                font-family: 'Roboto', Arial, sans-serif;
+                                font-size: 11pt;
+                                line-height: 1.6;
+                                color: #333;
+                            }
+                            
+                            .contract-header {
+                                text-align: center;
+                                margin-bottom: 30px;
+                                padding: 20px;
+                                background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+                                color: white;
+                                border-radius: 10px;
+                            }
+                            
+                            .contract-title {
+                                font-size: 28px;
+                                font-weight: 700;
+                                text-transform: uppercase;
+                                letter-spacing: 2px;
+                                margin-bottom: 10px;
+                            }
+                            
+                            .contract-subtitle {
+                                font-size: 14px;
+                                font-weight: 300;
+                                opacity: 0.9;
+                            }
+                            
+                            .contract-number {
+                                background: white;
+                                color: #1e3a8a;
+                                padding: 8px 20px;
+                                border-radius: 20px;
+                                display: inline-block;
+                                margin-top: 10px;
+                                font-weight: 600;
+                            }
+                            
+                            .parties-section {
+                                background: #f8fafc;
+                                padding: 20px;
+                                border-left: 4px solid #3b82f6;
+                                margin: 30px 0;
+                                border-radius: 5px;
+                            }
+                            
+                            .party-block {
+                                margin-bottom: 20px;
+                            }
+                            
+                            .party-title {
+                                font-size: 16px;
+                                font-weight: 700;
+                                color: #1e3a8a;
+                                text-transform: uppercase;
+                                margin-bottom: 10px;
+                                border-bottom: 2px solid #3b82f6;
+                                padding-bottom: 5px;
+                            }
+                            
+                            .party-details {
+                                margin-left: 20px;
+                            }
+                            
+                            .detail-row {
+                                margin: 8px 0;
+                            }
+                            
+                            .detail-label {
+                                font-weight: 600;
+                                display: inline-block;
+                                width: 150px;
+                                color: #475569;
+                            }
+                            
+                            .detail-value {
+                                color: #1e293b;
+                            }
+                            
+                            .property-summary {
+                                background: #fef3c7;
+                                border: 2px solid #fbbf24;
+                                padding: 20px;
+                                margin: 30px 0;
+                                border-radius: 10px;
+                            }
+                            
+                            .property-summary h3 {
+                                color: #92400e;
+                                margin-top: 0;
+                                font-size: 18px;
+                                border-bottom: 2px solid #fbbf24;
+                                padding-bottom: 10px;
+                            }
+                            
+                            .contract-clause {
+                                margin: 25px 0;
+                            }
+                            
+                            .clause-number {
+                                font-weight: 700;
+                                color: #1e3a8a;
+                                font-size: 14px;
+                            }
+                            
+                            .clause-title {
+                                font-weight: 600;
+                                color: #334155;
+                                text-transform: uppercase;
+                                margin-left: 5px;
+                            }
+                            
+                            .clause-content {
+                                margin-left: 30px;
+                                margin-top: 10px;
+                                text-align: justify;
+                            }
+                            
+                            .sub-clause {
+                                margin-left: 20px;
+                                margin-top: 8px;
+                            }
+                            
+                            .financial-table {
+                                width: 100%;
+                                border-collapse: collapse;
+                                margin: 20px 0;
+                                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                            }
+                            
+                            .financial-table th {
+                                background: #1e3a8a;
+                                color: white;
+                                padding: 12px;
+                                text-align: left;
+                                font-weight: 600;
+                            }
+                            
+                            .financial-table td {
+                                padding: 10px 12px;
+                                border-bottom: 1px solid #e2e8f0;
+                            }
+                            
+                            .financial-table tr:nth-child(even) {
+                                background: #f8fafc;
+                            }
+                            
+                            .financial-table tr:hover {
+                                background: #e0f2fe;
+                            }
+                            
+                            .total-row {
+                                background: #1e3a8a !important;
+                                color: white;
+                                font-weight: 700;
+                                font-size: 14px;
+                            }
+                            
+                            .signature-section {
+                                margin-top: 60px;
+                                page-break-inside: avoid;
+                            }
+                            
+                            .signature-box {
+                                display: inline-block;
+                                width: 45%;
+                                margin: 20px 2%;
+                                vertical-align: top;
+                            }
+                            
+                            .signature-line {
+                                border-top: 2px solid #334155;
+                                margin-top: 80px;
+                                padding-top: 10px;
+                            }
+                            
+                            .signature-label {
+                                font-weight: 600;
+                                color: #1e3a8a;
+                            }
+                            
+                            .signature-name {
+                                font-weight: 500;
+                                color: #334155;
+                            }
+                            
+                            .signature-date {
+                                color: #64748b;
+                                font-size: 10pt;
+                            }
+                            
+                            .legal-notice {
+                                background: #fef2f2;
+                                border-left: 4px solid #ef4444;
+                                padding: 15px;
+                                margin: 30px 0;
+                                font-size: 10pt;
+                                border-radius: 5px;
+                            }
+                            
+                            .legal-notice strong {
+                                color: #dc2626;
+                            }
+                            
+                            .footer-note {
+                                margin-top: 40px;
+                                padding-top: 20px;
+                                border-top: 2px solid #e2e8f0;
+                                text-align: center;
+                                font-size: 9pt;
+                                color: #64748b;
+                            }
+                            
+                            @media print {
+                                .page-break {
+                                    page-break-before: always;
+                                }
+                            }
+                        </style>
+
+                        <!-- Contract Header -->
+                        <div class="contract-header">
+                            <div class="contract-title">Property Sale Contract Agreement</div>
+                            <div class="contract-subtitle">Legally Binding Agreement for Property Purchase</div>
+                            <div class="contract-number">
+                                Contract No: <t t-esc="o.name"/>
+                            </div>
+                        </div>
+
+                        <!-- Agreement Date -->
+                        <div style="text-align: center; margin: 20px 0; font-size: 12pt;">
+                            This Agreement is made on <strong><t t-esc="o.sale_date.strftime('%d day of %B, %Y')"/></strong>
+                        </div>
+
+                        <!-- Parties Section -->
+                        <div class="parties-section">
+                            <h3 style="margin-top: 0; color: #1e3a8a; text-align: center;">BETWEEN THE FOLLOWING PARTIES</h3>
+                            
+                            <!-- Seller Party -->
+                            <div class="party-block">
+                                <div class="party-title">The Seller / Developer</div>
+                                <div class="party-details">
+                                    <div class="detail-row">
+                                        <span class="detail-label">Company Name:</span>
+                                        <span class="detail-value"><t t-esc="o.company_id.name"/></span>
+                                    </div>
+                                    <div class="detail-row" t-if="o.company_id.street">
+                                        <span class="detail-label">Address:</span>
+                                        <span class="detail-value">
+                                            <t t-esc="o.company_id.street"/>
+                                            <t t-if="o.company_id.city">, <t t-esc="o.company_id.city"/></t>
+                                            <t t-if="o.company_id.country_id">, <t t-esc="o.company_id.country_id.name"/></t>
+                                        </span>
+                                    </div>
+                                    <div class="detail-row" t-if="o.company_id.vat">
+                                        <span class="detail-label">Tax ID / VAT:</span>
+                                        <span class="detail-value"><t t-esc="o.company_id.vat"/></span>
+                                    </div>
+                                    <div class="detail-row" t-if="o.company_id.phone">
+                                        <span class="detail-label">Phone:</span>
+                                        <span class="detail-value"><t t-esc="o.company_id.phone"/></span>
+                                    </div>
+                                    <div class="detail-row" t-if="o.company_id.email">
+                                        <span class="detail-label">Email:</span>
+                                        <span class="detail-value"><t t-esc="o.company_id.email"/></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="text-align: center; margin: 20px 0; font-weight: 600; color: #1e3a8a;">AND</div>
+
+                            <!-- Buyer Party -->
+                            <div class="party-block">
+                                <div class="party-title">The Buyer / Purchaser</div>
+                                <div class="party-details">
+                                    <div class="detail-row">
+                                        <span class="detail-label">Full Name:</span>
+                                        <span class="detail-value"><t t-esc="o.partner_id.name"/></span>
+                                    </div>
+                                    <div class="detail-row" t-if="o.partner_id.street or o.partner_id.city">
+                                        <span class="detail-label">Address:</span>
+                                        <span class="detail-value">
+                                            <t t-if="o.partner_id.street"><t t-esc="o.partner_id.street"/></t>
+                                            <t t-if="o.partner_id.city">, <t t-esc="o.partner_id.city"/></t>
+                                            <t t-if="o.partner_id.state_id">, <t t-esc="o.partner_id.state_id.name"/></t>
+                                            <t t-if="o.partner_id.country_id">, <t t-esc="o.partner_id.country_id.name"/></t>
+                                        </span>
+                                    </div>
+                                    <div class="detail-row" t-if="o.partner_id.vat">
+                                        <span class="detail-label">ID / Passport:</span>
+                                        <span class="detail-value"><t t-esc="o.partner_id.vat"/></span>
+                                    </div>
+                                    <div class="detail-row" t-if="o.partner_id.phone or o.partner_id.mobile">
+                                        <span class="detail-label">Phone:</span>
+                                        <span class="detail-value">
+                                            <t t-if="o.partner_id.phone"><t t-esc="o.partner_id.phone"/></t>
+                                            <t t-if="o.partner_id.mobile and o.partner_id.phone"> / </t>
+                                            <t t-if="o.partner_id.mobile"><t t-esc="o.partner_id.mobile"/></t>
+                                        </span>
+                                    </div>
+                                    <div class="detail-row" t-if="o.partner_id.email">
+                                        <span class="detail-label">Email:</span>
+                                        <span class="detail-value"><t t-esc="o.partner_id.email"/></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Property Details -->
+                        <div class="property-summary">
+                            <h3>PROPERTY SUBJECT TO THIS AGREEMENT</h3>
+                            <div class="detail-row">
+                                <span class="detail-label">Property Name:</span>
+                                <span class="detail-value"><strong><t t-esc="o.property_id.name"/></strong></span>
+                            </div>
+                            <div class="detail-row" t-if="o.property_id.property_reference">
+                                <span class="detail-label">Reference No:</span>
+                                <span class="detail-value"><t t-esc="o.property_id.property_reference"/></span>
+                            </div>
+                            <div class="detail-row" t-if="o.property_id.project_name">
+                                <span class="detail-label">Project:</span>
+                                <span class="detail-value"><t t-esc="o.property_id.project_name"/></span>
+                            </div>
+                            <div class="detail-row" t-if="o.property_id.tower">
+                                <span class="detail-label">Tower/Building:</span>
+                                <span class="detail-value"><t t-esc="o.property_id.tower"/></span>
+                            </div>
+                            <div class="detail-row" t-if="o.property_id.level">
+                                <span class="detail-label">Level/Floor:</span>
+                                <span class="detail-value"><t t-esc="o.property_id.level"/></span>
+                            </div>
+                            <div class="detail-row" t-if="o.property_id.unit_no">
+                                <span class="detail-label">Unit Number:</span>
+                                <span class="detail-value"><t t-esc="o.property_id.unit_no"/></span>
+                            </div>
+                            <div class="detail-row" t-if="o.property_id.property_type">
+                                <span class="detail-label">Property Type:</span>
+                                <span class="detail-value"><t t-esc="o.property_id.property_type"/></span>
+                            </div>
+                            <div class="detail-row" t-if="o.property_id.total_sqft">
+                                <span class="detail-label">Total Area:</span>
+                                <span class="detail-value"><t t-esc="'{:,.2f}'.format(o.property_id.total_sqft)"/> sq. ft.</span>
+                            </div>
+                            <div class="detail-row" t-if="o.property_id.address">
+                                <span class="detail-label">Location:</span>
+                                <span class="detail-value"><t t-esc="o.property_id.address"/></span>
+                            </div>
+                        </div>
+
+                        <!-- Financial Terms -->
+                        <div class="contract-clause">
+                            <span class="clause-number">ARTICLE 1:</span>
+                            <span class="clause-title">Purchase Price and Payment Terms</span>
+                            <div class="clause-content">
+                                <p>The Seller agrees to sell and the Buyer agrees to purchase the above-mentioned property for the total consideration as detailed below:</p>
+                                
+                                <table class="financial-table">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 50%;">Description</th>
+                                            <th style="width: 25%; text-align: right;">Percentage</th>
+                                            <th style="width: 25%; text-align: right;">Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>Property Value</strong></td>
+                                            <td style="text-align: right;">100%</td>
+                                            <td style="text-align: right;">
+                                                <t t-esc="o.currency_id.symbol"/>
+                                                <t t-esc="'{:,.2f}'.format(o.property_value)"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>DLD Registration Fee (4%)</td>
+                                            <td style="text-align: right;">4%</td>
+                                            <td style="text-align: right;">
+                                                <t t-esc="o.currency_id.symbol"/>
+                                                <t t-esc="'{:,.2f}'.format(o.dld_fee)"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Administrative Fee</td>
+                                            <td style="text-align: right;">-</td>
+                                            <td style="text-align: right;">
+                                                <t t-esc="o.currency_id.symbol"/>
+                                                <t t-esc="'{:,.2f}'.format(o.admin_fee)"/>
+                                            </td>
+                                        </tr>
+                                        <tr class="total-row">
+                                            <td><strong>TOTAL SELLING PRICE</strong></td>
+                                            <td style="text-align: right;"></td>
+                                            <td style="text-align: right;">
+                                                <strong>
+                                                    <t t-esc="o.currency_id.symbol"/>
+                                                    <t t-esc="'{:,.2f}'.format(o.total_selling_price)"/>
+                                                </strong>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <div class="sub-clause">
+                                    <strong>1.1 Payment Structure:</strong>
+                                    <ul>
+                                        <li>Down Payment: <strong><t t-esc="'{:.1f}'.format(o.down_payment_percentage)"/>%</strong> 
+                                            (<t t-esc="o.currency_id.symbol"/><t t-esc="'{:,.2f}'.format(o.down_payment)"/>)
+                                            - Payable upon signing this agreement
+                                        </li>
+                                        <li>Balance Payment: <t t-esc="o.currency_id.symbol"/><t t-esc="'{:,.2f}'.format(o.remaining_balance)"/>
+                                            - Payable in <strong><t t-esc="o.no_of_installments"/> monthly installments</strong>
+                                        </li>
+                                        <li>Monthly Installment Amount: 
+                                            <strong>
+                                                <t t-esc="o.currency_id.symbol"/>
+                                                <t t-esc="'{:,.2f}'.format(o.amount_per_installment)"/>
+                                            </strong>
+                                        </li>
+                                        <li>First Installment Due: <t t-esc="o.start_date.strftime('%d %B %Y')"/></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Page Break for Contract Clauses -->
+                        <div class="page-break"></div>
+
+                        <!-- Contract Terms and Conditions -->
+                        <div class="contract-clause">
+                            <span class="clause-number">ARTICLE 2:</span>
+                            <span class="clause-title">Seller's Obligations</span>
+                            <div class="clause-content">
+                                <p>The Seller hereby agrees to:</p>
+                                <ul>
+                                    <li>Transfer the property free from all encumbrances, liens, and charges.</li>
+                                    <li>Deliver vacant possession of the property upon full payment.</li>
+                                    <li>Provide all necessary documentation for property registration.</li>
+                                    <li>Ensure the property complies with all building codes and regulations.</li>
+                                    <li>Execute the title deed transfer upon completion of payment.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="contract-clause">
+                            <span class="clause-number">ARTICLE 3:</span>
+                            <span class="clause-title">Buyer's Obligations</span>
+                            <div class="clause-content">
+                                <p>The Buyer hereby agrees to:</p>
+                                <ul>
+                                    <li>Make all payments as per the agreed payment schedule.</li>
+                                    <li>Pay all applicable registration fees, taxes, and charges.</li>
+                                    <li>Maintain the property in good condition after handover.</li>
+                                    <li>Comply with all community rules and regulations.</li>
+                                    <li>Complete the purchase transaction within the agreed timeframe.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="contract-clause">
+                            <span class="clause-number">ARTICLE 4:</span>
+                            <span class="clause-title">Late Payment</span>
+                            <div class="clause-content">
+                                <p>In the event of late payment, the following terms shall apply:</p>
+                                <ul>
+                                    <li>A grace period of 15 days shall be allowed from the due date.</li>
+                                    <li>Late payment charges of 1.5% per month shall be applied on overdue amounts.</li>
+                                    <li>Failure to pay three consecutive installments may result in contract termination.</li>
+                                    <li>The Seller reserves the right to take legal action for non-payment.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="contract-clause">
+                            <span class="clause-number">ARTICLE 5:</span>
+                            <span class="clause-title">Property Handover</span>
+                            <div class="clause-content">
+                                <p>The property shall be handed over to the Buyer under the following conditions:</p>
+                                <ul>
+                                    <li>Handover shall take place upon completion of all payments.</li>
+                                    <li>The property will be delivered in "as-is" condition unless otherwise specified.</li>
+                                    <li>All utility connections (water, electricity, etc.) shall be functional.</li>
+                                    <li>Keys and access cards shall be provided at the time of handover.</li>
+                                    <li>A handover checklist shall be signed by both parties.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="contract-clause">
+                            <span class="clause-number">ARTICLE 6:</span>
+                            <span class="clause-title">Cancellation and Refund Policy</span>
+                            <div class="clause-content">
+                                <p>In case of contract cancellation:</p>
+                                <ul>
+                                    <li>Buyer may cancel within 30 days with full refund minus administrative charges.</li>
+                                    <li>After 30 days, cancellation charges of 10% of the total price shall apply.</li>
+                                    <li>Seller may cancel if Buyer defaults on three consecutive payments.</li>
+                                    <li>In case of Seller default, full refund plus 10% compensation shall be paid.</li>
+                                    <li>All cancellations must be made in writing.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="contract-clause">
+                            <span class="clause-number">ARTICLE 7:</span>
+                            <span class="clause-title">Force Majeure</span>
+                            <div class="clause-content">
+                                <p>Neither party shall be liable for failure to perform obligations due to events beyond reasonable control, including but not limited to: natural disasters, war, government actions, pandemics, or other force majeure events.</p>
+                            </div>
+                        </div>
+
+                        <div class="contract-clause">
+                            <span class="clause-number">ARTICLE 8:</span>
+                            <span class="clause-title">Dispute Resolution</span>
+                            <div class="clause-content">
+                                <p>Any disputes arising from this agreement shall be resolved through:</p>
+                                <ul>
+                                    <li>Amicable negotiation between parties in the first instance.</li>
+                                    <li>Mediation by a mutually agreed third party if negotiation fails.</li>
+                                    <li>Arbitration in accordance with local arbitration laws.</li>
+                                    <li>Jurisdiction shall be the courts of <t t-esc="o.company_id.country_id.name or 'the relevant territory'"/>.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="contract-clause">
+                            <span class="clause-number">ARTICLE 9:</span>
+                            <span class="clause-title">Governing Law</span>
+                            <div class="clause-content">
+                                <p>This Agreement shall be governed by and construed in accordance with the laws of <t t-esc="o.company_id.country_id.name or 'the relevant territory'"/>. Both parties hereby submit to the exclusive jurisdiction of the courts in this territory.</p>
+                            </div>
+                        </div>
+
+                        <!-- Legal Notice -->
+                        <div class="legal-notice">
+                            <strong>IMPORTANT LEGAL NOTICE:</strong><br/>
+                            This is a legally binding contract. Both parties are advised to seek independent legal counsel before signing. 
+                            Once signed, this agreement is enforceable by law and both parties are bound by its terms and conditions.
+                        </div>
+
+                        <!-- Signature Section -->
+                        <div class="signature-section">
+                            <h3 style="text-align: center; color: #1e3a8a; margin-bottom: 40px;">
+                                SIGNATURES OF THE PARTIES
+                            </h3>
+                            
+                            <div style="overflow: hidden;">
+                                <div class="signature-box" style="float: left;">
+                                    <div class="signature-line">
+                                        <div class="signature-label">THE SELLER</div>
+                                        <div class="signature-name"><t t-esc="o.company_id.name"/></div>
+                                        <div style="margin-top: 10px;">
+                                            <span style="font-size: 10pt; color: #64748b;">Authorized Signatory</span>
+                                        </div>
+                                        <div class="signature-date" style="margin-top: 20px;">
+                                            Date: _______________________
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="signature-box" style="float: right;">
+                                    <div class="signature-line">
+                                        <div class="signature-label">THE BUYER</div>
+                                        <div class="signature-name"><t t-esc="o.partner_id.name"/></div>
+                                        <div style="margin-top: 10px;">
+                                            <span style="font-size: 10pt; color: #64748b;">Signature</span>
+                                        </div>
+                                        <div class="signature-date" style="margin-top: 20px;">
+                                            Date: _______________________
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="clear: both; margin-top: 60px; text-align: center;">
+                                <div style="border-top: 2px solid #e2e8f0; padding-top: 20px; margin-top: 40px;">
+                                    <strong>Witness (Optional)</strong><br/>
+                                    <div style="margin-top: 40px;">
+                                        Name: _______________________________&#160;&#160;&#160;&#160;Signature: _______________________________
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Footer -->
+                        <div class="footer-note">
+                            <p>
+                                <strong>Contract Reference:</strong> <t t-esc="o.name"/> | 
+                                <strong>Generated:</strong> <t t-esc="datetime.datetime.now().strftime('%d %B %Y at %H:%M')"/>
+                            </p>
+                            <p style="margin-top: 10px; font-size: 8pt;">
+                                This document is computer-generated and is valid without signature for reference purposes only.
+                                The signed original must be retained by both parties for legal validity.
+                            </p>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <!-- Report Action for Contract -->
+    <record id="action_property_contract_report" model="ir.actions.report">
+        <field name="name">Property Sale Contract</field>
+        <field name="model">property.sale</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">property_management.property_contract_template</field>
+        <field name="report_file">property_management.property_contract_template</field>
+        <field name="binding_model_id" ref="model_property_sale"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'Property_Contract_%s_%s' % (object.name, object.partner_id.name.replace(' ', '_'))</field>
+        <field name="paperformat_id" ref="base.paperformat_euro"/>
+    </record>
+</odoo>

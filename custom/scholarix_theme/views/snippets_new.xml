@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Website Snippets for Scholarix Theme -->
+        <template id="scholarix_snippets" name="Scholarix Theme Snippets" inherit_id="website.snippets">
+            
+            <!-- Add Scholarix snippets to the snippet groups -->
+            <xpath expr="//snippets[@id='snippet_groups']" position="inside">
+                <t t-snippet="scholarix_theme.ai_services_snippet"
+                   t-thumbnail="/scholarix_theme/static/src/img/logo.png"/>
+                <t t-snippet="scholarix_theme.tech_showcase_snippet" 
+                   t-thumbnail="/scholarix_theme/static/src/img/logo.png"/>
+                <t t-snippet="scholarix_theme.stats_counter_snippet"
+                   t-thumbnail="/scholarix_theme/static/src/img/logo.png"/>
+            </xpath>
+            
+        </template>
+
+        <!-- AI Services Snippet Template -->
+        <template id="ai_services_snippet" name="AI Services Cards">
+            <section class="scholarix-ai-services">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="scholarix-service-card">
+                                <div class="scholarix-service-icon">
+                                    <i class="fas fa-brain"></i>
+                                </div>
+                                <div class="scholarix-service-content">
+                                    <h4>AI Strategy</h4>
+                                    <p>Strategic AI implementation and digital transformation consulting.</p>
+                                </div>
+                                <div class="scholarix-service-action">
+                                    <a href="#" class="scholarix-service-link">
+                                        Learn More <i class="fas fa-arrow-right ms-1"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="scholarix-service-card">
+                                <div class="scholarix-service-icon">
+                                    <i class="fas fa-robot"></i>
+                                </div>
+                                <div class="scholarix-service-content">
+                                    <h4>Machine Learning</h4>
+                                    <p>Custom ML models and algorithms for business optimization.</p>
+                                </div>
+                                <div class="scholarix-service-action">
+                                    <a href="#" class="scholarix-service-link">
+                                        Learn More <i class="fas fa-arrow-right ms-1"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="scholarix-service-card">
+                                <div class="scholarix-service-icon">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <div class="scholarix-service-content">
+                                    <h4>Data Analytics</h4>
+                                    <p>Advanced analytics and business intelligence solutions.</p>
+                                </div>
+                                <div class="scholarix-service-action">
+                                    <a href="#" class="scholarix-service-link">
+                                        Learn More <i class="fas fa-arrow-right ms-1"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </template>
+
+        <!-- Tech Showcase Snippet Template -->
+        <template id="tech_showcase_snippet" name="Technology Showcase">
+            <section class="scholarix-tech-section">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-lg-6">
+                            <div class="scholarix-tech-content">
+                                <h2 class="scholarix-section-title">
+                                    Cutting-Edge <span class="scholarix-text-gradient">AI Technologies</span>
+                                </h2>
+                                <p class="scholarix-section-text">
+                                    We leverage the latest artificial intelligence technologies to deliver 
+                                    innovative solutions for modern business challenges.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="scholarix-tech-showcase">
+                                <div class="scholarix-tech-circle active" data-tech="ai">
+                                    <i class="fas fa-brain"></i>
+                                    <span>Artificial Intelligence</span>
+                                </div>
+                                <div class="scholarix-tech-circle" data-tech="ml">
+                                    <i class="fas fa-robot"></i>
+                                    <span>Machine Learning</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </template>
+
+        <!-- Stats Counter Snippet Template -->
+        <template id="stats_counter_snippet" name="Statistics Counter">
+            <section class="scholarix-stats-section">
+                <div class="container">
+                    <div class="row text-center">
+                        <div class="col-lg-3 col-md-6 mb-4">
+                            <div class="scholarix-stat-item">
+                                <div class="scholarix-stat-icon">
+                                    <i class="fas fa-project-diagram"></i>
+                                </div>
+                                <div class="scholarix-stat-number" data-target="150">150+</div>
+                                <div class="scholarix-stat-label">AI Projects</div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 mb-4">
+                            <div class="scholarix-stat-item">
+                                <div class="scholarix-stat-icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <div class="scholarix-stat-number" data-target="89">89+</div>
+                                <div class="scholarix-stat-label">Happy Clients</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </template>
+        
+    </data>
+</odoo>

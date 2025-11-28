@@ -1,0 +1,608 @@
+/**
+ * Scholarix AI Theme - Loading Effects Styles
+ * Advanced loading screen with logo animations and particle effects
+ */
+
+/* Loading Screen Container */
+.scholarix-loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #0D47A1 0%, #1A1A2E 50%, #16213E 100%);
+    z-index: 10001;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.5s ease-in-out;
+    overflow: hidden;
+}
+
+.scholarix-loading-screen.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.scholarix-loading-screen.scholarix-loading-complete {
+    animation: scholarix-loading-fadeout 1s ease-out forwards;
+}
+
+@keyframes scholarix-loading-fadeout {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+}
+
+/* Loading Background Effects */
+.scholarix-loading-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.scholarix-loading-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.scholarix-loading-grid {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        linear-gradient(rgba(0, 229, 255, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 229, 255, 0.1) 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: scholarix-grid-pulse 4s ease-in-out infinite;
+    opacity: 0.3;
+}
+
+.scholarix-loading-waves {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 20% 20%, rgba(0, 229, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(124, 77, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(64, 196, 255, 0.05) 0%, transparent 70%);
+    animation: scholarix-waves-flow 8s ease-in-out infinite;
+}
+
+@keyframes scholarix-grid-pulse {
+    0%, 100% {
+        opacity: 0.3;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.6;
+        transform: scale(1.02);
+    }
+}
+
+@keyframes scholarix-waves-flow {
+    0%, 100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 0.7;
+    }
+    25% {
+        transform: scale(1.1) rotate(90deg);
+        opacity: 0.5;
+    }
+    50% {
+        transform: scale(0.9) rotate(180deg);
+        opacity: 0.8;
+    }
+    75% {
+        transform: scale(1.05) rotate(270deg);
+        opacity: 0.4;
+    }
+}
+
+/* Loading Content */
+.scholarix-loading-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    max-width: 500px;
+    padding: 0 20px;
+}
+
+/* Logo Animation */
+.scholarix-loading-logo {
+    margin-bottom: 40px;
+    animation: scholarix-logo-entrance 2s ease-out;
+}
+
+.scholarix-logo-container {
+    position: relative;
+    display: inline-block;
+    width: 150px;
+    height: 150px;
+}
+
+.scholarix-logo-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 0 30px #00E5FF);
+    animation: scholarix-logo-pulse 2s ease-in-out infinite;
+    position: relative;
+    z-index: 3;
+}
+
+.scholarix-logo-glow {
+    position: absolute;
+    top: -20px;
+    left: -20px;
+    right: -20px;
+    bottom: -20px;
+    background: radial-gradient(circle, rgba(0, 229, 255, 0.3) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: scholarix-glow-rotate 4s linear infinite;
+    z-index: 1;
+}
+
+.scholarix-logo-ring {
+    position: absolute;
+    top: -30px;
+    left: -30px;
+    right: -30px;
+    bottom: -30px;
+    border: 2px solid transparent;
+    border-top: 2px solid #00E5FF;
+    border-right: 2px solid #7C4DFF;
+    border-radius: 50%;
+    animation: scholarix-ring-spin 3s linear infinite;
+    z-index: 2;
+}
+
+.scholarix-logo-particles {
+    position: absolute;
+    top: -40px;
+    left: -40px;
+    right: -40px;
+    bottom: -40px;
+    z-index: 1;
+}
+
+.scholarix-logo-particles::before,
+.scholarix-logo-particles::after {
+    content: '';
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: #40C4FF;
+    border-radius: 50%;
+    animation: scholarix-particle-orbit 5s linear infinite;
+}
+
+.scholarix-logo-particles::after {
+    animation-delay: 2.5s;
+    background: #7C4DFF;
+}
+
+@keyframes scholarix-logo-entrance {
+    0% {
+        transform: scale(0) rotate(180deg);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.2) rotate(90deg);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+@keyframes scholarix-logo-pulse {
+    0%, 100% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 30px #00E5FF);
+    }
+    50% {
+        transform: scale(1.05);
+        filter: drop-shadow(0 0 50px #00E5FF) drop-shadow(0 0 70px #7C4DFF);
+    }
+}
+
+@keyframes scholarix-glow-rotate {
+    0% {
+        transform: rotate(0deg) scale(1);
+    }
+    50% {
+        transform: rotate(180deg) scale(1.1);
+    }
+    100% {
+        transform: rotate(360deg) scale(1);
+    }
+}
+
+@keyframes scholarix-ring-spin {
+    0% {
+        transform: rotate(0deg);
+        border-top-color: #00E5FF;
+        border-right-color: #7C4DFF;
+    }
+    50% {
+        border-top-color: #7C4DFF;
+        border-right-color: #40C4FF;
+    }
+    100% {
+        transform: rotate(360deg);
+        border-top-color: #00E5FF;
+        border-right-color: #7C4DFF;
+    }
+}
+
+@keyframes scholarix-particle-orbit {
+    0% {
+        transform: rotate(0deg) translateX(100px) rotate(0deg);
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+    100% {
+        transform: rotate(360deg) translateX(100px) rotate(-360deg);
+        opacity: 1;
+    }
+}
+
+/* Loading Text */
+.scholarix-loading-text {
+    margin-bottom: 40px;
+}
+
+.scholarix-loading-title {
+    font-family: var(--scholarix-font-primary, 'Orbitron', monospace);
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    background: linear-gradient(45deg, #00E5FF, #40C4FF, #7C4DFF);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: scholarix-gradient-shift 3s ease-in-out infinite;
+}
+
+.scholarix-char-animate {
+    display: inline-block;
+    animation: scholarix-char-bounce 1s ease-out both;
+}
+
+.scholarix-loading-subtitle {
+    font-family: var(--scholarix-font-secondary, 'Rajdhani', sans-serif);
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.8);
+    min-height: 30px;
+}
+
+.scholarix-typewriter {
+    border-right: 2px solid #00E5FF;
+    animation: scholarix-blink-cursor 1s infinite;
+}
+
+@keyframes scholarix-gradient-shift {
+    0%, 100% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+}
+
+@keyframes scholarix-char-bounce {
+    0% {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    50% {
+        transform: translateY(-5px);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes scholarix-blink-cursor {
+    0%, 50% {
+        border-right-color: #00E5FF;
+        opacity: 1;
+    }
+    51%, 100% {
+        border-right-color: transparent;
+        opacity: 0;
+    }
+}
+
+/* Progress Bar */
+.scholarix-loading-progress {
+    margin-bottom: 40px;
+}
+
+.scholarix-progress-container {
+    position: relative;
+}
+
+.scholarix-progress-bar {
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+    backdrop-filter: blur(10px);
+}
+
+.scholarix-progress-fill {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, #00E5FF, #40C4FF, #7C4DFF);
+    background-size: 200% 100%;
+    border-radius: 2px;
+    transition: width 0.3s ease-out;
+    animation: scholarix-progress-glow 2s ease-in-out infinite;
+    position: relative;
+}
+
+.scholarix-progress-glow {
+    position: absolute;
+    top: -2px;
+    left: 0;
+    right: 0;
+    bottom: -2px;
+    background: inherit;
+    filter: blur(4px);
+    opacity: 0.6;
+}
+
+.scholarix-progress-text {
+    margin-top: 15px;
+    font-family: var(--scholarix-font-secondary, 'Rajdhani', sans-serif);
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #00E5FF;
+    animation: scholarix-text-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes scholarix-progress-glow {
+    0%, 100% {
+        background-position: 0% 50%;
+        opacity: 0.8;
+    }
+    50% {
+        background-position: 100% 50%;
+        opacity: 1;
+    }
+}
+
+@keyframes scholarix-text-pulse {
+    0%, 100% {
+        opacity: 0.8;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+}
+
+/* Loading Steps */
+.scholarix-loading-steps {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.scholarix-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    opacity: 0.4;
+    transition: all 0.5s ease-out;
+    animation: scholarix-step-idle 2s ease-in-out infinite;
+    animation-delay: calc(var(--step) * 0.2s);
+}
+
+.scholarix-step.active {
+    opacity: 1;
+    transform: scale(1.1);
+    animation: scholarix-step-active 1s ease-out;
+}
+
+.scholarix-step-icon {
+    width: 50px;
+    height: 50px;
+    background: rgba(0, 229, 255, 0.1);
+    border: 2px solid rgba(0, 229, 255, 0.3);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: #00E5FF;
+    transition: all 0.3s ease-out;
+}
+
+.scholarix-step.active .scholarix-step-icon {
+    background: rgba(0, 229, 255, 0.2);
+    border-color: #00E5FF;
+    box-shadow: 0 0 20px rgba(0, 229, 255, 0.4);
+    animation: scholarix-icon-glow 1s ease-in-out;
+}
+
+.scholarix-step span {
+    font-family: var(--scholarix-font-secondary, 'Rajdhani', sans-serif);
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.7);
+    text-align: center;
+    white-space: nowrap;
+}
+
+.scholarix-step.active span {
+    color: #00E5FF;
+    font-weight: 600;
+}
+
+@keyframes scholarix-step-idle {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-3px);
+    }
+}
+
+@keyframes scholarix-step-active {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.3);
+    }
+    100% {
+        transform: scale(1.1);
+    }
+}
+
+@keyframes scholarix-icon-glow {
+    0%, 100% {
+        box-shadow: 0 0 20px rgba(0, 229, 255, 0.4);
+    }
+    50% {
+        box-shadow: 0 0 40px rgba(0, 229, 255, 0.8);
+    }
+}
+
+/* Skip Button */
+.scholarix-skip-loading {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(0, 229, 255, 0.3);
+    border-radius: 25px;
+    padding: 10px 20px;
+    color: rgba(255, 255, 255, 0.8);
+    font-family: var(--scholarix-font-secondary, 'Rajdhani', sans-serif);
+    font-weight: 500;
+    cursor: none;
+    transition: all 0.3s ease-out;
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 10;
+}
+
+.scholarix-skip-loading:hover {
+    background: rgba(0, 229, 255, 0.1);
+    border-color: #00E5FF;
+    color: #00E5FF;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 229, 255, 0.3);
+}
+
+.scholarix-skip-loading i {
+    font-size: 12px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .scholarix-loading-content {
+        max-width: 350px;
+    }
+    
+    .scholarix-logo-container {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .scholarix-loading-title {
+        font-size: 1.5rem;
+    }
+    
+    .scholarix-loading-subtitle {
+        font-size: 1rem;
+    }
+    
+    .scholarix-loading-steps {
+        gap: 20px;
+    }
+    
+    .scholarix-step-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+    
+    .scholarix-skip-loading {
+        bottom: 20px;
+        right: 20px;
+        padding: 8px 16px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .scholarix-loading-steps {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .scholarix-step {
+        flex-direction: row;
+        gap: 15px;
+    }
+    
+    .scholarix-step span {
+        white-space: normal;
+        text-align: left;
+    }
+}
+
+/* Performance optimizations */
+.loading-paused .scholarix-loading-canvas,
+.loading-paused .scholarix-logo-glow,
+.loading-paused .scholarix-logo-ring {
+    animation-play-state: paused !important;
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .scholarix-loading-screen,
+    .scholarix-loading-screen * {
+        animation-duration: 0.1s !important;
+        transition-duration: 0.1s !important;
+    }
+}

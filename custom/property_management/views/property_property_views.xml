@@ -1,0 +1,148 @@
+<odoo>
+    <data>
+        <!-- Define the action first -->
+        <record id="action_property_property" model="ir.actions.act_window">
+            <field name="name">Properties</field>
+            <field name="res_model">property.property</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+        <!-- Define the menu items -->
+        <menuitem id="menu_property_root" name="Properties" sequence="5"/>
+        <menuitem id="menu_property_property" name="Manage Properties" parent="menu_property_root" action="action_property_property" sequence="10"/>
+
+        <!-- Define the tree and form views -->
+        <record id="view_property_property_list" model="ir.ui.view">
+            <field name="name">property.property.list</field>
+            <field name="model">property.property</field>
+            <field name="arch" type="xml">
+                <list string="Properties">
+                    <field name="property_reference"/>
+                    <field name="name"/>
+                    <field name="project_name"/>
+                    <field name="tower"/>
+                    <field name="unit_no"/>
+                    <field name="total_sqft"/>
+                    <field name="price_per_sqft"/>
+                    <field name="total_sale_value"/>
+                    <field name="property_price"/>
+                    <field name="property_image" widget="image" column_invisible="True"/>
+                    <field name="floor_plan" widget="image" column_invisible="True"/>
+                    <field name="sale_rent"/>
+                    <field name="status"/>
+                    <field name="payment_progress" widget="progressbar"/>
+                    <field name="state" column_invisible="True"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_property_property_form" model="ir.ui.view">
+            <field name="name">property.property.form</field>
+            <field name="model">property.property</field>
+            <field name="arch" type="xml">
+                <form string="Property">
+                    <header>
+                        <field name="state" widget="statusbar" statusbar_visible="available,reserved,booked,sold" invisible="1"/>
+                        <button name="action_create_sale" string="Create Sale" type="object" 
+                                class="oe_highlight" invisible="state == 'sold'"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <field name="sale_count" invisible="1"/>
+                            <button name="action_view_sales" type="object" class="oe_stat_button" icon="fa-money"
+                                    invisible="sale_count == 0">
+                                <field name="sale_count" widget="statinfo" string="Sales"/>
+                            </button>
+                            <button name="%(action_property_sales_offer_report)d" type="action" 
+                                    class="oe_stat_button" icon="fa-file-pdf-o" string="Sales Offer"
+                                    title="Generate Property Sales Offer Report"/>
+                        </div>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Property Name"/>
+                            </h1>
+                            <field name="payment_progress" invisible="1"/>
+                            <div invisible="payment_progress == 0" class="mt-2">
+                                <label for="payment_progress" string="Payment Progress"/>
+                                <field name="payment_progress" widget="progressbar" 
+                                       options="{'title': 'Payment Progress', 'editable': false}"/>
+                            </div>
+                        </div>
+                        <group>
+                            <group string="Property Information">
+                                <field name="property_reference"/>
+                                <field name="project_name"/>
+                                <field name="tower"/>
+                                <field name="level"/>
+                                <field name="unit_no"/>
+                                <field name="unit_view"/>
+                                <field name="property_type"/>
+                            </group>
+                            <group string="Financial Details">
+                                <field name="total_sqft"/>
+                                <field name="price_per_sqft"/>
+                                <field name="total_sale_value"/>
+                                <field name="property_price" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                <field name="currency_id" options="{'no_create': True}"/>
+                                <field name="sale_rent"/>
+                                <field name="revenue_account_id" options="{'no_create': True}"/>
+                            </group>
+                        </group>
+                        <group string="Payment Details" invisible="state != 'sold'">
+                            <group>
+                                <field name="partner_id" string="Customer"/>
+                                <field name="total_invoiced" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                <field name="total_paid" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                <field name="remaining_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            </group>
+                            <group>
+                                <field name="active_sale_id" readonly="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Address">
+                                <field name="address" placeholder="Enter full address..."/>
+                            </page>
+                            <page string="Description">
+                                <field name="description" placeholder="Enter property description..."/>
+                            </page>
+                            <page string="Property Photo">
+                                <field name="property_image" widget="image"/>
+                                <field name="floor_plan" widget="image"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Define the search view -->
+        <record id="view_property_property_search" model="ir.ui.view">
+            <field name="name">property.property.search</field>
+            <field name="model">property.property</field>
+            <field name="arch" type="xml">
+                <search string="Properties">
+                    <field name="name"/>
+                    <field name="property_reference"/>
+                    <field name="project_name"/>
+                    <field name="unit_no"/>
+                    <field name="partner_id"/>
+                    <separator/>
+                    <filter string="Available" name="available" domain="[('state', '=', 'available')]"/>
+                    <filter string="Reserved" name="reserved" domain="[('state', '=', 'reserved')]"/>
+                    <filter string="Booked" name="booked" domain="[('state', '=', 'booked')]"/>
+                    <filter string="Sold" name="sold" domain="[('state', '=', 'sold')]"/>
+                    <separator/>
+                    <filter string="For Sale" name="for_sale" domain="[('sale_rent', '=', 'for_sale')]"/>
+                    <filter string="For Rent" name="for_rent" domain="[('sale_rent', '=', 'for_rent')]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Status" name="state" context="{'group_by': 'state'}"/>
+                        <filter string="Project" name="project" context="{'group_by': 'project_name'}"/>
+                        <filter string="Tower" name="tower" context="{'group_by': 'tower'}"/>
+                        <filter string="Customer" name="partner" context="{'group_by': 'partner_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+    </data>
+</odoo>

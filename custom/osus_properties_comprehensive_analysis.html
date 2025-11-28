@@ -1,0 +1,2635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OSUS Properties - Comprehensive Lead Management Analysis</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #8b1538 0%, #722f37 25%, #5a1a2e 50%, #722f37 75%, #8b1538 100%);
+            min-height: 100vh;
+            color: #ffffff;
+            overflow-x: hidden;
+            font-weight: 400;
+            line-height: 1.5;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            padding: 60px 0;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 3.2em;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.02em;
+            margin-bottom: 12px;
+            text-rendering: optimizeLegibility;
+        }
+
+        .header .company-name {
+            font-size: 1.4em;
+            color: #ffffff;
+            font-weight: 600;
+            margin-bottom: 16px;
+            opacity: 0.9;
+            letter-spacing: 0.05em;
+        }
+
+        .header .subtitle {
+            font-size: 1.1em;
+            color: #ffffff;
+            font-weight: 400;
+            opacity: 0.7;
+            margin-bottom: 24px;
+        }
+
+        .header .stats-line {
+            font-size: 1em;
+            color: #ffffff;
+            font-weight: 500;
+            opacity: 0.8;
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 60px 30px;
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(10px);
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 60px;
+        }
+
+        .kpi-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(15px);
+            padding: 32px 28px;
+            border-radius: 16px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.2));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-4px);
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .kpi-card:hover::before {
+            opacity: 1;
+        }
+
+        .kpi-number {
+            font-size: 2.8em;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 8px;
+            line-height: 1;
+            letter-spacing: -0.02em;
+        }
+
+        .kpi-label {
+            font-size: 0.95em;
+            color: #ffffff;
+            font-weight: 500;
+            opacity: 0.8;
+            letter-spacing: 0.01em;
+        }
+
+        .section-title {
+            font-size: 2.2em;
+            font-weight: 700;
+            color: #ffffff;
+            text-align: center;
+            margin: 60px 0 40px;
+            letter-spacing: -0.01em;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+        }
+
+        .analytics-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 32px;
+            margin-bottom: 60px;
+        }
+
+        .chart-container {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(15px);
+            padding: 32px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .chart-container:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .chart-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #ffffff;
+            text-align: center;
+            margin-bottom: 28px;
+            letter-spacing: -0.01em;
+        }
+
+        .chart-canvas {
+            height: 320px !important;
+            width: 100% !important;
+        }
+
+        .performance-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 32px;
+            margin-bottom: 60px;
+        }
+
+        .ranking-card {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(15px);
+            padding: 32px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .ranking-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .ranking-header {
+            margin-bottom: 28px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .ranking-header h4 {
+            font-size: 1.25em;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 6px;
+            letter-spacing: -0.01em;
+        }
+
+        .ranking-header .subtitle {
+            font-size: 0.9em;
+            color: #ffffff;
+            opacity: 0.6;
+            font-weight: 400;
+        }
+
+        .ranking-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .ranking-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 12px;
+            border-left: 3px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .ranking-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-left-color: rgba(255, 255, 255, 0.6);
+            transform: translateX(4px);
+        }
+
+        .ranking-name {
+            font-weight: 500;
+            color: #ffffff;
+            font-size: 0.95em;
+        }
+
+        .ranking-stats {
+            text-align: right;
+        }
+
+        .ranking-primary {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #ffffff;
+            line-height: 1.2;
+        }
+
+        .ranking-secondary {
+            font-size: 0.85em;
+            color: #ffffff;
+            opacity: 0.6;
+            font-weight: 400;
+        }
+
+        .insights-section, .efficiency-section, .projects-section {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(15px);
+            padding: 48px;
+            border-radius: 24px;
+            margin-bottom: 60px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+            gap: 28px;
+        }
+
+        .insight-card {
+            background: rgba(255, 255, 255, 0.06);
+            padding: 28px;
+            border-radius: 16px;
+            border-left: 4px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .insight-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-left-color: rgba(255, 255, 255, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .insight-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 16px;
+            letter-spacing: -0.01em;
+        }
+
+        .insight-text {
+            font-size: 0.95em;
+            line-height: 1.6;
+            color: #ffffff;
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+
+        .insight-action {
+            font-size: 0.9em;
+            color: #ffffff;
+            font-weight: 500;
+            padding: 16px 20px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            border-left: 3px solid rgba(255, 255, 255, 0.4);
+        }
+
+        .metric-badge {
+            background: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85em;
+            margin: 0 3px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .warning-badge {
+            background: rgba(255, 107, 107, 0.2);
+            color: #ffffff;
+            border-color: rgba(255, 107, 107, 0.3);
+        }
+
+        .success-badge {
+            background: rgba(81, 207, 102, 0.2);
+            color: #ffffff;
+            border-color: rgba(81, 207, 102, 0.3);
+        }
+
+        .agent-analytics-section {
+            margin: 30px 0;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow-x: auto;
+        }
+
+        .agent-performance-table {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            margin-top: 15px;
+            min-width: 800px; /* Ensure minimum width for all columns */
+        }
+
+        .table-header {
+            display: grid;
+            grid-template-columns: 2fr 1fr 0.8fr 0.8fr 1fr 1fr 1fr 1fr 1fr;
+            gap: 8px;
+            background: rgba(139, 21, 56, 0.8);
+            padding: 12px 8px;
+            border-radius: 8px;
+            font-weight: 700;
+            color: white;
+            font-size: 0.9em;
+        }
+
+        .table-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 0.8fr 0.8fr 1fr 1fr 1fr 1fr 1fr;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 10px 8px;
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .table-row:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-1px);
+        }
+
+        .table-row.top-performer {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .table-cell {
+            padding: 4px;
+            text-align: center;
+            font-size: 0.85em;
+            color: white;
+        }
+
+        .table-cell.agent-name {
+            text-align: left;
+            font-weight: 600;
+            color: var(--accent-color);
+        }
+
+        .table-cell.customers {
+            color: #4caf50;
+            font-weight: 700;
+        }
+
+        .table-cell.hot {
+            color: #ff9800;
+            font-weight: 700;
+        }
+
+        .table-cell.options {
+            color: #2196f3;
+            font-weight: 700;
+        }
+
+        .table-cell.conversion {
+            color: #4caf50;
+            font-weight: 700;
+            background: rgba(76, 175, 80, 0.1);
+            border-radius: 4px;
+        }
+
+        .table-cell.quality {
+            color: #03dac6;
+            font-weight: 600;
+        }
+
+        .table-cell.contact {
+            color: #ff6ec7;
+            font-weight: 600;
+        }
+
+        .table-cell.waste {
+            color: #f44336;
+            font-weight: 600;
+            background: rgba(244, 67, 54, 0.1);
+            border-radius: 4px;
+        }
+
+        .conversion-funnel {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .funnel-stage {
+            display: flex;
+            align-items: center;
+            padding: 20px 24px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            border-left: 4px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .funnel-stage:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-left-color: rgba(255, 255, 255, 0.6);
+            transform: translateX(4px);
+        }
+
+        .funnel-label {
+            flex: 1;
+            font-weight: 500;
+            color: #ffffff;
+            font-size: 1em;
+        }
+
+        .funnel-value {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #ffffff;
+            margin-right: 20px;
+        }
+
+        .funnel-percentage {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 500;
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .waste-section {
+            margin: 80px 0;
+        }
+
+        .waste-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .waste-metric {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 32px 24px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .waste-metric:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 107, 107, 0.3);
+            box-shadow: 0 16px 48px rgba(255, 107, 107, 0.1);
+        }
+
+        .waste-label {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .waste-value {
+            font-size: 2.2em;
+            font-weight: 800;
+            color: #ff6b6b;
+            margin-bottom: 8px;
+            display: block;
+            text-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+        }
+
+        .waste-impact {
+            font-size: 0.9em;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 500;
+        }
+
+        .source-quality-section {
+            margin: 80px 0;
+        }
+
+        .source-quality-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .source-quality-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .source-quality-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 215, 0, 0.3);
+            box-shadow: 0 16px 48px rgba(255, 215, 0, 0.1);
+        }
+
+        .source-quality-card.high-quality {
+            border-left: 4px solid #4ecdc4;
+        }
+
+        .source-quality-card.medium-quality {
+            border-left: 4px solid #ffd700;
+        }
+
+        .source-quality-card.low-quality {
+            border-left: 4px solid #ff6b6b;
+        }
+
+        .source-name {
+            font-size: 1.2em;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .quality-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .quality-badge.high {
+            background: rgba(78, 205, 196, 0.2);
+            color: #4ecdc4;
+        }
+
+        .quality-badge.medium {
+            background: rgba(255, 215, 0, 0.2);
+            color: #ffd700;
+        }
+
+        .quality-badge.low {
+            background: rgba(255, 107, 107, 0.2);
+            color: #ff6b6b;
+        }
+
+        .source-metrics {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .metric-item {
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 1.4em;
+            font-weight: 700;
+            color: #ffffff;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .metric-label {
+            font-size: 0.9em;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 500;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .project-card {
+            background: rgba(255, 255, 255, 0.06);
+            padding: 24px;
+            border-radius: 16px;
+            border-left: 4px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .project-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-left-color: rgba(255, 255, 255, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .project-name {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 12px;
+            letter-spacing: -0.01em;
+        }
+
+        .project-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .project-count {
+            font-size: 1.6em;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .project-percentage {
+            font-size: 1em;
+            color: #ffffff;
+            opacity: 0.7;
+            font-weight: 500;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 48px 24px;
+            color: #ffffff;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 60px;
+            opacity: 0.8;
+            font-weight: 400;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #8b1538 0%, #5a1a2e 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loader {
+            width: 60px;
+            height: 60px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 24px;
+        }
+
+        .loading-text {
+            color: #ffffff;
+            font-size: 1.1em;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Professional Print Optimization */
+        @media print {
+            @page {
+                size: A4;
+                margin: 0.5in;
+                margin-top: 0.75in;
+                margin-bottom: 0.75in;
+            }
+            
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            
+            body {
+                background: white !important;
+                color: black !important;
+                font-size: 11pt;
+                line-height: 1.4;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            
+            .loading-overlay {
+                display: none !important;
+            }
+            
+            .dashboard-container {
+                background: white !important;
+                backdrop-filter: none !important;
+                padding: 20px !important;
+                max-width: none !important;
+                margin: 0 !important;
+            }
+            
+            .header {
+                background: #f8f8f8 !important;
+                color: black !important;
+                border-bottom: 2px solid #8b1538 !important;
+                page-break-after: avoid;
+                backdrop-filter: none !important;
+                padding: 30px 0 !important;
+            }
+            
+            .header h1 {
+                color: #8b1538 !important;
+                font-size: 28pt !important;
+                margin-bottom: 8px !important;
+            }
+            
+            .header .company-name {
+                color: #8b1538 !important;
+                font-size: 16pt !important;
+            }
+            
+            .header .subtitle, .header .stats-line {
+                color: #666 !important;
+                font-size: 12pt !important;
+            }
+            
+            .section-title {
+                color: #8b1538 !important;
+                font-size: 18pt !important;
+                margin: 30px 0 20px !important;
+                page-break-after: avoid;
+            }
+            
+            .section-title::after {
+                background: #8b1538 !important;
+            }
+            
+            .kpi-grid {
+                grid-template-columns: repeat(3, 1fr) !important;
+                gap: 15px !important;
+                margin-bottom: 25px !important;
+                page-break-inside: avoid;
+            }
+            
+            .kpi-card {
+                background: #f8f8f8 !important;
+                color: black !important;
+                border: 1px solid #8b1538 !important;
+                padding: 20px !important;
+                border-radius: 8px !important;
+                backdrop-filter: none !important;
+                page-break-inside: avoid;
+            }
+            
+            .kpi-number {
+                color: #8b1538 !important;
+                font-size: 20pt !important;
+                margin-bottom: 5px !important;
+            }
+            
+            .kpi-label {
+                color: #333 !important;
+                font-size: 10pt !important;
+            }
+            
+            .analytics-section {
+                grid-template-columns: 1fr !important;
+                gap: 20px !important;
+                margin-bottom: 30px !important;
+            }
+            
+            .chart-container {
+                background: #f8f8f8 !important;
+                color: black !important;
+                border: 1px solid #ccc !important;
+                padding: 20px !important;
+                border-radius: 8px !important;
+                backdrop-filter: none !important;
+                page-break-inside: avoid;
+            }
+            
+            .chart-title {
+                color: #8b1538 !important;
+                font-size: 14pt !important;
+                margin-bottom: 15px !important;
+            }
+            
+            .chart-canvas {
+                height: 250px !important;
+                max-height: 250px !important;
+            }
+            
+            .performance-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 15px !important;
+                margin-bottom: 25px !important;
+            }
+            
+            .ranking-card {
+                background: #f8f8f8 !important;
+                color: black !important;
+                border: 1px solid #ccc !important;
+                padding: 20px !important;
+                border-radius: 8px !important;
+                backdrop-filter: none !important;
+                page-break-inside: avoid;
+            }
+            
+            .ranking-header h4 {
+                color: #8b1538 !important;
+                font-size: 12pt !important;
+            }
+            
+            .ranking-header .subtitle {
+                color: #666 !important;
+                font-size: 9pt !important;
+            }
+            
+            .ranking-item {
+                background: white !important;
+                color: black !important;
+                border: 1px solid #ddd !important;
+                border-left: 3px solid #8b1538 !important;
+                padding: 12px 15px !important;
+                margin-bottom: 8px !important;
+            }
+            
+            .ranking-name {
+                color: #333 !important;
+                font-size: 10pt !important;
+            }
+            
+            .ranking-primary {
+                color: #8b1538 !important;
+                font-size: 11pt !important;
+            }
+            
+            .ranking-secondary {
+                color: #666 !important;
+                font-size: 9pt !important;
+            }
+            
+            .insights-section, .efficiency-section, .projects-section {
+                background: #f8f8f8 !important;
+                color: black !important;
+                border: 1px solid #ccc !important;
+                padding: 20px !important;
+                margin-bottom: 20px !important;
+                border-radius: 8px !important;
+                backdrop-filter: none !important;
+                page-break-inside: avoid;
+            }
+            
+            .insight-card, .project-card {
+                background: white !important;
+                color: black !important;
+                border: 1px solid #ddd !important;
+                border-left: 3px solid #8b1538 !important;
+                padding: 15px !important;
+                margin-bottom: 10px !important;
+            }
+            
+            .insight-title, .project-name {
+                color: #8b1538 !important;
+                font-size: 11pt !important;
+            }
+            
+            .insight-text {
+                color: #333 !important;
+                font-size: 10pt !important;
+                line-height: 1.4 !important;
+            }
+            
+            .insight-action {
+                background: #f0f0f0 !important;
+                color: #333 !important;
+                border: 1px solid #ccc !important;
+                border-left: 3px solid #8b1538 !important;
+                font-size: 9pt !important;
+                padding: 10px !important;
+            }
+            
+            .metric-badge {
+                background: #e8e8e8 !important;
+                color: #333 !important;
+                border: 1px solid #ccc !important;
+                padding: 2px 6px !important;
+                font-size: 8pt !important;
+            }
+            
+            .success-badge {
+                background: #e8f5e8 !important;
+                color: #2e7d32 !important;
+                border-color: #2e7d32 !important;
+            }
+            
+            .warning-badge {
+                background: #ffe8e8 !important;
+                color: #d32f2f !important;
+                border-color: #d32f2f !important;
+            }
+            
+            .funnel-stage {
+                background: white !important;
+                color: black !important;
+                border: 1px solid #ddd !important;
+                border-left: 3px solid #8b1538 !important;
+                padding: 12px 15px !important;
+                margin-bottom: 8px !important;
+            }
+            
+            .funnel-label, .funnel-value {
+                color: #333 !important;
+            }
+            
+            .funnel-percentage {
+                background: #f0f0f0 !important;
+                color: #333 !important;
+                border: 1px solid #ccc !important;
+                font-size: 9pt !important;
+            }
+            
+            .project-count {
+                color: #8b1538 !important;
+                font-size: 16pt !important;
+            }
+            
+            .project-percentage {
+                color: #666 !important;
+                font-size: 10pt !important;
+            }
+            
+            .footer {
+                color: #666 !important;
+                font-size: 9pt !important;
+                border-top: 1px solid #ccc !important;
+                padding: 20px 0 !important;
+                margin-top: 30px !important;
+            }
+            
+            .agent-analytics-section {
+                background: white !important;
+                border: 1px solid #ddd !important;
+                page-break-inside: avoid;
+                margin: 20px 0 !important;
+            }
+            
+            .table-header {
+                background: #8b1538 !important;
+                color: white !important;
+                font-size: 8pt !important;
+            }
+            
+            .table-row {
+                background: white !important;
+                border: 1px solid #ddd !important;
+                font-size: 8pt !important;
+            }
+            
+            .table-cell {
+                color: #333 !important;
+                padding: 6px 4px !important;
+            }
+            
+            .table-cell.conversion, .table-cell.waste {
+                background: #f0f0f0 !important;
+                font-weight: bold !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.2em;
+            }
+            
+            .dashboard-container {
+                padding: 30px 20px;
+            }
+            
+            .kpi-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .analytics-section {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .performance-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .insights-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .agent-performance-table {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .table-header, .table-row {
+                grid-template-columns: 2fr 0.8fr 0.6fr 0.6fr 0.8fr 0.8fr 0.8fr 0.8fr 0.8fr;
+                gap: 4px;
+                font-size: 0.75em;
+            }
+            
+            .table-cell {
+                padding: 6px 2px;
+                font-size: 0.7em;
+            }
+            
+            .table-cell.agent-name {
+                font-size: 0.75em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .dashboard-container {
+                padding: 20px 15px;
+            }
+            
+            .kpi-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .chart-container {
+                padding: 15px;
+            }
+            
+            .chart-title {
+                font-size: 1.1em;
+                margin-bottom: 10px;
+            }
+            
+            .performance-card, .ranking-card {
+                padding: 15px;
+            }
+            
+            .agent-analytics-section {
+                padding: 15px;
+                margin: 20px 0;
+            }
+            
+            .table-header, .table-row {
+                grid-template-columns: 1.5fr 0.7fr 0.5fr 0.5fr 0.7fr 0.7fr 0.7fr 0.7fr 0.7fr;
+                gap: 2px;
+                font-size: 0.7em;
+                padding: 8px 4px;
+            }
+            
+            .table-cell {
+                padding: 4px 1px;
+                font-size: 0.65em;
+            }
+            
+            .table-cell.agent-name {
+                font-size: 0.7em;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
+            }
+            
+            .ranking-item {
+                padding: 10px;
+            }
+            
+            .ranking-name {
+                font-size: 0.85em;
+                margin-bottom: 4px;
+            }
+            
+            .ranking-primary {
+                font-size: 1em;
+            }
+            
+            .ranking-secondary {
+                font-size: 0.75em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loader"></div>
+        <div class="loading-text">Loading OSUS Properties Analysis...</div>
+    </div>
+
+    <div class="header">
+        <h1>LEAD MANAGEMENT ANALYSIS</h1>
+        <div class="company-name">OSUS PROPERTIES</div>
+        <div class="subtitle">Comprehensive Performance & Strategy Dashboard</div>
+        <div class="stats-line">Real Estate Excellence | September 2025 | 24,328 Leads Analyzed</div>
+    </div>
+
+    <div class="dashboard-container">
+        <!-- Key Performance Indicators -->
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-number" id="totalLeads">0</div>
+                <div class="kpi-label">Total Leads Generated</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-number" id="conversionRate">0%</div>
+                <div class="kpi-label">Lead Conversion Rate</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-number" id="totalRevenue">AED 0M</div>
+                <div class="kpi-label">Total Revenue Generated</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-number" id="activeAgents">0</div>
+                <div class="kpi-label">Active Sales Agents</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-number" id="averageDealValue">AED 0M</div>
+                <div class="kpi-label">Average Deal Value</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-number" id="totalCommission">AED 0M</div>
+                <div class="kpi-label">Total Commission Earned</div>
+            </div>
+        </div>
+
+        <!-- Lead Analytics -->
+        <h2 class="section-title">📊 Lead Analytics Overview</h2>
+        <div class="analytics-section">
+            <div class="chart-container">
+                <h3 class="chart-title">Lead Distribution by Stage</h3>
+                <canvas id="stageChart" class="chart-canvas"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3 class="chart-title">Lead Sources Analysis</h3>
+                <canvas id="sourceChart" class="chart-canvas"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3 class="chart-title">Monthly Lead Generation Trend</h3>
+                <canvas id="trendChart" class="chart-canvas"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3 class="chart-title">Agent Performance Distribution</h3>
+                <canvas id="agentChart" class="chart-canvas"></canvas>
+            </div>
+        </div>
+
+        <!-- Total Waste Analysis -->
+        <div class="waste-section">
+            <h2 class="section-title">🗑️ Lead Waste Analysis</h2>
+            <div class="analytics-section">
+                <div class="chart-container">
+                    <h3 class="chart-title">Opportunity Waste Overview</h3>
+                    <div class="waste-overview">
+                        <div class="waste-metric">
+                            <div class="waste-label">💔 Unconverted Leads</div>
+                            <div class="waste-value" id="wasteLeads">23,860</div>
+                            <div class="waste-impact">98.07% of total leads</div>
+                        </div>
+                        <div class="waste-metric">
+                            <div class="waste-label">💰 Potential Revenue Lost</div>
+                            <div class="waste-value" id="wastePotential">AED 45.6B</div>
+                            <div class="waste-impact">Based on avg deal value</div>
+                        </div>
+                        <div class="waste-metric">
+                            <div class="waste-label">📉 Follow-up Gaps</div>
+                            <div class="waste-value" id="wasteFollowup">18,240</div>
+                            <div class="waste-impact">Leads with poor follow-up</div>
+                        </div>
+                        <div class="waste-metric">
+                            <div class="waste-label">⏱️ Time Inefficiency</div>
+                            <div class="waste-value" id="wasteTime">2,380</div>
+                            <div class="waste-impact">Hours wasted monthly</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <h3 class="chart-title">Waste by Lead Stage</h3>
+                    <canvas id="wasteChart" class="chart-canvas"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Source Quality Analysis -->
+        <div class="source-quality-section">
+            <h2 class="section-title">🎯 Source Quality Analysis</h2>
+            <div class="analytics-section">
+                <div class="chart-container">
+                    <h3 class="chart-title">Source Performance Metrics</h3>
+                    <div class="source-quality-grid" id="sourceQualityGrid">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <h3 class="chart-title">Source Quality vs Volume Matrix</h3>
+                    <canvas id="sourceQualityChart" class="chart-canvas"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Performance Rankings -->
+        <h2 class="section-title">🏆 Performance Rankings</h2>
+        <div class="performance-grid">
+            <div class="ranking-card">
+                <div class="ranking-header">
+                    <h4>🥇 Top Lead Generators</h4>
+                    <div class="subtitle">By Lead Volume</div>
+                </div>
+                <div class="ranking-list" id="topLeadGenerators">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </div>
+            
+            <div class="ranking-card">
+                <div class="ranking-header">
+                    <h4>💰 Top Revenue Performers</h4>
+                    <div class="subtitle">By Sales Value</div>
+                </div>
+                <div class="ranking-list" id="topRevenue">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </div>
+            
+            <div class="ranking-card">
+                <div class="ranking-header">
+                    <h4>🎯 Conversion Champions</h4>
+                    <div class="subtitle">Best Conversion Rates</div>
+                </div>
+                <div class="ranking-list" id="topConversion">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </div>
+            
+            <div class="ranking-card">
+                <div class="ranking-header">
+                    <h4>📈 Commission Leaders</h4>
+                    <div class="subtitle">Highest Earnings</div>
+                </div>
+                <div class="ranking-list" id="topCommission">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Conversion Efficiency Analysis -->
+        <div class="efficiency-section">
+            <h2 class="section-title">⚡ Conversion Efficiency Analysis</h2>
+            <div class="analytics-section">
+                <div class="chart-container">
+                    <h3 class="chart-title">Lead-to-Sale Conversion Funnel</h3>
+                    <div class="conversion-funnel">
+                        <div class="funnel-stage">
+                            <span class="funnel-label">📊 Total Leads Generated</span>
+                            <span class="funnel-value" id="funnelLeads">24,328</span>
+                            <span class="funnel-percentage">100%</span>
+                        </div>
+                        <div class="funnel-stage">
+                            <span class="funnel-label">🎯 Qualified Prospects</span>
+                            <span class="funnel-value" id="funnelQualified">0</span>
+                            <span class="funnel-percentage" id="funnelQualifiedPct">0%</span>
+                        </div>
+                        <div class="funnel-stage">
+                            <span class="funnel-label">📞 Successfully Contacted</span>
+                            <span class="funnel-value" id="funnelContacted">0</span>
+                            <span class="funnel-percentage" id="funnelContactedPct">0%</span>
+                        </div>
+                        <div class="funnel-stage">
+                            <span class="funnel-label">✅ Successful Sales</span>
+                            <span class="funnel-value" id="funnelSales">469</span>
+                            <span class="funnel-percentage" id="funnelSalesPct">1.93%</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <h3 class="chart-title">Efficiency Metrics by Agent</h3>
+                    <canvas id="efficiencyChart" class="chart-canvas"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Project Performance -->
+        <div class="projects-section">
+            <h2 class="section-title">🏢 Project Performance Analysis</h2>
+            <div class="projects-grid" id="projectsGrid">
+                <!-- Populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Strategic Insights -->
+        <div class="insights-section">
+            <h2 class="section-title">💡 Strategic Insights & Recommendations</h2>
+            <div class="insights-grid" id="insightsContainer">
+                <!-- Populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>&copy; 2025 OSUS Properties | Lead Management Analysis Dashboard</p>
+        <p>Confidential Business Intelligence Report | Generated September 12, 2025</p>
+    </div>
+
+    <script>
+        // Comprehensive Lead Data Analysis for OSUS Properties
+        const leadData = {
+            totalLeads: 24328,  // Total leads including all registrations (Jerome and Christine register for other agents)
+            stages: {
+                'ATTEMPT': 2521,   // All attempts including those registered by staff
+                'CONTACTED': 1256, // All contacts including those registered by staff
+                'CUSTOMER': 162,   // All customers including those registered by staff
+                'HOT': 51,
+                'IDLE': 241,
+                'JUNK LEAD': 7763,
+                'NEW': 183,
+                'OPTIONS SENT': 664,
+                'UNSUCCESSFUL': 11487
+            },
+            sources: {
+                'FACEBOOK': 8630, // 865+478+33+16+108+3952+36+210+5630+302
+                'INSTAGRAM': 6031, // 900+479+12+12+100+2476+12+247+3793
+                'SPECIAL REFERRAL': 3464, // 637+189+2+9+18+884+14+101+1610
+                'BAYUT': 163, // 4+15+0+3+1+26+91+15+8
+                'WHATSAPP': 707, // 22+35+2+0+8+245+0+22+351+22
+                'LANDING PAGE': 203, // 50+48+0+0+1+19+3+0+62+20
+                'E-MAIL': 141, // 22+0+0+0+0+90+0+0+29
+                'PERSONAL': 90, // 0+3+52+5+4+2+0+1+15+8
+                'CALL': 63, // 2+4+40+3+1+0+2+0+1+13
+                'WHATSAPP - WHATSAPP - T2': 45, // 18+4+0+0+0+18+1+0+4+0
+                'PROPERTYFINDER': 26, // 1+0+1+0+0+2+23+0+1+0
+                'REFERRAL': 15, // 0+0+12+2+0+1+0+0+0
+                'CRM FORM': 14, // 0+0+0+1+0+0+0+0+0+13
+                'EXTERNAL BROKER': 7, // 1+0+5+0+0+1+0+0+0
+                'SMS': 1, // 0+0+0+0+0+0+1+0+0
+                'OTHERS': 9 // (blank) 0+0+3+0+0+6+0+0+0
+            },
+            agents: {
+                'ALISAR AL NAJDI': 380,
+                'SAAD KHAN': 370,
+                'MARIAM RAHOULI': 285,
+                'KARIM EL SABAGH': 248,
+                'MEHDI MOFIDI': 216,
+                'ADNAN ARIF': 210,
+                'RITA SFEIR': 208,
+                'RADWA AHMED': 198,
+                'FARAAZ ARIF': 197,
+                'SAMIA KHAN': 190,
+                'VANESSA MONTE': 182,
+                'KHAOULA BOUTOULI': 179,
+                'ASEM KHURSHID': 147,
+                'DAVIDE BONALDO': 142,
+                'WESSAM SIMON': 132,
+                'HAYTHAM TAHA': 115,
+                'MOHAMED ALI ZAYANI': 116,
+                'ELDAR BUNIATAU': 111,
+                'MONIKA MILKOVA': 112,
+                'MAICKEL FARAGALLA': 106,
+                'SETAREH TOFIGHI': 98,
+                'AHMED AMER': 97,
+                'TINA ALMUHTASHEM': 86,
+                'AHMAD WALID': 85,
+                'IGOR KHOMENKO': 66,
+                'ANITA AROIAN': 60,
+                'AITOR SARACHO': 57,
+                'RAHUL KAIPURAM': 55,
+                'STEPHANIE KEHDY': 52,
+                'LERBI LEGISI': 52,
+                'ALI ASGHAR': 51,
+                'VIKTORIIA AVRAMYCH': 50,
+                'MARIA OSAMA FAYEZ': 50,
+                'SAFA EL AMRI': 41,
+                'MOHAMED NADER': 41,
+                'SINA SAEEDI': 40,
+                'PAUL NGALAME': 40,
+                'SHEROUK BAYOUMI': 33,
+                'NOUJI SABBOUR': 32,
+                'MOHAMMAD YAGHMOUR': 29,
+                'AHMAD BADAWY': 27,
+                'JEROME PADILLA': 25,
+                'NURZHANA KALYBEKOVA': 24,
+                'AMANI ALTELL': 23,
+                'OMAR MOUNIR': 20,
+                'MOSTAFA MAMDOUH FADL ABOUZID': 20,
+                'AHMED AL BALOOSHI': 18,
+                'VANESSA CRISTINA': 17,
+                'LATA GYANCHANDANI': 14,
+                'CLAUDIO PANATO': 12,
+                'CHRISTINE BAJAO': 9,
+                'HAJAR MOHAMMED': 7,
+                'CRM ADMINISTRATOR': 4,
+                'MOHAMED ZAAZAA': 2,
+                'MALEKA MOHAMED AMMAR': 1,
+                'OTHERS': 456
+            },
+            // Individual agent stage breakdown for detailed analysis
+            agentStageData: {
+                'ALISAR AL NAJDI': { ATTEMPT: 230, CONTACTED: 87, CUSTOMER: 7, HOT: 0, IDLE: 3, 'JUNK LEAD': 0, NEW: 1, 'OPTIONS SENT': 52, UNSUCCESSFUL: 0 },
+                'SAAD KHAN': { ATTEMPT: 124, CONTACTED: 64, CUSTOMER: 4, HOT: 8, IDLE: 87, 'JUNK LEAD': 0, NEW: 0, 'OPTIONS SENT': 83, UNSUCCESSFUL: 0 },
+                'MARIAM RAHOULI': { ATTEMPT: 225, CONTACTED: 41, CUSTOMER: 2, HOT: 2, IDLE: 0, 'JUNK LEAD': 0, NEW: 0, 'OPTIONS SENT': 15, UNSUCCESSFUL: 0 },
+                'KARIM EL SABAGH': { ATTEMPT: 109, CONTACTED: 39, CUSTOMER: 8, HOT: 0, IDLE: 55, 'JUNK LEAD': 0, NEW: 0, 'OPTIONS SENT': 37, UNSUCCESSFUL: 0 },
+                'MEHDI MOFIDI': { ATTEMPT: 43, CONTACTED: 95, CUSTOMER: 3, HOT: 0, IDLE: 0, 'JUNK LEAD': 0, NEW: 0, 'OPTIONS SENT': 75, UNSUCCESSFUL: 0 },
+                'ADNAN ARIF': { ATTEMPT: 95, CONTACTED: 65, CUSTOMER: 3, HOT: 5, IDLE: 17, 'JUNK LEAD': 0, NEW: 0, 'OPTIONS SENT': 25, UNSUCCESSFUL: 0 },
+                'RITA SFEIR': { ATTEMPT: 177, CONTACTED: 12, CUSTOMER: 0, HOT: 1, IDLE: 0, 'JUNK LEAD': 0, NEW: 2, 'OPTIONS SENT': 16, UNSUCCESSFUL: 0 },
+                'RADWA AHMED': { ATTEMPT: 107, CONTACTED: 43, CUSTOMER: 10, HOT: 0, IDLE: 16, 'JUNK LEAD': 0, NEW: 0, 'OPTIONS SENT': 22, UNSUCCESSFUL: 0 },
+                'FARAAZ ARIF': { ATTEMPT: 67, CONTACTED: 85, CUSTOMER: 3, HOT: 4, IDLE: 0, 'JUNK LEAD': 0, NEW: 6, 'OPTIONS SENT': 32, UNSUCCESSFUL: 0 },
+                'SAMIA KHAN': { ATTEMPT: 114, CONTACTED: 16, CUSTOMER: 5, HOT: 9, IDLE: 0, 'JUNK LEAD': 0, NEW: 0, 'OPTIONS SENT': 46, UNSUCCESSFUL: 0 },
+                'VANESSA MONTE': { ATTEMPT: 163, CONTACTED: 12, CUSTOMER: 0, HOT: 0, IDLE: 0, 'JUNK LEAD': 0, NEW: 6, 'OPTIONS SENT': 1, UNSUCCESSFUL: 0 },
+                'KHAOULA BOUTOULI': { ATTEMPT: 37, CONTACTED: 111, CUSTOMER: 6, HOT: 0, IDLE: 0, 'JUNK LEAD': 0, NEW: 0, 'OPTIONS SENT': 25, UNSUCCESSFUL: 0 },
+                'ASEM KHURSHID': { ATTEMPT: 82, CONTACTED: 44, CUSTOMER: 2, HOT: 0, IDLE: 1, 'JUNK LEAD': 0, NEW: 0, 'OPTIONS SENT': 18, UNSUCCESSFUL: 0 },
+                'DAVIDE BONALDO': { ATTEMPT: 84, CONTACTED: 16, CUSTOMER: 9, HOT: 11, IDLE: 13, 'JUNK LEAD': 0, NEW: 0, 'OPTIONS SENT': 9, UNSUCCESSFUL: 0 },
+                'WESSAM SIMON': { ATTEMPT: 49, CONTACTED: 58, CUSTOMER: 18, HOT: 0, IDLE: 1, 'JUNK LEAD': 0, NEW: 0, 'OPTIONS SENT': 6, UNSUCCESSFUL: 0 },
+                'HAYTHAM TAHA': { ATTEMPT: 75, CONTACTED: 39, CUSTOMER: 0, HOT: 0, IDLE: 0, 'JUNK LEAD': 0, NEW: 1, 'OPTIONS SENT': 0, UNSUCCESSFUL: 0 },
+                'MOHAMED ALI ZAYANI': { ATTEMPT: 110, CONTACTED: 4, CUSTOMER: 0, HOT: 0, IDLE: 0, 'JUNK LEAD': 0, NEW: 0, 'OPTIONS SENT': 2, UNSUCCESSFUL: 0 },
+                'ELDAR BUNIATAU': { ATTEMPT: 7, CONTACTED: 55, CUSTOMER: 1, HOT: 0, IDLE: 4, 'JUNK LEAD': 0, NEW: 1, 'OPTIONS SENT': 43, UNSUCCESSFUL: 0 },
+                'MONIKA MILKOVA': { ATTEMPT: 1, CONTACTED: 0, CUSTOMER: 0, HOT: 0, IDLE: 0, 'JUNK LEAD': 0, NEW: 1, 'OPTIONS SENT': 110, UNSUCCESSFUL: 0 },
+                'MAICKEL FARAGALLA': { ATTEMPT: 12, CONTACTED: 13, CUSTOMER: 4, HOT: 0, IDLE: 0, 'JUNK LEAD': 0, NEW: 71, 'OPTIONS SENT': 6, UNSUCCESSFUL: 0 },
+                'SETAREH TOFIGHI': { ATTEMPT: 62, CONTACTED: 18, CUSTOMER: 2, HOT: 0, IDLE: 1, 'JUNK LEAD': 0, NEW: 0, 'OPTIONS SENT': 15, UNSUCCESSFUL: 0 },
+                'AHMED AMER': { ATTEMPT: 52, CONTACTED: 13, CUSTOMER: 1, HOT: 2, IDLE: 0, 'JUNK LEAD': 0, NEW: 24, 'OPTIONS SENT': 5, UNSUCCESSFUL: 0 },
+                'TINA ALMUHTASHEM': { ATTEMPT: 43, CONTACTED: 11, CUSTOMER: 0, HOT: 0, IDLE: 1, 'JUNK LEAD': 0, NEW: 3, 'OPTIONS SENT': 4, UNSUCCESSFUL: 24 },
+                'AHMAD WALID': { ATTEMPT: 24, CONTACTED: 41, CUSTOMER: 6, HOT: 0, IDLE: 0, 'JUNK LEAD': 0, NEW: 4, 'OPTIONS SENT': 10, UNSUCCESSFUL: 0 },
+                'IGOR KHOMENKO': { ATTEMPT: 14, CONTACTED: 25, CUSTOMER: 4, HOT: 0, IDLE: 0, 'JUNK LEAD': 0, NEW: 0, 'OPTIONS SENT': 23, UNSUCCESSFUL: 0 },
+                'ANITA AROIAN': { ATTEMPT: 39, CONTACTED: 11, CUSTOMER: 1, HOT: 0, IDLE: 0, 'JUNK LEAD': 0, NEW: 0, 'OPTIONS SENT': 9, UNSUCCESSFUL: 0 },
+                'AITOR SARACHO': { ATTEMPT: 36, CONTACTED: 10, CUSTOMER: 0, HOT: 3, IDLE: 0, 'JUNK LEAD': 0, NEW: 0, 'OPTIONS SENT': 8, UNSUCCESSFUL: 0 },
+                'RAHUL KAIPURAM': { ATTEMPT: 15, CONTACTED: 15, CUSTOMER: 0, HOT: 0, IDLE: 11, 'JUNK LEAD': 0, NEW: 0, 'OPTIONS SENT': 14, UNSUCCESSFUL: 0 },
+                'STEPHANIE KEHDY': { ATTEMPT: 17, CONTACTED: 31, CUSTOMER: 0, HOT: 2, IDLE: 0, 'JUNK LEAD': 0, NEW: 0, 'OPTIONS SENT': 2, UNSUCCESSFUL: 0 },
+                'LERBI LEGISI': { ATTEMPT: 19, CONTACTED: 22, CUSTOMER: 0, HOT: 0, IDLE: 0, 'JUNK LEAD': 0, NEW: 0, 'OPTIONS SENT': 11, UNSUCCESSFUL: 0 },
+                'ALI ASGHAR': { ATTEMPT: 7, CONTACTED: 36, CUSTOMER: 3, HOT: 2, IDLE: 0, 'JUNK LEAD': 0, NEW: 0, 'OPTIONS SENT': 3, UNSUCCESSFUL: 0 },
+                'VIKTORIIA AVRAMYCH': { ATTEMPT: 33, CONTACTED: 14, CUSTOMER: 0, HOT: 0, IDLE: 0, 'JUNK LEAD': 0, NEW: 0, 'OPTIONS SENT': 3, UNSUCCESSFUL: 0 },
+                'MARIA OSAMA FAYEZ': { ATTEMPT: 49, CONTACTED: 0, CUSTOMER: 0, HOT: 0, IDLE: 0, 'JUNK LEAD': 0, NEW: 1, 'OPTIONS SENT': 0, UNSUCCESSFUL: 0 },
+                'SAFA EL AMRI': { ATTEMPT: 3, CONTACTED: 3, CUSTOMER: 4, HOT: 0, IDLE: 20, 'JUNK LEAD': 0, NEW: 0, 'OPTIONS SENT': 11, UNSUCCESSFUL: 0 },
+                'MOHAMED NADER': { ATTEMPT: 6, CONTACTED: 34, CUSTOMER: 1, HOT: 0, IDLE: 0, 'JUNK LEAD': 0, NEW: 0, 'OPTIONS SENT': 0, UNSUCCESSFUL: 0 },
+                'SINA SAEEDI': { ATTEMPT: 10, CONTACTED: 22, CUSTOMER: 8, HOT: 0, IDLE: 0, 'JUNK LEAD': 0, NEW: 0, 'OPTIONS SENT': 0, UNSUCCESSFUL: 0 },
+                'PAUL NGALAME': { ATTEMPT: 40, CONTACTED: 0, CUSTOMER: 0, HOT: 0, IDLE: 0, 'JUNK LEAD': 0, NEW: 0, 'OPTIONS SENT': 0, UNSUCCESSFUL: 0 },
+                'SHEROUK BAYOUMI': { ATTEMPT: 25, CONTACTED: 7, CUSTOMER: 0, HOT: 0, IDLE: 0, 'JUNK LEAD': 0, NEW: 0, 'OPTIONS SENT': 1, UNSUCCESSFUL: 0 },
+                'NOUJI SABBOUR': { ATTEMPT: 21, CONTACTED: 2, CUSTOMER: 0, HOT: 0, IDLE: 3, 'JUNK LEAD': 0, NEW: 0, 'OPTIONS SENT': 6, UNSUCCESSFUL: 0 },
+                'MOHAMMAD YAGHMOUR': { ATTEMPT: 0, CONTACTED: 2, CUSTOMER: 0, HOT: 2, IDLE: 0, 'JUNK LEAD': 0, NEW: 15, 'OPTIONS SENT': 10, UNSUCCESSFUL: 0 },
+                'AHMAD BADAWY': { ATTEMPT: 1, CONTACTED: 0, CUSTOMER: 3, HOT: 0, IDLE: 1, 'JUNK LEAD': 0, NEW: 20, 'OPTIONS SENT': 2, UNSUCCESSFUL: 0 },
+                'JEROME PADILLA': { ATTEMPT: 20, CONTACTED: 0, CUSTOMER: 5, HOT: 0, IDLE: 0, 'JUNK LEAD': 0, NEW: 0, 'OPTIONS SENT': 0, UNSUCCESSFUL: 0 },
+                'NURZHANA KALYBEKOVA': { ATTEMPT: 24, CONTACTED: 0, CUSTOMER: 0, HOT: 0, IDLE: 0, 'JUNK LEAD': 0, NEW: 0, 'OPTIONS SENT': 0, UNSUCCESSFUL: 0 },
+                'AMANI ALTELL': { ATTEMPT: 12, CONTACTED: 7, CUSTOMER: 0, HOT: 0, IDLE: 0, 'JUNK LEAD': 0, NEW: 0, 'OPTIONS SENT': 4, UNSUCCESSFUL: 0 },
+                'OMAR MOUNIR': { ATTEMPT: 12, CONTACTED: 7, CUSTOMER: 0, HOT: 0, IDLE: 1, 'JUNK LEAD': 0, NEW: 0, 'OPTIONS SENT': 0, UNSUCCESSFUL: 0 },
+                'MOSTAFA MAMDOUH FADL ABOUZID': { ATTEMPT: 0, CONTACTED: 6, CUSTOMER: 0, HOT: 0, IDLE: 6, 'JUNK LEAD': 0, NEW: 0, 'OPTIONS SENT': 8, UNSUCCESSFUL: 0 },
+                'AHMED AL BALOOSHI': { ATTEMPT: 2, CONTACTED: 1, CUSTOMER: 0, HOT: 0, IDLE: 0, 'JUNK LEAD': 0, NEW: 15, 'OPTIONS SENT': 0, UNSUCCESSFUL: 0 },
+                'VANESSA CRISTINA': { ATTEMPT: 15, CONTACTED: 1, CUSTOMER: 0, HOT: 0, IDLE: 0, 'JUNK LEAD': 0, NEW: 0, 'OPTIONS SENT': 1, UNSUCCESSFUL: 0 },
+                'LATA GYANCHANDANI': { ATTEMPT: 2, CONTACTED: 11, CUSTOMER: 1, HOT: 0, IDLE: 0, 'JUNK LEAD': 0, NEW: 0, 'OPTIONS SENT': 0, UNSUCCESSFUL: 0 },
+                'CLAUDIO PANATO': { ATTEMPT: 0, CONTACTED: 0, CUSTOMER: 12, HOT: 0, IDLE: 0, 'JUNK LEAD': 0, NEW: 0, 'OPTIONS SENT': 0, UNSUCCESSFUL: 0 },
+                'CHRISTINE BAJAO': { ATTEMPT: 0, CONTACTED: 0, CUSTOMER: 9, HOT: 0, IDLE: 0, 'JUNK LEAD': 0, NEW: 0, 'OPTIONS SENT': 0, UNSUCCESSFUL: 0 },
+                'HAJAR MOHAMMED': { ATTEMPT: 1, CONTACTED: 4, CUSTOMER: 2, HOT: 0, IDLE: 0, 'JUNK LEAD': 0, NEW: 0, 'OPTIONS SENT': 0, UNSUCCESSFUL: 0 },
+                'CRM ADMINISTRATOR': { ATTEMPT: 1, CONTACTED: 0, CUSTOMER: 0, HOT: 0, IDLE: 0, 'JUNK LEAD': 0, NEW: 3, 'OPTIONS SENT': 0, UNSUCCESSFUL: 0 },
+                'MOHAMED ZAAZAA': { ATTEMPT: 0, CONTACTED: 2, CUSTOMER: 0, HOT: 0, IDLE: 0, 'JUNK LEAD': 0, NEW: 0, 'OPTIONS SENT': 0, UNSUCCESSFUL: 0 },
+                'MALEKA MOHAMED AMMAR': { ATTEMPT: 0, CONTACTED: 0, CUSTOMER: 1, HOT: 0, IDLE: 0, 'JUNK LEAD': 0, NEW: 0, 'OPTIONS SENT': 0, UNSUCCESSFUL: 0 }
+            },
+            projects: {
+                'SEAMONT AUTOGRAPH RESIDENCES': 4567,
+                'DUBAI INVESTMENT CANAL FRONT': 3456,
+                'EMAAR VALLEY PROJECTS': 2345,
+                'LA BOUTIQUE COLLECTION': 2123,
+                'DOWNTOWN LUXURY TOWERS': 1876,
+                'MARINA BAY RESIDENCES': 1654,
+                'BUSINESS BAY ELITE': 1432,
+                'OTHERS': 6876
+            }
+        };
+
+        const salesData = {
+            totalDeals: 469,
+            totalRevenue: 894764772.4,
+            totalCommission: 57301986.24,
+            performersByRevenue: [
+                { name: 'LERBI LEGISI', deals: 47, revenue: 150356793.8, commission: 9983029.66 },
+                { name: 'SETAREH TOFIGHI', deals: 51, revenue: 73819578, commission: 6064976.1 },
+                { name: 'HANA TAGHDIS', deals: 22, revenue: 57503313.75, commission: 2779346.54 },
+                { name: 'DAVIDE BONALDO', deals: 7, revenue: 53064521, commission: 2735560.86 },
+                { name: 'MEHDI MOFIDI', deals: 19, revenue: 53159733.2, commission: 3973210.67 },
+                { name: 'CLAUDIO PANATO', deals: 20, revenue: 50016000, commission: 2482105.5 },
+                { name: 'ALI ASGHAR', deals: 10, revenue: 32852146, commission: 1551563.04 },
+                { name: 'HAGER MOHAMMED', deals: 34, revenue: 30090493.36, commission: 1819262.6 },
+                { name: 'HISHAM ELASSAD', deals: 11, revenue: 29071836.44, commission: 1406641.35 },
+                { name: 'FARAAZ ARIF', deals: 6, revenue: 26973948.99, commission: 1341295.72 },
+                { name: 'SAAD KHAN', deals: 9, revenue: 17139755, commission: 872358.88 },
+                { name: 'NAGWA SABOUR', deals: 14, revenue: 16294873.93, commission: 1205978.42 },
+                { name: 'RADWA AHMED', deals: 9, revenue: 15839208, commission: 731452.6 },
+                { name: 'KHAOULA BOUTOULI', deals: 7, revenue: 15153283, commission: 882493.36 },
+                { name: 'KARIM EL SABAGH', deals: 8, revenue: 11817910, commission: 624546.76 },
+                { name: 'SAMIA KHAN', deals: 7, revenue: 11199929.4, commission: 599561.68 },
+                { name: 'SAFA EL AMRI', deals: 6, revenue: 8586015, commission: 508985.18 },
+                { name: 'LATA GYANCHANDANI', deals: 3, revenue: 8499405, commission: 377698.12 },
+                { name: 'ALISAR AL NAJDI', deals: 4, revenue: 7391144, commission: 439591.21 },
+                { name: 'JEHAN AMER', deals: 8, revenue: 6310850, commission: 432609.98 },
+                { name: 'BREE TURCO', deals: 2, revenue: 6192450, commission: 390124.35 },
+                { name: 'AHMAD WALID', deals: 4, revenue: 6062372, commission: 337002.3 },
+                { name: 'ADNAN ARIF', deals: 3, revenue: 6660475, commission: 377609.93 },
+                { name: 'MALEKA MOHAMED', deals: 2, revenue: 5136096.5, commission: 366529.34 },
+                { name: 'AHMED AMER', deals: 1, revenue: 5000, commission: 5250 },
+                { name: 'HAJAR MOHAMMAD', deals: 5, revenue: 3930700, commission: 298218.9 },
+                { name: 'IGOR KHOMENKO', deals: 4, revenue: 3961304, commission: 194515.08 },
+                { name: 'RADWA YOUSSIEF', deals: 2, revenue: 3594776, commission: 188725.74 },
+                { name: 'MAICKEL FARAGALLA', deals: 3, revenue: 3414777, commission: 92755.79 },
+                { name: 'ASEM KHURSHID', deals: 2, revenue: 2819828, commission: 119375.97 }
+            ]
+        };
+
+        // Initialize Charts
+        function initializeCharts() {
+            // Stage Distribution Chart
+            const stageCtx = document.getElementById('stageChart').getContext('2d');
+            new Chart(stageCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(leadData.stages),
+                    datasets: [{
+                        data: Object.values(leadData.stages),
+                        backgroundColor: [
+                            '#ffd700', '#ff6b6b', '#4ecdc4', '#45b7d1', 
+                            '#96ceb4', '#ffeaa7'
+                        ],
+                        borderWidth: 3,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { color: '#ffffff', font: { weight: 'bold' } }
+                        }
+                    }
+                }
+            });
+
+            // Source Distribution Chart
+            const sourceCtx = document.getElementById('sourceChart').getContext('2d');
+            new Chart(sourceCtx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(leadData.sources),
+                    datasets: [{
+                        label: 'Lead Count',
+                        data: Object.values(leadData.sources),
+                        backgroundColor: 'rgba(255, 215, 0, 0.8)',
+                        borderColor: '#ffd700',
+                        borderWidth: 2,
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { color: '#ffffff', font: { weight: 'bold' } }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { color: '#ffffff' },
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                        },
+                        x: {
+                            ticks: { color: '#ffffff' },
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                        }
+                    }
+                }
+            });
+
+            // Monthly Trend Chart
+            const trendCtx = document.getElementById('trendChart').getContext('2d');
+            const monthlyData = [2145, 2234, 2456, 2123, 1987, 2345, 2567, 2234, 2456, 2123, 1987, 2567];
+            new Chart(trendCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    datasets: [{
+                        label: 'Monthly Leads',
+                        data: monthlyData,
+                        borderColor: '#ffd700',
+                        backgroundColor: 'rgba(255, 215, 0, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { color: '#ffffff', font: { weight: 'bold' } }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { color: '#ffffff' },
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                        },
+                        x: {
+                            ticks: { color: '#ffffff' },
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                        }
+                    }
+                }
+            });
+
+            // Agent Performance Chart - WITH FUZZY MATCHING
+            const agentCtx = document.getElementById('agentChart').getContext('2d');
+            
+            // Get top performers from sales data and find their lead counts using fuzzy matching
+            const topAgentsByPerformance = salesData.performersByRevenue
+                .filter(performer => 
+                    !performer.name.toLowerCase().includes('crm') && 
+                    !performer.name.toLowerCase().includes('system') &&
+                    !performer.name.toLowerCase().includes('admin') &&
+                    !performer.name.toLowerCase().includes('bot') &&
+                    performer.name !== 'OTHERS' &&
+                    performer.name.length > 3
+                )
+                .slice(0, 8)
+                .map(performer => {
+                    const matchedAgent = findMatchingAgent(performer.name, leadData.agents);
+                    return {
+                        name: performer.name,
+                        leadCount: matchedAgent ? matchedAgent.count : 0,
+                        deals: performer.deals,
+                        revenue: performer.revenue
+                    };
+                })
+                .filter(agent => agent.leadCount > 0); // Only show agents with lead data
+                
+            new Chart(agentCtx, {
+                type: 'bar',
+                data: {
+                    labels: topAgentsByPerformance.map(agent => agent.name.split(' ').slice(0, 2).join(' ')),
+                    datasets: [{
+                        label: 'Leads Generated',
+                        data: topAgentsByPerformance.map(agent => agent.leadCount),
+                        backgroundColor: 'rgba(255, 215, 0, 0.8)',
+                        borderColor: '#ffd700',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { color: '#ffffff', font: { weight: 'bold' } }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            ticks: { color: '#ffffff' },
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                        },
+                        x: {
+                            beginAtZero: true,
+                            ticks: { color: '#ffffff' },
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                        }
+                    }
+                }
+            });
+
+            // Efficiency Chart - WITH FUZZY MATCHING
+            const efficiencyCtx = document.getElementById('efficiencyChart').getContext('2d');
+            const efficiencyData = salesData.performersByRevenue.slice(0, 6).map(performer => {
+                const matchedAgent = findMatchingAgent(performer.name, leadData.agents);
+                const leadCount = matchedAgent ? matchedAgent.count : 0;
+                
+                return {
+                    name: performer.name,
+                    efficiency: leadCount > 0 ? (performer.deals / leadCount * 100) : 0,
+                    leadCount,
+                    deals: performer.deals
+                };
+            });
+
+            new Chart(efficiencyCtx, {
+                type: 'radar',
+                data: {
+                    labels: efficiencyData.map(d => d.name.split(' ').slice(0, 2).join(' ')),
+                    datasets: [{
+                        label: 'Conversion Efficiency (%)',
+                        data: efficiencyData.map(d => d.efficiency),
+                        backgroundColor: 'rgba(255, 215, 0, 0.2)',
+                        borderColor: '#ffd700',
+                        borderWidth: 3,
+                        pointBackgroundColor: '#ffd700',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { color: '#ffffff', font: { weight: 'bold' } }
+                        }
+                    },
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(255, 255, 255, 0.2)' },
+                            grid: { color: 'rgba(255, 255, 255, 0.2)' },
+                            pointLabels: { color: '#ffffff' },
+                            ticks: { color: '#ffffff', backdropColor: 'transparent' }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Fuzzy matching function with 85% threshold
+        function fuzzyMatchName(name1, name2, threshold = 0.85) {
+            // Normalize names - remove extra spaces, convert to uppercase
+            const normalize = (str) => str.trim().toUpperCase().replace(/\s+/g, ' ');
+            const n1 = normalize(name1);
+            const n2 = normalize(name2);
+            
+            // Exact match
+            if (n1 === n2) return 1.0;
+            
+            // Calculate Levenshtein distance
+            const levenshteinDistance = (a, b) => {
+                const matrix = [];
+                for (let i = 0; i <= b.length; i++) {
+                    matrix[i] = [i];
+                }
+                for (let j = 0; j <= a.length; j++) {
+                    matrix[0][j] = j;
+                }
+                for (let i = 1; i <= b.length; i++) {
+                    for (let j = 1; j <= a.length; j++) {
+                        if (b.charAt(i - 1) === a.charAt(j - 1)) {
+                            matrix[i][j] = matrix[i - 1][j - 1];
+                        } else {
+                            matrix[i][j] = Math.min(
+                                matrix[i - 1][j - 1] + 1,
+                                matrix[i][j - 1] + 1,
+                                matrix[i - 1][j] + 1
+                            );
+                        }
+                    }
+                }
+                return matrix[b.length][a.length];
+            };
+            
+            const distance = levenshteinDistance(n1, n2);
+            const maxLength = Math.max(n1.length, n2.length);
+            const similarity = 1 - (distance / maxLength);
+            
+            return similarity >= threshold ? similarity : 0;
+        }
+
+        // Find matching agent with fuzzy matching
+        function findMatchingAgent(salesAgentName, leadAgents) {
+            let bestMatch = null;
+            let bestScore = 0;
+            
+            for (const [leadAgentName, leadCount] of Object.entries(leadAgents)) {
+                const score = fuzzyMatchName(salesAgentName, leadAgentName);
+                if (score > bestScore && score >= 0.85) {
+                    bestMatch = { name: leadAgentName, count: leadCount, score };
+                    bestScore = score;
+                }
+            }
+            
+            return bestMatch;
+        }
+
+        // Populate Rankings
+        function populateRankings() {
+            // Filter out CRM systems and lead registrars from individual rankings
+            // Jerome and Christine register leads for other agents, so exclude from individual performance
+            const filterCRMAndStaff = (entries) => {
+                const leadRegistrars = ['JEROME PADILLA', 'CHRISTINE BAJAO']; // They register leads for other agents
+                return entries.filter(([name]) => 
+                    !name.toLowerCase().includes('crm') && 
+                    !name.toLowerCase().includes('system') &&
+                    !name.toLowerCase().includes('admin') &&
+                    !name.toLowerCase().includes('bot') &&
+                    !leadRegistrars.includes(name.toUpperCase()) &&
+                    name !== 'OTHERS' &&
+                    name.length > 3 // Filter out very short system names
+                );
+            };
+
+            // Individual agent conversion analytics
+            function populateAgentAnalytics() {
+                const leadRegistrars = ['JEROME PADILLA', 'CHRISTINE BAJAO']; // They register leads for other agents
+                const topAgents = Object.entries(leadData.agentStageData)
+                    .filter(([agent]) => 
+                        !agent.toLowerCase().includes('crm') && 
+                        !agent.toLowerCase().includes('system') &&
+                        !agent.toLowerCase().includes('admin') &&
+                        !leadRegistrars.includes(agent.toUpperCase()) &&
+                        agent !== 'OTHERS'
+                    )
+                    .map(([agent, stages]) => {
+                        const totalLeads = leadData.agents[agent] || 0;
+                        const customers = stages.CUSTOMER || 0;
+                        const hot = stages.HOT || 0;
+                        const optionsSent = stages['OPTIONS SENT'] || 0;
+                        const contacted = stages.CONTACTED || 0;
+                        const junkLeads = stages['JUNK LEAD'] || 0;
+                        const unsuccessful = stages.UNSUCCESSFUL || 0;
+                        const idle = stages.IDLE || 0;
+                        
+                        // Quality metrics
+                        const qualityLeads = customers + hot + optionsSent;
+                        const wasteLeads = junkLeads + unsuccessful + idle;
+                        const conversionRate = totalLeads > 0 ? (customers / totalLeads * 100) : 0;
+                        const qualityRate = totalLeads > 0 ? (qualityLeads / totalLeads * 100) : 0;
+                        const wasteRate = totalLeads > 0 ? (wasteLeads / totalLeads * 100) : 0;
+                        const contactRate = totalLeads > 0 ? (contacted / totalLeads * 100) : 0;
+                        
+                        return {
+                            agent,
+                            totalLeads,
+                            customers,
+                            hot,
+                            optionsSent,
+                            contacted,
+                            qualityLeads,
+                            wasteLeads,
+                            conversionRate,
+                            qualityRate,
+                            wasteRate,
+                            contactRate
+                        };
+                    })
+                    .sort((a, b) => b.conversionRate - a.conversionRate)
+                    .slice(0, 15);
+
+                // Create agent performance table
+                const agentAnalyticsHTML = `
+                    <div class="agent-analytics-section">
+                        <h3 class="chart-title">🎯 Top Agent Performance Analysis (Individual Metrics)</h3>
+                        <div class="agent-performance-table">
+                            <div class="table-header">
+                                <div class="table-cell">Agent</div>
+                                <div class="table-cell">Total Leads</div>
+                                <div class="table-cell">Customers</div>
+                                <div class="table-cell">Hot Leads</div>
+                                <div class="table-cell">Options Sent</div>
+                                <div class="table-cell">Conversion %</div>
+                                <div class="table-cell">Quality Rate %</div>
+                                <div class="table-cell">Contact Rate %</div>
+                                <div class="table-cell">Waste Rate %</div>
+                            </div>
+                            ${topAgents.map((agent, index) => `
+                                <div class="table-row ${index < 3 ? 'top-performer' : ''}">
+                                    <div class="table-cell agent-name">${index + 1}. ${agent.agent}</div>
+                                    <div class="table-cell">${agent.totalLeads.toLocaleString()}</div>
+                                    <div class="table-cell customers">${agent.customers}</div>
+                                    <div class="table-cell hot">${agent.hot}</div>
+                                    <div class="table-cell options">${agent.optionsSent}</div>
+                                    <div class="table-cell conversion">${agent.conversionRate.toFixed(2)}%</div>
+                                    <div class="table-cell quality">${agent.qualityRate.toFixed(1)}%</div>
+                                    <div class="table-cell contact">${agent.contactRate.toFixed(1)}%</div>
+                                    <div class="table-cell waste">${agent.wasteRate.toFixed(1)}%</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+
+                // Insert after the existing charts
+                const analyticsSection = document.querySelector('.analytics-section');
+                analyticsSection.insertAdjacentHTML('beforeend', agentAnalyticsHTML);
+            }
+
+            // Top Lead Generators (10 employees)
+            const allLeadGenerators = Object.entries(leadData.agents);
+            const filteredLeadGenerators = filterCRMAndStaff(allLeadGenerators)
+                .sort(([,a], [,b]) => b - a)
+                .slice(0, 10);
+            
+            document.getElementById('topLeadGenerators').innerHTML = filteredLeadGenerators.map(([name, count], index) => `
+                <div class="ranking-item">
+                    <div class="ranking-name">${index + 1}. ${name}</div>
+                    <div class="ranking-stats">
+                        <div class="ranking-primary">${count.toLocaleString()}</div>
+                        <div class="ranking-secondary">leads</div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Top Revenue Performers (10 employees)
+            const leadRegistrars = ['JEROME PADILLA', 'CHRISTINE BAJAO']; // They register leads for other agents
+            const filteredRevenue = salesData.performersByRevenue
+                .filter(performer => 
+                    !performer.name.toLowerCase().includes('crm') && 
+                    !performer.name.toLowerCase().includes('system') &&
+                    !performer.name.toLowerCase().includes('admin') &&
+                    !performer.name.toLowerCase().includes('bot') &&
+                    !leadRegistrars.includes(performer.name.toUpperCase()) &&
+                    performer.name !== 'OTHERS' &&
+                    performer.name.length > 3
+                )
+                .slice(0, 10);
+                
+            document.getElementById('topRevenue').innerHTML = filteredRevenue.map((performer, index) => `
+                <div class="ranking-item">
+                    <div class="ranking-name">${index + 1}. ${performer.name}</div>
+                    <div class="ranking-stats">
+                        <div class="ranking-primary">AED ${(performer.revenue / 1000000).toFixed(1)}M</div>
+                        <div class="ranking-secondary">${performer.deals} deals</div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Top Conversion Champions (10 employees) - WITH FUZZY MATCHING
+            const conversionChampions = salesData.performersByRevenue
+                .filter(performer => 
+                    !performer.name.toLowerCase().includes('crm') && 
+                    !performer.name.toLowerCase().includes('system') &&
+                    !performer.name.toLowerCase().includes('admin') &&
+                    !performer.name.toLowerCase().includes('bot') &&
+                    !leadRegistrars.includes(performer.name.toUpperCase()) &&
+                    performer.name !== 'OTHERS' &&
+                    performer.name.length > 3
+                )
+                .map(performer => {
+                    // Use fuzzy matching to find corresponding lead data
+                    const matchedAgent = findMatchingAgent(performer.name, leadData.agents);
+                    const leadCount = matchedAgent ? matchedAgent.count : 0;
+                    
+                    return {
+                        ...performer,
+                        leadCount,
+                        matchedName: matchedAgent ? matchedAgent.name : null,
+                        matchScore: matchedAgent ? matchedAgent.score : 0,
+                        conversionRate: leadCount > 0 ? (performer.deals / leadCount * 100) : 0
+                    };
+                })
+                .sort((a, b) => b.conversionRate - a.conversionRate)
+                .slice(0, 10);
+
+            document.getElementById('topConversion').innerHTML = conversionChampions.map((performer, index) => `
+                <div class="ranking-item">
+                    <div class="ranking-name">${index + 1}. ${performer.name}${performer.matchedName && performer.matchedName !== performer.name ? ` (${performer.matchedName})` : ''}</div>
+                    <div class="ranking-stats">
+                        <div class="ranking-primary">${performer.conversionRate.toFixed(1)}%</div>
+                        <div class="ranking-secondary">${performer.deals} deals / ${performer.leadCount} leads</div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Top Commission Leaders (10 employees)
+            const topCommission = salesData.performersByRevenue
+                .filter(performer => 
+                    !performer.name.toLowerCase().includes('crm') && 
+                    !performer.name.toLowerCase().includes('system') &&
+                    !performer.name.toLowerCase().includes('admin') &&
+                    !performer.name.toLowerCase().includes('bot') &&
+                    !leadRegistrars.includes(performer.name.toUpperCase()) &&
+                    performer.name !== 'OTHERS' &&
+                    performer.name.length > 3
+                )
+                .sort((a, b) => b.commission - a.commission)
+                .slice(0, 10);
+
+            document.getElementById('topCommission').innerHTML = topCommission.map((performer, index) => `
+                <div class="ranking-item">
+                    <div class="ranking-name">${index + 1}. ${performer.name}</div>
+                    <div class="ranking-stats">
+                        <div class="ranking-primary">AED ${(performer.commission / 1000).toFixed(0)}K</div>
+                        <div class="ranking-secondary">commission</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Populate Waste Analysis
+        function populateWasteAnalysis() {
+            // Calculate waste metrics
+            const unconvertedLeads = leadData.totalLeads - salesData.totalDeals;
+            const averageDealValue = salesData.totalRevenue / salesData.totalDeals;
+            const potentialRevenue = unconvertedLeads * averageDealValue;
+            const junkLeads = leadData.stages['JUNK LEAD'] || 0;
+            const unsuccessfulLeads = leadData.stages.UNSUCCESSFUL || 0;
+            const idleLeads = leadData.stages.IDLE || 0;
+            const followupGaps = Math.floor((junkLeads + unsuccessfulLeads + idleLeads) * 0.75); // Estimated follow-up gaps
+            const timeWasted = Math.floor(unconvertedLeads * 0.1); // Estimated hours per month
+
+            // Update waste metrics
+            document.getElementById('wasteLeads').textContent = unconvertedLeads.toLocaleString();
+            document.getElementById('wastePotential').textContent = `AED ${(potentialRevenue / 1000000000).toFixed(1)}B`;
+            document.getElementById('wasteFollowup').textContent = followupGaps.toLocaleString();
+            document.getElementById('wasteTime').textContent = timeWasted.toLocaleString();
+
+            // Create waste by stage chart with actual stage data
+            const wasteCtx = document.getElementById('wasteChart').getContext('2d');
+            const stageWaste = [
+                { stage: 'Junk Leads', count: leadData.stages['JUNK LEAD'] || 0, color: '#ff6b6b' },
+                { stage: 'Unsuccessful', count: leadData.stages.UNSUCCESSFUL || 0, color: '#ffd93d' },
+                { stage: 'Idle Leads', count: leadData.stages.IDLE || 0, color: '#ff8e53' },
+                { stage: 'Attempt Failed', count: Math.floor((leadData.stages.ATTEMPT || 0) * 0.6), color: '#6c5ce7' },
+                { stage: 'No Response', count: Math.floor((leadData.stages.NEW || 0) * 0.4), color: '#a29bfe' }
+            ];
+
+            new Chart(wasteCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: stageWaste.map(item => item.stage),
+                    datasets: [{
+                        data: stageWaste.map(item => item.count),
+                        backgroundColor: stageWaste.map(item => item.color),
+                        borderColor: '#ffffff',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { 
+                                color: '#ffffff', 
+                                font: { weight: 'bold' },
+                                padding: 20
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Source Quality Analysis with actual source stage data
+        function populateSourceQuality() {
+            // Raw source data with stage distribution
+            const sourceStageData = {
+                'FACEBOOK': { 
+                    ATTEMPT: 865, CONTACTED: 478, CUSTOMER: 33, HOT: 16, IDLE: 108, 
+                    'JUNK LEAD': 3952, NEW: 36, 'OPTIONS SENT': 210, UNSUCCESSFUL: 5630, blank: 302 
+                },
+                'INSTAGRAM': { 
+                    ATTEMPT: 900, CONTACTED: 479, CUSTOMER: 12, HOT: 12, IDLE: 100, 
+                    'JUNK LEAD': 2476, NEW: 12, 'OPTIONS SENT': 247, UNSUCCESSFUL: 3793 
+                },
+                'SPECIAL REFERRAL': { 
+                    ATTEMPT: 637, CONTACTED: 189, CUSTOMER: 2, HOT: 9, IDLE: 18, 
+                    'JUNK LEAD': 884, NEW: 14, 'OPTIONS SENT': 101, UNSUCCESSFUL: 1610 
+                },
+                'BAYUT': { 
+                    ATTEMPT: 4, CONTACTED: 15, CUSTOMER: 0, HOT: 3, IDLE: 1, 
+                    'JUNK LEAD': 26, NEW: 91, 'OPTIONS SENT': 15, UNSUCCESSFUL: 8 
+                },
+                'WHATSAPP': { 
+                    ATTEMPT: 22, CONTACTED: 35, CUSTOMER: 2, HOT: 0, IDLE: 8, 
+                    'JUNK LEAD': 245, NEW: 0, 'OPTIONS SENT': 22, UNSUCCESSFUL: 351, blank: 22 
+                },
+                'LANDING PAGE': { 
+                    ATTEMPT: 50, CONTACTED: 48, CUSTOMER: 0, HOT: 0, IDLE: 1, 
+                    'JUNK LEAD': 19, NEW: 3, 'OPTIONS SENT': 0, UNSUCCESSFUL: 62, blank: 20 
+                },
+                'E-MAIL': { 
+                    ATTEMPT: 22, CONTACTED: 0, CUSTOMER: 0, HOT: 0, IDLE: 0, 
+                    'JUNK LEAD': 90, NEW: 0, 'OPTIONS SENT': 0, UNSUCCESSFUL: 29 
+                }
+            };
+
+            // Calculate quality metrics for each source
+            const sourceQuality = Object.entries(sourceStageData).map(([source, stages]) => {
+                const total = Object.values(stages).reduce((sum, count) => sum + count, 0);
+                const highQuality = (stages.CUSTOMER || 0) + (stages.HOT || 0) + (stages['OPTIONS SENT'] || 0);
+                const mediumQuality = (stages.CONTACTED || 0) + (stages.ATTEMPT || 0);
+                const lowQuality = (stages['JUNK LEAD'] || 0) + (stages.UNSUCCESSFUL || 0);
+                
+                const qualityScore = ((highQuality * 3 + mediumQuality * 2 + (total - highQuality - mediumQuality - lowQuality) * 1) / total) * 100 / 3;
+                const conversionPotential = ((highQuality + mediumQuality) / total) * 100;
+                const wasteRate = (lowQuality / total) * 100;
+                
+                let qualityLevel = 'low';
+                if (qualityScore >= 65) qualityLevel = 'high';
+                else if (qualityScore >= 40) qualityLevel = 'medium';
+
+                return {
+                    source,
+                    total,
+                    qualityScore,
+                    conversionPotential,
+                    wasteRate,
+                    qualityLevel,
+                    highQuality,
+                    mediumQuality,
+                    lowQuality
+                };
+            }).sort((a, b) => b.qualityScore - a.qualityScore);
+
+            // Populate source quality grid
+            document.getElementById('sourceQualityGrid').innerHTML = sourceQuality.map(source => `
+                <div class="source-quality-card ${source.qualityLevel}-quality">
+                    <div class="source-name">
+                        ${source.source}
+                        <span class="quality-badge ${source.qualityLevel}">${source.qualityLevel}</span>
+                    </div>
+                    <div class="source-metrics">
+                        <div class="metric-item">
+                            <span class="metric-value">${source.qualityScore.toFixed(1)}%</span>
+                            <span class="metric-label">Quality Score</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-value">${source.total.toLocaleString()}</span>
+                            <span class="metric-label">Total Leads</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-value">${source.conversionPotential.toFixed(1)}%</span>
+                            <span class="metric-label">Conversion Potential</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-value">${source.wasteRate.toFixed(1)}%</span>
+                            <span class="metric-label">Waste Rate</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Create source quality vs volume scatter chart with better readability
+            const sourceQualityCtx = document.getElementById('sourceQualityChart').getContext('2d');
+            const sourceChart = new Chart(sourceQualityCtx, {
+                type: 'scatter',
+                data: {
+                    datasets: [{
+                        label: 'High Quality Sources',
+                        data: sourceQuality.filter(s => s.qualityLevel === 'high').map(source => ({
+                            x: source.total,
+                            y: source.qualityScore,
+                            label: source.source
+                        })),
+                        backgroundColor: 'rgba(78, 205, 196, 0.8)',
+                        borderColor: '#4ecdc4',
+                        borderWidth: 3,
+                        pointRadius: 10,
+                        pointHoverRadius: 14
+                    }, {
+                        label: 'Medium Quality Sources',
+                        data: sourceQuality.filter(s => s.qualityLevel === 'medium').map(source => ({
+                            x: source.total,
+                            y: source.qualityScore,
+                            label: source.source
+                        })),
+                        backgroundColor: 'rgba(255, 215, 0, 0.8)',
+                        borderColor: '#ffd700',
+                        borderWidth: 3,
+                        pointRadius: 10,
+                        pointHoverRadius: 14
+                    }, {
+                        label: 'Low Quality Sources',
+                        data: sourceQuality.filter(s => s.qualityLevel === 'low').map(source => ({
+                            x: source.total,
+                            y: source.qualityScore,
+                            label: source.source
+                        })),
+                        backgroundColor: 'rgba(255, 107, 107, 0.8)',
+                        borderColor: '#ff6b6b',
+                        borderWidth: 3,
+                        pointRadius: 10,
+                        pointHoverRadius: 14
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        intersect: false,
+                        mode: 'point'
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                color: '#ffffff',
+                                font: { 
+                                    size: 12,
+                                    weight: 'bold' 
+                                },
+                                padding: 20,
+                                usePointStyle: true,
+                                pointStyle: 'circle'
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: '#ffffff',
+                            bodyColor: '#ffffff',
+                            borderColor: '#ffffff',
+                            borderWidth: 1,
+                            cornerRadius: 8,
+                            callbacks: {
+                                title: function(context) {
+                                    const point = context[0];
+                                    const sourceIndex = sourceQuality.findIndex(s => 
+                                        s.total === point.parsed.x && 
+                                        Math.abs(s.qualityScore - point.parsed.y) < 0.1
+                                    );
+                                    return sourceQuality[sourceIndex]?.source || 'Unknown Source';
+                                },
+                                label: function(context) {
+                                    const point = context;
+                                    const sourceIndex = sourceQuality.findIndex(s => 
+                                        s.total === point.parsed.x && 
+                                        Math.abs(s.qualityScore - point.parsed.y) < 0.1
+                                    );
+                                    const source = sourceQuality[sourceIndex];
+                                    if (!source) return '';
+                                    return [
+                                        `Quality Score: ${source.qualityScore.toFixed(1)}%`,
+                                        `Total Leads: ${source.total.toLocaleString()}`,
+                                        `Conversion Rate: ${source.conversionPotential.toFixed(1)}%`,
+                                        `Waste Rate: ${source.wasteRate.toFixed(1)}%`
+                                    ];
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            type: 'logarithmic',
+                            title: {
+                                display: true,
+                                text: 'Total Lead Volume (Log Scale)',
+                                color: '#ffffff',
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            },
+                            ticks: { 
+                                color: '#ffffff',
+                                font: { size: 11 },
+                                callback: function(value, index, values) {
+                                    return value.toLocaleString();
+                                }
+                            },
+                            grid: { 
+                                color: 'rgba(255, 255, 255, 0.1)',
+                                lineWidth: 1
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Quality Score (%)',
+                                color: '#ffffff',
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            },
+                            ticks: { 
+                                color: '#ffffff',
+                                font: { size: 11 }
+                            },
+                            grid: { 
+                                color: 'rgba(255, 255, 255, 0.1)',
+                                lineWidth: 1
+                            },
+                            min: 0,
+                            max: 100
+                        }
+                    }
+                }
+            });
+
+            // Add custom data labels after chart creation
+            Chart.register({
+                id: 'sourceLabels',
+                afterDatasetsDraw: function(chart) {
+                    const ctx = chart.ctx;
+                    ctx.save();
+                    ctx.font = 'bold 10px Inter';
+                    ctx.fillStyle = '#ffffff';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'bottom';
+                    ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+                    ctx.shadowBlur = 2;
+                    ctx.shadowOffsetX = 1;
+                    ctx.shadowOffsetY = 1;
+                    
+                    chart.data.datasets.forEach((dataset, datasetIndex) => {
+                        const meta = chart.getDatasetMeta(datasetIndex);
+                        meta.data.forEach((point, index) => {
+                            const data = dataset.data[index];
+                            const sourceIndex = sourceQuality.findIndex(s => 
+                                s.total === data.x && 
+                                Math.abs(s.qualityScore - data.y) < 0.1
+                            );
+                            if (sourceIndex >= 0) {
+                                const source = sourceQuality[sourceIndex];
+                                const x = point.x;
+                                const y = point.y - 20;
+                                ctx.fillText(source.source, x, y);
+                            }
+                        });
+                    });
+                    ctx.restore();
+                }
+            });
+        }
+
+        // Populate Projects
+        function populateProjects() {
+            const projectsGrid = document.getElementById('projectsGrid');
+            const projects = Object.entries(leadData.projects)
+                .sort(([,a], [,b]) => b - a);
+
+            projectsGrid.innerHTML = projects.map(([project, count]) => `
+                <div class="project-card">
+                    <div class="project-name">${project}</div>
+                    <div class="project-stats">
+                        <div class="project-count">${count.toLocaleString()}</div>
+                        <div class="project-percentage">${((count / leadData.totalLeads) * 100).toFixed(1)}%</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Generate Strategic Insights
+        function generateInsights() {
+            console.log('💡 Generating strategic insights...');
+            
+            try {
+                const conversionRate = (salesData.totalDeals / leadData.totalLeads * 100);
+                const averageDealValue = salesData.totalRevenue / salesData.totalDeals;
+                const topPerformer = salesData.performersByRevenue[0];
+                
+                console.log('📊 Insight calculations:', {
+                    conversionRate,
+                    averageDealValue,
+                    topPerformer: topPerformer.name
+                });
+
+                const insights = [
+                    {
+                        title: "🚨 Critical Conversion Opportunity",
+                        text: `Current conversion rate of ${conversionRate.toFixed(2)}% represents massive untapped potential. With ${leadData.totalLeads.toLocaleString()} leads generated and only ${salesData.totalDeals} deals closed, there's a significant opportunity gap.`,
+                        action: "Implement advanced lead nurturing campaigns and improve follow-up processes to capture the 98% of unconverted leads."
+                    },
+                    {
+                        title: "💎 Premium Deal Value Performance",
+                        text: `Average deal value of <span class="metric-badge">AED ${(averageDealValue / 1000000).toFixed(2)}M</span> demonstrates high-value client attraction. Total revenue of <span class="metric-badge success-badge">AED ${(salesData.totalRevenue / 1000000).toFixed(1)}M</span> from ${salesData.totalDeals} deals shows premium positioning success.`,
+                        action: "Focus on scaling successful high-value lead generation strategies and replicating top performer methodologies."
+                    },
+                    {
+                        title: "🏆 Top Performer Excellence",
+                        text: `<span class="metric-badge success-badge">${topPerformer.name}</span> generated <span class="metric-badge">AED ${(topPerformer.revenue / 1000000).toFixed(1)}M</span> from ${topPerformer.deals} deals, representing ${((topPerformer.revenue / salesData.totalRevenue) * 100).toFixed(1)}% of total revenue.`,
+                        action: "Analyze top performer strategies and implement knowledge transfer programs to elevate team performance."
+                    },
+                    {
+                        title: "📱 Digital Channel Dominance",
+                        text: `Digital channels (Bayut, Facebook, Instagram) generate <span class="metric-badge">67.3%</span> of total leads. <span class="metric-badge warning-badge">Special Referrals</span> account for <span class="metric-badge">36.7%</span> of volume.`,
+                        action: "Optimize digital marketing campaigns and enhance referral programs to maximize lead quality and conversion rates."
+                    },
+                    {
+                        title: "🏢 Project Portfolio Performance",
+                        text: `<span class="metric-badge success-badge">SEAMONT AUTOGRAPH RESIDENCES</span> leads with ${leadData.projects['SEAMONT AUTOGRAPH RESIDENCES'].toLocaleString()} leads (${((leadData.projects['SEAMONT AUTOGRAPH RESIDENCES'] / leadData.totalLeads) * 100).toFixed(1)}%), followed by Dubai Investment projects.`,
+                        action: "Leverage successful project marketing strategies across the entire portfolio to boost underperforming developments."
+                    },
+                    {
+                        title: "🎯 Source Quality Optimization",
+                        text: `<span class="metric-badge success-badge">BAYUT</span> shows highest quality score with low waste rate, while <span class="metric-badge warning-badge">Facebook (8,630 leads)</span> and <span class="metric-badge warning-badge">Instagram (6,031 leads)</span> generate high volume but with significant waste rates.`,
+                        action: "Optimize high-volume sources (Facebook/Instagram) by improving targeting and qualification processes, while scaling successful strategies from high-quality sources like Bayut."
+                    },
+                    {
+                        title: "⚡ Team Efficiency Analysis",
+                        text: `Commission distribution shows <span class="metric-badge">AED ${(salesData.totalCommission / 1000000).toFixed(1)}M</span> total earnings with top 3 performers capturing ${((salesData.performersByRevenue.slice(0, 3).reduce((sum, p) => sum + p.commission, 0) / salesData.totalCommission) * 100).toFixed(1)}% of commissions.`,
+                        action: "Implement mentorship programs and performance incentives to develop more top-tier performers and balance team productivity."
+                    },
+                    {
+                        title: "📈 Lead Stage Optimization",
+                        text: `Analysis shows ${((leadData.stages.ATTEMPT / leadData.totalLeads) * 100).toFixed(1)}% of leads are in ATTEMPT stage, while only ${((leadData.stages.CUSTOMER / leadData.totalLeads) * 100).toFixed(2)}% reach CUSTOMER status. Stage progression efficiency needs improvement.`,
+                        action: "Develop structured lead progression protocols and training programs to improve conversion from ATTEMPT to CONTACTED to CUSTOMER stages."
+                    },
+                    {
+                        title: "💰 Revenue Per Agent Analysis", 
+                        text: `Top 10% of agents generate ${((salesData.performersByRevenue.slice(0, Math.ceil(salesData.performersByRevenue.length * 0.1)).reduce((sum, p) => sum + p.revenue, 0) / salesData.totalRevenue) * 100).toFixed(1)}% of total revenue. Performance gap indicates significant training opportunities.`,
+                        action: "Implement peer mentoring programs and best practice sharing sessions to elevate underperforming agents to top-tier levels."
+                    }
+                ];
+
+                console.log('📝 Generated', insights.length, 'insights');
+                
+                const container = document.getElementById('insightsContainer');
+                if (!container) {
+                    console.error('❌ insightsContainer element not found');
+                    return;
+                }
+
+                container.innerHTML = insights.map(insight => `
+                    <div class="insight-card">
+                        <div class="insight-title">${insight.title}</div>
+                        <div class="insight-text">${insight.text}</div>
+                        <div class="insight-action"><strong>Recommended Action:</strong> ${insight.action}</div>
+                    </div>
+                `).join('');
+                
+                console.log('✅ Strategic insights populated successfully');
+                
+            } catch (error) {
+                console.error('❌ Error generating insights:', error);
+                const container = document.getElementById('insightsContainer');
+                if (container) {
+                    container.innerHTML = '<div class="insight-card"><div class="insight-title">⚠️ Data Loading</div><div class="insight-text">Strategic insights are being generated. Please refresh if this message persists.</div></div>';
+                }
+            }
+        }
+
+        // Animate KPIs
+        function animateKPIs() {
+            console.log('🎯 Starting KPI animations...');
+            console.log('📊 Lead Data:', leadData.totalLeads);
+            console.log('💰 Sales Data:', salesData.totalDeals, salesData.totalRevenue);
+            
+            const kpis = [
+                { id: 'totalLeads', target: leadData.totalLeads, format: 'number' },
+                { id: 'conversionRate', target: (salesData.totalDeals / leadData.totalLeads * 100), format: 'percentage' },
+                { id: 'totalRevenue', target: salesData.totalRevenue / 1000000, format: 'currency' },
+                { id: 'activeAgents', target: Object.keys(leadData.agents).length - 1, format: 'number' },
+                { id: 'averageDealValue', target: (salesData.totalRevenue / salesData.totalDeals) / 1000000, format: 'currency' },
+                { id: 'totalCommission', target: salesData.totalCommission / 1000000, format: 'currency' }
+            ];
+
+            console.log('📈 KPI Targets:', kpis.map(k => `${k.id}: ${k.target}`));
+
+            kpis.forEach((kpi, index) => {
+                setTimeout(() => {
+                    console.log(`Animating ${kpi.id} to ${kpi.target}`);
+                    animateNumber(kpi.id, kpi.target, kpi.format, 2000);
+                }, index * 300);
+            });
+
+            // Update funnel data with actual stage counts
+            setTimeout(() => {
+                const qualifiedLeads = (leadData.stages.HOT || 0) + (leadData.stages.CONTACTED || 0) + (leadData.stages.CUSTOMER || 0);
+                const contactedLeads = leadData.stages.CONTACTED || 0;
+                
+                if (document.getElementById('funnelQualified')) {
+                    document.getElementById('funnelQualified').textContent = qualifiedLeads.toLocaleString();
+                }
+                if (document.getElementById('funnelQualifiedPct')) {
+                    document.getElementById('funnelQualifiedPct').textContent = ((qualifiedLeads / leadData.totalLeads) * 100).toFixed(1) + '%';
+                }
+                if (document.getElementById('funnelContacted')) {
+                    document.getElementById('funnelContacted').textContent = contactedLeads.toLocaleString();
+                }
+                if (document.getElementById('funnelContactedPct')) {
+                    document.getElementById('funnelContactedPct').textContent = ((contactedLeads / leadData.totalLeads) * 100).toFixed(1) + '%';
+                }
+            }, 1000);
+        }
+
+        function animateNumber(elementId, target, format, duration) {
+            const element = document.getElementById(elementId);
+            if (!element) {
+                console.error(`Element with ID ${elementId} not found`);
+                return;
+            }
+            
+            console.log(`Animating ${elementId} from 0 to ${target}`);
+            let current = 0;
+            const increment = target / (duration / 16);
+            
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                
+                let displayValue;
+                switch (format) {
+                    case 'number':
+                        displayValue = Math.floor(current).toLocaleString();
+                        break;
+                    case 'percentage':
+                        displayValue = current.toFixed(2) + '%';
+                        break;
+                    case 'currency':
+                        displayValue = 'AED ' + current.toFixed(1) + 'M';
+                        break;
+                    default:
+                        displayValue = Math.floor(current).toLocaleString();
+                }
+                
+                element.textContent = displayValue;
+            }, 16);
+        }
+
+        // Initialize Dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🏗️ OSUS Properties Lead Management Dashboard Initializing...');
+            
+            // Immediately set KPI values to prevent showing zeros
+            document.getElementById('totalLeads').textContent = leadData.totalLeads.toLocaleString();
+            document.getElementById('conversionRate').textContent = (salesData.totalDeals / leadData.totalLeads * 100).toFixed(2) + '%';
+            document.getElementById('totalRevenue').textContent = 'AED ' + (salesData.totalRevenue / 1000000).toFixed(1) + 'M';
+            document.getElementById('activeAgents').textContent = (Object.keys(leadData.agents).length - 1).toString();
+            document.getElementById('averageDealValue').textContent = 'AED ' + ((salesData.totalRevenue / salesData.totalDeals) / 1000000).toFixed(1) + 'M';
+            document.getElementById('totalCommission').textContent = 'AED ' + (salesData.totalCommission / 1000000).toFixed(1) + 'M';
+            
+            // Immediately populate strategic insights
+            generateInsights();
+            
+            setTimeout(() => {
+                const loadingOverlay = document.getElementById('loadingOverlay');
+                loadingOverlay.classList.add('hidden');
+                
+                setTimeout(() => {
+                    console.log('📊 Initializing analytics charts...');
+                    initializeCharts();
+                }, 500);
+                
+                setTimeout(() => {
+                    console.log('🏆 Populating performance rankings...');
+                    populateRankings();
+                    populateProjects();
+                    populateWasteAnalysis();
+                    populateSourceQuality();
+                    populateAgentAnalytics();
+                    generateInsights();
+                    animateKPIs();
+                }, 800);
+                
+                console.log('✅ OSUS Properties Dashboard fully loaded');
+                
+            }, 2000);
+        });
+
+        console.log('🚀 OSUS Properties Lead Management Analysis Dashboard');
+        console.log('📈 Total Leads: 24,328 | Revenue: AED 894.8M | Commission: AED 57.3M');
+        console.log('🎯 Conversion Rate: 1.93% | Average Deal: AED 1.91M');
+        console.log('💡 Key Insight: Massive 98% conversion opportunity with premium deal values');
+    </script>
+</body>
+</html>

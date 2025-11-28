@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Email Composer Wizard Form -->
+        <record id="hr_recruitment_email_composer_view_form" model="ir.ui.view">
+            <field name="name">hr.recruitment.email.composer.form</field>
+            <field name="model">hr.recruitment.email.composer</field>
+            <field name="arch" type="xml">
+                <form string="Send Training Period Offer Email">
+                    <header>
+                        <button name="action_send_mail" 
+                                string="Send Email" 
+                                type="object" 
+                                class="btn-primary"
+                                icon="fa-paper-plane"/>
+                        <button name="action_preview" 
+                                string="Preview" 
+                                type="object" 
+                                class="btn-secondary"
+                                icon="fa-eye"/>
+                        <button string="Cancel" 
+                                class="btn-secondary" 
+                                special="cancel"/>
+                    </header>
+                    
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <i class="fa fa-envelope text-primary"/> 
+                                Training Period Offer Email
+                            </h1>
+                        </div>
+                        
+                        <group>
+                            <group string="Recipient Information">
+                                <field name="applicant_id" readonly="1"/>
+                                <field name="email_to" string="To" required="1"/>
+                                <field name="email_cc" string="CC"/>
+                                <field name="email_bcc" string="BCC"/>
+                            </group>
+                            <group string="Email Template">
+                                <field name="template_id" 
+                                       string="Template" 
+                                       required="1"
+                                       options="{'no_create': True, 'no_edit': True}"/>
+                            </group>
+                        </group>
+                        
+                        <group string="Email Content">
+                            <field name="subject" string="Subject" required="1"/>
+                        </group>
+                        
+                        <separator string="Email Body"/>
+                        <field name="body" 
+                               widget="html" 
+                               options="{'height': 500, 'resizable': true}"
+                               required="1"/>
+                               
+                        <div class="alert alert-info mt-3" role="alert">
+                            <h5><i class="fa fa-info-circle"/> Template Features</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <ul>
+                                        <li>📱 Mobile-responsive design</li>
+                                        <li>🎨 SCHOLARIX branding &amp; colors</li>
+                                        <li>⚡ Dynamic data population</li>
+                                        <li>📋 Professional training offer layout</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <ul>
+                                        <li>📄 Terms and conditions</li>
+                                        <li>📞 Contact information</li>
+                                        <li>✍ Acceptance form section</li>
+                                        <li>🔗 Action buttons (Accept/Contact)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Email Composer Action -->
+        <record id="action_hr_recruitment_email_composer" model="ir.actions.act_window">
+            <field name="name">Send Training Period Offer Email</field>
+            <field name="res_model">hr.recruitment.email.composer</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="binding_model_id" ref="hr_recruitment.model_hr_applicant"/>
+            <field name="binding_type">action</field>
+        </record>
+    </data>
+</odoo>

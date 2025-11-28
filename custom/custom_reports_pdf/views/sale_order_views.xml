@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- Add SCHOLARIX Print Button to Sale Order Form View -->
+        <record id="view_order_form_scholarix" model="ir.ui.view">
+            <field name="name">sale.order.form.scholarix</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//header" position="inside">
+                    <button name="action_print_scholarix_quotation" 
+                            string="📄 SCHOLARIX Quotation" 
+                            type="object" 
+                            class="btn-primary"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Add action to sale order tree view context menu -->
+        <record id="action_print_scholarix_quotation_multi" model="ir.actions.server">
+            <field name="name">Print SCHOLARIX Quotation</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="binding_model_id" ref="sale.model_sale_order"/>
+            <field name="binding_type">action</field>
+            <field name="state">code</field>
+            <field name="code">
+                action = records.action_print_scholarix_quotation()
+            </field>
+        </record>
+
+        <!-- Custom menu item for SCHOLARIX Sales Reports -->
+        <menuitem id="menu_scholarix_sales_reports_root"
+                  name="📊 SCHOLARIX Sales Reports"
+                  parent="sale.sale_menu_root"
+                  sequence="100"/>
+
+        <menuitem id="menu_scholarix_quotation_reports"
+                  name="Quotation Reports"
+                  parent="menu_scholarix_sales_reports_root"
+                  action="action_report_scholarix_quotation"
+                  sequence="10"/>
+    </data>
+</odoo>

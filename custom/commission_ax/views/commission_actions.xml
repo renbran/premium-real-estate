@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Commission Line Actions -->
+        <record id="action_commission_line_tree" model="ir.actions.act_window">
+            <field name="name">Commission Lines</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">commission.line</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <!-- Commission Line Tree View -->
+        <record id="view_commission_line_tree" model="ir.ui.view">
+            <field name="name">commission.line.tree</field>
+            <field name="model">commission.line</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="partner_id"/>
+                    <field name="commission_type_id"/>
+                    <field name="role"/>
+                    <field name="commission_category"/>
+                    <field name="commission_amount" widget="monetary"/>
+                    <field name="state"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Commission Line Form View -->
+        <record id="view_commission_line_form" model="ir.ui.view">
+            <field name="name">commission.line.form</field>
+            <field name="model">commission.line</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="action_calculate" type="object" string="Calculate" invisible="state != 'draft'"/>
+                        <button name="action_confirm" type="object" string="Confirm" invisible="state not in ['draft', 'calculated']"/>
+                        <button name="action_process" type="object" string="Process" invisible="state not in ['draft', 'calculated', 'confirmed']"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,calculated,confirmed,processed,paid"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="sale_order_id"/>
+                                <field name="partner_id"/>
+                                <field name="commission_type_id"/>
+                            </group>
+                            <group>
+                                <field name="role"/>
+                                <field name="commission_category"/>
+                                <field name="calculation_method"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="rate"/>
+                                <field name="base_amount" widget="monetary"/>
+                                <field name="commission_amount" widget="monetary"/>
+                            </group>
+                            <group>
+                                <field name="payment_status"/>
+                                <field name="purchase_order_id"/>
+                                <field name="calculation_date"/>
+                            </group>
+                        </group>
+                        <field name="notes" placeholder="Enter notes..."/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Commission Line Search View -->
+        <record id="view_commission_line_search" model="ir.ui.view">
+            <field name="name">commission.line.search</field>
+            <field name="model">commission.line</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="partner_id"/>
+                    <field name="sale_order_id"/>
+                    <field name="commission_type_id"/>
+                    <separator/>
+                    <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                    <filter string="Calculated" name="calculated" domain="[('state', '=', 'calculated')]"/>
+                    <filter string="Confirmed" name="confirmed" domain="[('state', '=', 'confirmed')]"/>
+                    <filter string="Processed" name="processed" domain="[('state', '=', 'processed')]"/>
+                    <filter string="Paid" name="paid" domain="[('state', '=', 'paid')]"/>
+                    <separator/>
+                    <filter string="Internal" name="internal" domain="[('commission_category', '=', 'internal')]"/>
+                    <filter string="External" name="external" domain="[('commission_category', '=', 'external')]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Partner" name="group_partner" context="{'group_by': 'partner_id'}"/>
+                        <filter string="State" name="group_state" context="{'group_by': 'state'}"/>
+                        <filter string="Role" name="group_role" context="{'group_by': 'role'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Commission Type Actions -->
+        <record id="action_commission_type" model="ir.actions.act_window">
+            <field name="name">Commission Types</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">commission.type</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Commission Type Tree View -->
+        <record id="view_commission_type_tree" model="ir.ui.view">
+            <field name="name">commission.type.tree</field>
+            <field name="model">commission.type</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="category"/>
+                    <field name="calculation_method"/>
+                    <field name="default_rate"/>
+                    <field name="active"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Commission Type Form View -->
+        <record id="view_commission_type_form" model="ir.ui.view">
+            <field name="name">commission.type.form</field>
+            <field name="model">commission.type</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Commission Type Name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="code"/>
+                                <field name="active"/>
+                            </group>
+                            <group>
+                                <field name="calculation_method"/>
+                                <field name="category"/>
+                                <field name="default_rate"/>
+                            </group>
+                        </group>
+                        <field name="description" placeholder="Commission type description..."/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Menu Items -->
+        <menuitem id="menu_commission_root" name="Commissions" sequence="80"/>
+        <menuitem id="menu_commission_lines" name="Commission Lines" parent="menu_commission_root" action="action_commission_line_tree" sequence="10"/>
+        <menuitem id="menu_commission_types" name="Commission Types" parent="menu_commission_root" action="action_commission_type" sequence="20"/>
+
+        <!-- Server Actions for Processing -->
+        <record id="server_action_process_commissions" model="ir.actions.server">
+            <field name="name">Process Commissions</field>
+            <field name="model_id" ref="model_commission_line"/>
+            <field name="binding_model_id" ref="model_commission_line"/>
+            <field name="state">code</field>
+            <field name="code">if records:
+    records.action_process()</field>
+        </record>
+    </data>
+</odoo>

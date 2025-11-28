@@ -1,0 +1,402 @@
+/**
+ * Scholarix AI Theme - Animation Effects
+ * Advanced animations and effects for futuristic AI aesthetic
+ */
+
+@import 'primary_variables';
+
+// ===== KEYFRAME ANIMATIONS =====
+
+@keyframes scholarixGlow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba($scholarix-electric-blue, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba($scholarix-electric-blue, 0.8), 
+                0 0 30px rgba($scholarix-electric-blue, 0.6);
+  }
+}
+
+@keyframes scholarixPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+}
+
+@keyframes scholarixFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes scholarixFadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scholarixSlideInLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scholarixSlideInRight {
+  0% {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scholarixTechScan {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes scholarixHolographic {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes scholarixCircuitFlow {
+  0% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: -20;
+  }
+}
+
+@keyframes scholarixDataStream {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh);
+    opacity: 0;
+  }
+}
+
+@keyframes scholarixMatrixRain {
+  0% {
+    transform: translateY(-100px);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh);
+    opacity: 0;
+  }
+}
+
+// ===== UTILITY ANIMATION CLASSES =====
+
+.scholarix-glow {
+  animation: scholarixGlow 2s ease-in-out infinite;
+}
+
+.scholarix-pulse {
+  animation: scholarixPulse 1.5s ease-in-out infinite;
+}
+
+.scholarix-float {
+  animation: scholarixFloat 3s ease-in-out infinite;
+}
+
+.scholarix-fade-in {
+  animation: scholarixFadeInUp 0.8s ease-out forwards;
+}
+
+.scholarix-slide-left {
+  animation: scholarixSlideInLeft 0.6s ease-out forwards;
+}
+
+.scholarix-slide-right {
+  animation: scholarixSlideInRight 0.6s ease-out forwards;
+}
+
+.scholarix-tech-scan {
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+      transparent, 
+      rgba($scholarix-electric-blue, 0.4), 
+      transparent);
+    animation: scholarixTechScan 2s ease-in-out infinite;
+  }
+}
+
+.scholarix-holographic {
+  background: $scholarix-gradient-holographic;
+  background-size: 400% 400%;
+  animation: scholarixHolographic 3s ease infinite;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+// ===== HOVER EFFECTS =====
+
+.scholarix-hover-lift {
+  transition: transform $scholarix-transition-base $scholarix-ease-out;
+  
+  &:hover {
+    transform: translateY(-5px);
+  }
+}
+
+.scholarix-hover-glow {
+  transition: all $scholarix-transition-base $scholarix-ease-out;
+  
+  &:hover {
+    box-shadow: $scholarix-shadow-neon;
+    border-color: $scholarix-electric-blue;
+  }
+}
+
+.scholarix-hover-scale {
+  transition: transform $scholarix-transition-base $scholarix-ease-out;
+  
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.scholarix-hover-rotate {
+  transition: transform $scholarix-transition-base $scholarix-ease-out;
+  
+  &:hover {
+    transform: rotate(5deg);
+  }
+}
+
+// ===== LOADING ANIMATIONS =====
+
+.scholarix-loading {
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid transparent;
+    border-top: 2px solid $scholarix-electric-blue;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.scholarix-loading-dots {
+  display: inline-block;
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    left: 100%;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: $scholarix-electric-blue;
+    animation: scholarixLoadingDots 1.5s ease-in-out infinite;
+  }
+}
+
+@keyframes scholarixLoadingDots {
+  0%, 100% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+// ===== SCROLL ANIMATIONS =====
+
+.scholarix-scroll-reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s ease-out;
+  
+  &.scholarix-revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.scholarix-parallax {
+  transition: transform 0.1s ease-out;
+}
+
+// ===== PARTICLE EFFECTS =====
+
+.scholarix-particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+  
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: $scholarix-electric-blue;
+    border-radius: 50%;
+    animation: scholarixDataStream 4s linear infinite;
+  }
+  
+  &::before {
+    left: 20%;
+    animation-delay: -1s;
+  }
+  
+  &::after {
+    left: 80%;
+    animation-delay: -3s;
+  }
+}
+
+// ===== CIRCUIT PATTERN ANIMATION =====
+
+.scholarix-circuit {
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+      linear-gradient(90deg, transparent 49%, rgba($scholarix-electric-blue, 0.3) 50%, transparent 51%),
+      linear-gradient(0deg, transparent 49%, rgba($scholarix-electric-blue, 0.3) 50%, transparent 51%);
+    background-size: 20px 20px;
+    opacity: 0.1;
+    pointer-events: none;
+  }
+  
+  &.scholarix-circuit-animated::before {
+    animation: scholarixCircuitFlow 2s linear infinite;
+  }
+}
+
+// ===== TEXT EFFECTS =====
+
+.scholarix-text-glow {
+  text-shadow: 
+    0 0 5px rgba($scholarix-electric-blue, 0.8),
+    0 0 10px rgba($scholarix-electric-blue, 0.6),
+    0 0 15px rgba($scholarix-electric-blue, 0.4);
+}
+
+.scholarix-text-typing {
+  overflow: hidden;
+  border-right: 2px solid $scholarix-electric-blue;
+  white-space: nowrap;
+  animation: scholarixTyping 3.5s steps(40, end), scholarixBlinkCursor 0.75s step-end infinite;
+}
+
+@keyframes scholarixTyping {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+@keyframes scholarixBlinkCursor {
+  from, to { border-color: transparent; }
+  50% { border-color: $scholarix-electric-blue; }
+}
+
+// ===== RESPONSIVE ANIMATION CONTROLS =====
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .scholarix-float,
+  .scholarix-pulse,
+  .scholarix-glow {
+    animation: none;
+  }
+  
+  .scholarix-tech-scan::before {
+    animation: none;
+  }
+  
+  .scholarix-holographic {
+    animation: none;
+  }
+}

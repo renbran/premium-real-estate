@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- List View -->
+        <record id="view_property_sale_list" model="ir.ui.view">
+            <field name="name">property.sale.list</field>
+            <field name="model">property.sale</field>
+            <field name="arch" type="xml">
+                <list string="Property Sales" decoration-info="state == 'draft'" decoration-success="state == 'confirmed'" decoration-muted="state == 'cancelled'">
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="property_id"/>
+                    <field name="property_value" widget="monetary" options='{"currency_field": "currency_id"}'/>
+                    <field name="total_selling_price" widget="monetary" options='{"currency_field": "currency_id"}'/>
+                    <field name="down_payment" widget="monetary" options='{"currency_field": "currency_id"}'/>
+                    <field name="dld_fee" widget="monetary" options='{"currency_field": "currency_id"}'/>
+                    <field name="admin_fee" widget="monetary" options='{"currency_field": "currency_id"}'/>
+                    <field name="remaining_balance" widget="monetary" options='{"currency_field": "currency_id"}'/>
+                    <field name="state"/>
+                    <field name="currency_id" column_invisible="True"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record id="view_property_sale_form" model="ir.ui.view">
+            <field name="name">property.sale.form</field>
+            <field name="model">property.sale</field>
+            <field name="arch" type="xml">
+        <form string="Property Sale">
+            <header>
+                <field name="state" invisible="1"/>
+                <button name="action_confirm" string="Confirm Sale" type="object"
+                        class="btn btn-success oe_highlight"
+                        invisible="state != 'draft'"/>
+                <button name="action_view_invoices" string="View Invoices" type="object"
+                        class="btn btn-success"
+                        invisible="state != 'invoiced'"/>
+                <button name="action_cancel" string="Cancel" type="object"
+                        class="btn btn-danger"
+                        invisible="state == 'cancelled'"/>
+                <button name="action_generate_all_invoices" string="Generate All Invoices" type="object"
+                        class="oe_highlight"
+                        invisible="state != 'confirmed'"
+                        confirm="This will generate invoices for all unpaid installments based on their due dates. Continue?"/>
+                <button name="action_generate_broker_commission_invoice" string="Generate Broker Commission" type="object"
+                        class="btn btn-primary"
+                        invisible="state != 'confirmed'"/>
+                <button name="action_send_sales_offer_email" string="Send Sales Offer Email" type="object"
+                        class="btn btn-info"
+                        invisible="state not in ['draft', 'confirmed']"
+                        confirm="This will send the sales offer to the customer via email. Continue?"/>
+                <button name="action_send_contract_email" string="Send Contract" type="object"
+                        class="btn btn-success"
+                        invisible="state not in ['confirmed', 'invoiced']"
+                        confirm="This will send the property sale contract agreement to the customer via email. Continue?"/>
+                <button name="action_send_statement_email" string="Send Statement" type="object"
+                        class="btn btn-warning"
+                        invisible="state not in ['confirmed', 'invoiced']"
+                        confirm="This will send the statement of account to the customer via email. Continue?"/>
+            </header>
+            <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Sale Reference"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group string="Customer Information">
+                                <field name="partner_id" required="1" placeholder="Select Customer..."/>
+                                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                                <field name="currency_id" groups="base.group_multi_currency"/>
+                                <field name="start_date"/>
+                                <field name="sale_date"/>
+                            </group>
+                            <group string="Property Information">
+                                <field name="property_id"/>
+                                <field name="property_value" widget="monetary" options='{"currency_field": "currency_id"}'/>
+                                <field name="total_selling_price" widget="monetary" options='{"currency_field": "currency_id"}'/>
+                                <field name="down_payment_percentage"/>
+                                <field name="down_payment" widget="monetary" options='{"currency_field": "currency_id"}'/>
+                                <field name="dld_fee" widget="monetary" options='{"currency_field": "currency_id"}'/>
+                                <field name="admin_fee" widget="monetary" options='{"currency_field": "currency_id"}'/>
+                            </group>
+                        </group>
+                        <group string="Payment Plan">
+                            <group>
+                                <field name="remaining_balance" widget="monetary" options='{"currency_field": "currency_id"}'/>
+                                <field name="payment_frequency" widget="radio"/>
+                                <field name="no_of_installments" invisible="payment_frequency in ['milestone', 'custom']"/>
+                                <field name="amount_per_installment" widget="monetary" options='{"currency_field": "currency_id"}' invisible="payment_frequency in ['milestone', 'custom']"/>
+                                <div class="alert alert-info" role="alert" invisible="payment_frequency not in ['milestone', 'custom']">
+                                    <strong>Note:</strong> For milestone/custom schedules, manually add installment lines in the Payment Schedule tab below.
+                                </div>
+                            </group>
+                            <group string="Broker Information">
+                                <field name="seller_id"/>
+                                <field name="broker_commission_percentage"/>
+                                <field name="broker_commission_total_amount" widget="monetary" options='{"currency_field": "currency_id"}'/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Payment Schedule" name="payment_schedule">
+                                <!-- Use current record id instead of non-existent active_id in form view context -->
+                                <field name="property_sale_line_ids" context="{'default_property_sale_id': id}">
+                                    <list string="Payment Schedule" editable="bottom">
+                                        <field name="serial_number"/>
+                                        <field name="line_type"/>
+                                        <field name="milestone_description" optional="show"/>
+                                        <field name="collection_date"/>
+                                        <field name="capital_repayment" sum="Total" widget="monetary" options='{"currency_field": "currency_id"}'/>
+                                        <field name="remaining_capital" sum="Remaining" widget="monetary" options='{"currency_field": "currency_id"}'/>
+                                        <field name="collection_status"/>
+                                        <field name="invoice_id" readonly="1"/>
+                                        <field name="currency_id" column_invisible="True"/>
+                                    </list>
+                                </field>
+                            </page>
+                            <page string="Broker Commission" name="broker_commission">
+                                <field name="broker_commission_invoice_ids" readonly="1">
+                                    <list string="Broker Commission Invoices">
+                                        <field name="display_name"/>
+                                        <field name="seller_id"/>
+                                        <field name="commission_percentage"/>
+                                        <field name="commission_amount" widget="monetary" options='{"currency_field": "currency_id"}'/>
+                                        <field name="currency_id" column_invisible="True"/>
+                                        <field name="state"/>
+                                        <field name="invoice_ids" widget="many2many_tags"/>
+                                        <button name="action_view_invoices"
+                                                string="View Invoices" type="object"
+                                                class="btn-link"
+                                                invisible="not invoice_ids"/>
+                                    </list>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Search View -->
+        <record id="view_property_sale_search" model="ir.ui.view">
+            <field name="name">property.sale.search</field>
+            <field name="model">property.sale</field>
+            <field name="arch" type="xml">
+                <search string="Property Sales">
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="property_id"/>
+                    <separator/>
+                    <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                    <filter string="Confirmed" name="confirmed" domain="[('state', '=', 'confirmed')]"/>
+                    <filter string="Invoiced" name="invoiced" domain="[('state', '=', 'invoiced')]"/>
+                    <filter string="Cancelled" name="cancelled" domain="[('state', '=', 'cancelled')]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Status" name="state" context="{'group_by': 'state'}"/>
+                        <filter string="Customer" name="partner" context="{'group_by': 'partner_id'}"/>
+                        <filter string="Property" name="property" context="{'group_by': 'property_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_property_sale" model="ir.actions.act_window">
+            <field name="name">Property Sales</field>
+            <field name="res_model">property.sale</field>
+            <field name="view_mode">list,form</field>
+            <field name="search_view_id" ref="view_property_sale_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first property sale
+                </p>
+                <p>
+                    Create property sales and manage installment plans.
+                </p>
+            </field>
+        </record>
+
+        <!-- Menu Items -->
+        <menuitem id="menu_property_sale_root" name="Property Sales" sequence="10"/>
+        <menuitem id="menu_property_sale" name="Sales" parent="menu_property_sale_root" action="action_property_sale" sequence="10"/>
+    </data>
+</odoo>

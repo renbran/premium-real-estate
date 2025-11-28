@@ -1,0 +1,133 @@
+/**
+ * Scholarix AI Theme - Primary Variables
+ * Defines the core color palette and design system variables
+ * Based on Scholarix Global Consultants brand identity
+ */
+
+// ===== BRAND COLORS =====
+// Primary brand colors (Electric Blue Theme)
+$scholarix-electric-blue: #00E5FF;
+$scholarix-deep-blue: #0D47A1;
+$scholarix-neon-blue: #40C4FF;
+$scholarix-tech-teal: #00BCD4;
+
+// Secondary colors
+$scholarix-white: #FFFFFF;
+$scholarix-black: #000000;
+$scholarix-dark-gray: #1A1A1A;
+$scholarix-silver: #E0E0E0;
+
+// Accent colors
+$scholarix-holographic-purple: #7C4DFF;
+$scholarix-bright-orange: #FF6D00;
+$scholarix-success-green: #00E676;
+$scholarix-warning-amber: #FFD600;
+$scholarix-danger-red: #FF5722;
+
+// ===== BOOTSTRAP OVERRIDES =====
+// Override Bootstrap's default color system
+$primary: $scholarix-electric-blue;
+$secondary: $scholarix-deep-blue;
+$success: $scholarix-success-green;
+$info: $scholarix-tech-teal;
+$warning: $scholarix-warning-amber;
+$danger: $scholarix-danger-red;
+$light: $scholarix-silver;
+$dark: $scholarix-dark-gray;
+
+// ===== ODOO SPECIFIC OVERRIDES =====
+// Main brand colors
+$o-brand-primary: $scholarix-electric-blue;
+$o-brand-secondary: $scholarix-deep-blue;
+$o-brand-accent: $scholarix-holographic-purple;
+
+// Background colors
+$o-main-bg: $scholarix-dark-gray;
+$o-view-background-color: $scholarix-black;
+$o-navbar-bg: linear-gradient(135deg, $scholarix-deep-blue 0%, $scholarix-electric-blue 100%);
+
+// Text colors
+$o-main-text-color: $scholarix-white;
+$o-main-heading-color: $scholarix-electric-blue;
+$o-brand-lightest: $scholarix-neon-blue;
+
+// Component colors
+$o-form-lightsecondary: rgba(0, 229, 255, 0.1);
+$o-kanban-record-color: $scholarix-dark-gray;
+$o-list-footer-bg-color: $scholarix-deep-blue;
+
+// ===== GRADIENT DEFINITIONS =====
+$scholarix-gradient-primary: linear-gradient(135deg, $scholarix-electric-blue 0%, $scholarix-tech-teal 100%);
+$scholarix-gradient-secondary: linear-gradient(135deg, $scholarix-deep-blue 0%, $scholarix-electric-blue 100%);
+$scholarix-gradient-accent: linear-gradient(135deg, $scholarix-holographic-purple 0%, $scholarix-electric-blue 100%);
+$scholarix-gradient-holographic: linear-gradient(45deg, $scholarix-holographic-purple 0%, $scholarix-electric-blue 50%, $scholarix-tech-teal 100%);
+$scholarix-gradient-tech: linear-gradient(90deg, $scholarix-dark-gray 0%, $scholarix-deep-blue 50%, $scholarix-dark-gray 100%);
+$scholarix-gradient-neon: linear-gradient(135deg, $scholarix-neon-blue 0%, $scholarix-electric-blue 100%);
+
+// ===== TYPOGRAPHY =====
+// Font families
+$scholarix-font-primary: 'Exo 2', 'Orbitron', sans-serif;
+$scholarix-font-secondary: 'Inter', 'Roboto', sans-serif;
+$scholarix-font-tech: 'Courier New', 'Monaco', monospace;
+
+// Font sizes
+$scholarix-font-size-xs: 0.75rem;
+$scholarix-font-size-sm: 0.875rem;
+$scholarix-font-size-base: 1rem;
+$scholarix-font-size-lg: 1.125rem;
+$scholarix-font-size-xl: 1.25rem;
+$scholarix-font-size-2xl: 1.5rem;
+$scholarix-font-size-3xl: 1.875rem;
+$scholarix-font-size-4xl: 2.25rem;
+$scholarix-font-size-5xl: 3rem;
+
+// Font weights
+$scholarix-font-weight-light: 300;
+$scholarix-font-weight-normal: 400;
+$scholarix-font-weight-medium: 500;
+$scholarix-font-weight-semibold: 600;
+$scholarix-font-weight-bold: 700;
+$scholarix-font-weight-extrabold: 800;
+
+// ===== SPACING & SIZING =====
+$scholarix-spacing-xs: 0.25rem;
+$scholarix-spacing-sm: 0.5rem;
+$scholarix-spacing-base: 1rem;
+$scholarix-spacing-lg: 1.5rem;
+$scholarix-spacing-xl: 2rem;
+$scholarix-spacing-2xl: 3rem;
+$scholarix-spacing-3xl: 4rem;
+
+// ===== ANIMATION & EFFECTS =====
+// Transition durations
+$scholarix-transition-fast: 0.15s;
+$scholarix-transition-base: 0.3s;
+$scholarix-transition-slow: 0.5s;
+
+// Easing functions
+$scholarix-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+$scholarix-ease-out: cubic-bezier(0, 0, 0.2, 1);
+$scholarix-ease-in: cubic-bezier(0.4, 0, 1, 1);
+
+// Shadow definitions
+$scholarix-shadow-sm: 0 1px 2px 0 rgba(0, 229, 255, 0.05);
+$scholarix-shadow-base: 0 4px 6px -1px rgba(0, 229, 255, 0.1), 0 2px 4px -1px rgba(0, 229, 255, 0.06);
+$scholarix-shadow-lg: 0 10px 15px -3px rgba(0, 229, 255, 0.1), 0 4px 6px -2px rgba(0, 229, 255, 0.05);
+$scholarix-shadow-glow: 0 0 20px rgba(0, 229, 255, 0.3);
+$scholarix-shadow-neon: 0 0 10px $scholarix-electric-blue, 0 0 20px $scholarix-electric-blue, 0 0 30px $scholarix-electric-blue;
+
+// ===== BORDER RADIUS =====
+$scholarix-radius-sm: 0.125rem;
+$scholarix-radius-base: 0.25rem;
+$scholarix-radius-lg: 0.5rem;
+$scholarix-radius-xl: 1rem;
+$scholarix-radius-full: 9999px;
+
+// ===== Z-INDEX LAYERS =====
+$scholarix-z-dropdown: 1000;
+$scholarix-z-sticky: 1020;
+$scholarix-z-fixed: 1030;
+$scholarix-z-modal-backdrop: 1040;
+$scholarix-z-modal: 1050;
+$scholarix-z-popover: 1060;
+$scholarix-z-tooltip: 1070;

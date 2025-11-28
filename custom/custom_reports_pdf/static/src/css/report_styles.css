@@ -1,0 +1,410 @@
+/* SCHOLARIX PDF Report Styles */
+
+/* A4 Page Setup for PDF Generation */
+@page {
+    size: A4;
+    margin: 15mm;
+    padding: 0;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Base Typography */
+body, .o_report_layout_container {
+    font-family: 'Inter', 'Arial', sans-serif !important;
+    font-size: 10pt;
+    line-height: 1.4;
+    color: #2C3E50;
+    background: #FFFFFF;
+}
+
+/* Header Section */
+.o_company_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #0080FF;
+    position: relative;
+}
+
+.company_header_row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.company_logo_section {
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
+.o_company_logo {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(45deg, #0080FF, #00FFFF);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    font-weight: bold;
+    color: white;
+    margin-right: 15px;
+    position: relative;
+    overflow: hidden;
+}
+
+.o_company_logo::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        linear-gradient(45deg, transparent 45%, rgba(255,255,255,0.1) 50%, transparent 55%),
+        repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,0.1) 2px, rgba(255,255,255,0.1) 4px);
+    background-size: 20px 20px, 6px 6px;
+}
+
+.o_company_logo span {
+    position: relative;
+    z-index: 2;
+}
+
+.company_info {
+    margin-left: 10px;
+}
+
+.o_company_name {
+    font-size: 24pt;
+    font-weight: bold;
+    color: #1B365D;
+    margin-bottom: 2px;
+    letter-spacing: 1px;
+}
+
+.o_company_tagline {
+    font-size: 11pt;
+    color: #0080FF;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.o_company_details {
+    font-size: 9pt;
+    color: #64748B;
+    line-height: 1.3;
+}
+
+.document_info {
+    text-align: right;
+    flex: 0 0 auto;
+}
+
+.o_report_title {
+    font-size: 28pt;
+    font-weight: bold;
+    color: #1B365D;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.o_report_number {
+    font-size: 14pt;
+    color: #0080FF;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.o_report_date {
+    font-size: 10pt;
+    color: #64748B;
+}
+
+/* Main Content Area */
+.o_report_content {
+    margin: 20px 0;
+}
+
+/* Partner Information Section */
+.o_partner_section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-bottom: 25px;
+}
+
+.o_partner_block {
+    background: rgba(0, 128, 255, 0.02);
+    border: 1px solid rgba(0, 128, 255, 0.1);
+    border-radius: 8px;
+    padding: 20px;
+    position: relative;
+}
+
+.o_partner_block::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(to bottom, #0080FF, #00FFFF);
+    border-radius: 4px 0 0 4px;
+}
+
+.o_partner_title {
+    font-size: 12pt;
+    font-weight: bold;
+    color: #1B365D;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.o_partner_details {
+    font-size: 10pt;
+    color: #475569;
+    line-height: 1.5;
+}
+
+/* Table Styles */
+.o_report_table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin: 20px 0;
+}
+
+.o_report_table thead {
+    background: linear-gradient(135deg, #1B365D 0%, #0080FF 100%);
+    color: white;
+}
+
+.o_report_table th {
+    padding: 12px 15px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 10pt;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.o_report_table th:last-child {
+    border-right: none;
+}
+
+.o_report_table tbody tr {
+    border-bottom: 1px solid #E2E8F0;
+}
+
+.o_report_table tbody tr:nth-child(even) {
+    background-color: rgba(0, 128, 255, 0.02);
+}
+
+.o_report_table tbody tr:hover {
+    background-color: rgba(0, 128, 255, 0.05);
+}
+
+.o_report_table td {
+    padding: 10px 15px;
+    font-size: 9pt;
+    color: #475569;
+    border-right: 1px solid #E2E8F0;
+}
+
+.o_report_table td:last-child {
+    border-right: none;
+}
+
+/* Summary Section */
+.o_report_summary {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.o_summary_table {
+    width: 300px;
+    border-collapse: collapse;
+}
+
+.o_summary_table tr {
+    border-bottom: 1px solid #E2E8F0;
+}
+
+.o_summary_table td {
+    padding: 8px 15px;
+    font-size: 10pt;
+}
+
+.o_summary_label {
+    text-align: left;
+    color: #64748B;
+    font-weight: 500;
+}
+
+.o_summary_value {
+    text-align: right;
+    color: #1B365D;
+    font-weight: 600;
+}
+
+.o_total_row {
+    background: linear-gradient(135deg, #1B365D 0%, #0080FF 100%);
+    color: white !important;
+    font-weight: bold;
+    font-size: 12pt;
+}
+
+.o_total_row td {
+    border-bottom: none;
+    color: white !important;
+}
+
+/* Notes Section */
+.o_report_notes {
+    margin-top: 20px;
+    padding: 15px;
+    background: rgba(255, 217, 61, 0.05);
+    border-left: 4px solid #FFD93D;
+    border-radius: 0 4px 4px 0;
+}
+
+.o_notes_title {
+    font-weight: bold;
+    color: #1B365D;
+    margin-bottom: 8px;
+    font-size: 10pt;
+}
+
+.o_notes_content {
+    font-size: 9pt;
+    color: #64748B;
+    line-height: 1.5;
+}
+
+/* Footer Section */
+.o_report_footer {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #E2E8F0;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+    font-size: 8pt;
+    color: #64748B;
+    line-height: 1.4;
+}
+
+.o_footer_section h4 {
+    color: #1B365D;
+    font-size: 9pt;
+    margin-bottom: 8px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.o_footer_section p {
+    margin: 2px 0;
+}
+
+.o_footer_highlight {
+    color: #0080FF !important;
+    font-weight: 500;
+}
+
+/* Text Alignment Utilities */
+.text-center {
+    text-align: center !important;
+}
+
+.text-right {
+    text-align: right !important;
+}
+
+.text-left {
+    text-align: left !important;
+}
+
+.font-weight-bold {
+    font-weight: bold !important;
+}
+
+/* Print Optimization */
+@media print {
+    body {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    .o_report_layout_container {
+        page-break-inside: avoid;
+    }
+    
+    .o_report_table {
+        page-break-inside: auto;
+    }
+    
+    .o_report_table tr {
+        page-break-inside: avoid;
+    }
+    
+    .o_company_header {
+        page-break-after: avoid;
+    }
+    
+    .o_report_footer {
+        page-break-before: avoid;
+    }
+}
+
+/* Responsive Design for smaller screens */
+@media (max-width: 768px) {
+    .company_header_row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .company_logo_section {
+        margin-bottom: 20px;
+    }
+    
+    .document_info {
+        text-align: left;
+    }
+    
+    .o_partner_section {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .o_report_footer {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .o_report_table {
+        font-size: 8pt;
+    }
+    
+    .o_report_table th,
+    .o_report_table td {
+        padding: 8px 10px;
+    }
+}

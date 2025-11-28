@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- Paper Format for SCHOLARIX Reports -->
+        <record id="paperformat_scholarix_a4" model="report.paperformat">
+            <field name="name">SCHOLARIX A4 Format</field>
+            <field name="default" eval="True"/>
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">15</field>
+            <field name="margin_bottom">15</field>
+            <field name="margin_left">15</field>
+            <field name="margin_right">15</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">10</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <!-- SCHOLARIX Invoice Report Action -->
+        <record id="action_report_scholarix_invoice" model="ir.actions.report">
+            <field name="name">SCHOLARIX Invoice</field>
+            <field name="model">account.move</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">custom_reports_pdf.report_scholarix_invoice_document</field>
+            <field name="report_file">custom_reports_pdf.report_scholarix_invoice_document</field>
+            <field name="print_report_name">'SCHOLARIX_Invoice_%s' % (object.name)</field>
+            <field name="binding_model_id" ref="account.model_account_move"/>
+            <field name="binding_type">report</field>
+            <field name="paperformat_id" ref="paperformat_scholarix_a4"/>
+        </record>
+
+        <!-- SCHOLARIX Quotation/Sales Order Report Action -->
+        <record id="action_report_scholarix_quotation" model="ir.actions.report">
+            <field name="name">SCHOLARIX Quotation</field>
+            <field name="model">sale.order</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">custom_reports_pdf.report_scholarix_saleorder_document</field>
+            <field name="report_file">custom_reports_pdf.report_scholarix_saleorder_document</field>
+            <field name="print_report_name">'SCHOLARIX_Quotation_%s' % (object.name)</field>
+            <field name="binding_model_id" ref="sale.model_sale_order"/>
+            <field name="binding_type">report</field>
+            <field name="paperformat_id" ref="paperformat_scholarix_a4"/>
+        </record>
+    </data>
+</odoo>

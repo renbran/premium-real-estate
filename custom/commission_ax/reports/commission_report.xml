@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- QWeb Template for Professional Commission Report -->
+        <template id="commission_payout_report_template_professional" name="Professional Commission Report">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <!-- Helpers -->
+                    <t t-set="external_total" t-value="(o.broker_amount or 0) + (o.referrer_amount or 0) + (o.cashback_amount or 0) + (o.other_external_amount or 0)"/>
+                    <t t-set="internal_total" t-value="(o.agent1_amount or 0) + (o.agent2_amount or 0) + (o.manager_amount or 0) + (o.director_amount or 0)"/>
+                    <t t-set="total_commission" t-value="external_total + internal_total"/>
+                    <t t-set="net_before_vat" t-value="(o.amount_total or 0) - total_commission"/>
+                    <t t-set="vat_rate" t-value="0.05"/>
+                    <t t-set="vat_amount" t-value="net_before_vat * vat_rate"/>
+                    <t t-set="net_commission" t-value="net_before_vat - vat_amount"/>
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <style>
+                                .commission-section {
+                                    margin-bottom: 20px;
+                                }
+
+                                table.commission-matrix {
+                                    width: 100%;
+                                    table-layout: fixed;
+                                    border-collapse: collapse;
+                                }
+
+                                table.commission-matrix col.role-column {
+                                    width: 60%;
+                                }
+
+                                table.commission-matrix col.amount-column {
+                                    width: 40%;
+                                }
+
+                                table.commission-matrix th,
+                                table.commission-matrix td {
+                                    padding: 6px 8px;
+                                    word-break: break-word;
+                                    vertical-align: top;
+                                }
+
+                                table.commission-matrix thead th {
+                                    background-color: #f1f1f1;
+                                }
+
+                                table.commission-matrix tbody tr.total-row td {
+                                    font-weight: 600;
+                                }
+
+                                table.commission-summary col.label-column {
+                                    width: 65%;
+                                }
+
+                                table.commission-summary col.value-column {
+                                    width: 35%;
+                                }
+                            </style>
+                            <div class="oe_structure"/>
+                            <div class="row">
+                                <div class="col-12">
+                                    <h2>Commission Report</h2>
+                                    <p>Order: <span t-field="o.name"/>
+                                    </p>
+                                    <p>Customer: <span t-field="o.partner_id.name"/>
+                                    </p>
+                                    <p>Date: <span t-field="o.date_order"/>
+                                    </p>
+                                    <p>Total Amount: <span t-field="o.amount_total" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="row mt-4 commission-section">
+                                <div class="col-6">
+                                    <h4>External Commissions</h4>
+                                    <table class="table table-sm table-bordered commission-matrix">
+                                        <colgroup>
+                                            <col class="role-column"/>
+                                            <col class="amount-column"/>
+                                        </colgroup>
+                                        <thead>
+                                            <tr>
+                                                <th>Role</th>
+                                                <th class="text-right">Amount</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr t-if="o.broker_amount">
+                                                <td>Broker</td>
+                                                <td class="text-right">
+                                                    <span t-field="o.broker_amount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                                </td>
+                                            </tr>
+                                            <tr t-if="o.referrer_amount">
+                                                <td>Referrer</td>
+                                                <td class="text-right">
+                                                    <span t-field="o.referrer_amount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                                </td>
+                                            </tr>
+                                            <tr t-if="o.cashback_amount">
+                                                <td>Cashback</td>
+                                                <td class="text-right">
+                                                    <span t-field="o.cashback_amount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                                </td>
+                                            </tr>
+                                            <tr t-if="o.other_external_amount">
+                                                <td>Other External</td>
+                                                <td class="text-right">
+                                                    <span t-field="o.other_external_amount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                                </td>
+                                            </tr>
+                                            <tr class="border-top total-row">
+                                                <td>External Total</td>
+                                                <td class="text-right">
+                                                    <span class="fw-bold" t-esc="external_total" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="col-6">
+                                    <h4>Internal Commissions</h4>
+                                    <table class="table table-sm table-bordered commission-matrix">
+                                        <colgroup>
+                                            <col class="role-column"/>
+                                            <col class="amount-column"/>
+                                        </colgroup>
+                                        <thead>
+                                            <tr>
+                                                <th>Role</th>
+                                                <th class="text-right">Amount</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr t-if="o.agent1_amount">
+                                                <td>Agent 1</td>
+                                                <td class="text-right">
+                                                    <span t-field="o.agent1_amount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                                </td>
+                                            </tr>
+                                            <tr t-if="o.agent2_amount">
+                                                <td>Agent 2</td>
+                                                <td class="text-right">
+                                                    <span t-field="o.agent2_amount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                                </td>
+                                            </tr>
+                                            <tr t-if="o.manager_amount">
+                                                <td>Manager</td>
+                                                <td class="text-right">
+                                                    <span t-field="o.manager_amount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                                </td>
+                                            </tr>
+                                            <tr t-if="o.director_amount">
+                                                <td>Director</td>
+                                                <td class="text-right">
+                                                    <span t-field="o.director_amount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                                </td>
+                                            </tr>
+                                            <tr class="border-top total-row">
+                                                <td>Internal Total</td>
+                                                <td class="text-right">
+                                                    <span class="fw-bold" t-esc="internal_total" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="row commission-section">
+                                <div class="col-12">
+                                    <h4>Summary</h4>
+                                    <table class="table table-sm table-bordered commission-matrix commission-summary">
+                                        <colgroup>
+                                            <col class="label-column"/>
+                                            <col class="value-column"/>
+                                        </colgroup>
+                                        <tbody>
+                                            <tr>
+                                                <td>Total Commissions</td>
+                                                <td class="text-right">
+                                                    <span t-esc="total_commission" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Net Before VAT</td>
+                                                <td class="text-right">
+                                                    <span t-esc="net_before_vat" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>VAT (5%)</td>
+                                                <td class="text-right">
+                                                    <span t-esc="vat_amount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                                </td>
+                                            </tr>
+                                            <tr class="border-top total-row">
+                                                <td>Net Commission</td>
+                                                <td class="text-right">
+                                                    <span class="fw-bold" t-esc="net_commission" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="oe_structure"/>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <!-- Report Action -->
+        <record id="action_report_commission_payout_professional" model="ir.actions.report">
+            <field name="name">Professional Commission Report</field>
+            <field name="model">sale.order</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">commission_ax.commission_payout_report_template_professional</field>
+            <field name="report_file">commission_payout_report_template_professional</field>
+            <field name="print_report_name">'Commission Report - %s' % (object.name)</field>
+            <field name="binding_model_id" ref="sale.model_sale_order"/>
+            <field name="binding_type">report</field>
+        </record>
+    </data>
+</odoo>

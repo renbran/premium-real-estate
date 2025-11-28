@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Training Period Offer Email Template - Responsive -->
+        <record id="hr_recruitment_training_period_offer" model="mail.template">
+            <field name="name">HR Recruitment: Training Period Offer</field>
+            <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
+            <field name="subject">⚠ URGENT: Training Period Offer - {{ object.job_id.name or 'Direct Sales Position' }} at {{ object.company_id.name or 'Scholarix Global Consultants' }}</field>
+            <field name="email_from">{{ (object.user_id.email_formatted or user.email_formatted or 'info@scholarix.com') }}</field>
+            <field name="email_to">{{ object.email_from }}</field>
+            <field name="partner_to">{{ object.partner_id.id if object.partner_id else False }}</field>
+            <field name="lang">{{ object.partner_id.lang if object.partner_id else user.lang }}</field>
+            <field name="description">Training period offer email sent to successful job applicants</field>
+            <field name="body_html" type="html"><![CDATA[
+<div style="font-family: 'Arial', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f8f9fa; color: #333333; line-height: 1.6; margin: 0; padding: 0; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%;">
+    <!-- Responsive Container -->
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #f8f9fa; min-height: 100vh;">
+        <tbody>
+            <tr>
+                <td align="center" style="padding: 10px;">
+                    <!-- Main Email Container -->
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="max-width: 700px; width: 100%; background-color: #ffffff; border: 2px solid #0c1e3d; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(12, 30, 61, 0.15); margin: 0 auto;">
+                        <tbody>
+                            <!-- Header Section -->
+                            <tr>
+                                <td style="background: linear-gradient(135deg, #0c1e3d 0%, #1e3a8a 50%, #4fc3f7 100%); padding: 20px 15px; text-align: center; color: #ffffff; position: relative;">
+                                    <div style="position: relative; z-index: 1;">
+                                        <div style="font-size: clamp(18px, 4vw, 28px); font-weight: 700; letter-spacing: 1px; margin-bottom: 8px; word-wrap: break-word;">
+                                            SCHOLARIX GLOBAL CONSULTANTS
+                                        </div>
+                                        <div style="font-size: clamp(12px, 2.5vw, 14px); opacity: 0.9; margin-bottom: 10px;">
+                                            Dubai, United Arab Emirates
+                                        </div>
+                                        <div style="font-size: clamp(11px, 2vw, 13px); opacity: 0.8; word-wrap: break-word;">
+                                            Email: info@scholarix.com | Phone: +971-56 390 5772
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Urgent Notice -->
+                            <tr>
+                                <td style="background: linear-gradient(135deg, #ff4444, #cc0000); color: #ffffff; padding: 12px 15px; text-align: center;">
+                                    <div style="font-size: clamp(14px, 3vw, 16px); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; word-wrap: break-word;">
+                                        ⚠ URGENT: Response Required Today
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Date and Address Section -->
+                            <tr>
+                                <td style="padding: 20px 15px 15px 15px; background-color: #ffffff;">
+                                    <!-- Date - Right aligned on desktop, center on mobile -->
+                                    <div style="text-align: right; color: #666; margin-bottom: 20px; font-size: clamp(13px, 2.5vw, 14px);">
+                                        <strong>Date:</strong> {{ format_date(datetime.datetime.now()) }}
+                                    </div>
+                                    
+                                    <!-- Address Section -->
+                                    <div style="margin-bottom: 20px; color: #333; font-size: clamp(13px, 2.5vw, 14px); word-wrap: break-word;">
+                                        <strong>To:</strong><br/>
+                                        {{ object.partner_name or object.name or 'Valued Candidate' }}<br/>
+                                        {% if object.partner_id and object.partner_id.street %}
+                                            {{ object.partner_id.street }}<br/>
+                                        {% endif %}
+                                        {% if object.partner_id and (object.partner_id.city or object.partner_id.state_id or object.partner_id.zip) %}
+                                            {{ object.partner_id.city or '' }}{% if object.partner_id.state_id %}, {{ object.partner_id.state_id.name }}{% endif %}{% if object.partner_id.zip %} {{ object.partner_id.zip }}{% endif %}
+                                        {% endif %}
+                                    </div>
+
+                                    <h1 style="font-size: clamp(18px, 4vw, 24px); font-weight: 700; color: #0c1e3d; margin: 20px 0 10px 0; text-transform: uppercase; text-align: center; word-wrap: break-word; line-height: 1.2;">
+                                        TRAINING PERIOD OFFER - DIRECT SALES POSITION
+                                    </h1>
+                                    
+                                    <div style="background: #ff4444; color: #ffffff; padding: 12px; border-radius: 8px; text-align: center; margin-bottom: 20px; font-weight: 700; font-size: clamp(14px, 3vw, 16px);">
+                                        Start Date: Monday, {{ format_date(datetime.datetime.now() + datetime.timedelta(days=1)) }}
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Main Content -->
+                            <tr>
+                                <td style="padding: 0 15px 20px 15px; background-color: #ffffff;">
+                                    <p style="font-size: clamp(14px, 3vw, 16px); color: #333333; margin-bottom: 20px; line-height: 1.6; word-wrap: break-word;">
+                                        Dear <strong style="color: #1e3a8a; font-weight: 700;">
+                                            {{ object.partner_name or object.name or 'Valued Candidate' }}
+                                        </strong>,<br/><br/>
+                                        
+                                        We are pleased to extend this offer for participation in our <strong>Training and Trial Program</strong> for the position of <strong>Direct Sales Representative</strong> specializing in software sales and implementation at Scholarix Global Consultants. Following your successful interview process, we invite you to join our comprehensive training program that will evaluate your suitability for a permanent position.
+                                    </p>
+
+                                    <!-- Training Period Details - Responsive Table -->
+                                    <div style="background: linear-gradient(135deg, #e3f2fd, #bbdefb); border: 2px solid #4fc3f7; border-radius: 12px; padding: 15px; margin: 20px 0; overflow-x: auto;">
+                                        <h3 style="font-size: clamp(16px, 3.5vw, 20px); font-weight: 700; color: #0c1e3d; margin-bottom: 15px; text-align: center; margin-top: 0;">
+                                            📋 Training Period Details
+                                        </h3>
+                                        
+                                        <!-- Responsive Details Layout -->
+                                        <div style="display: block;">
+                                            <div style="margin-bottom: 12px; padding: 8px 0; border-bottom: 1px solid rgba(79, 195, 247, 0.3);">
+                                                <div style="display: inline-block; width: 100%; max-width: 200px; vertical-align: top; font-size: clamp(13px, 2.5vw, 14px);">
+                                                    <strong style="color: #1e3a8a;">Duration:</strong>
+                                                </div>
+                                                <div style="display: inline-block; color: #333; font-size: clamp(13px, 2.5vw, 14px);">
+                                                    12 working days
+                                                </div>
+                                            </div>
+                                            
+                                            <div style="margin-bottom: 12px; padding: 8px 0; border-bottom: 1px solid rgba(79, 195, 247, 0.3);">
+                                                <div style="display: inline-block; width: 100%; max-width: 200px; vertical-align: top; font-size: clamp(13px, 2.5vw, 14px);">
+                                                    <strong style="color: #1e3a8a;">Daily Compensation:</strong>
+                                                </div>
+                                                <div style="display: inline-block; color: #333; font-size: clamp(13px, 2.5vw, 14px);">
+                                                    AED 60 per day
+                                                </div>
+                                            </div>
+                                            
+                                            <div style="margin-bottom: 12px; padding: 8px 0; border-bottom: 1px solid rgba(79, 195, 247, 0.3);">
+                                                <div style="display: inline-block; width: 100%; max-width: 200px; vertical-align: top; font-size: clamp(13px, 2.5vw, 14px);">
+                                                    <strong style="color: #1e3a8a;">Working Hours:</strong>
+                                                </div>
+                                                <div style="display: inline-block; color: #333; font-size: clamp(13px, 2.5vw, 14px);">
+                                                    9:00 AM - 6:00 PM, Monday to Saturday
+                                                </div>
+                                            </div>
+                                            
+                                            <div style="margin-bottom: 12px; padding: 8px 0; border-bottom: 1px solid rgba(79, 195, 247, 0.3);">
+                                                <div style="display: inline-block; width: 100%; max-width: 200px; vertical-align: top; font-size: clamp(13px, 2.5vw, 14px);">
+                                                    <strong style="color: #1e3a8a;">Position:</strong>
+                                                </div>
+                                                <div style="display: inline-block; color: #333; font-size: clamp(13px, 2.5vw, 14px); word-wrap: break-word;">
+                                                    {{ object.job_id.name or 'Direct Sales Representative - Software Sales &amp; Implementation' }}
+                                                </div>
+                                            </div>
+                                            
+                                            <div style="padding: 8px 0;">
+                                                <div style="display: inline-block; width: 100%; max-width: 200px; vertical-align: top; font-size: clamp(13px, 2.5vw, 14px);">
+                                                    <strong style="color: #1e3a8a;">Start Date:</strong>
+                                                </div>
+                                                <div style="display: inline-block; color: #333; font-size: clamp(13px, 2.5vw, 14px);">
+                                                    Monday, {{ format_date(datetime.datetime.now() + datetime.timedelta(days=1)) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Terms and Conditions -->
+                                    <div style="background: #f8f9fa; border-left: 4px solid #4fc3f7; padding: 15px; margin: 20px 0; border-radius: 8px;">
+                                        <h3 style="font-size: clamp(16px, 3.5vw, 18px); font-weight: 700; color: #0c1e3d; margin-bottom: 15px; margin-top: 0;">
+                                            📝 Terms and Conditions
+                                        </h3>
+                                        
+                                        <div style="color: #333333; line-height: 1.6; font-size: clamp(13px, 2.5vw, 14px);">
+                                            <p style="margin-bottom: 10px;"><strong>1. Training Period:</strong> 12-day assessment of your capabilities, learning aptitude, and sales environment fit.</p>
+                                            
+                                            <p style="margin-bottom: 10px;"><strong>2. Daily Compensation:</strong> AED 60 per working day during training period.</p>
+                                            
+                                            <p style="margin-bottom: 10px;"><strong>3. Performance Evaluation:</strong> Continuous assessment based on learning ability, communication skills, software sales understanding, professional attitude, and customer interaction capabilities.</p>
+                                            
+                                            <p style="margin-bottom: 10px;"><strong>4. Decision Process:</strong> Final employment decision made after 12 days based on overall performance.</p>
+                                            
+                                            <p style="margin-bottom: 10px;"><strong>5. Salary Determination:</strong> If selected, starting salary determined by training performance; range discussed upon completion.</p>
+                                            
+                                            <p style="margin-bottom: 10px;"><strong>6. No Guarantee:</strong> Training does not guarantee permanent employment; decision based on performance and business requirements.</p>
+                                            
+                                            <p style="margin-bottom: 0;"><strong>7. Schedule &amp; Reporting:</strong> Monday-Saturday, 9:00 AM - 6:00 PM, reporting to Sales Manager.</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Training Program -->
+                                    <div style="background: linear-gradient(135deg, #e8f5e8, #c8e6c9); border-left: 4px solid #4caf50; padding: 15px; margin: 20px 0; border-radius: 8px;">
+                                        <h3 style="font-size: clamp(16px, 3.5vw, 18px); font-weight: 700; color: #0c1e3d; margin-bottom: 10px; margin-top: 0;">
+                                            🎯 Training Program
+                                        </h3>
+                                        <p style="color: #333333; margin: 0; line-height: 1.6; font-size: clamp(13px, 2.5vw, 14px); word-wrap: break-word;">
+                                            Product knowledge, sales methodology, customer interaction skills, software implementation fundamentals, company policies, and hands-on practice with real scenarios.
+                                        </p>
+                                    </div>
+
+                                    <!-- Required Documents -->
+                                    <div style="background: #fff3cd; border: 2px solid #ffc107; border-radius: 8px; padding: 15px; margin: 20px 0;">
+                                        <h3 style="font-size: clamp(16px, 3.5vw, 18px); font-weight: 700; color: #856404; margin-bottom: 15px; margin-top: 0;">
+                                            📄 Required Documents ({{ format_date(datetime.datetime.now() + datetime.timedelta(days=1)) }})
+                                        </h3>
+                                        <div style="color: #856404; line-height: 1.6; font-size: clamp(13px, 2.5vw, 14px); word-wrap: break-word;">
+                                            Original Passport, UAE Visa copy, 2 passport photos (white background), educational certificates (originals), experience letters (if applicable), Emirates ID (if available).
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Action Section -->
+                            <tr>
+                                <td style="background: linear-gradient(135deg, #ff4444, #cc0000); color: #ffffff; padding: 20px 15px; text-align: center;">
+                                    <h2 style="font-size: clamp(18px, 4vw, 22px); font-weight: 700; margin-bottom: 15px; margin-top: 0; text-transform: uppercase; word-wrap: break-word; line-height: 1.2;">
+                                        ⚠ DEADLINE: This offer must be accepted TODAY
+                                    </h2>
+                                    <p style="opacity: 0.95; margin-bottom: 20px; font-size: clamp(14px, 3vw, 16px);">
+                                        Please respond immediately to confirm your acceptance.
+                                    </p>
+
+                                    <!-- Responsive Buttons -->
+                                    <div style="text-align: center;">
+                                        <a href="https://www.jotform.com/form/252631826888066" target="_blank" style="display: inline-block; background: #ffffff; color: #cc0000; padding: 15px 25px; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: clamp(14px, 3vw, 16px); margin: 8px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); min-width: 200px; text-align: center; box-sizing: border-box;">
+                                            ✅ ACCEPT OFFER NOW
+                                        </a>
+                                        
+                                        <br style="display: block; content: ''; margin: 5px 0;"/>
+                                        
+                                        <a href="mailto:info@scholarix.com?subject=Training Offer Response - {{ object.job_id.name or 'Direct Sales Position' }}" style="display: inline-block; background: rgba(255, 255, 255, 0.2); color: #ffffff; padding: 15px 25px; text-decoration: none; border: 2px solid #ffffff; border-radius: 8px; font-weight: 700; font-size: clamp(14px, 3vw, 16px); margin: 8px; min-width: 200px; text-align: center; box-sizing: border-box;">
+                                            📧 Contact HR Team
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Important Notice -->
+                            <tr>
+                                <td style="padding: 20px 15px; background-color: #ffffff;">
+                                    <div style="background: #e3f2fd; border: 2px solid #2196f3; border-radius: 8px; padding: 15px; text-align: center;">
+                                        <h3 style="font-size: clamp(16px, 3.5vw, 18px); font-weight: 700; color: #0c1e3d; margin-bottom: 15px; margin-top: 0;">
+                                            📍 Important Notice
+                                        </h3>
+                                        <p style="color: #333333; margin-bottom: 15px; line-height: 1.6; font-size: clamp(13px, 2.5vw, 14px); word-wrap: break-word;">
+                                            This offer is contingent upon successful completion of required documentation, background checks, and medical examinations per company policy and UAE labor law.
+                                        </p>
+                                        <div style="background: #4fc3f7; color: #ffffff; padding: 12px; border-radius: 6px; font-weight: 700; font-size: clamp(14px, 3vw, 16px); word-wrap: break-word;">
+                                            Report to Scholarix Global Consultants office on<br/>
+                                            <strong>Monday, {{ format_date(datetime.datetime.now() + datetime.timedelta(days=1)) }} at 9:00 AM sharp</strong><br/>
+                                            with all required documents.
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Contact Information -->
+                            <tr>
+                                <td style="padding: 20px 15px; background-color: #f8f9fa;">
+                                    <div style="text-align: center;">
+                                        <h3 style="font-weight: 700; color: #0c1e3d; margin-bottom: 15px; margin-top: 0; font-size: clamp(16px, 3.5vw, 18px);">
+                                            📞 Contact Information
+                                        </h3>
+                                        <div style="background: #ffffff; padding: 15px; border-radius: 8px; border: 1px solid #4fc3f7;">
+                                            <div style="font-weight: 600; color: #1e3a8a; margin-bottom: 10px; font-size: clamp(14px, 3vw, 16px);">Scholarix Global Consultants</div>
+                                            <div style="color: #333333; line-height: 1.6; font-size: clamp(13px, 2.5vw, 14px); word-wrap: break-word;">
+                                                📧 Email: info@scholarix.com<br/>
+                                                📱 Phone: +971-56 390 5772<br/>
+                                                📍 Dubai, United Arab Emirates
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Footer -->
+                            <tr>
+                                <td style="background: linear-gradient(135deg, #0c1e3d, #1e3a8a); color: #ffffff; padding: 20px 15px; text-align: center;">
+                                    <p style="margin-bottom: 15px; opacity: 0.9; font-size: clamp(14px, 3vw, 16px); word-wrap: break-word;">
+                                        We look forward to working with you and wish you success in the training program.
+                                    </p>
+                                    <div style="font-weight: 700; font-size: clamp(16px, 3.5vw, 18px); margin-bottom: 5px;">
+                                        Scholarix Global Consultants HR Department
+                                    </div>
+                                    <div style="opacity: 0.8; font-size: clamp(12px, 2.5vw, 14px);">
+                                        Date: {{ format_date(datetime.datetime.now()) }}
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Acceptance Section -->
+                            <tr>
+                                <td style="padding: 20px 15px; background-color: #ffffff; border-top: 2px dashed #ccc;">
+                                    <div style="text-align: center;">
+                                        <h3 style="font-weight: 700; color: #0c1e3d; margin-bottom: 20px; margin-top: 0; font-size: clamp(16px, 3.5vw, 18px);">
+                                            ✍ Candidate Acceptance
+                                        </h3>
+                                        <p style="color: #333333; margin-bottom: 20px; font-style: italic; font-size: clamp(13px, 2.5vw, 14px);">
+                                            I accept the terms and conditions outlined in this offer letter.
+                                        </p>
+                                        
+                                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #ddd; text-align: left;">
+                                            <p style="color: #666; margin: 0; line-height: 1.8; font-size: clamp(13px, 2.5vw, 14px); word-wrap: break-word;">
+                                                <strong>Candidate Name:</strong> {{ object.partner_name or object.name or '[Candidate Name]' }}<br/>
+                                                <strong>Signature:</strong> ___________________<br/>
+                                                <strong>Date:</strong> ___________
+                                            </p>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+]]></field>
+        </record>
+    </data>
+</odoo>
