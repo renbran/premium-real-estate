@@ -1,0 +1,19 @@
+﻿{
+  "name": "osus-properties",
+  "version": "1.0.0",
+  "description": "Premium Real Estate Website - OSUS Properties",
+  "private": true,
+  "homepage": "https://properties.erposus.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YOUR_USERNAME/premium-real-estate.git"
+  },
+  "keywords": [
+    "real-estate",
+    "properties",
+    "luxury",
+    "website"
+  ],
+  "author": "OSUS Properties",
+  "license": "MIT"
+}
