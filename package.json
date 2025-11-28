@@ -17,7 +17,7 @@
   "author": "OSUS Properties",
   "license": "MIT",
   "scripts": {
-    "build": "cp index.html _redirects static dist/ 2>/dev/null || (mkdir -p dist && cp index.html _redirects dist/ && cp -r static/media dist/media)",
+    "build": "node build.js",
     "deploy": "echo 'Deployment via Cloudflare Pages'"
   }
 }
