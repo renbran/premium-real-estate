@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Demo Data for Partner Statement Follow-up Module -->
+
+    <!-- Demo Follow-up Levels -->
+    <record id="demo_followup_level_1" model="followup.level">
+        <field name="name">First Reminder</field>
+        <field name="sequence">10</field>
+        <field name="delay_days">7</field>
+        <field name="send_email">True</field>
+        <field name="email_subject">Payment Reminder - {{ object.name }}</field>
+        <field name="email_body"><![CDATA[
+<p>Dear {{ object.name }},</p>
+<p>This is a friendly reminder that we have not yet received payment for the following invoice(s):</p>
+<p>Please arrange payment at your earliest convenience.</p>
+<p>If you have any questions, please contact us.</p>
+<p>Thank you,<br/>{{ user.name }}</p>
+        ]]>        </field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="demo_followup_level_2" model="followup.level">
+        <field name="name">Second Notice</field>
+        <field name="sequence">20</field>
+        <field name="delay_days">14</field>
+        <field name="send_email">True</field>
+        <field name="create_activity">True</field>
+        <field name="activity_type_id" ref="mail.mail_activity_data_call"/>
+        <field name="email_subject">Second Notice - Payment Required - {{ object.name }}</field>
+        <field name="email_body"><![CDATA[
+<p>Dear {{ object.name }},</p>
+<p>We have not yet received payment for your overdue account.</p>
+<p>This is your second notice. Please remit payment immediately to avoid further collection activities.</p>
+<p>If payment has been sent, please disregard this notice.</p>
+<p>Accounts Receivable Department<br/>{{ user.company_id.name }}</p>
+        ]]>        </field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="demo_followup_level_3" model="followup.level">
+        <field name="name">Final Notice</field>
+        <field name="sequence">30</field>
+        <field name="delay_days">30</field>
+        <field name="send_email">True</field>
+        <field name="block_sales">True</field>
+        <field name="create_activity">True</field>
+        <field name="activity_type_id" ref="mail.mail_activity_data_call"/>
+        <field name="email_subject">FINAL NOTICE - Immediate Payment Required - {{ object.name }}</field>
+        <field name="email_body"><![CDATA[
+<p>Dear {{ object.name }},</p>
+<p><strong>FINAL NOTICE - IMMEDIATE PAYMENT REQUIRED</strong></p>
+<p>Your account is seriously past due. If payment is not received within 5 business days, 
+   we will be forced to take further collection action which may include:</p>
+<ul>
+<li>Suspension of all services</li>
+<li>Referral to collection agency</li>
+<li>Legal action</li>
+</ul>
+<p>Please contact us immediately to resolve this matter.</p>
+<p>Collections Department<br/>{{ user.company_id.name }}</p>
+        ]]>        </field>
+        <field name="active">True</field>
+    </record>
+
+    <!-- Demo Statement Configuration -->
+    <record id="demo_statement_config_quarterly" model="statement.config">
+        <field name="name">Quarterly Statement</field>
+        <field name="frequency">quarterly</field>
+        <field name="auto_send">True</field>
+        <field name="email_template_id" ref="email_template_partner_statement"/>
+        <field name="include_ageing">True</field>
+        <field name="filter_by">customers</field>
+        <field name="exclude_zero_balance">True</field>
+        <field name="active">True</field>
+    </record>
+
+    <!-- Demo Partners with Follow-up Data -->
+    <record id="demo_partner_abc_corp" model="res.partner">
+        <field name="name">ABC Corporation</field>
+        <field name="is_company">True</field>
+        <field name="customer_rank">1</field>
+        <field name="street">123 Business Ave</field>
+        <field name="city">Demo City</field>
+        <field name="zip">12345</field>
+        <field name="phone">+1-555-0123</field>
+        <field name="email">accounting@abccorp.demo</field>
+        <field name="credit_limit">50000.00</field>
+        <field name="property_payment_term_id" ref="account.account_payment_term_net"/>
+    </record>
+
+    <record id="demo_partner_xyz_ltd" model="res.partner">
+        <field name="name">XYZ Limited</field>
+        <field name="is_company">True</field>
+        <field name="customer_rank">1</field>
+        <field name="street">456 Commerce St</field>
+        <field name="city">Demo Town</field>
+        <field name="zip">67890</field>
+        <field name="phone">+1-555-0456</field>
+        <field name="email">billing@xyzltd.demo</field>
+        <field name="credit_limit">25000.00</field>
+        <field name="property_payment_term_id" ref="account.account_payment_term_15days"/>
+    </record>
+
+    <!-- Demo Follow-up History -->
+    <record id="demo_followup_history_1" model="followup.history">
+        <field name="partner_id" ref="demo_partner_abc_corp"/>
+        <field name="date" eval="(datetime.datetime.now() - datetime.timedelta(days=15)).strftime('%Y-%m-%d')"/>
+        <field name="followup_level_id" ref="demo_followup_level_1"/>
+        <field name="communication_method">email</field>
+        <field name="amount_due">5000.00</field>
+        <field name="status">sent</field>
+        <field name="email_sent">True</field>
+        <field name="email_subject">Payment Reminder - ABC Corporation</field>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+
+    <record id="demo_followup_history_2" model="followup.history">
+        <field name="partner_id" ref="demo_partner_xyz_ltd"/>
+        <field name="date" eval="(datetime.datetime.now() - datetime.timedelta(days=7)).strftime('%Y-%m-%d')"/>
+        <field name="followup_level_id" ref="demo_followup_level_2"/>
+        <field name="communication_method">email</field>
+        <field name="amount_due">1500.00</field>
+        <field name="status">sent</field>
+        <field name="email_sent">True</field>
+        <field name="email_subject">Second Notice - Payment Required - XYZ Limited</field>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+
+    <!-- Demo Ageing Periods for Testing -->
+    <record id="demo_ageing_period_current" model="ageing.period">
+        <field name="name">Current (Demo)</field>
+        <field name="sequence">10</field>
+        <field name="days_from">0</field>
+        <field name="days_to">0</field>
+        <field name="is_current">True</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="demo_ageing_period_1_30" model="ageing.period">
+        <field name="name">1-30 Days (Demo)</field>
+        <field name="sequence">20</field>
+        <field name="days_from">1</field>
+        <field name="days_to">30</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="demo_ageing_period_31_60" model="ageing.period">
+        <field name="name">31-60 Days (Demo)</field>
+        <field name="sequence">30</field>
+        <field name="days_from">31</field>
+        <field name="days_to">60</field>
+        <field name="active">True</field>
+    </record>
+
+    <!-- Demo System Parameters -->
+    <record id="demo_param_default_followup_days" model="ir.config_parameter">
+        <field name="key">partner_statement_followup.default_followup_days</field>
+        <field name="value">7</field>
+    </record>
+
+    <record id="demo_param_max_followup_level" model="ir.config_parameter">
+        <field name="key">partner_statement_followup.max_followup_level</field>
+        <field name="value">3</field>
+    </record>
+
+    <record id="demo_param_auto_block_sales" model="ir.config_parameter">
+        <field name="key">partner_statement_followup.auto_block_sales_days</field>
+        <field name="value">45</field>
+    </record>
+
+    <!-- Demo Email Templates for Different Languages -->
+    <record id="demo_email_template_spanish" model="mail.template">
+        <field name="name">Partner Statement (Spanish)</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="subject">Estado de Cuenta - {{ object.name }}</field>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px;">
+                <p>Estimado/a {{ object.name }},</p>
+
+                <p>Adjunto encontrará su Estado de Cuenta al {{ ctx.get('date_to', '') }}.</p>
+
+                <p>Si tiene alguna pregunta sobre su cuenta o necesita aclaración sobre algún elemento, 
+       no dude en contactarnos.</p>
+
+                <p>Gracias por su negocio.</p>
+
+                <p>Saludos cordiales,<br/>
+       {{ user.name }}<br/>
+       {{ user.company_id.name }}
+            </p>
+        </div>
+    </field>
+    <field name="lang">es_ES</field>
+    <field name="auto_delete" eval="True"/>
+</record>
+
+<!-- Demo Batch Processing Configuration -->
+<record id="demo_batch_config_weekly" model="batch.followup.config">
+    <field name="name">Weekly Auto Follow-up</field>
+    <field name="frequency">weekly</field>
+    <field name="day_of_week">1</field>
+    <field name="auto_process">True</field>
+    <field name="min_overdue_days">7</field>
+    <field name="exclude_weekends">True</field>
+    <field name="test_mode">True</field>
+    <field name="active">False</field>
+</record>
+
+<!-- Demo Activities for Follow-up -->
+<record id="demo_activity_followup_call" model="mail.activity.type">
+    <field name="name">Follow-up Call</field>
+    <field name="category">phonecall</field>
+    <field name="delay_count">1</field>
+    <field name="delay_unit">days</field>
+    <field name="summary">Call customer regarding overdue payment</field>
+    <field name="res_model_id" ref="base.model_res_partner"/>
+</record>
+
+<!-- Demo Report Configurations -->
+<record id="demo_report_config_monthly" model="report.config">
+    <field name="name">Monthly Ageing Report</field>
+    <field name="report_type">ageing</field>
+    <field name="frequency">monthly</field>
+    <field name="auto_generate">True</field>
+    <field name="email_recipients">manager@company.demo,accounting@company.demo</field>
+    <field name="include_zero_balance">False</field>
+    <field name="active">True</field>
+</record>
+
+<!-- Demo User Groups Assignment -->
+<record id="demo_user_statement_manager" model="res.users">
+    <field name="name">Demo Statement Manager</field>
+    <field name="login">statement.manager@demo.com</field>
+    <field name="email">statement.manager@demo.com</field>
+    <field name="groups_id" eval="[(6, 0, [ref('partner_statement_group_manager')])]"/>
+    <field name="active">False</field>
+</record>
+
+<record id="demo_user_statement_user" model="res.users">
+    <field name="name">Demo Statement User</field>
+    <field name="login">statement.user@demo.com</field>
+    <field name="email">statement.user@demo.com</field>
+    <field name="groups_id" eval="[(6, 0, [ref('partner_statement_group_user')])]"/>
+    <field name="active">False</field>
+</record>
+
+<!-- Demo Cron Jobs (Disabled by Default) -->
+<record id="demo_cron_daily_followup" model="ir.cron">
+    <field name="name">Demo Daily Follow-up Check</field>
+    <field name="model_id" ref="model_batch_followup_wizard"/>
+    <field name="state">code</field>
+    <field name="code">
+# Demo automated follow-up processing env['batch.followup.wizard'].with_context(demo_mode=True).process_daily_followups()
+    </field>
+    <field name="interval_number">1</field>
+    <field name="interval_type">days</field>
+    <field name="numbercall">-1</field>
+    <field name="active">False</field>
+    <field name="doall">False</field>
+</record>
+</odoo>

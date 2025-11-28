@@ -1,0 +1,449 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Bulk Approval Wizard Views -->
+
+    <!-- Bulk Approval Wizard Form -->
+    <record id="view_payment_bulk_approval_wizard_form" model="ir.ui.view">
+        <field name="name">payment.bulk.approval.wizard.form</field>
+        <field name="model">payment.bulk.approval.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Bulk Payment Approval">
+                <header>
+                    <button name="action_process_bulk" string="Process Bulk Action" type="object" class="btn-primary" invisible="eligible_count == 0"/>
+                    <button name="action_preview_changes" string="Preview Changes" type="object" class="btn-secondary" invisible="eligible_count == 0"/>
+                    <button name="action_filter_payments" string="Apply Filters" type="object" class="btn-info"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </header>
+
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Bulk Payment Approval</h1>
+                    </div>
+
+                    <group>
+                        <group name="action_config">
+                            <field name="action_type" widget="radio" options="{'horizontal': true}"/>
+                            <field name="company_id" options="{'no_create': True, 'no_edit': True}"/>
+                            <field name="urgency_filter"/>
+                            <field name="amount_threshold"/>
+                        </group>
+                        <group name="statistics">
+                            <field name="total_count" readonly="1"/>
+                            <field name="total_amount" widget="monetary" readonly="1"/>
+                            <field name="eligible_count" readonly="1"/>
+                            <field name="eligible_amount" widget="monetary" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <group name="action_details" invisible="action_type not in ('approve', 'authorize', 'post', 'reject')">
+                        <group>
+                            <field name="notes" placeholder="Optional notes for all payments..."/>
+                            <field name="rejection_reason" invisible="action_type != 'reject'" required="action_type == 'reject'"/>
+                        </group>
+                        <group>
+                            <field name="require_signature"/>
+                            <field name="signature_data" widget="signature" invisible="require_signature == False" required="require_signature == True"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Selected Payments" name="selected_payments">
+                            <field name="payment_ids" nolabel="1">
+                                <tree decoration-success="voucher_state == 'posted'" decoration-info="voucher_state in ['approved', 'authorized']" decoration-warning="voucher_state in ['submitted', 'under_review']" decoration-danger="voucher_state == 'rejected'">
+                                    <field name="name"/>
+                                    <field name="partner_id"/>
+                                    <field name="amount" sum="Total Amount"/>
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="date"/>
+                                    <field name="voucher_state"/>
+                                    <field name="urgency"/>
+                                </tree>
+                            </field>
+                        </page>
+
+                        <page string="Eligible Payments" name="eligible_payments" invisible="eligible_count == 0">
+                            <field name="eligible_payment_ids" nolabel="1">
+                                <tree decoration-bf="1">
+                                    <field name="name"/>
+                                    <field name="partner_id"/>
+                                    <field name="amount" sum="Eligible Amount"/>
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="date"/>
+                                    <field name="voucher_state"/>
+                                    <field name="urgency"/>
+                                </tree>
+                            </field>
+                        </page>
+
+                        <page string="Ineligible Payments" name="ineligible_payments" invisible="ineligible_payment_ids == []">
+                            <field name="ineligible_payment_ids" nolabel="1">
+                                <tree decoration-muted="1">
+                                    <field name="name"/>
+                                    <field name="partner_id"/>
+                                    <field name="amount"/>
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="date"/>
+                                    <field name="voucher_state"/>
+                                    <field name="urgency"/>
+                                </tree>
+                            </field>
+                            <div class="alert alert-info" role="alert">
+                                <strong>Note:</strong> These payments cannot be processed with the selected action due to their current state or your permissions.
+                            </div>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Bulk Preview Wizard Form -->
+    <record id="view_payment_bulk_preview_wizard_form" model="ir.ui.view">
+        <field name="name">payment.bulk.preview.wizard.form</field>
+        <field name="model">payment.bulk.preview.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Preview Bulk Changes">
+                <header>
+                    <button name="action_confirm_bulk" string="Confirm and Execute" type="object" class="btn-primary"/>
+                    <button name="action_back_to_wizard" string="Back to Wizard" type="object" class="btn-secondary"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </header>
+
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Preview Bulk Changes</h1>
+                        <h2>Review the changes that will be made to the selected payments</h2>
+                    </div>
+
+                    <field name="preview_line_ids" nolabel="1">
+                        <tree decoration-info="current_state != new_state">
+                            <field name="payment_name"/>
+                            <field name="partner_name"/>
+                            <field name="amount" widget="monetary"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="current_state"/>
+                            <field name="new_state"/>
+                        </tree>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Rejection Wizard Views -->
+
+    <!-- Rejection Wizard Form -->
+    <record id="view_payment_rejection_wizard_form" model="ir.ui.view">
+        <field name="name">payment.rejection.wizard.form</field>
+        <field name="model">payment.rejection.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Reject Payment">
+                <header>
+                    <button name="action_confirm_rejection" string="Confirm Rejection" type="object" class="btn-danger"/>
+                    <button name="action_preview_rejection" string="Preview Email" type="object" class="btn-info"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </header>
+
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Reject Payment</h1>
+                    </div>
+
+                    <group>
+                        <group name="payment_info">
+                            <field name="payment_reference" readonly="1"/>
+                            <field name="payment_amount" widget="monetary" readonly="1"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="payment_partner" readonly="1"/>
+                            <field name="payment_state" readonly="1"/>
+                        </group>
+                        <group name="rejection_config">
+                            <field name="rejection_category"/>
+                            <field name="return_to_creator"/>
+                            <field name="allow_resubmission"/>
+                            <field name="escalate_to_manager"/>
+                        </group>
+                    </group>
+
+                    <group name="rejection_details">
+                        <field name="rejection_reason" placeholder="Provide detailed explanation for rejection..." colspan="2" nolabel="1"/>
+                        <field name="required_actions" placeholder="Specify actions required to resolve issues..." colspan="2" nolabel="1"/>
+                    </group>
+
+                    <group name="notifications">
+                        <field name="notify_stakeholders"/>
+                        <field name="signature_required"/>
+                    </group>
+
+                    <group name="signature" invisible="signature_required == False">
+                        <field name="signature_data" widget="signature" nolabel="1" colspan="2"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Report Wizard Views -->
+
+    <!-- Report Wizard Form -->
+    <record id="view_payment_report_wizard_form" model="ir.ui.view">
+        <field name="name">payment.report.wizard.form</field>
+        <field name="model">payment.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Generate Payment Report">
+                <header>
+                    <button name="action_generate_report" string="Generate Report" type="object" class="btn-primary"/>
+                    <button name="action_preview_report" string="Preview Report" type="object" class="btn-info"/>
+                    <button name="action_schedule_report" string="Schedule Report" type="object" class="btn-secondary"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </header>
+
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Payment Report Generator</h1>
+                    </div>
+
+                    <group>
+                        <group name="report_config">
+                            <field name="report_type"/>
+                            <field name="output_format"/>
+                            <field name="report_title" placeholder="Custom report title..."/>
+                        </group>
+                        <group name="date_range">
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                            <field name="total_payments_count" readonly="1"/>
+                            <field name="total_amount" widget="monetary" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Filters" name="filters">
+                            <group>
+                                <group name="basic_filters">
+                                    <field name="company_ids" widget="many2many_tags"/>
+                                    <field name="partner_ids" widget="many2many_tags"/>
+                                    <field name="user_ids" widget="many2many_tags"/>
+                                    <field name="urgency_levels"/>
+                                </group>
+                                <group name="amount_filters">
+                                    <field name="amount_min"/>
+                                    <field name="amount_max"/>
+                                    <field name="group_by"/>
+                                </group>
+                            </group>
+
+                            <group string="Specific Payments">
+                                <field name="payment_ids" nolabel="1">
+                                    <tree>
+                                        <field name="name"/>
+                                        <field name="partner_id"/>
+                                        <field name="amount"/>
+                                        <field name="date"/>
+                                        <field name="voucher_state"/>
+                                    </tree>
+                                </field>
+                            </group>
+                        </page>
+
+                        <page string="Options" name="options">
+                            <group>
+                                <group name="content_options">
+                                    <field name="include_charts"/>
+                                    <field name="include_details"/>
+                                    <field name="include_signatures"/>
+                                    <field name="include_qr_codes"/>
+                                </group>
+                                <group name="format_options">
+                                    <field name="include_logo"/>
+                                    <field name="include_watermark"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <page string="Email Settings" name="email">
+                            <group>
+                                <field name="email_report"/>
+                                <field name="email_recipients" invisible="email_report == False" required="email_report == True" placeholder="email1@example.com, email2@example.com"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Report Preview Wizard Form -->
+    <record id="view_payment_report_preview_wizard_form" model="ir.ui.view">
+        <field name="name">payment.report.preview.wizard.form</field>
+        <field name="model">payment.report.preview.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Report Preview">
+                <header>
+                    <button name="action_generate_final_report" string="Generate Final Report" type="object" class="btn-primary"/>
+                    <button name="action_back_to_wizard" string="Back to Configuration" type="object" class="btn-secondary"/>
+                    <button string="Close" class="btn-default" special="cancel"/>
+                </header>
+
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Report Preview</h1>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <field name="preview_html" widget="html" nolabel="1"/>
+                        </div>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Configuration Settings View Enhancement -->
+    <record id="view_payment_approval_config_settings" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.payment.approval</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+                <div class="app_settings_block" data-string="Payment Approval" string="Payment Approval" data-key="account_payment_approval" groups="account.group_account_manager">
+
+                    <h2>Payment Approval Settings</h2>
+
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="auto_submit_on_create"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="auto_submit_on_create"/>
+                                <div class="text-muted">
+                                    Automatically submit payments for approval when created
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="enable_qr_verification"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="enable_qr_verification"/>
+                                <div class="text-muted">
+                                    Generate QR codes for payment verification
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>Approval Thresholds</h3>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label for="payment_approval_threshold" string="Payment Approval Threshold"/>
+                                <field name="payment_approval_threshold" class="o_light_label"/>
+                                <div class="text-muted">
+                                    Minimum amount requiring approval for outbound payments
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label for="tier_2_threshold" string="Tier 2 Threshold"/>
+                                <field name="tier_2_threshold" class="o_light_label"/>
+                                <div class="text-muted">
+                                    Amount requiring 2-tier approval
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>Workflow Configuration</h3>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="require_signature_all_stages"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="require_signature_all_stages"/>
+                                <div class="text-muted">
+                                    Require digital signatures at every approval stage
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="enable_bulk_approval"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="enable_bulk_approval"/>
+                                <div class="text-muted">
+                                    Allow bulk approval of multiple payments
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>Time Limits (Hours)</h3>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-4 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label for="review_time_limit" string="Review Time Limit"/>
+                                <field name="review_time_limit" class="o_light_label"/>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-4 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label for="approval_time_limit" string="Approval Time Limit"/>
+                                <field name="approval_time_limit" class="o_light_label"/>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-4 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label for="authorization_time_limit" string="Authorization Time Limit"/>
+                                <field name="authorization_time_limit" class="o_light_label"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>Statistics</h3>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label string="Pending Approvals"/>
+                                <field name="total_pending_approvals" readonly="1" class="o_light_label"/>
+                                <div class="text-muted">
+                                    Total number of payments pending approval
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label string="Approval Efficiency Rate"/>
+                                <field name="approval_efficiency_rate" readonly="1" class="o_light_label" widget="percentage"/>
+                                <div class="text-muted">
+                                    Percentage of payments approved within time limits
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt16">
+                        <div class="col-12">
+                            <button name="action_create_approval_config" string="Create New Configuration" type="object" class="btn-secondary"/>
+                            <button name="action_test_approval_workflow" string="Test Workflow" type="object" class="btn-info"/>
+                            <button name="action_reset_approval_defaults" string="Reset to Defaults" type="object" class="btn-link" confirm="Are you sure you want to reset all payment approval settings to their default values?"/>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

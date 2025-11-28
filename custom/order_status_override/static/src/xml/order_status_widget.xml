@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <!-- Order Status Widget Template -->
+    <t t-name="order_status_override.StatusWidget" owl="1">
+        <div class="o_order_status_widget">
+            <div class="o_status_header">
+                <h4>Order Status</h4>
+                <t t-if="state.isLoading">
+                    <i class="fa fa-spinner fa-spin"/>
+                </t>
+            </div>
+            <div class="o_status_content">
+                <t t-if="state.orderStatus">
+                    <div class="o_status_info">
+                        <span class="o_status_label">Current Status:</span>
+                        <span class="o_status_value" t-esc="state.orderStatus.status"/>
+                    </div>
+                    <div class="o_status_actions" t-if="!props.readonly">
+                        <button class="btn btn-primary btn-sm" 
+                                t-on-click="() => this.onStatusChange('approved')">
+                            Approve
+                        </button>
+                        <button class="btn btn-secondary btn-sm"
+                                t-on-click="() => this.onStatusChange('rejected')">
+                            Reject
+                        </button>
+                    </div>
+                </t>
+                <t t-else="">
+                    <div class="o_status_empty">
+                        No status information available
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>

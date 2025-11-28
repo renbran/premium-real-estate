@@ -1,0 +1,408 @@
+{
+  "info": {
+    "_postman_id": "enhanced-rest-api-collection",
+    "name": "Enhanced REST API for Odoo 17",
+    "description": "Comprehensive REST API collection for Odoo 17 server-wide modules",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8069",
+      "type": "string"
+    },
+    {
+      "key": "api_key",
+      "value": "your-api-key-here",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/status",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "status"]
+            }
+          }
+        },
+        {
+          "name": "Generate API Key",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "admin",
+                  "type": "string"
+                },
+                {
+                  "key": "password", 
+                  "value": "admin",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/generate-key",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "generate-key"]
+            }
+          }
+        },
+        {
+          "name": "Get User Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-API-Key",
+                "value": "{{api_key}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/user/profile",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "user", "profile"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "CRM APIs",
+      "item": [
+        {
+          "name": "Get CRM Leads",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-API-Key",
+                "value": "{{api_key}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/crm/leads?limit=10&offset=0",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "crm", "leads"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create CRM Lead",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-API-Key",
+                "value": "{{api_key}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"New Lead via API\",\n  \"partner_name\": \"Test Customer\",\n  \"email_from\": \"customer@example.com\",\n  \"phone\": \"+1234567890\",\n  \"description\": \"Lead created via Enhanced REST API\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/crm/leads",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "crm", "leads"]
+            }
+          }
+        },
+        {
+          "name": "CRM Dashboard",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-API-Key",
+                "value": "{{api_key}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/crm/dashboard",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "crm", "dashboard"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sales APIs",
+      "item": [
+        {
+          "name": "Get Sales Orders",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-API-Key",
+                "value": "{{api_key}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/sales/orders?limit=10&state=sale",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "sales", "orders"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "state",
+                  "value": "sale"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Sales Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-API-Key",
+                "value": "{{api_key}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"partner_id\": 7,\n  \"order_line\": [\n    {\n      \"product_id\": 1,\n      \"product_uom_qty\": 2,\n      \"price_unit\": 100.00\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/sales/orders",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "sales", "orders"]
+            }
+          }
+        },
+        {
+          "name": "Sales Dashboard",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-API-Key",
+                "value": "{{api_key}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/sales/dashboard",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "sales", "dashboard"]
+            }
+          }
+        },
+        {
+          "name": "Get Products",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-API-Key",
+                "value": "{{api_key}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/sales/products?limit=20",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "sales", "products"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Payment APIs",
+      "item": [
+        {
+          "name": "Get Payments",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-API-Key",
+                "value": "{{api_key}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/payments?limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "payments"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-API-Key",
+                "value": "{{api_key}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 1000.00,\n  \"partner_id\": 7,\n  \"payment_type\": \"inbound\",\n  \"payment_method_id\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/payments",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "payments"]
+            }
+          }
+        },
+        {
+          "name": "Verify Payment (QR Code)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/payments/1/verify",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "payments", "1", "verify"]
+            }
+          }
+        },
+        {
+          "name": "Payment Dashboard",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-API-Key",
+                "value": "{{api_key}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/payments/dashboard",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "payments", "dashboard"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Generic Model APIs",
+      "item": [
+        {
+          "name": "Search Partners",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-API-Key",
+                "value": "{{api_key}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/models/res.partner/search?domain=[[\"is_company\",\"=\",true]]&fields=name,email,phone&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "models", "res.partner", "search"],
+              "query": [
+                {
+                  "key": "domain",
+                  "value": "[[\"is_company\",\"=\",true]]"
+                },
+                {
+                  "key": "fields",
+                  "value": "name,email,phone"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Search Products",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-API-Key",
+                "value": "{{api_key}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/models/product.template/search?domain=[[\"sale_ok\",\"=\",true]]&fields=name,list_price,categ_id&limit=20",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "models", "product.template", "search"],
+              "query": [
+                {
+                  "key": "domain",
+                  "value": "[[\"sale_ok\",\"=\",true]]"
+                },
+                {
+                  "key": "fields",
+                  "value": "name,list_price,categ_id"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Follow-up Level Views -->
+    <record id="view_followup_level_tree" model="ir.ui.view">
+        <field name="name">followup.level.tree</field>
+        <field name="model">followup.level</field>
+        <field name="arch" type="xml">
+            <tree string="Follow-up Levels">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="days"/>
+                <field name="send_email"/>
+                <field name="send_letter"/>
+                <field name="manual_action"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_followup_level_form" model="ir.ui.view">
+        <field name="name">followup.level.form</field>
+        <field name="model">followup.level</field>
+        <field name="arch" type="xml">
+            <form string="Follow-up Level">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="sequence"/>
+                            <field name="days"/>
+                            <field name="delay_days"/>
+                            <field name="active"/>
+                        </group>
+                        <group>
+                            <field name="send_email"/>
+                            <field name="send_letter"/>
+                            <field name="manual_action"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Email Template" attrs="{'invisible': [('send_email', '=', False)]}">
+                            <group>
+                                <field name="email_template_id"/>
+                                <field name="email_subject"/>
+                            </group>
+                            <field name="email_body"/>
+                        </page>
+                        <page string="Description">
+                            <field name="description"/>
+                        </page>
+                        <page string="Manual Action" attrs="{'invisible': [('manual_action', '=', False)]}">
+                            <field name="manual_action_note"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Statement Ageing Period Views -->
+    <record id="view_statement_ageing_period_tree" model="ir.ui.view">
+        <field name="name">statement.ageing.period.tree</field>
+        <field name="model">statement.ageing.period</field>
+        <field name="arch" type="xml">
+            <tree string="Ageing Periods">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="days_from"/>
+                <field name="days_to"/>
+                <field name="color" widget="color"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_statement_ageing_period_form" model="ir.ui.view">
+        <field name="name">statement.ageing.period.form</field>
+        <field name="model">statement.ageing.period</field>
+        <field name="arch" type="xml">
+            <form string="Ageing Period">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="sequence"/>
+                            <field name="config_id"/>
+                        </group>
+                        <group>
+                            <field name="days_from"/>
+                            <field name="days_to"/>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                        </group>
+                        <group>
+                            <field name="color" widget="color"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Statement Config Views -->
+    <record id="view_statement_config_tree" model="ir.ui.view">
+        <field name="name">statement.config.tree</field>
+        <field name="model">statement.config</field>
+        <field name="arch" type="xml">
+            <tree string="Statement Configurations">
+                <field name="name"/>
+                <field name="statement_format"/>
+                <field name="frequency"/>
+                <field name="show_aging"/>
+                <field name="auto_followup"/>
+                <field name="active"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_statement_config_form" model="ir.ui.view">
+        <field name="name">statement.config.form</field>
+        <field name="model">statement.config</field>
+        <field name="arch" type="xml">
+            <form string="Statement Configuration">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="statement_format"/>
+                            <field name="active"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="show_aging"/>
+                            <field name="show_payments"/>
+                            <field name="include_zero_balance"/>
+                            <field name="show_credit_balance"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Ageing Configuration">
+                            <group>
+                                <group string="Ageing Buckets (Days)">
+                                    <field name="ageing_bucket_1"/>
+                                    <field name="ageing_bucket_2"/>
+                                    <field name="ageing_bucket_3"/>
+                                    <field name="ageing_bucket_4"/>
+                                </group>
+                                <group string="Format Settings">
+                                    <field name="currency_format"/>
+                                    <field name="date_format"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Follow-up Settings">
+                            <group>
+                                <group string="Automation">
+                                    <field name="auto_followup"/>
+                                    <field name="followup_interval" attrs="{'invisible': [('auto_followup', '=', False)]}"/>
+                                    <field name="auto_send"/>
+                                    <field name="email_template_id" attrs="{'invisible': [('auto_send', '=', False)]}"/>
+                                </group>
+                                <group string="Frequency &amp; Filtering">
+                                    <field name="frequency"/>
+                                    <field name="filter_by"/>
+                                    <field name="include_ageing"/>
+                                    <field name="exclude_zero_balance"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Statement Footer">
+                            <field name="statement_footer"/>
+                        </page>
+                        <page string="Description">
+                            <field name="description"/>
+                        </page>
+                        <page string="Aging Buckets (Detailed)">
+                            <field name="aging_bucket_ids">
+                                <tree>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="days_from"/>
+                                    <field name="days_to"/>
+                                    <field name="color" widget="color"/>
+                                    <field name="active"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Follow-up History Views -->
+    <record id="view_followup_history_tree" model="ir.ui.view">
+        <field name="name">followup.history.tree</field>
+        <field name="model">followup.history</field>
+        <field name="arch" type="xml">
+            <tree string="Follow-up History">
+                <field name="date"/>
+                <field name="partner_id"/>
+                <field name="level_id"/>
+                <field name="user_id"/>
+                <field name="email_sent"/>
+                <field name="letter_printed"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_followup_history_form" model="ir.ui.view">
+        <field name="name">followup.history.form</field>
+        <field name="model">followup.history</field>
+        <field name="arch" type="xml">
+            <form string="Follow-up History">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="partner_id"/>
+                            <field name="date"/>
+                        </group>
+                        <group>
+                            <field name="level_id"/>
+                            <field name="user_id"/>
+                            <field name="email_sent"/>
+                            <field name="letter_printed"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="description"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

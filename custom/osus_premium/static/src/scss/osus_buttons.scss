@@ -1,0 +1,524 @@
+// OSUS Properties - Luxury Button Styles
+// Premium button components for Odoo17
+// ====================================
+
+@import "osus_variables";
+
+// BASE BUTTON LUXURY STYLING
+// ===========================
+.btn {
+  border-radius: $osus-border-radius-lg;
+  font-family: $osus-font-family-primary;
+  font-weight: $osus-font-weight-semibold;
+  padding: $osus-spacing-md $osus-spacing-lg;
+  border: none;
+  transition: all $osus-transition-standard;
+  position: relative;
+  overflow: hidden;
+  text-transform: none;
+  letter-spacing: 0.5px;
+  box-shadow: $osus-shadow-sm;
+
+  // Luxury hover effect
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba($osus-white, 0.2),
+      transparent
+    );
+    transition: left $osus-transition-luxury;
+  }
+
+  &:hover::before {
+    left: 100%;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: $osus-shadow-lg;
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: $osus-shadow-sm;
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 3px rgba($osus-burgundy-medium, 0.3);
+  }
+
+  // Disabled state
+  &:disabled,
+  &.disabled {
+    background: $osus-gray !important;
+    color: $osus-white !important;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+
+    &::before {
+      display: none;
+    }
+  }
+}
+
+// PRIMARY BUTTON - Burgundy Gradient
+// ==================================
+.btn-primary {
+  background: $osus-burgundy-gradient;
+  color: $osus-white;
+  border: 1px solid $osus-burgundy-primary;
+
+  &:hover {
+    background: linear-gradient(
+      135deg,
+      $osus-burgundy-medium 0%,
+      $osus-burgundy-dark 100%
+    );
+    border-color: $osus-burgundy-dark;
+    color: $osus-white;
+  }
+
+  &:focus {
+    background: $osus-burgundy-gradient;
+    border-color: $osus-burgundy-dark;
+    color: $osus-white;
+    box-shadow: 0 0 0 3px rgba($osus-burgundy-medium, 0.3);
+  }
+
+  &:active {
+    background: $osus-burgundy-dark;
+    border-color: $osus-burgundy-dark;
+  }
+}
+
+// SECONDARY BUTTON - Gold Gradient
+// ================================
+.btn-secondary {
+  background: $osus-gold-gradient;
+  color: $osus-burgundy-primary;
+  border: 1px solid $osus-gold-medium;
+
+  &:hover {
+    background: linear-gradient(
+      135deg,
+      $osus-gold-medium 0%,
+      $osus-gold-dark 100%
+    );
+    border-color: $osus-gold-dark;
+    color: $osus-burgundy-primary;
+  }
+
+  &:focus {
+    background: $osus-gold-gradient;
+    border-color: $osus-gold-dark;
+    color: $osus-burgundy-primary;
+    box-shadow: 0 0 0 3px rgba($osus-gold-medium, 0.3);
+  }
+
+  &:active {
+    background: $osus-gold-dark;
+    border-color: $osus-gold-dark;
+  }
+}
+
+// SUCCESS BUTTON - Elegant Green
+// ==============================
+.btn-success {
+  background: linear-gradient(
+    135deg,
+    $osus-success 0%,
+    darken($osus-success, 10%) 100%
+  );
+  color: $osus-white;
+  border: 1px solid $osus-success;
+
+  &:hover {
+    background: linear-gradient(
+      135deg,
+      darken($osus-success, 5%) 0%,
+      darken($osus-success, 15%) 100%
+    );
+    border-color: darken($osus-success, 10%);
+    color: $osus-white;
+  }
+}
+
+// WARNING BUTTON - Refined Amber
+// ==============================
+.btn-warning {
+  background: linear-gradient(
+    135deg,
+    $osus-warning 0%,
+    darken($osus-warning, 10%) 100%
+  );
+  color: $osus-burgundy-primary;
+  border: 1px solid $osus-warning;
+
+  &:hover {
+    background: linear-gradient(
+      135deg,
+      darken($osus-warning, 5%) 0%,
+      darken($osus-warning, 15%) 100%
+    );
+    border-color: darken($osus-warning, 10%);
+    color: $osus-burgundy-primary;
+  }
+}
+
+// DANGER BUTTON - Sophisticated Red
+// =================================
+.btn-danger {
+  background: linear-gradient(
+    135deg,
+    $osus-danger 0%,
+    darken($osus-danger, 10%) 100%
+  );
+  color: $osus-white;
+  border: 1px solid $osus-danger;
+
+  &:hover {
+    background: linear-gradient(
+      135deg,
+      darken($osus-danger, 5%) 0%,
+      darken($osus-danger, 15%) 100%
+    );
+    border-color: darken($osus-danger, 10%);
+    color: $osus-white;
+  }
+}
+
+// INFO BUTTON - Premium Teal
+// ==========================
+.btn-info {
+  background: linear-gradient(
+    135deg,
+    $osus-info 0%,
+    darken($osus-info, 10%) 100%
+  );
+  color: $osus-white;
+  border: 1px solid $osus-info;
+
+  &:hover {
+    background: linear-gradient(
+      135deg,
+      darken($osus-info, 5%) 0%,
+      darken($osus-info, 15%) 100%
+    );
+    border-color: darken($osus-info, 10%);
+    color: $osus-white;
+  }
+}
+
+// OUTLINE BUTTONS - Luxury Borders
+// ================================
+.btn-outline-primary {
+  background: transparent;
+  color: $osus-burgundy-primary;
+  border: 2px solid $osus-burgundy-primary;
+
+  &:hover {
+    background: $osus-burgundy-gradient;
+    color: $osus-white;
+    border-color: $osus-burgundy-primary;
+  }
+}
+
+.btn-outline-secondary {
+  background: transparent;
+  color: $osus-gold-medium;
+  border: 2px solid $osus-gold-medium;
+
+  &:hover {
+    background: $osus-gold-gradient;
+    color: $osus-burgundy-primary;
+    border-color: $osus-gold-medium;
+  }
+}
+
+// BUTTON SIZES - Luxury Proportions
+// =================================
+.btn-sm {
+  padding: $osus-spacing-sm $osus-spacing-md;
+  font-size: $osus-font-size-sm;
+  height: $osus-btn-height-sm;
+  border-radius: $osus-border-radius-md;
+}
+
+.btn-lg {
+  padding: $osus-spacing-lg $osus-spacing-xl;
+  font-size: $osus-font-size-lg;
+  height: $osus-btn-height-lg;
+  border-radius: $osus-border-radius-xl;
+  font-weight: $osus-font-weight-bold;
+}
+
+.btn-xl {
+  padding: $osus-spacing-xl $osus-spacing-2xl;
+  font-size: $osus-font-size-xl;
+  height: $osus-btn-height-xl;
+  border-radius: $osus-border-radius-xl;
+  font-weight: $osus-font-weight-bold;
+  letter-spacing: 1px;
+}
+
+// BUTTON GROUPS - Luxury Arrangement
+// ==================================
+.btn-group {
+  .btn {
+    border-radius: 0;
+
+    &:first-child {
+      border-radius: $osus-border-radius-lg 0 0 $osus-border-radius-lg;
+    }
+
+    &:last-child {
+      border-radius: 0 $osus-border-radius-lg $osus-border-radius-lg 0;
+    }
+
+    &:only-child {
+      border-radius: $osus-border-radius-lg;
+    }
+  }
+}
+
+// FLOATING ACTION BUTTON - Premium Style
+// ======================================
+.btn-floating {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  bottom: $osus-spacing-xl;
+  right: $osus-spacing-xl;
+  z-index: $osus-z-fixed;
+  box-shadow: $osus-shadow-luxury;
+  background: $osus-burgundy-gradient;
+  color: $osus-white;
+  border: none;
+
+  &:hover {
+    transform: scale(1.1) translateY(-2px);
+    box-shadow: 0 12px 24px rgba($osus-burgundy-primary, 0.3);
+  }
+
+  i,
+  svg {
+    font-size: 24px;
+  }
+}
+
+// SPECIAL LUXURY BUTTON VARIANTS
+// ==============================
+
+// Gold Foil Effect Button
+.btn-gold-foil {
+  background: $osus-foil-effect;
+  background-size: 200% 200%;
+  color: $osus-burgundy-primary;
+  border: 1px solid $osus-gold-medium;
+  font-weight: $osus-font-weight-bold;
+  animation: foilShimmer 3s ease-in-out infinite;
+
+  &:hover {
+    animation-duration: 1s;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba($osus-gold-medium, 0.4);
+  }
+}
+
+@keyframes foilShimmer {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+// Glass Effect Button
+.btn-glass {
+  background: rgba($osus-white, 0.1);
+  -webkit-backdrop-filter: $osus-backdrop-blur;
+  backdrop-filter: $osus-backdrop-blur;
+  border: 1px solid rgba($osus-white, 0.2);
+  color: $osus-burgundy-primary;
+
+  &:hover {
+    background: rgba($osus-white, 0.2);
+    border-color: rgba($osus-white, 0.3);
+  }
+}
+
+// Curved Edge Button (Brand Signature)
+.btn-curved {
+  border-radius: $osus-border-radius-curved;
+  padding: $osus-spacing-md $osus-spacing-xl;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: -10px;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border: 10px solid transparent;
+    border-left-color: currentColor;
+    opacity: 0;
+    transition: opacity $osus-transition-standard;
+  }
+
+  &:hover::after {
+    opacity: 1;
+  }
+}
+
+// ODOO SPECIFIC BUTTON OVERRIDES
+// ==============================
+
+// Action buttons in forms
+.o_form_button_edit,
+.o_form_button_create,
+.o_form_button_save {
+  @extend .btn-primary;
+  font-weight: $osus-font-weight-semibold;
+}
+
+.o_form_button_cancel {
+  @extend .btn-outline-secondary;
+}
+
+// Kanban buttons
+.o_kanban_button {
+  border-radius: $osus-border-radius-md;
+  transition: all $osus-transition-fast;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: $osus-shadow-sm;
+  }
+}
+
+// Control panel buttons
+.o_cp_buttons {
+  .btn {
+    margin-left: $osus-spacing-sm;
+
+    &.btn-primary {
+      background: $osus-burgundy-gradient;
+    }
+  }
+}
+
+// List view action buttons
+.o_list_button {
+  border-radius: $osus-border-radius-sm;
+  padding: $osus-spacing-xs $osus-spacing-sm;
+  font-size: $osus-font-size-sm;
+
+  &.btn-link {
+    color: $osus-burgundy-medium;
+    text-decoration: none;
+
+    &:hover {
+      color: $osus-burgundy-primary;
+      text-decoration: underline;
+      text-decoration-color: $osus-gold-medium;
+    }
+  }
+}
+
+// Status bar buttons
+.o_statusbar_buttons {
+  .btn {
+    border-radius: $osus-border-radius-curved;
+    margin: 0 $osus-spacing-xs;
+
+    &.btn-primary {
+      background: $osus-burgundy-gradient;
+    }
+
+    &.btn-secondary {
+      background: $osus-gold-gradient;
+      color: $osus-burgundy-primary;
+    }
+  }
+}
+
+// Pagination buttons
+.o_pager {
+  .btn {
+    border-radius: $osus-border-radius-md;
+    margin: 0 $osus-spacing-xs / 2;
+
+    &:hover {
+      background: $osus-offwhite-burgundy-gradient;
+    }
+  }
+}
+
+// Search panel buttons
+.o_search_panel {
+  .btn {
+    width: 100%;
+    text-align: left;
+    border-radius: $osus-border-radius-md;
+    margin-bottom: $osus-spacing-xs;
+
+    &.active {
+      background: $osus-burgundy-gradient;
+      color: $osus-white;
+    }
+  }
+}
+
+// RESPONSIVE BUTTON ADJUSTMENTS
+// =============================
+@media (max-width: $osus-breakpoint-md) {
+  .btn {
+    padding: $osus-spacing-sm $osus-spacing-md;
+    font-size: $osus-font-size-sm;
+  }
+
+  .btn-lg {
+    padding: $osus-spacing-md $osus-spacing-lg;
+    font-size: $osus-font-size-base;
+  }
+
+  .btn-floating {
+    width: 48px;
+    height: 48px;
+    bottom: $osus-spacing-lg;
+    right: $osus-spacing-lg;
+
+    i,
+    svg {
+      font-size: 20px;
+    }
+  }
+}
+
+@media (max-width: $osus-breakpoint-sm) {
+  .btn {
+    padding: $osus-spacing-xs $osus-spacing-sm;
+    font-size: $osus-font-size-xs;
+  }
+
+  .btn-group {
+    .btn {
+      padding: $osus-spacing-xs;
+    }
+  }
+}

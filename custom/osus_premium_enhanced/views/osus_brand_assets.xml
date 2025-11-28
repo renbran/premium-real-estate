@@ -1,0 +1,14 @@
+<odoo>
+    <template id="assets_backend" name="OSUS Premium Enhanced Backend Assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" type="text/scss" href="/osus_premium_enhanced/static/src/scss/osus_backend_theme.scss"/>
+            <script type="text/javascript" src="/osus_premium_enhanced/static/src/js/osus_enhanced_system.js"/>
+        </xpath>
+    </template>
+    <template id="assets_frontend" name="OSUS Premium Enhanced Frontend Assets" inherit_id="web.assets_frontend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" type="text/scss" href="/osus_premium_enhanced/static/src/scss/frontend/_website.scss"/>
+            <script type="text/javascript" src="/osus_premium_enhanced/static/src/js/osus_frontend_enhanced.js"/>
+        </xpath>
+    </template>
+</odoo>

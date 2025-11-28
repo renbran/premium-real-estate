@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_enhanced_api_config,access_enhanced_api_config,model_enhanced_api_config,base.group_system,1,1,1,1
+access_enhanced_api_log,access_enhanced_api_log,model_enhanced_api_log,base.group_system,1,1,1,1
+access_enhanced_api_usage_log,access_enhanced_api_usage_log,model_enhanced_api_usage_log,base.group_system,1,1,1,1
+access_enhanced_api_config_user,access_enhanced_api_config_user,model_enhanced_api_config,base.group_user,1,0,0,0
+access_enhanced_api_log_user,access_enhanced_api_log_user,model_enhanced_api_log,base.group_user,1,0,0,0

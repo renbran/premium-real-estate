@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Source of Funds Options -->
+        <record id="source_funds_employment" model="kyc.source.funds">
+            <field name="name">Employment Income</field>
+        </record>
+        <record id="source_funds_investment" model="kyc.source.funds">
+            <field name="name">Sale of Investment or Properties</field>
+        </record>
+        <record id="source_funds_business" model="kyc.source.funds">
+            <field name="name">Business Income</field>
+        </record>
+        <record id="source_funds_savings" model="kyc.source.funds">
+            <field name="name">Savings</field>
+        </record>
+        <record id="source_funds_other" model="kyc.source.funds">
+            <field name="name">Other</field>
+        </record>
+
+        <!-- Source of Wealth Options -->
+        <record id="source_wealth_employment" model="kyc.source.wealth">
+            <field name="name">Employment Income</field>
+        </record>
+        <record id="source_wealth_investment" model="kyc.source.wealth">
+            <field name="name">Sale of Investment or Properties</field>
+        </record>
+        <record id="source_wealth_business" model="kyc.source.wealth">
+            <field name="name">Business Income</field>
+        </record>
+        <record id="source_wealth_savings" model="kyc.source.wealth">
+            <field name="name">Savings</field>
+        </record>
+        <record id="source_wealth_inheritance" model="kyc.source.wealth">
+            <field name="name">Inheritance</field>
+        </record>
+        <record id="source_wealth_other" model="kyc.source.wealth">
+            <field name="name">Other</field>
+        </record>
+    </data>
+</odoo>

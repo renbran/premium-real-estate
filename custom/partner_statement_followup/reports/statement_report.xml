@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Partner Statement Report Configuration -->
+
+    <!-- Report Action Definition -->
+    <record id="action_report_partner_statement" model="ir.actions.report">
+        <field name="name">Partner Statement</field>
+        <field name="model">res.partner</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">partner_statement_followup.report_partner_statement_template</field>
+        <field name="report_file">partner_statement_followup.report_partner_statement_template</field>
+        <field name="binding_model_id" ref="base.model_res_partner"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="paperformat_statement_custom"/>
+    </record>
+
+    <!-- Ageing Report Action Definition -->
+    <record id="action_report_partner_ageing" model="ir.actions.report">
+        <field name="name">Partner Ageing Analysis</field>
+        <field name="model">res.partner</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">partner_statement_followup.report_partner_ageing_template</field>
+        <field name="report_file">partner_statement_followup.report_partner_ageing_template</field>
+        <field name="binding_model_id" ref="base.model_res_partner"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="base.paperformat_us"/>
+    </record>
+
+    <!-- Follow-up Letter Report Action Definition -->
+    <record id="action_report_followup_letter" model="ir.actions.report">
+        <field name="name">Follow-up Letter</field>
+        <field name="model">res.partner</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">partner_statement_followup.report_followup_letter_template</field>
+        <field name="report_file">partner_statement_followup.report_followup_letter_template</field>
+        <field name="binding_model_id" ref="base.model_res_partner"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="base.paperformat_us"/>
+    </record>
+
+    <!-- Batch Statement Report Action Definition -->
+    <record id="action_report_batch_statement" model="ir.actions.report">
+        <field name="name">Batch Partner Statement</field>
+        <field name="model">partner.statement.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">partner_statement_followup.report_batch_statement_template</field>
+        <field name="report_file">partner_statement_followup.report_batch_statement_template</field>
+        <field name="binding_model_id" ref="model_partner_statement_wizard"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="base.paperformat_us"/>
+    </record>
+
+    <!-- Excel Export Report Action -->
+    <record id="action_report_statement_excel" model="ir.actions.report">
+        <field name="name">Partner Statement (Excel)</field>
+        <field name="model">res.partner</field>
+        <field name="report_type">xlsx</field>
+        <field name="report_name">partner_statement_followup.report_statement_excel</field>
+        <field name="report_file">partner_statement_followup.report_statement_excel</field>
+        <field name="binding_model_id" ref="base.model_res_partner"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- Report Paper Format for Statements -->
+    <record id="paperformat_statement_custom" model="report.paperformat">
+        <field name="name">Statement Format</field>
+        <field name="format">A4</field>
+        <field name="page_height">297</field>
+        <field name="page_width">210</field>
+        <field name="margin_top">40</field>
+        <field name="margin_bottom">23</field>
+        <field name="margin_left">10</field>
+        <field name="margin_right">10</field>
+        <field name="orientation">Portrait</field>
+        <field name="header_line">False</field>
+        <field name="header_spacing">35</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <!-- Menu Items for Reports -->
+    <record id="menu_partner_statement_reports" model="ir.ui.menu">
+        <field name="name">Reports</field>
+        <field name="parent_id" ref="menu_partner_statements"/>
+        <field name="sequence">30</field>
+    </record>
+
+    <!-- Statement Report Menu -->
+    <record id="menu_statement_report" model="ir.ui.menu">
+        <field name="name">Partner Statements</field>
+        <field name="parent_id" ref="menu_partner_statement_reports"/>
+        <field name="action" ref="action_report_partner_statement"/>
+        <field name="sequence">10</field>
+    </record>
+
+    <!-- Ageing Report Menu -->
+    <record id="menu_ageing_report" model="ir.ui.menu">
+        <field name="name">Ageing Analysis</field>
+        <field name="parent_id" ref="menu_partner_statement_reports"/>
+        <field name="action" ref="action_report_partner_ageing"/>
+        <field name="sequence">20</field>
+    </record>
+
+    <!-- Follow-up Letters Menu -->
+    <record id="menu_followup_letters" model="ir.ui.menu">
+        <field name="name">Follow-up Letters</field>
+        <field name="parent_id" ref="menu_partner_statement_reports"/>
+        <field name="action" ref="action_report_followup_letter"/>
+        <field name="sequence">30</field>
+    </record>
+
+    <!-- Server Actions for Report Generation -->
+    <record id="server_action_generate_statements" model="ir.actions.server">
+        <field name="name">Generate Statements</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="binding_model_id" ref="base.model_res_partner"/>
+        <field name="binding_type">action</field>
+        <field name="state">code</field>
+        <field name="code">
+# Generate partner statements for selected partners
+if records:
+    wizard_obj = env['partner.statement.wizard']
+    wizard = wizard_obj.create({
+        'partner_ids': [(6, 0, records.ids)],
+        'date_to': fields.Date.today(),
+        'output_format': 'pdf',
+    })
+    action = wizard.action_generate_statement()
+    
+    # Return the action to show the result
+    if action:
+        action.update({
+            'target': 'new',
+            'res_model': 'partner.statement.wizard',
+            'res_id': wizard.id,
+            'view_mode': 'form',
+        })
+        result = action
+        </field>
+    </record>
+
+    <!-- Automated Statement Generation via Cron -->
+    <record id="cron_generate_monthly_statements" model="ir.cron">
+        <field name="name">Generate Monthly Partner Statements</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="state">code</field>
+        <field name="code">
+# Generate monthly statements for all customers
+wizard_obj = env['partner.statement.wizard']
+wizard = wizard_obj.create({
+    'filter_by': 'customers',
+    'customer_only': True,
+    'exclude_zero_balance': True,
+    'date_to': fields.Date.today(),
+    'output_format': 'pdf',
+    'send_email': True,
+    'auto_followup': True,
+})
+wizard.action_generate_statement()
+        </field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">months</field>
+        <field name="numbercall">-1</field>
+        <field name="active">False</field>
+        <field name="doall">False</field>
+    </record>
+
+    <!-- Email Templates for Statements -->
+    <record id="email_template_partner_statement" model="mail.template">
+        <field name="name">Partner Statement</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="subject">Statement of Account - {{ object.name }}</field>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px;">
+                <p>Dear {{ object.name }},</p>
+
+                <p>Please find attached your Statement of Account as of {{ ctx.get('date_to', '') }}.</p>
+
+                <p>If you have any questions about your account or need clarification on any items, 
+       please don't hesitate to contact us.</p>
+
+                <p>Thank you for your business.</p>
+
+                <p>Best regards,<br/>
+       {{ user.name }}<br/>
+       {{ user.company_id.name }}
+            </p>
+        </div>
+    </field>
+    <field name="attachment_ids" eval="[(6, 0, [])]"/>
+    <field name="auto_delete" eval="True"/>
+    <field name="email_from">{{ user.email }}</field>
+    <field name="email_to">{{ object.email }}</field>
+</record>
+</odoo>

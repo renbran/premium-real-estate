@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Backend Assets -->
+        <template id="assets_backend" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" type="text/scss" href="/white_label_branding/static/src/css/white_label.css"/>
+                <script type="text/javascript" src="/white_label_branding/static/src/js/white_label.js"></script>
+            </xpath>
+        </template>
+
+        <!-- Frontend Assets -->
+        <template id="assets_frontend" inherit_id="web.assets_frontend">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" type="text/scss" href="/white_label_branding/static/src/css/frontend.css"/>
+                <script type="text/javascript" src="/white_label_branding/static/src/js/frontend.js"></script>
+            </xpath>
+        </template>
+
+    </data>
+</odoo>

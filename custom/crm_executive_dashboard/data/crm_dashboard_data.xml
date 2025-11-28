@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Default Dashboard Configuration -->
+        <record id="default_crm_executive_dashboard" model="crm.executive.dashboard">
+            <field name="name">Default Executive Dashboard</field>
+            <field name="active" eval="True"/>
+            <field name="date_from" eval="(DateTime.now() - relativedelta(months=1)).strftime('%Y-%m-%d')"/>
+            <field name="date_to" eval="DateTime.now().strftime('%Y-%m-%d')"/>
+            <field name="user_id" ref="base.user_admin"/>
+        </record>
+
+        <!-- System Parameters for Dashboard Configuration -->
+        <record id="param_auto_refresh" model="ir.config_parameter">
+            <field name="key">crm_executive_dashboard.auto_refresh</field>
+            <field name="value">True</field>
+        </record>
+
+        <record id="param_refresh_interval" model="ir.config_parameter">
+            <field name="key">crm_executive_dashboard.refresh_interval</field>
+            <field name="value">5</field>
+        </record>
+
+        <record id="param_default_period" model="ir.config_parameter">
+            <field name="key">crm_executive_dashboard.default_period</field>
+            <field name="value">30</field>
+        </record>
+
+        <record id="param_show_forecasts" model="ir.config_parameter">
+            <field name="key">crm_executive_dashboard.show_forecasts</field>
+            <field name="value">True</field>
+        </record>
+
+        <record id="param_currency_format" model="ir.config_parameter">
+            <field name="key">crm_executive_dashboard.currency_format</field>
+            <field name="value">symbol</field>
+        </record>
+
+        <!-- Email Template for Dashboard Reports -->
+        <record id="email_template_dashboard_report" model="mail.template">
+            <field name="name">CRM Executive Dashboard Report</field>
+            <field name="model_id" ref="model_crm_executive_dashboard"/>
+            <field name="subject">CRM Executive Dashboard Report - ${object.name}</field>
+            <field name="email_from">${(object.user_id.email or user.email)|safe}</field>
+            <field name="email_to">${object.user_id.email}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
+                    <div style="background-color: #f7f7f7; padding: 20px;">
+                        <div style="background-color: white; border-radius: 8px; padding: 30px; max-width: 600px; margin: 0 auto;">
+                            <h2 style="color: #7c3aed; text-align: center; margin-bottom: 30px;">
+                                📊 CRM Executive Dashboard Report
+                            </h2>
+                            
+                            <div style="margin-bottom: 20px;">
+                                <h3 style="color: #333; border-bottom: 2px solid #7c3aed; padding-bottom: 10px;">
+                                    Dashboard Overview
+                                </h3>
+                                <p><strong>Dashboard:</strong> ${object.name}</p>
+                                <p><strong>Period:</strong> ${object.date_from} to ${object.date_to}</p>
+                                <p><strong>Generated:</strong> ${datetime.datetime.now().strftime('%Y-%m-%d %H:%M')}</p>
+                            </div>
+
+                            <div style="margin-bottom: 20px;">
+                                <h3 style="color: #333; border-bottom: 2px solid #7c3aed; padding-bottom: 10px;">
+                                    Quick Access
+                                </h3>
+                                <p>
+                                    <a href="/web#action=crm_executive_dashboard.action_crm_executive_dashboard_main" 
+                                       style="background-color: #7c3aed; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">
+                                        View Dashboard
+                                    </a>
+                                </p>
+                            </div>
+
+                            <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+                                <p style="color: #666; font-size: 12px;">
+                                    This is an automated report from your CRM Executive Dashboard.
+                                    <br/>
+                                    ${ctx.get('company_name', 'Your Company')}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </field>
+        </record>
+
+        <!-- Scheduled Action for Dashboard Data Cleanup -->
+        <record id="ir_cron_dashboard_cleanup" model="ir.cron">
+            <field name="name">CRM Dashboard: Cleanup Old Configurations</field>
+            <field name="model_id" ref="model_crm_executive_dashboard"/>
+            <field name="state">code</field>
+            <field name="code">
+                # Clean up old dashboard configurations (older than 6 months and inactive)
+                old_date = (datetime.datetime.now() - relativedelta(months=6)).strftime('%Y-%m-%d')
+                old_dashboards = model.search([
+                    ('active', '=', False),
+                    ('create_date', '&lt;', old_date)
+                ])
+                old_dashboards.unlink()
+            </field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">weeks</field>
+            <field name="numbercall">-1</field>
+            <field name="active" eval="True"/>
+        </record>
+
+    </data>
+</odoo>

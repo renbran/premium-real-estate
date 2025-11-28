@@ -1,0 +1,19 @@
+# Module Icon
+# This would typically be a PNG file, but for demonstration, I'm creating a placeholder
+
+Frontend Enhancement Module Icon
+===============================
+
+This module uses a professional icon representing:
+- File upload functionality (cloud upload icon)
+- Reference management (tag/bookmark icons)
+- Enhanced frontend (modern UI elements)
+
+Icon specifications:
+- Size: 128x128 pixels
+- Format: PNG with transparency
+- Colors: OSUS Properties branding (#1f4788 primary)
+- Style: Modern, professional, minimalist
+
+The icon should be created and placed at:
+static/description/icon.png

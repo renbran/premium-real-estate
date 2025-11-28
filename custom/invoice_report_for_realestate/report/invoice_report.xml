@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_osus_invoice_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-set="o" t-value="doc.with_context(lang=lang)"/>
+                <t t-set="format_uk_date" t-value="lambda d: d.strftime('%d/%m/%Y') if d else ''"/>
+                <t t-set="format_number" t-value="lambda v: '{:,.2f}'.format(float(v)) if v else '0.00'"/>
+                <t t-call="web.external_layout">
+                    <div class="page" style="font-family: 'Arial', 'Helvetica', sans-serif; font-size: 14px; line-height: 1.4; color: #000; margin: 0; padding: 15px;">
+                        <div class="container" style="max-width: 100%; margin: 0 auto; padding: 0;">
+                            <!-- QR Code and Vendor Details -->
+                            <div class="row mb-2" style="margin-top: 10px; margin-bottom: 15px;">
+                                <div class="col-6">
+                                    <!-- QR Code Section - Optional for Customer Invoices -->
+                                    <div style="display: flex; align-items: flex-start;">
+                                        <t t-if="o.qr_in_report and o.qr_image">
+                                            <div style="text-align: center;">
+                                                <img class="border border-dark rounded" t-att-src="image_data_uri(o.qr_image)" style="width:120px; height:120px;"/>
+                                                <div style="font-size: 10px; color: #800020; margin-top: 5px; font-weight: bold;">
+                                                    Scan to view invoice<br/>or make payment
+                                                </div>
+                                            </div>
+                                        </t>
+                                        <t t-else="">
+                                            <div style="width:120px; height:120px; border: 2px solid #800020; display: flex; align-items: center; justify-content: center; background-color: #f8f9fa; flex-direction: column;">
+                                                <span style="color: #800020; font-weight: bold; font-size: 14px;">INVOICE</span>
+                                                <span style="color: #666; font-size: 10px; text-align: center;">QR Code<br/>Optional</span>
+                                            </div>
+                                        </t>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div style="text-align: right; padding-left: 15px;">
+                                        <h5 style="color: #800020; font-weight: bold; font-size: 18px; margin-bottom: 8px; text-decoration: underline;">VENDOR DETAILS</h5>
+                                        <div style="color: #000; font-size: 16px; line-height: 1.3; margin-bottom: 4px; font-weight: bold;">
+                                            <span t-field="o.partner_id.name"/>
+                                        </div>
+                                        <div style="color: #000; font-size: 16px; line-height: 1.3; margin-bottom: 3px;" t-field="o.partner_id.street"/>
+                                        <t t-if="o.partner_id.street2">
+                                            <div style="color: #000; font-size: 16px; line-height: 1.3; margin-bottom: 3px;" t-field="o.partner_id.street2"/>
+                                        </t>
+                                        <div style="color: #000; font-size: 16px; line-height: 1.3; margin-bottom: 3px;">
+                                            <span t-field="o.partner_id.city"/>
+                                            <t t-if="o.partner_id.zip">, <span t-field="o.partner_id.zip"/></t>
+                                        </div>
+                                        <div style="color: #000; font-size: 16px; line-height: 1.3; margin-bottom: 3px;" t-field="o.partner_id.country_id.name"/>
+                                        <div style="color: #000; font-size: 16px; line-height: 1.3; font-weight: bold;">
+                                            <strong>VAT: <span t-field="o.partner_id.vat"/></strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Invoice Header -->
+                            <div style="text-align: center; margin: 15px 0;">
+                                <h2 style="color: #800020; font-size: 24px; font-weight: bold; margin: 0; letter-spacing: 1px; font-family: 'Arial', 'Helvetica', sans-serif;">
+                                    TAX INVOICE <span t-field="o.name" style="color: #800020;"/>
+                                </h2>
+                            </div>
+
+                            <!-- Dates -->
+                            <div class="row mb-2" style="margin-bottom: 12px;">
+                                <div class="col-4">
+                                    <div style="font-size: 14px;">
+                                        <strong style="color: #800020;">Invoice Date:</strong> 
+                                        <span style="color: #000;" t-out="format_uk_date(o.invoice_date)"/>
+                                    </div>
+                                </div>
+                                <div class="col-4 text-center">
+                                    <div style="font-size: 14px;">
+                                        <strong style="color: #800020;">Due Date:</strong> 
+                                        <span style="color: #000;" t-out="format_uk_date(o.invoice_date_due or o.date)"/>
+                                    </div>
+                                </div>
+                                <div class="col-4 text-end">
+                                    <div style="font-size: 14px;">
+                                        <strong style="color: #800020;">Booking Date:</strong> 
+                                        <span style="color: #000;" t-out="format_uk_date(o.booking_date)"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Line Items -->
+                            <table class="table table-bordered mb-3" style="border: 3px solid #800020; border-collapse: collapse; margin-bottom: 12px; width: 100%; font-size: 14px;">
+                                <thead>
+                                    <tr style="background-color: #800020; color: white;">
+                                        <th style="color: white; padding: 8px; border: 2px solid #800020; font-size: 14px; font-weight: bold; text-align: center; vertical-align: middle;">BUYER</th>
+                                        <th style="color: white; padding: 8px; border: 2px solid #800020; font-size: 14px; font-weight: bold; text-align: center; vertical-align: middle;">PROJECT</th>
+                                        <th style="color: white; padding: 8px; border: 2px solid #800020; font-size: 14px; font-weight: bold; text-align: center; vertical-align: middle;">UNIT</th>
+                                        <th style="color: white; padding: 8px; border: 2px solid #800020; font-size: 14px; font-weight: bold; text-align: center; vertical-align: middle;">RATE</th>
+                                        <th style="color: white; padding: 8px; border: 2px solid #800020; font-size: 14px; font-weight: bold; text-align: center; vertical-align: middle;">UNIT PRICE</th>
+                                        <th style="color: white; padding: 8px; border: 2px solid #800020; font-size: 14px; font-weight: bold; text-align: center; vertical-align: middle;">VAT</th>
+                                        <th style="color: white; padding: 8px; border: 2px solid #800020; font-size: 14px; font-weight: bold; text-align: center; vertical-align: middle;">VAT AMOUNT</th>
+                                        <th style="color: white; padding: 8px; border: 2px solid #800020; font-size: 14px; font-weight: bold; text-align: center; vertical-align: middle;">AMOUNT</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr style="background-color: white;">
+                                        <td style="color: #000; padding: 8px; border: 2px solid #800020; font-size: 14px; vertical-align: middle;"><span t-field="o.buyer_id.name"/></td>
+                                        <td style="color: #000; padding: 8px; border: 2px solid #800020; font-size: 14px; vertical-align: middle;"><span t-field="o.project_id.name"/></td>
+                                        <td style="color: #000; padding: 8px; border: 2px solid #800020; font-size: 14px; vertical-align: middle;"><span t-field="o.unit_id.name"/></td>
+                                        <td class="text-end" style="color: #000; padding: 8px; border: 2px solid #800020; font-size: 14px; text-align: right; vertical-align: middle;">
+                                            <t t-if="o.invoice_line_ids">
+                                                <span t-esc="format_number(o.invoice_line_ids[0].quantity * 100)"/>%
+                                            </t>
+                                            <t t-else="">0.00%</t>
+                                        </td>
+                                        <td class="text-end" style="color: #000; padding: 8px; border: 2px solid #800020; font-size: 14px; text-align: right; vertical-align: middle;">
+                                            <span t-esc="format_number(o.sale_value)"/> AED
+                                        </td>
+                                        <td class="text-center" style="color: #000; padding: 8px; border: 2px solid #800020; font-size: 14px; text-align: center; vertical-align: middle;">5%</td>
+                                        <td class="text-end" style="color: #000; padding: 8px; border: 2px solid #800020; font-size: 14px; text-align: right; vertical-align: middle;">
+                                            <span t-esc="format_number(o.amount_tax)"/> AED
+                                        </td>
+                                        <td class="text-end" style="color: #000; padding: 8px; border: 2px solid #800020; font-size: 14px; text-align: right; vertical-align: middle; font-weight: bold;">
+                                            <span t-esc="format_number(o.amount_total)"/> AED
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <!-- Totals - Enhanced with better spacing and bold text -->
+                            <div class="row justify-content-end" style="margin-bottom: 12px;">
+                                <div class="col-5">
+                                    <table style="width: 100%; border-collapse: collapse; border: 3px solid #800020; font-size: 14px;">
+                                        <tr style="background-color: #800020; color: white;">
+                                            <td style="border: 2px solid #800020; padding: 8px; font-weight: bold; text-align: left;">UNTAXED AMOUNT</td>
+                                            <td style="border: 2px solid #800020; padding: 8px; text-align: right; font-weight: bold;">
+                                                <span t-esc="format_number(o.amount_untaxed)"/> AED
+                                            </td>
+                                        </tr>
+                                        <tr style="background-color: #800020; color: white;">
+                                            <td style="border: 2px solid #800020; padding: 8px; font-weight: bold; text-align: left;">VAT (5%)</td>
+                                            <td style="border: 2px solid #800020; padding: 8px; text-align: right; font-weight: bold;">
+                                                <span t-esc="format_number(o.amount_tax)"/> AED
+                                            </td>
+                                        </tr>
+                                        <tr style="background-color: #800020; color: white;">
+                                            <td style="border: 2px solid #800020; padding: 8px; font-weight: bold; text-align: left;">TOTAL DUE AMOUNT</td>
+                                            <td style="border: 2px solid #800020; padding: 8px; text-align: right; font-weight: bold; font-size: 16px;">
+                                                <span t-esc="format_number(o.amount_total)"/> AED
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Amount in Words -->
+                            <div class="mb-3" style="color: #000; font-size: 14px; margin-bottom: 12px;">
+                                <strong style="color: #800020;">Amount in Words (Total):</strong>
+                                <span t-field="o.amount_total_words" style="font-style: italic;"/>
+                            </div>
+
+                            <!-- Payment Instructions -->
+                            <div class="mb-3" style="margin-bottom: 12px;">
+                                <h4 style="color: #800020; font-size: 16px; font-weight: bold; margin-bottom: 8px;">Payment Instructions</h4>
+                                <p style="color: #000; font-size: 14px; margin-bottom: 8px;">Please pay to this Account Details in Cheque or Bank Transfer</p>
+                                <table style="width: 100%; border-collapse: collapse; border: 3px solid #800020; font-size: 14px;">
+                                    <tr style="background-color: #f8f9fa;">
+                                        <td style="width: 30%; color: #000; font-weight: bold; padding: 6px; border: 2px solid #800020;">Bank Name</td>
+                                        <td style="color: #000; padding: 6px; border: 2px solid #800020;">ABU DHABI COMMERCIAL BANK (ADCB)</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="color: #000; font-weight: bold; padding: 6px; border: 2px solid #800020;">Account Name</td>
+                                        <td style="color: #000; padding: 6px; border: 2px solid #800020;">OSUS REAL ESTATE BROKERAGE LLC</td>
+                                    </tr>
+                                    <tr style="background-color: #f8f9fa;">
+                                        <td style="color: #000; font-weight: bold; padding: 6px; border: 2px solid #800020;">Account No.</td>
+                                        <td style="color: #000; padding: 6px; border: 2px solid #800020;">14041417820001 - AED</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="color: #000; font-weight: bold; padding: 6px; border: 2px solid #800020;">IBAN</td>
+                                        <td style="color: #000; padding: 6px; border: 2px solid #800020;">AE350030014041417820001</td>
+                                    </tr>
+                                    <tr style="background-color: #f8f9fa;">
+                                        <td style="color: #000; font-weight: bold; padding: 6px; border: 2px solid #800020;">Branch</td>
+                                        <td style="color: #000; padding: 6px; border: 2px solid #800020;">Business Bay</td>
+                                    </tr>
+                                </table>
+                                <p class="fst-italic" style="color: #000; margin-top: 6px; font-size: 12px; font-style: italic;">Please include your reference number when making the payment</p>
+                            </div>
+
+                            <!-- Footer with larger disclaimer -->
+                            <div class="text-center" style="color: #000; font-size: 14px; margin-top: 12px; border-top: 1px solid #eee; padding-top: 6px; font-weight: bold;">
+                                This is a computer generated document. No signature or stamp required.
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

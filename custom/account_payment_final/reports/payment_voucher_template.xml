@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- This file is deprecated. Templates have been moved to views/payment_voucher_template.xml -->
+        <!-- This file exists only for backward compatibility during upgrades -->
+    </data>
+</odoo>

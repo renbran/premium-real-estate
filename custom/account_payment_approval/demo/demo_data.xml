@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Demo Partners for Payment Testing -->
+    <record id="demo_partner_real_estate_vendor" model="res.partner">
+        <field name="name">Prime Real Estate Services</field>
+        <field name="is_company">True</field>
+        <field name="street">123 Property Lane</field>
+        <field name="city">Real Estate City</field>
+        <field name="zip">12345</field>
+        <field name="email">vendor@primerealestate.com</field>
+        <field name="phone">+1-555-0123</field>
+        <field name="supplier_rank">1</field>
+        <field name="category_id" eval="[(6, 0, [ref('base.res_partner_category_3')])]"/>
+    </record>
+
+    <record id="demo_partner_maintenance_company" model="res.partner">
+        <field name="name">OSUS Maintenance Solutions</field>
+        <field name="is_company">True</field>
+        <field name="street">456 Service Street</field>
+        <field name="city">Maintenance City</field>
+        <field name="zip">67890</field>
+        <field name="email">contact@osusmaintenance.com</field>
+        <field name="phone">+1-555-0456</field>
+        <field name="supplier_rank">1</field>
+    </record>
+
+    <record id="demo_partner_legal_services" model="res.partner">
+        <field name="name">Property Legal Associates</field>
+        <field name="is_company">True</field>
+        <field name="street">789 Legal Avenue</field>
+        <field name="city">Law City</field>
+        <field name="zip">13579</field>
+        <field name="email">admin@propertylegal.com</field>
+        <field name="phone">+1-555-0789</field>
+        <field name="supplier_rank">1</field>
+    </record>
+
+    <record id="demo_partner_tenant_johnson" model="res.partner">
+        <field name="name">Johnson Family Trust</field>
+        <field name="is_company">False</field>
+        <field name="street">321 Tenant Road</field>
+        <field name="city">Residential Area</field>
+        <field name="zip">24680</field>
+        <field name="email">johnson.trust@email.com</field>
+        <field name="phone">+1-555-0321</field>
+        <field name="customer_rank">1</field>
+    </record>
+
+    <record id="demo_partner_tenant_smith" model="res.partner">
+        <field name="name">Smith Enterprises LLC</field>
+        <field name="is_company">True</field>
+        <field name="street">654 Business Plaza</field>
+        <field name="city">Commercial District</field>
+        <field name="zip">97531</field>
+        <field name="email">accounting@smithenterprises.com</field>
+        <field name="phone">+1-555-0654</field>
+        <field name="customer_rank">1</field>
+    </record>
+
+    <!-- Demo Payment Vouchers -->
+    <record id="demo_payment_maintenance_repair" model="account.payment">
+        <field name="partner_id" ref="demo_partner_maintenance_company"/>
+        <field name="payment_type">outbound</field>
+        <field name="amount">2500.00</field>
+        <field name="ref">Monthly maintenance for Property Complex A</field>
+        <field name="date" eval="(DateTime.now() - timedelta(days=5)).strftime('%Y-%m-%d')"/>
+        <field name="voucher_state">submitted</field>
+        <field name="voucher_number">PV-2024-001</field>
+        <field name="related_document_type">Invoice</field>
+        <field name="related_document_number">INV-MAINT-2024-001</field>
+        <field name="related_document_date" eval="(DateTime.now() - timedelta(days=7)).strftime('%Y-%m-%d')"/>
+        <field name="amount_in_words">Two Thousand Five Hundred Dollars and Zero Cents</field>
+        <field name="creator_name">System Administrator</field>
+        <field name="creator_signature_date" eval="(DateTime.now() - timedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+    </record>
+
+    <record id="demo_payment_legal_fees" model="account.payment">
+        <field name="partner_id" ref="demo_partner_legal_services"/>
+        <field name="payment_type">outbound</field>
+        <field name="amount">5000.00</field>
+        <field name="ref">Legal consultation for property acquisition - Downtown Project</field>
+        <field name="date" eval="(DateTime.now() - timedelta(days=3)).strftime('%Y-%m-%d')"/>
+        <field name="voucher_state">reviewed</field>
+        <field name="voucher_number">PV-2024-002</field>
+        <field name="related_document_type">Contract</field>
+        <field name="related_document_number">CON-LEGAL-2024-002</field>
+        <field name="related_document_date" eval="(DateTime.now() - timedelta(days=10)).strftime('%Y-%m-%d')"/>
+        <field name="amount_in_words">Five Thousand Dollars and Zero Cents</field>
+        <field name="creator_name">System Administrator</field>
+        <field name="creator_signature_date" eval="(DateTime.now() - timedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="reviewer_name">Demo Reviewer</field>
+        <field name="reviewer_signature_date" eval="(DateTime.now() - timedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
+    </record>
+
+    <record id="demo_payment_real_estate_commission" model="account.payment">
+        <field name="partner_id" ref="demo_partner_real_estate_vendor"/>
+        <field name="payment_type">outbound</field>
+        <field name="amount">15000.00</field>
+        <field name="ref">Real estate commission for Maple Street property sale</field>
+        <field name="date" eval="(DateTime.now() - timedelta(days=1)).strftime('%Y-%m-%d')"/>
+        <field name="voucher_state">approved</field>
+        <field name="voucher_number">PV-2024-003</field>
+        <field name="related_document_type">Sale Agreement</field>
+        <field name="related_document_number">SA-MAPLE-2024-001</field>
+        <field name="related_document_date" eval="(DateTime.now() - timedelta(days=15)).strftime('%Y-%m-%d')"/>
+        <field name="amount_in_words">Fifteen Thousand Dollars and Zero Cents</field>
+        <field name="creator_name">System Administrator</field>
+        <field name="creator_signature_date" eval="(DateTime.now() - timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="reviewer_name">Demo Reviewer</field>
+        <field name="reviewer_signature_date" eval="(DateTime.now() - timedelta(hours=20)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="approver_name">Demo Approver</field>
+        <field name="approver_signature_date" eval="(DateTime.now() - timedelta(hours=12)).strftime('%Y-%m-%d %H:%M:%S')"/>
+    </record>
+
+    <!-- Demo Receipt Vouchers -->
+    <record id="demo_receipt_johnson_rent" model="account.payment">
+        <field name="partner_id" ref="demo_partner_tenant_johnson"/>
+        <field name="payment_type">inbound</field>
+        <field name="amount">3200.00</field>
+        <field name="ref">Monthly rent payment - Johnson Family Trust - Apartment 12A</field>
+        <field name="date" eval="(DateTime.now() - timedelta(days=2)).strftime('%Y-%m-%d')"/>
+        <field name="voucher_state">reviewed</field>
+        <field name="voucher_number">RV-2024-001</field>
+        <field name="related_document_type">Lease Agreement</field>
+        <field name="related_document_number">LEASE-12A-2024</field>
+        <field name="related_document_date" eval="(DateTime.now() - timedelta(days=30)).strftime('%Y-%m-%d')"/>
+        <field name="amount_in_words">Three Thousand Two Hundred Dollars and Zero Cents</field>
+        <field name="creator_name">System Administrator</field>
+        <field name="creator_signature_date" eval="(DateTime.now() - timedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="reviewer_name">Demo Reviewer</field>
+        <field name="reviewer_signature_date" eval="(DateTime.now() - timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+    </record>
+
+    <record id="demo_receipt_smith_rent" model="account.payment">
+        <field name="partner_id" ref="demo_partner_tenant_smith"/>
+        <field name="payment_type">inbound</field>
+        <field name="amount">8500.00</field>
+        <field name="ref">Monthly commercial rent - Smith Enterprises - Office Suite 401</field>
+        <field name="date" eval="DateTime.now().strftime('%Y-%m-%d')"/>
+        <field name="voucher_state">authorized</field>
+        <field name="voucher_number">RV-2024-002</field>
+        <field name="related_document_type">Commercial Lease</field>
+        <field name="related_document_number">COM-LEASE-401-2024</field>
+        <field name="related_document_date" eval="(DateTime.now() - timedelta(days=45)).strftime('%Y-%m-%d')"/>
+        <field name="amount_in_words">Eight Thousand Five Hundred Dollars and Zero Cents</field>
+        <field name="creator_name">System Administrator</field>
+        <field name="creator_signature_date" eval="DateTime.now().strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="reviewer_name">Demo Reviewer</field>
+        <field name="reviewer_signature_date" eval="(DateTime.now() - timedelta(hours=18)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="authorizer_name">Demo Authorizer</field>
+        <field name="authorizer_signature_date" eval="(DateTime.now() - timedelta(hours=6)).strftime('%Y-%m-%d %H:%M:%S')"/>
+    </record>
+
+    <record id="demo_receipt_security_deposit" model="account.payment">
+        <field name="partner_id" ref="demo_partner_tenant_johnson"/>
+        <field name="payment_type">inbound</field>
+        <field name="amount">4800.00</field>
+        <field name="ref">Security deposit refund processed - Unit 12A - Johnson Family Trust</field>
+        <field name="date" eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d')"/>
+        <field name="voucher_state">posted</field>
+        <field name="voucher_number">RV-2024-003</field>
+        <field name="related_document_type">Deposit Agreement</field>
+        <field name="related_document_number">DEP-12A-2023</field>
+        <field name="related_document_date" eval="(DateTime.now() - timedelta(days=365)).strftime('%Y-%m-%d')"/>
+        <field name="amount_in_words">Four Thousand Eight Hundred Dollars and Zero Cents</field>
+        <field name="creator_name">System Administrator</field>
+        <field name="creator_signature_date" eval="(DateTime.now() - timedelta(days=4)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="reviewer_name">Demo Reviewer</field>
+        <field name="reviewer_signature_date" eval="(DateTime.now() - timedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="authorizer_name">Demo Authorizer</field>
+        <field name="authorizer_signature_date" eval="(DateTime.now() - timedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
+    </record>
+
+    <!-- Demo Draft Payments for Testing -->
+    <record id="demo_draft_payment_utilities" model="account.payment">
+        <field name="partner_id" ref="demo_partner_maintenance_company"/>
+        <field name="payment_type">outbound</field>
+        <field name="amount">1200.00</field>
+        <field name="ref">Utility payments for Property Complex B - Draft for approval</field>
+        <field name="date" eval="DateTime.now().strftime('%Y-%m-%d')"/>
+        <field name="voucher_state">draft</field>
+        <field name="related_document_type">Utility Bill</field>
+        <field name="related_document_number">UTIL-COMPLEX-B-2024</field>
+        <field name="related_document_date" eval="(DateTime.now() - timedelta(days=5)).strftime('%Y-%m-%d')"/>
+        <field name="amount_in_words">One Thousand Two Hundred Dollars and Zero Cents</field>
+    </record>
+
+    <record id="demo_draft_receipt_late_fee" model="account.payment">
+        <field name="partner_id" ref="demo_partner_tenant_smith"/>
+        <field name="payment_type">inbound</field>
+        <field name="amount">150.00</field>
+        <field name="ref">Late fee collection - Smith Enterprises - Draft processing</field>
+        <field name="date" eval="DateTime.now().strftime('%Y-%m-%d')"/>
+        <field name="voucher_state">draft</field>
+        <field name="related_document_type">Late Fee Notice</field>
+        <field name="related_document_number">LF-SMITH-2024-01</field>
+        <field name="related_document_date" eval="(DateTime.now() - timedelta(days=3)).strftime('%Y-%m-%d')"/>
+        <field name="amount_in_words">One Hundred Fifty Dollars and Zero Cents</field>
+    </record>
+
+</odoo>

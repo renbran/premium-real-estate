@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Company Configuration for OSUS Branding -->
+        <record id="view_company_form_osus_branding" model="ir.ui.view">
+            <field name="name">res.company.form.osus.branding</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+                <!-- Add at the end of notebook -->
+                <xpath expr="//notebook" position="inside">
+                    <page string="OSUS Payment Voucher Settings" name="osus_payment_settings">
+                        <group>
+                            <group string="Branding Options">
+                                <field name="use_osus_branding"/>
+                            </group>
+                            <group string="Voucher Settings">
+                                <field name="voucher_footer_message"/>
+                                <field name="voucher_terms"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Payment Voucher Configuration Menu -->
+        <record id="action_payment_voucher_config" model="ir.actions.act_window">
+            <field name="name">Payment Voucher Configuration</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.company</field>
+            <field name="view_mode">form</field>
+            <field name="target">current</field>
+            <field name="context">{'form_view_initial_mode': 'edit'}</field>
+        </record>
+
+        <menuitem id="menu_payment_voucher_config"
+                  name="Payment Voucher Settings"
+                  parent="account.menu_finance_configuration"
+                  action="action_payment_voucher_config"
+                  sequence="50"/>
+
+    </data>
+</odoo>

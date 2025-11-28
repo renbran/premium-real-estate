@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- KYC Report Template -->
+        <template id="report_kyc_form_document">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <style>
+                                .kyc-form{font-family:Arial,sans-serif;font-size:13px;line-height:1.4}
+                                .kyc-header{text-align:center;margin-bottom:15px}
+                                .kyc-title{font-size:20px;font-weight:bold;margin-bottom:5px}
+                                .kyc-subtitle{font-size:15px;margin-bottom:5px}
+                                .kyc-confidential{font-size:13px;color:#666;margin-bottom:15px}
+                                .kyc-section{margin-bottom:15px;border:1px solid #ddd;padding:8px}
+                                .kyc-section-title{background-color:#f0f0f0;padding:4px;margin:-8px -8px 8px -8px;font-weight:bold;font-size:14px}
+                                .kyc-row{margin-bottom:8px}
+                                .kyc-field{display:inline-block;margin-right:15px;margin-bottom:8px}
+                                .kyc-label{font-weight:bold;margin-right:5px;font-size:13px}
+                                .kyc-value{border-bottom:1px solid #999;padding:0 5px;min-width:120px;display:inline-block}
+                                .kyc-checkbox{margin-right:15px;margin-bottom:6px;font-size:13px;display:inline-block}
+                                .kyc-full-width{width:100%}
+                                .kyc-half-width{width:48%;display:inline-block}
+                                .kyc-third-width{width:31%;display:inline-block}
+                                .kyc-quarter-width{width:23%;display:inline-block}
+                                /* New 3-column checkbox layout */
+                                .kyc-checkbox-container{display:flex;flex-wrap:wrap;gap:10px}
+                                .kyc-checkbox-col{flex:1;min-width:30%;margin-bottom:8px}
+                                .kyc-checkbox-col-3{width:32%;display:inline-block;vertical-align:top;margin-right:1%}
+                                .kyc-checkbox-col-4{width:24%;display:inline-block;vertical-align:top;margin-right:1%}
+                                .kyc-checkbox-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;margin-top:8px}
+                                .kyc-checkbox-item{display:flex;align-items:center;padding:3px 0}
+                                .kyc-checkbox-item input[type="checkbox"]{margin-right:8px;transform:scale(1.2)}
+                                .kyc-note{font-size:11px;margin-top:10px;padding:8px;background-color:#f9f9f9}
+                                .kyc-declaration{margin-top:15px;padding:12px;background-color:#f0f0f0;font-size:13px}
+                                .kyc-signature-section{margin-top:25px}
+                                .kyc-signature-field{display:inline-block;width:30%;margin-right:5%}
+                                /* Compact spacing for better page utilization */
+                                @media print{
+                                    .kyc-section{margin-bottom:12px;padding:6px}
+                                    .kyc-section-title{margin:-6px -6px 6px -6px;padding:3px}
+                                    .kyc-row{margin-bottom:6px}
+                                    .kyc-field{margin-bottom:6px}
+                                    .kyc-checkbox{margin-bottom:4px}
+                                }
+                            </style>
+
+                            <div class="kyc-form">
+                                <!-- Header -->
+                                <div class="kyc-header">
+                                    <div class="kyc-title">KYC FORM</div>
+                                    <div class="kyc-subtitle">PROPERTY PURCHASE (INDIVIDUAL)</div>
+                                    <div class="kyc-confidential">STRICTLY CONFIDENTIAL</div>
+                                </div>
+
+                                <!-- Name of Purchaser -->
+                                <div class="kyc-section">
+                                    <div class="kyc-section-title">NAME OF PURCHASER</div>
+                                    <div class="kyc-row">
+                                        <div class="kyc-field kyc-full-width">
+                                            <span class="kyc-label">Full name:</span>
+                                            <span class="kyc-value" style="width:80%"><t t-esc="o.name or ''"/></span>
+                                        </div>
+                                    </div>
+                                    <div class="kyc-row">
+                                        <div class="kyc-field kyc-full-width">
+                                            <span class="kyc-label">Aliases (if any):</span>
+                                            <span class="kyc-value" style="width:80%"><t t-esc="o.x_aliases or ''"/></span>
+                                        </div>
+                                    </div>
+                                    <div class="kyc-row">
+                                        <div class="kyc-field kyc-full-width">
+                                            <span class="kyc-label">Current Residential Address:</span>
+                                            <span class="kyc-value" style="width:65%">
+                                                <t t-if="o.street"><t t-esc="o.street"/></t>
+                                                <t t-if="o.street2">, <t t-esc="o.street2"/></t>
+                                                <t t-if="o.city">, <t t-esc="o.city"/></t>
+                                                <t t-if="o.state_id">, <t t-esc="o.state_id.name"/></t>
+                                                <t t-if="o.country_id">, <t t-esc="o.country_id.name"/></t>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="kyc-row">
+                                        <div class="kyc-field kyc-quarter-width">
+                                            <span class="kyc-label">Email Address:</span>
+                                            <span class="kyc-value"><t t-esc="o.email or ''"/></span>
+                                        </div>
+                                        <div class="kyc-field kyc-quarter-width">
+                                            <span class="kyc-label">Telephone No.:</span>
+                                            <span class="kyc-value"><t t-esc="o.phone or ''"/></span>
+                                        </div>
+                                        <div class="kyc-field kyc-quarter-width">
+                                            <span class="kyc-label">Mobile No.:</span>
+                                            <span class="kyc-value"><t t-esc="o.mobile or ''"/></span>
+                                        </div>
+                                        <div class="kyc-field kyc-quarter-width">
+                                            <span class="kyc-label">Gender:</span>
+                                            <div class="kyc-checkbox-container">
+                                                <span class="kyc-checkbox">
+                                                    <t t-if="o.x_gender == 'female'">☑ F</t>
+                                                    <t t-else="">☐ F</t>
+                                                </span>
+                                                <span class="kyc-checkbox">
+                                                    <t t-if="o.x_gender == 'male'">☑ M</t>
+                                                    <t t-else="">☐ M</t>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="kyc-row">
+                                        <div class="kyc-field kyc-third-width">
+                                            <span class="kyc-label">Date of Birth (dd/mm/yyyy):</span>
+                                            <span class="kyc-value"><t t-esc="o.x_date_of_birth and o.x_date_of_birth.strftime('%d/%m/%Y') or ''"/></span>
+                                        </div>
+                                        <div class="kyc-field kyc-third-width">
+                                            <span class="kyc-label">Place of Birth:</span>
+                                            <span class="kyc-value"><t t-esc="o.x_place_of_birth or ''"/></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Citizenship -->
+                                <div class="kyc-section">
+                                    <div class="kyc-section-title">CITIZENSHIP</div>
+                                    <div class="kyc-row">
+                                        <div class="kyc-field kyc-third-width">
+                                            <span class="kyc-label">Nationality:</span>
+                                            <span class="kyc-value"><t t-esc="o.country_id.name or ''"/></span>
+                                        </div>
+                                        <div class="kyc-field kyc-third-width">
+                                            <span class="kyc-label">Passport No.:</span>
+                                            <span class="kyc-value"><t t-esc="o.x_passport_number or ''"/></span>
+                                        </div>
+                                        <div class="kyc-field kyc-third-width">
+                                            <span class="kyc-label">Country of Issue:</span>
+                                            <span class="kyc-value"><t t-esc="o.x_passport_country_id.name or ''"/></span>
+                                        </div>
+                                    </div>
+                                    <div class="kyc-row">
+                                        <div class="kyc-field kyc-half-width">
+                                            <span class="kyc-label">Issue Date (dd/mm/yyyy):</span>
+                                            <span class="kyc-value"><t t-esc="o.x_passport_issue_date and o.x_passport_issue_date.strftime('%d/%m/%Y') or ''"/></span>
+                                        </div>
+                                        <div class="kyc-field kyc-half-width">
+                                            <span class="kyc-label">Expiry Date (dd/mm/yyyy):</span>
+                                            <span class="kyc-value"><t t-esc="o.x_passport_expiry_date and o.x_passport_expiry_date.strftime('%d/%m/%Y') or ''"/></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- UAE Residency -->
+                                <div class="kyc-section">
+                                    <div class="kyc-section-title">UAE RESIDENCY (if applicable)</div>
+                                    <div class="kyc-row">
+                                        <div class="kyc-field kyc-third-width">
+                                            <span class="kyc-label">Residency Visa No.:</span>
+                                            <span class="kyc-value"><t t-esc="o.x_residency_visa_no or ''"/></span>
+                                        </div>
+                                        <div class="kyc-field kyc-third-width">
+                                            <span class="kyc-label">Emirates ID No.:</span>
+                                            <span class="kyc-value"><t t-esc="o.x_emirates_id or ''"/></span>
+                                        </div>
+                                        <div class="kyc-field kyc-third-width">
+                                            <span class="kyc-label">Expiry Date (dd/mm/yyyy):</span>
+                                            <span class="kyc-value"><t t-esc="o.x_residency_expiry_date and o.x_residency_expiry_date.strftime('%d/%m/%Y') or ''"/></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Employment -->
+                                <div class="kyc-section">
+                                    <div class="kyc-section-title">EMPLOYMENT</div>
+                                    <div class="kyc-row">
+                                        <div class="kyc-field kyc-third-width">
+                                            <span class="kyc-label">Occupation:</span>
+                                            <span class="kyc-value"><t t-esc="o.function or ''"/></span>
+                                        </div>
+                                        <div class="kyc-field kyc-third-width">
+                                            <span class="kyc-label">Years in Present Role:</span>
+                                            <span class="kyc-value"><t t-esc="o.x_years_in_role or ''"/></span>
+                                        </div>
+                                        <div class="kyc-field kyc-third-width">
+                                            <span class="kyc-label">Annual Income:</span>
+                                            <span class="kyc-value"><t t-esc="o.x_annual_income and '{:,.0f}'.format(o.x_annual_income) or ''"/></span>
+                                        </div>
+                                    </div>
+                                    <div class="kyc-row">
+                                        <div class="kyc-field kyc-half-width">
+                                            <span class="kyc-label">Employer / Establishment Name:</span>
+                                            <span class="kyc-value" style="width:70%"><t t-esc="o.parent_id.name or ''"/></span>
+                                        </div>
+                                        <div class="kyc-field kyc-half-width">
+                                            <span class="kyc-label">Employer Address:</span>
+                                            <span class="kyc-value" style="width:70%"><t t-esc="o.x_employer_address or ''"/></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Source of Funds -->
+                                <div class="kyc-section">
+                                    <div class="kyc-section-title">SOURCE OF FUNDS (Please check all that apply)</div>
+                                    <div class="kyc-checkbox-list">
+                                        <t t-foreach="request.env['kyc.source.funds'].search([])" t-as="sf">
+                                            <div class="kyc-checkbox-item">
+                                                <span class="kyc-checkbox">
+                                                    <t t-if="sf in o.x_source_of_funds">☑</t>
+                                                    <t t-else="">☐</t>
+                                                    <t t-esc="sf.name"/>
+                                                </span>
+                                            </div>
+                                        </t>
+                                    </div>
+                                </div>
+
+                                <!-- Source of Wealth -->
+                                <div class="kyc-section">
+                                    <div class="kyc-section-title">SOURCE OF WEALTH (Please check all that apply)</div>
+                                    <div class="kyc-checkbox-list">
+                                        <t t-foreach="request.env['kyc.source.wealth'].search([])" t-as="sw">
+                                            <div class="kyc-checkbox-item">
+                                                <span class="kyc-checkbox">
+                                                    <t t-if="sw in o.x_source_of_wealth">☑</t>
+                                                    <t t-else="">☐</t>
+                                                    <t t-esc="sw.name"/>
+                                                </span>
+                                            </div>
+                                        </t>
+                                    </div>
+                                </div>
+
+                                <!-- Purpose & Payment -->
+                                <div class="kyc-section">
+                                    <div class="kyc-row">
+                                        <div class="kyc-field kyc-full-width">
+                                            <span class="kyc-label">Purpose of Purchase:</span>
+                                            <div class="kyc-checkbox-container">
+                                                <t t-foreach="[('end_use','End Use'),('savings','Savings'),('investment','Investment'),('other','Other')]" t-as="choice">
+                                                    <div class="kyc-checkbox-col-4">
+                                                        <span class="kyc-checkbox">
+                                                            <t t-if="o.x_purpose_of_purchase == choice[0]">☑</t>
+                                                            <t t-else="">☐</t>
+                                                            <t t-esc="choice[1]"/>
+                                                        </span>
+                                                    </div>
+                                                </t>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="kyc-row">
+                                        <div class="kyc-field kyc-full-width">
+                                            <span class="kyc-label">Payment Method:</span>
+                                            <div class="kyc-checkbox-container">
+                                                <t t-foreach="[('cash','Cash'),('cheque','Cheque'),('bank_transfer','Bank Transfer'),('mortgage','Mortgage'),('crypto','Crypto'),('other','Other')]" t-as="choice">
+                                                    <div class="kyc-checkbox-col-3">
+                                                        <span class="kyc-checkbox">
+                                                            <t t-if="o.x_payment_method == choice[0]">☑</t>
+                                                            <t t-else="">☐</t>
+                                                            <t t-esc="choice[1]"/>
+                                                        </span>
+                                                    </div>
+                                                </t>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="kyc-row">
+                                        <div class="kyc-field kyc-full-width">
+                                            <span class="kyc-label">Are you current / former Politically Exposed Person?</span>
+                                            <div class="kyc-checkbox-container">
+                                                <t t-foreach="[('yes','Yes'),('no','No'),('other','Other')]" t-as="choice">
+                                                    <div class="kyc-checkbox-col-3">
+                                                        <span class="kyc-checkbox">
+                                                            <t t-if="o.x_politically_exposed_person == choice[0]">☑</t>
+                                                            <t t-else="">☐</t>
+                                                            <t t-esc="choice[1]"/>
+                                                        </span>
+                                                    </div>
+                                                </t>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Notes -->
+                                <div class="kyc-note">
+                                    <strong>Note:</strong>
+                                    1. If the Property/Unit is owned in joint names each named customer must complete a separate form.
+                                    2. If the Property/Unit is owned by a company/legal entity, each Ultimate Beneficial Owner (i.e. any individual who owns 25% or more of the ultimate holding company) must complete separate form. Also, a separate checklist will be issued for the legal owner of the Property/Unit.
+                                    3. If a person is acting on behalf of the owner, a separate form must be completed.
+                                    4. Following the initial checks, we may be required to ask further documentation.
+                                </div>
+
+                                <!-- Declaration -->
+                                <div class="kyc-declaration">
+                                    <strong>Declaration:</strong>
+                                    I hereby certify that the information in this KYC Form is true to the best of my knowledge, information and belief, and I agree to promptly notify OSUS REAL ESTATE of any material changes to the information contained in this form.
+                                </div>
+
+                                <!-- Signature -->
+                                <div class="kyc-signature-section">
+                                    <div class="kyc-signature-field">
+                                        <span class="kyc-label">Signature:</span><br/>
+                                        <div style="border-bottom:1px solid #000;height:30px;margin-top:5px"></div>
+                                    </div>
+                                    <div class="kyc-signature-field">
+                                        <span class="kyc-label">Date:</span><br/>
+                                        <div style="border-bottom:1px solid #000;height:30px;margin-top:5px"></div>
+                                    </div>
+                                    <div class="kyc-signature-field">
+                                        <span class="kyc-label">Signed at:</span><br/>
+                                        <div style="border-bottom:1px solid #000;height:30px;margin-top:5px"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Footer -->
+                                <div style="margin-top:40px;text-align:right;font-size:10px;color:#666">
+                                    Document ID: KYC-<t t-esc="o.id"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <!-- Report Action -->
+        <record id="action_report_kyc_form" model="ir.actions.report">
+            <field name="name">KYC Form</field>
+            <field name="model">res.partner</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">contact_kyc.report_kyc_form_document</field>
+            <field name="report_file">contact_kyc.report_kyc_form_document</field>
+            <field name="print_report_name">'KYC Form - %s' % (object.name)</field>
+            <field name="binding_model_id" ref="base.model_res_partner"/>
+            <field name="binding_type">report</field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,125 @@
+<!-- AI Tech Theme - Login Page Templates -->
+<!-- Futuristic login page with glassmorphism -->
+<odoo>
+    <!-- Login Page Template -->
+    <template id="login_template" name="AI Tech Login Page" inherit_id="web.login">
+        <xpath expr="//div[hasclass('oe_login_form')]" position="replace">
+            <div class="o_login_container ai-glass-card">
+                <!-- Animated Background Gradient -->
+                <div class="ai-login-background">
+                    <div class="ai-gradient-orb ai-gradient-orb-1"></div>
+                    <div class="ai-gradient-orb ai-gradient-orb-2"></div>
+                    <div class="ai-gradient-orb ai-gradient-orb-3"></div>
+                </div>
+                
+                <!-- Login Form -->
+                <div class="oe_login_form ai-login-form">
+                    <!-- Logo/Brand -->
+                    <div class="ai-login-header">
+                        <div class="ai-login-logo">
+                            <i class="fa fa-bolt ai-animate-glow" style="font-size: 48px; color: var(--ai-primary);"></i>
+                        </div>
+                        <h1 class="ai-login-title">
+                            <t t-esc="company_name or 'OSUS ERP'"/>
+                        </h1>
+                        <p class="ai-login-tagline">Powered by AI Technology</p>
+                    </div>
+                    
+                    <!-- Login Fields -->
+                    <form class="oe_login_form" role="form" method="post">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        
+                        <!-- Database Selection (if needed) -->
+                        <div class="form-group field-db" t-if="databases">
+                            <label for="db" class="control-label">Database</label>
+                            <div class="ai-input-wrapper">
+                                <i class="fa fa-database ai-input-icon"></i>
+                                <select name="db" class="form-control" required="required">
+                                    <t t-foreach="databases" t-as="db">
+                                        <option t-att-value="db" t-att-selected="db == selected_db">
+                                            <t t-esc="db"/>
+                                        </option>
+                                    </t>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Username/Email -->
+                        <div class="form-group field-login">
+                            <label for="login" class="control-label">Email / Username</label>
+                            <div class="ai-input-wrapper">
+                                <i class="fa fa-user ai-input-icon"></i>
+                                <input type="text" 
+                                       name="login" 
+                                       id="login" 
+                                       class="form-control" 
+                                       required="required" 
+                                       autofocus="autofocus" 
+                                       autocapitalize="off"
+                                       placeholder="Enter your email"/>
+                            </div>
+                        </div>
+                        
+                        <!-- Password -->
+                        <div class="form-group field-password">
+                            <label for="password" class="control-label">Password</label>
+                            <div class="ai-input-wrapper">
+                                <i class="fa fa-lock ai-input-icon"></i>
+                                <input type="password" 
+                                       name="password" 
+                                       id="password" 
+                                       class="form-control" 
+                                       required="required"
+                                       placeholder="Enter your password"/>
+                            </div>
+                        </div>
+                        
+                        <!-- Error Message -->
+                        <div class="alert alert-danger" t-if="error" role="alert">
+                            <i class="fa fa-exclamation-triangle"></i>
+                            <t t-esc="error"/>
+                        </div>
+                        
+                        <!-- Success Message -->
+                        <div class="alert alert-success" t-if="message" role="alert">
+                            <i class="fa fa-check-circle"></i>
+                            <t t-esc="message"/>
+                        </div>
+                        
+                        <!-- Login Button -->
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary btn-block ai-login-button">
+                                <span class="ai-button-text">Sign In</span>
+                                <i class="fa fa-arrow-right ai-button-icon"></i>
+                            </button>
+                        </div>
+                        
+                        <!-- Additional Links -->
+                        <div class="ai-login-footer">
+                            <a href="/web/reset_password" class="ai-link">Forgot Password?</a>
+                            <t t-if="signup_enabled">
+                                <span class="text-muted">·</span>
+                                <a href="/web/signup" class="ai-link">Create Account</a>
+                            </t>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Footer -->
+                <div class="ai-login-footer-info">
+                    <p class="text-muted">
+                        <i class="fa fa-shield-alt"></i>
+                        Secure AI-Powered Enterprise Resource Planning
+                    </p>
+                </div>
+            </div>
+        </xpath>
+    </template>
+    
+    <!-- Login Page Styling -->
+    <template id="login_styles" name="AI Tech Login Styles" inherit_id="web.assets_frontend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" href="/ai_tech_whitelabel/static/src/scss/login.scss"/>
+        </xpath>
+    </template>
+</odoo>

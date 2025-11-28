@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Enhanced Invoice List View -->
+    <record id="view_move_tree_enhanced" model="ir.ui.view">
+        <field name="name">account.move.tree.enhanced</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_tree"/>
+        <field name="arch" type="xml">
+            <!-- Make customer reference more prominent -->
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="ref" string="Customer Reference" decoration-info="ref" decoration-bf="ref"/>
+                <field name="reference_validated" string="Validated" decoration-success="reference_validated" widget="boolean"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Enhanced Invoice Form View -->
+    <record id="view_move_form_enhanced" model="ir.ui.view">
+        <field name="name">account.move.form.enhanced</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <!-- Enhance customer reference section -->
+            <xpath expr="//field[@name='ref']" position="replace">
+                <div class="o_row">
+                    <field name="ref" placeholder="Enter customer reference..." class="o_field_highlight" style="width: 60%;"/>
+                    <field name="reference_source" style="width: 35%;"/>
+                </div>
+            </xpath>
+
+            <!-- Add computed display field -->
+            <xpath expr="//field[@name='ref']" position="after">
+                <field name="customer_reference_display" readonly="1" class="o_field_computed"/>
+            </xpath>
+
+            <!-- Add validation section -->
+            <xpath expr="//field[@name='customer_reference_display']" position="after">
+                <div class="o_row" groups="account.group_account_manager">
+                    <field name="reference_validated" readonly="1"/>
+                    <field name="reference_validation_date" readonly="1" attrs="{'invisible': [('reference_validated', '=', False)]}"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Add reference validation buttons -->
+    <record id="view_move_form_reference_buttons" model="ir.ui.view">
+        <field name="name">account.move.form.reference.buttons</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='button_draft']" position="before">
+                <button name="action_validate_reference" string="Validate Reference" type="object" class="btn-primary" attrs="{'invisible': ['|', ('ref', '=', False), ('reference_validated', '=', True)]}" groups="account.group_account_manager"/>
+                <button name="action_reset_reference_validation" string="Reset Validation" type="object" class="btn-secondary" attrs="{'invisible': [('reference_validated', '=', False)]}" groups="account.group_account_manager"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Invoice Search View Enhancement -->
+    <record id="view_account_invoice_filter_enhanced" model="ir.ui.view">
+        <field name="name">account.move.search.enhanced</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+        <field name="arch" type="xml">
+            <!-- Add customer reference search -->
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="ref" string="Customer Reference" filter_domain="[('ref', 'ilike', self)]"/>
+                <field name="customer_reference_display" string="Reference Display" filter_domain="[('customer_reference_display', 'ilike', self)]"/>
+            </xpath>
+
+            <!-- Add reference validation filters -->
+            <xpath expr="//filter[@name='late']" position="after">
+                <separator/>
+                <filter name="validated_references" string="Validated References" domain="[('reference_validated', '=', True)]"/>
+                <filter name="unvalidated_references" string="Unvalidated References" domain="[('reference_validated', '=', False), ('ref', '!=', False)]"/>
+                <filter name="has_customer_ref" string="Has Customer Reference" domain="[('ref', '!=', False)]"/>
+                <filter name="from_sale_order" string="From Sale Order" domain="[('reference_source', '=', 'sale_order')]"/>
+            </xpath>
+
+            <!-- Add groupby options -->
+            <xpath expr="//group[@name='group_by']" position="inside">
+                <filter name="group_by_reference_source" string="Reference Source" context="{'group_by': 'reference_source'}"/>
+                <filter name="group_by_reference_validated" string="Reference Validation" context="{'group_by': 'reference_validated'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Portal Invoice Enhancement -->
+    <record id="portal_invoice_page_enhanced" model="ir.ui.view">
+        <field name="name">portal.account_invoices.enhanced</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.portal_invoice_page"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@class='row mt-4']" position="before">
+                <div class="row mt-3" t-if="invoice.ref or invoice.invoice_origin">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header bg-info text-white">
+                                <h5 class="mb-0">
+                                    <i class="fa fa-bookmark"/>
+ Reference Information
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6" t-if="invoice.ref">
+                                        <strong>Customer Reference:</strong>
+                                        <p class="text-info">
+                                            <t t-esc="invoice.ref"/>
+                                            <span t-if="invoice.reference_validated" class="badge badge-success ml-2">
+                                                <i class="fa fa-check"/>
+ Validated
+                                            </span>
+                                        </p>
+                                    </div>
+                                    <div class="col-md-6" t-if="invoice.invoice_origin">
+                                        <strong>Origin:</strong>
+                                        <p>
+                                            <t t-esc="invoice.invoice_origin"/>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="row" t-if="invoice.reference_source">
+                                    <div class="col-md-6">
+                                        <strong>Reference Source:</strong>
+                                        <p>
+                                            <span t-if="invoice.reference_source == 'sale_order'" class="badge badge-primary">Sale Order</span>
+                                            <span t-elif="invoice.reference_source == 'manual'" class="badge badge-secondary">Manual Entry</span>
+                                            <span t-else="" class="badge badge-light">
+                                                <t t-esc="invoice.reference_source.replace('_', ' ').title()"/>
+                                            </span>
+                                        </p>
+                                    </div>
+                                    <div class="col-md-6" t-if="invoice.reference_validation_date">
+                                        <strong>Validated On:</strong>
+                                        <p>
+                                            <t t-esc="invoice.reference_validation_date" t-options="{'widget': 'datetime'}"/>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Action for Enhanced Invoices -->
+    <record id="action_move_out_invoice_enhanced" model="ir.actions.act_window">
+        <field name="name">Customer Invoices (Enhanced)</field>
+        <field name="res_model">account.move</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_id" ref="view_move_tree_enhanced"/>
+        <field name="domain">[('move_type', 'in', ('out_invoice', 'out_refund'))]</field>
+        <field name="context">{'default_move_type': 'out_invoice'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first customer invoice with enhanced reference tracking!
+            </p>
+            <p>
+                This enhanced view includes customer references and validation features.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu item for enhanced invoices -->
+    <menuitem id="menu_action_move_out_invoice_enhanced" name="Customer Invoices (Enhanced)" parent="account.menu_finance_receivables" action="action_move_out_invoice_enhanced" sequence="5"/>
+
+    <!-- Dashboard for Reference Statistics -->
+    <record id="view_account_reference_dashboard" model="ir.ui.view">
+        <field name="name">account.reference.dashboard</field>
+        <field name="model">account.move</field>
+        <field name="arch" type="xml">
+            <tree string="Reference Dashboard" create="false" edit="false">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="ref"/>
+                <field name="reference_source"/>
+                <field name="reference_validated"/>
+                <field name="amount_total"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_account_reference_dashboard" model="ir.actions.act_window">
+        <field name="name">Reference Dashboard</field>
+        <field name="res_model">account.move</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_account_reference_dashboard"/>
+        <field name="domain">[('move_type', 'in', ('out_invoice', 'out_refund'))]</field>
+        <field name="context">{}</field>
+    </record>
+
+    <!-- Menu for Reference Dashboard -->
+    <menuitem id="menu_account_reference_dashboard" name="Reference Dashboard" parent="account.menu_finance_reports" action="action_account_reference_dashboard" sequence="50"/>
+</odoo>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_cron_osus_birthday_wish" model="ir.cron">
+        <field name="name">OSUS Properties: Daily Birthday Greetings</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_birthday_reminder()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="active">True</field>
+        <field name="doall" eval="True"/>
+        <field name="nextcall" eval="(DateTime.now() + timedelta(days=1)).replace(hour=9, minute=0, second=0)"/>
+        <field name="priority">5</field>
+    </record>
+</odoo>

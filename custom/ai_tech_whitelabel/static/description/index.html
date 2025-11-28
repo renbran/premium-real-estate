@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>AI Tech White-Label Theme</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #e2e8f0;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 4rem;
+            padding: 3rem 0;
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .header h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #0ea5e9 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+        .tagline {
+            font-size: 1.5rem;
+            color: #94a3b8;
+            font-weight: 300;
+        }
+        .badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(14, 165, 233, 0.2);
+            border: 1px solid rgba(14, 165, 233, 0.3);
+            border-radius: 999px;
+            color: #0ea5e9;
+            font-weight: 600;
+            margin: 0.5rem;
+            font-size: 0.875rem;
+        }
+        .section {
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .section h2 {
+            color: #0ea5e9;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .section h3 {
+            color: #8b5cf6;
+            font-size: 1.5rem;
+            margin: 1.5rem 0 1rem;
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        .feature-card {
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        .feature-card:hover {
+            background: rgba(14, 165, 233, 0.1);
+            border-color: rgba(14, 165, 233, 0.3);
+            transform: translateY(-4px);
+        }
+        .feature-card h4 {
+            color: #06b6d4;
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+        .feature-card p {
+            color: #cbd5e1;
+            font-size: 0.95rem;
+        }
+        .screenshot {
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+            font-size: 1.25rem;
+            margin: 2rem 0;
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+        }
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .tech-item {
+            padding: 0.75rem 1.25rem;
+            background: rgba(139, 92, 246, 0.15);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 8px;
+            font-weight: 500;
+            color: #a78bfa;
+        }
+        .cta-section {
+            text-align: center;
+            padding: 3rem;
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
+            border-radius: 16px;
+            margin-top: 3rem;
+        }
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: linear-gradient(135deg, #0ea5e9 0%, #8b5cf6 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1.125rem;
+            transition: all 0.3s ease;
+            margin: 1rem 0.5rem;
+        }
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(14, 165, 233, 0.3);
+        }
+        code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            color: #06b6d4;
+            font-family: 'Courier New', monospace;
+        }
+        ul {
+            list-style: none;
+            margin-left: 1rem;
+        }
+        ul li:before {
+            content: "▹";
+            color: #0ea5e9;
+            font-weight: bold;
+            display: inline-block;
+            width: 1.5rem;
+            margin-left: -1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>AI Tech White-Label Theme</h1>
+            <p class="tagline">A Futuristic, Production-Ready Backend Theme for Odoo 17</p>
+            <div style="margin-top: 1.5rem;">
+                <span class="badge">Odoo 17.0</span>
+                <span class="badge">Dark Theme</span>
+                <span class="badge">Glassmorphism</span>
+                <span class="badge">Responsive</span>
+                <span class="badge">Production Ready</span>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🚀 Overview</h2>
+            <p>Transform your Odoo 17 backend into a stunning, modern experience with AI Tech White-Label Theme. Featuring cutting-edge design principles including glassmorphism, smooth animations, and a beautiful cyan-purple gradient color scheme.</p>
+            <div class="screenshot">
+                [Backend Interface Preview]
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>✨ Key Features</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>🎨 Modern Design</h4>
+                    <p>Glassmorphism effects, smooth gradients, and a sophisticated dark theme create a premium user experience</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🎯 Fully Customizable</h4>
+                    <p>Easy-to-use settings panel for colors, fonts, branding, and visual effects - no coding required</p>
+                </div>
+                <div class="feature-card">
+                    <h4>⚡ Performance Optimized</h4>
+                    <p>CSS variables, efficient animations, and optional effects ensure smooth performance on all devices</p>
+                </div>
+                <div class="feature-card">
+                    <h4>📱 Responsive Design</h4>
+                    <p>Perfectly optimized layouts for desktop, tablet, and mobile devices</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🔒 Enterprise Ready</h4>
+                    <p>Production-tested, secure, and compatible with all standard Odoo modules</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🌐 White-Label</h4>
+                    <p>Customize branding, colors, and logos to match your company identity</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🎨 Design System</h2>
+            <h3>Color Palette</h3>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4 style="color: #0ea5e9;">Primary - Cyan</h4>
+                    <p><code>#0ea5e9</code> - Main accent color, buttons, highlights</p>
+                </div>
+                <div class="feature-card">
+                    <h4 style="color: #8b5cf6;">Secondary - Purple</h4>
+                    <p><code>#8b5cf6</code> - Secondary accents, gradients</p>
+                </div>
+                <div class="feature-card">
+                    <h4 style="color: #06b6d4;">Accent - Bright Cyan</h4>
+                    <p><code>#06b6d4</code> - Interactive elements, links</p>
+                </div>
+            </div>
+
+            <h3>Visual Effects</h3>
+            <ul>
+                <li><strong>Glassmorphism:</strong> Frosted glass effect with backdrop-filter blur</li>
+                <li><strong>Gradient Animations:</strong> Smooth animated gradients on key elements</li>
+                <li><strong>Particle System:</strong> Optional animated particles for login/landing pages</li>
+                <li><strong>Hover Effects:</strong> Smooth transitions and micro-interactions</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>🛠️ Technology Stack</h2>
+            <div class="tech-stack">
+                <div class="tech-item">Odoo 17.0</div>
+                <div class="tech-item">SCSS/CSS3</div>
+                <div class="tech-item">JavaScript ES6+</div>
+                <div class="tech-item">OWL Components</div>
+                <div class="tech-item">CSS Variables</div>
+                <div class="tech-item">Glassmorphism</div>
+                <div class="tech-item">Canvas API</div>
+                <div class="tech-item">Responsive Design</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📦 What's Included</h2>
+            <h3>Styled Components</h3>
+            <ul>
+                <li>Complete backend interface theme</li>
+                <li>Custom login page with animated background</li>
+                <li>Enhanced navigation and sidebar</li>
+                <li>Beautiful form controls and inputs</li>
+                <li>Custom buttons, cards, and alerts</li>
+                <li>Responsive tables and lists</li>
+                <li>Loading screens and notifications</li>
+            </ul>
+
+            <h3>Configuration Options</h3>
+            <ul>
+                <li>Branding: App name, tagline, logo</li>
+                <li>Colors: Primary, secondary, accent, backgrounds</li>
+                <li>Typography: Font family selection</li>
+                <li>Visual Effects: Enable/disable glassmorphism, animations, gradients, particles</li>
+                <li>Media: Custom login background and favicon</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>🚀 Installation</h2>
+            <h3>Quick Start</h3>
+            <ol style="list-style: decimal; margin-left: 2rem;">
+                <li>Update Apps list in Odoo</li>
+                <li>Search for "AI Tech White-Label"</li>
+                <li>Click Install</li>
+                <li>Configure theme in Settings → General Settings → AI Tech Theme</li>
+                <li>Refresh your browser and enjoy!</li>
+            </ol>
+            <p style="margin-top: 1rem;">See <code>INSTALLATION.md</code> for detailed instructions and troubleshooting.</p>
+        </div>
+
+        <div class="section">
+            <h2>📊 Browser Support</h2>
+            <ul>
+                <li>✅ Chrome/Edge 76+ (Full support)</li>
+                <li>✅ Firefox 103+ (Full support)</li>
+                <li>✅ Safari 15.4+ (Full support)</li>
+                <li>⚠️ Older browsers: Graceful fallback to solid backgrounds</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>🎯 Use Cases</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>Tech Startups</h4>
+                    <p>Modern, innovative look that matches your tech-forward company culture</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Professional Services</h4>
+                    <p>Sophisticated interface that projects competence and reliability</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Creative Agencies</h4>
+                    <p>Stunning visual design that showcases your creative capabilities</p>
+                </div>
+                <div class="feature-card">
+                    <h4>White-Label Solutions</h4>
+                    <p>Fully customizable branding for resellers and implementation partners</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="cta-section">
+            <h2 style="color: #fff; margin-bottom: 1rem;">Ready to Transform Your Odoo?</h2>
+            <p style="color: #cbd5e1; font-size: 1.125rem; margin-bottom: 2rem;">
+                Install AI Tech White-Label Theme today and give your team a backend they'll love to use.
+            </p>
+            <a href="#" class="cta-button">Install Now</a>
+            <a href="https://github.com/renbran/FINAL-ODOO-APPS" class="cta-button" style="background: rgba(255, 255, 255, 0.1);">View on GitHub</a>
+        </div>
+
+        <div class="section" style="text-align: center; padding: 2rem;">
+            <p style="color: #64748b;">
+                Version 17.0.1.0.0 | Compatible with Odoo 17.0<br>
+                Developed for OSUS Properties and CloudPepper Deployment<br>
+                © 2024 OSUS Properties. All rights reserved.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

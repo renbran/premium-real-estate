@@ -1,0 +1,28 @@
+<odoo>
+    <data>
+        <record id="view_res_users_form_inherit" model="ir.ui.view">
+            <field name="name">res.users.form.inherit.access.manager</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='login']" position="after">
+                    <field name="employee_position_id" />
+                </xpath>
+                <xpath expr="//field[@name='employee_position_id']" position="after">
+                    <field name="access_rights_ids" widget="many2many_tags" options="{'no_create': True}" />
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_res_users_tree_inherit" model="ir.ui.view">
+            <field name="name">res.users.tree.inherit.access.manager</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="inside">
+                    <field name="employee_position_id" />
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

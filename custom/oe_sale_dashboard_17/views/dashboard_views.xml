@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Sales Dashboard Action -->
+        <record id="action_sale_dashboard" model="ir.actions.client">
+            <field name="name">Sales Dashboard</field>
+            <field name="tag">oe_sale_dashboard_17_action</field>
+            <field name="target">current</field>
+            <field name="context">{}</field>
+        </record>
+
+        <!-- Enhanced Sale Order Form View for Dashboard Integration -->
+        <record id="view_order_form_dashboard_enhanced" model="ir.ui.view">
+            <field name="name">sale.order.form.dashboard.enhanced</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                    <button type="action" 
+                            name="%(action_sale_dashboard)d" 
+                            class="oe_stat_button" 
+                            icon="fa-dashboard"
+                            string="Dashboard"
+                            help="Open Sales Dashboard"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Dashboard Configuration Form -->
+        <record id="view_dashboard_config_form" model="ir.ui.view">
+            <field name="name">dashboard.config.form</field>
+            <field name="model">sale.order</field>
+            <field name="arch" type="xml">
+                <form string="Dashboard Configuration">
+                    <header>
+                        <button name="get_dashboard_health_check" 
+                                type="object" 
+                                string="Health Check" 
+                                class="oe_highlight"/>
+                        <button name="optimize_dashboard_performance" 
+                                type="object" 
+                                string="Optimize Performance"/>
+                        <button name="clear_dashboard_cache" 
+                                type="object" 
+                                string="Clear Cache"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>Dashboard Configuration</h1>
+                        </div>
+                        <group>
+                            <group string="System Information">
+                                <field name="name" readonly="1"/>
+                                <field name="state" readonly="1"/>
+                                <field name="date_order" readonly="1"/>
+                                <field name="amount_total" readonly="1"/>
+                            </group>
+                            <group string="Dashboard Features">
+                                <div class="o_form_label">Available Features</div>
+                                <div name="dashboard_features">
+                                    <p>• Real-time sales analytics</p>
+                                    <p>• Performance tracking</p>
+                                    <p>• Advanced KPI calculations</p>
+                                    <p>• Export functionality</p>
+                                    <p>• Auto-refresh capabilities</p>
+                                </div>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Field Mapping">
+                                <group>
+                                    <group string="Date Fields">
+                                        <div class="o_form_label">Booking Date Available</div>
+                                        <div class="o_form_label">Date Order Available</div>
+                                    </group>
+                                    <group string="Amount Fields">
+                                        <div class="o_form_label">Sale Value Available</div>
+                                        <div class="o_form_label">Amount Total Available</div>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Performance">
+                                <group>
+                                    <group string="Database Performance">
+                                        <div class="o_form_label">Total Orders</div>
+                                        <div class="o_form_label">Recent Orders</div>
+                                        <div class="o_form_label">Performance Score</div>
+                                    </group>
+                                    <group string="Recommendations">
+                                        <div class="o_form_label">Optimization Tips</div>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Dashboard Configuration Action -->
+        <record id="action_dashboard_config" model="ir.actions.act_window">
+            <field name="name">Dashboard Configuration</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_dashboard_config_form"/>
+            <field name="target">new</field>
+            <field name="context">{'default_name': 'Dashboard Config'}</field>
+        </record>
+
+        <!-- Server Actions for Dashboard Management -->
+        <record id="action_server_dashboard_health_check" model="ir.actions.server">
+            <field name="name">Dashboard Health Check</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="state">code</field>
+            <field name="code">
+health_result = model.get_dashboard_health_check()
+title = "Dashboard Health Check Results"
+message = f"Overall Status: {health_result.get('overall_status', 'unknown')}\n\n"
+
+if health_result.get('checks'):
+    message += "Checks:\n"
+    for check, status in health_result['checks'].items():
+        message += f"• {check}: {status}\n"
+
+if health_result.get('warnings'):
+    message += "\nWarnings:\n"
+    for warning in health_result['warnings']:
+        message += f"• {warning}\n"
+
+if health_result.get('errors'):
+    message += "\nErrors:\n"
+    for error in health_result['errors']:
+        message += f"• {error}\n"
+
+action = {
+    'type': 'ir.actions.client',
+    'tag': 'display_notification',
+    'params': {
+        'title': title,
+        'message': message,
+        'type': 'success' if health_result.get('overall_status') == 'healthy' else 'warning',
+        'sticky': True,
+    }
+}
+            </field>
+        </record>
+
+        <record id="action_server_dashboard_optimize" model="ir.actions.server">
+            <field name="name">Optimize Dashboard Performance</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="state">code</field>
+            <field name="code">
+optimize_result = model.optimize_dashboard_performance()
+title = "Dashboard Performance Optimization"
+message = "Optimization completed:\n\n"
+
+message += f"• Cache cleared: {'✓' if optimize_result.get('cache_cleared') else '✗'}\n"
+message += f"• Statistics updated: {'✓' if optimize_result.get('statistics_updated') else '✗'}\n"
+message += f"• Old data archived: {'✓' if optimize_result.get('old_data_archived') else '✗'}\n"
+
+if optimize_result.get('errors'):
+    message += "\nErrors encountered:\n"
+    for error in optimize_result['errors']:
+        message += f"• {error}\n"
+
+action = {
+    'type': 'ir.actions.client',
+    'tag': 'display_notification',
+    'params': {
+        'title': title,
+        'message': message,
+        'type': 'success' if not optimize_result.get('errors') else 'warning',
+        'sticky': True,
+    }
+}
+            </field>
+        </record>
+
+        <record id="action_server_clear_cache" model="ir.actions.server">
+            <field name="name">Clear Dashboard Cache</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="state">code</field>
+            <field name="code">
+cache_result = model.clear_dashboard_cache()
+title = "Dashboard Cache Management"
+message = cache_result.get('message', 'Cache operation completed')
+
+action = {
+    'type': 'ir.actions.client',
+    'tag': 'display_notification',
+    'params': {
+        'title': title,
+        'message': message,
+        'type': 'success' if cache_result.get('success') else 'danger',
+    }
+}
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,227 @@
+// AI Tech Theme - Animations & Transitions
+// Smooth, futuristic motion design
+// ==========================================
+
+// Keyframe Animations
+@keyframes ai-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes ai-slide-in-right {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes ai-slide-in-left {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes ai-scale-in {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes ai-glow-pulse {
+    0%, 100% {
+        box-shadow: 0 0 20px rgba(14, 165, 233, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 30px rgba(14, 165, 233, 0.6), 0 0 40px rgba(139, 92, 246, 0.4);
+    }
+}
+
+@keyframes ai-gradient-shift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes ai-border-glow {
+    0%, 100% {
+        border-color: var(--ai-primary);
+        box-shadow: 0 0 10px rgba(14, 165, 233, 0.3);
+    }
+    50% {
+        border-color: var(--ai-secondary);
+        box-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+    }
+}
+
+@keyframes ai-float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes ai-rotate-slow {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes ai-shimmer {
+    0% {
+        background-position: -1000px 0;
+    }
+    100% {
+        background-position: 1000px 0;
+    }
+}
+
+@keyframes ai-particle-float {
+    0% {
+        transform: translateY(0) translateX(0);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-100vh) translateX(50px);
+        opacity: 0;
+    }
+}
+
+// Animation Utility Classes
+.ai-animate-fade-in {
+    animation: ai-fade-in var(--ai-transition-base) ease-out;
+}
+
+.ai-animate-slide-right {
+    animation: ai-slide-in-right var(--ai-transition-base) ease-out;
+}
+
+.ai-animate-slide-left {
+    animation: ai-slide-in-left var(--ai-transition-base) ease-out;
+}
+
+.ai-animate-scale {
+    animation: ai-scale-in var(--ai-transition-base) ease-out;
+}
+
+.ai-animate-glow {
+    animation: ai-glow-pulse 3s ease-in-out infinite;
+}
+
+.ai-animate-gradient {
+    background-size: 200% 200%;
+    animation: ai-gradient-shift 3s ease infinite;
+}
+
+.ai-animate-float {
+    animation: ai-float 3s ease-in-out infinite;
+}
+
+.ai-animate-rotate {
+    animation: ai-rotate-slow 10s linear infinite;
+}
+
+// Hover Effects
+.ai-hover-lift {
+    transition: transform var(--ai-transition-base), box-shadow var(--ai-transition-base);
+    
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--ai-shadow-lg);
+    }
+}
+
+.ai-hover-glow {
+    transition: box-shadow var(--ai-transition-base);
+    
+    &:hover {
+        box-shadow: var(--ai-glow-primary);
+    }
+}
+
+.ai-hover-scale {
+    transition: transform var(--ai-transition-fast);
+    
+    &:hover {
+        transform: scale(1.05);
+    }
+}
+
+.ai-hover-brightness {
+    transition: filter var(--ai-transition-fast);
+    
+    &:hover {
+        filter: brightness(1.2);
+    }
+}
+
+// Loading Animations
+.ai-loading-spinner {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(14, 165, 233, 0.2);
+    border-top-color: var(--ai-primary);
+    border-radius: 50%;
+    animation: ai-rotate-slow 1s linear infinite;
+}
+
+.ai-loading-pulse {
+    animation: ai-glow-pulse 1.5s ease-in-out infinite;
+}
+
+// Transition Classes
+.ai-transition-all {
+    transition: all var(--ai-transition-base);
+}
+
+.ai-transition-fast {
+    transition: all var(--ai-transition-fast);
+}
+
+.ai-transition-slow {
+    transition: all var(--ai-transition-slow);
+}
+
+// Stagger animation delays (for list items)
+@for $i from 1 through 10 {
+    .ai-stagger-#{$i} {
+        animation-delay: #{$i * 50}ms;
+    }
+}

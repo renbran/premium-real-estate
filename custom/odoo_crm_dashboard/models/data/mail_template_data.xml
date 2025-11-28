@@ -1,0 +1,467 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ===================================================================== -->
+    <!-- PAYMENT APPROVAL WORKFLOW EMAIL TEMPLATES WITH COLOR CODING -->
+    <!-- Blue - Under Review | Green - Approved | Orange - Authorization -->
+    <!-- Purple - Posted | Red - Rejected | Deep Orange - Urgent -->
+    <!-- ===================================================================== -->
+
+    <!-- 1. Under Review - Payment Submitted for Review -->
+    <record id="mail_template_payment_submitted" model="mail.template">
+        <field name="name">Payment Submitted for Review</field>
+        <field name="model_id" ref="account.model_account_payment"/>
+        <field name="subject">Payment ${object.voucher_number or object.name} Submitted for Review</field>
+        <field name="email_from">${object.company_id.email or user.email}</field>
+        <field name="email_to">${object.company_id.email or user.email}</field>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px; background-color: #f5f5f5;">
+                <table style="width: 100%; max-width: 600px; margin: 20px auto; background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 4px;">
+                    <tbody>
+                        <tr>
+                            <td style="padding: 20px; background-color: #2196F3; color: #ffffff; text-align: center; border-radius: 4px 4px 0 0;">
+                                <h2 style="margin: 0; font-size: 24px; font-weight: 300;">🔵 Payment Review Required</h2>
+                                <p style="margin: 8px 0 0 0; font-size: 14px; opacity: 0.9;">Awaiting Your Review</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 30px 20px; font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 13px; color: #555555;">
+                                <p style="margin: 0 0 10px 0;">Dear Reviewer,</p>
+                                <p style="margin: 10px 0;">A new payment has been submitted and requires your review.</p>
+                                <div style="background-color: #E3F2FD; border-left: 4px solid #2196F3; padding: 15px; margin: 20px 0;">
+                                    <h3 style="margin: 0 0 12px 0; color: #1976D2; font-size: 16px; font-weight: 600;">Payment Under Review</h3>
+                                    <table style="width: 100%; border-collapse: collapse;">
+                                        <tr>
+                                            <td style="padding: 4px 0; color: #666666; font-weight: 600; width: 40%;">Voucher Number:</td>
+                                            <td style="padding: 4px 0; color: #333333; font-weight: 600;">
+                                                <t t-out="object.voucher_number or object.name"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 4px 0; color: #666666; font-weight: 600;">Partner:</td>
+                                            <td style="padding: 4px 0; color: #333333;">
+                                                <t t-out="object.partner_id.name"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 4px 0; color: #666666; font-weight: 600;">Amount:</td>
+                                            <td style="padding: 4px 0; color: #2196F3; font-weight: 700; font-size: 16px;">
+                                                <t t-out="object.currency_id.symbol"/>
+                                                <t t-out="'{:,.2f}'.format(object.amount)"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 4px 0; color: #666666; font-weight: 600;">Payment Type:</td>
+                                            <td style="padding: 4px 0; color: #333333;">
+                                                <t t-if="object.payment_type == 'inbound'">Receipt</t>
+                                                <t t-else="">Payment</t>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 4px 0; color: #666666; font-weight: 600;">Submitted By:</td>
+                                            <td style="padding: 4px 0; color: #333333;">
+                                                <t t-out="object.create_uid.name"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div style="text-align: center; margin: 30px 0;">
+                                    <a t-attf-href="/web#id={{object.id}}&amp;model=account.payment&amp;view_type=form" style="background-color: #2196F3; color: #ffffff; padding: 12px 30px; text-decoration: none; border-radius: 4px; display: inline-block; font-size: 14px; font-weight: 600;">Review Payment Now</a>
+                                </div>
+                                <p style="margin: 10px 0 0 0;">Best regards,<br/>
+                                <strong>Payment System</strong>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 15px 20px; background-color: #f9f9f9; border-top: 1px solid #e0e0e0; text-align: center; font-size: 11px; color: #999999;">This is an automated notification from the payment system.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </field>
+    <field name="auto_delete" eval="True"/>
+</record>
+
+<!-- 2. Approved - Payment Approved (green) -->
+<record id="mail_template_payment_approved" model="mail.template">
+    <field name="name">Payment Approved</field>
+    <field name="model_id" ref="account.model_account_payment"/>
+    <field name="subject">Payment ${object.voucher_number or object.name} Approved</field>
+    <field name="email_from">${object.company_id.email or user.email}</field>
+    <field name="email_to">${object.partner_id.email or ''}</field>
+    <field name="body_html" type="html">
+        <div style="margin: 0px; padding: 0px; background-color: #f5f5f5;">
+            <table style="width: 100%; max-width: 600px; margin: 20px auto; background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 4px;">
+                <tbody>
+                    <tr>
+                        <td style="padding: 20px; background-color: #4CAF50; color: #ffffff; text-align: center; border-radius: 4px 4px 0 0;">
+                            <h2 style="margin: 0; font-size: 24px; font-weight: 300;">✅ Payment Approved</h2>
+                            <p style="margin: 8px 0 0 0; font-size: 14px; opacity: 0.9;">Approval Confirmed</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 30px 20px; font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 13px; color: #555555;">
+                            <p style="margin: 0 0 10px 0;">Dear <t t-out="object.partner_id.name"/>
+,</p>
+                            <p style="margin: 10px 0;">Your payment has been <strong style="color: #4CAF50;">approved</strong> and is now proceeding to the next stage.</p>
+                            <div style="background-color: #E8F5E9; border-left: 4px solid #4CAF50; padding: 15px; margin: 20px 0;">
+                                <h3 style="margin: 0 0 12px 0; color: #2E7D32; font-size: 16px; font-weight: 600;">Approved Payment</h3>
+                                <table style="width: 100%; border-collapse: collapse;">
+                                    <tr>
+                                        <td style="padding: 4px 0; color: #666666; font-weight: 600; width: 40%;">Voucher Number:</td>
+                                        <td style="padding: 4px 0; color: #333333; font-weight: 600;">
+                                            <t t-out="object.voucher_number or object.name"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 4px 0; color: #666666; font-weight: 600;">Partner:</td>
+                                        <td style="padding: 4px 0; color: #333333;">
+                                            <t t-out="object.partner_id.name"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 4px 0; color: #666666; font-weight: 600;">Amount:</td>
+                                        <td style="padding: 4px 0; color: #4CAF50; font-weight: 700; font-size: 16px;">
+                                            <t t-out="object.currency_id.symbol"/>
+                                            <t t-out="'{:,.2f}'.format(object.amount)"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 4px 0; color: #666666; font-weight: 600;">Approved By:</td>
+                                        <td style="padding: 4px 0; color: #333333;">
+                                            <t t-out="object.write_uid.name"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 4px 0; color: #666666; font-weight: 600;">Status:</td>
+                                        <td style="padding: 4px 0; color: #4CAF50; font-weight: 600;">✓ APPROVED</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div style="text-align: center; margin: 30px 0;">
+                                <a t-attf-href="/web#id={{object.id}}&amp;model=account.payment&amp;view_type=form" style="background-color: #4CAF50; color: #ffffff; padding: 12px 30px; text-decoration: none; border-radius: 4px; display: inline-block; font-size: 14px; font-weight: 600;">View Payment</a>
+                            </div>
+                            <p style="margin: 10px 0 0 0;">Best regards,<br/>
+                            <strong>Accounts Team</strong>
+                        </p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</field>
+<field name="auto_delete" eval="True"/>
+</record>
+
+<!-- 3. Authorization - High-Value Payment Authorization Required (orange) -->
+<record id="mail_template_payment_approved_authorization" model="mail.template">
+<field name="name">Payment Approved - Authorization Required</field>
+<field name="model_id" ref="account.model_account_payment"/>
+<field name="subject">Payment ${object.voucher_number or object.name} - Authorization Required</field>
+<field name="email_from">${object.company_id.email or user.email}</field>
+<field name="email_to">${object.company_id.email or user.email}</field>
+<field name="body_html" type="html">
+    <div style="margin: 0px; padding: 0px; background-color: #f5f5f5;">
+        <table style="width: 100%; max-width: 600px; margin: 20px auto; background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 4px;">
+            <tbody>
+                <tr>
+                    <td style="padding: 20px; background-color: #FF9800; color: #ffffff; text-align: center; border-radius: 4px 4px 0 0;">
+                        <h2 style="margin: 0; font-size: 24px; font-weight: 300;">🟡 Authorization Required</h2>
+                        <p style="margin: 8px 0 0 0; font-size: 14px; opacity: 0.9;">High-Value Payment Authorization</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 30px 20px; font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 13px; color: #555555;">
+                        <p style="margin: 0 0 10px 0;">Dear Authorizer,</p>
+                        <p style="margin: 10px 0;">A payment has been approved and requires your <strong style="color: #FF9800;">final authorization</strong> before processing.</p>
+                        <div style="background-color: #FFF3E0; border-left: 4px solid #FF9800; padding: 15px; margin: 20px 0;">
+                            <h3 style="margin: 0 0 12px 0; color: #E65100; font-size: 16px; font-weight: 600;">Payment Awaiting Authorization</h3>
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <tr>
+                                    <td style="padding: 4px 0; color: #666666; font-weight: 600; width: 40%;">Voucher Number:</td>
+                                    <td style="padding: 4px 0; color: #333333; font-weight: 600;">
+                                        <t t-out="object.voucher_number or object.name"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 4px 0; color: #666666; font-weight: 600;">Partner:</td>
+                                    <td style="padding: 4px 0; color: #333333;">
+                                        <t t-out="object.partner_id.name"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 4px 0; color: #666666; font-weight: 600;">Amount:</td>
+                                    <td style="padding: 4px 0; color: #FF9800; font-weight: 700; font-size: 16px;">
+                                        <t t-out="object.currency_id.symbol"/>
+                                        <t t-out="'{:,.2f}'.format(object.amount)"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 4px 0; color: #666666; font-weight: 600;">Approved By:</td>
+                                    <td style="padding: 4px 0; color: #333333;">
+                                        <t t-out="object.reviewer_id.name"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 4px 0; color: #666666; font-weight: 600;">Payment Method:</td>
+                                    <td style="padding: 4px 0; color: #333333;">
+                                        <t t-out="object.journal_id.name"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div style="text-align: center; margin: 30px 0;">
+                            <a t-attf-href="/web#id={{object.id}}&amp;model=account.payment&amp;view_type=form" style="background-color: #FF9800; color: #ffffff; padding: 12px 30px; text-decoration: none; border-radius: 4px; display: inline-block; font-size: 14px; font-weight: 600;">Authorize Payment</a>
+                        </div>
+                        <p style="margin: 10px 0 0 0;">Best regards,<br/>
+                        <strong>Payment System</strong>
+                    </p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+</field>
+<field name="auto_delete" eval="True"/>
+</record>
+
+<!-- 4. Posted - Payment Posted/Processed (purple) -->
+<record id="mail_template_payment_posted" model="mail.template">
+<field name="name">Payment Posted</field>
+<field name="model_id" ref="account.model_account_payment"/>
+<field name="subject">Payment ${object.voucher_number or object.name} Posted Successfully</field>
+<field name="email_from">${object.company_id.email or user.email}</field>
+<field name="email_to">${object.partner_id.email or ''}</field>
+<field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px; background-color: #f5f5f5;">
+    <table style="width: 100%; max-width: 600px; margin: 20px auto; background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 4px;">
+        <tbody>
+            <tr>
+                <td style="padding: 20px; background-color: #875a7b; color: #ffffff; text-align: center; border-radius: 4px 4px 0 0;">
+                    <h2 style="margin: 0; font-size: 24px; font-weight: 300;">💳 Payment Processed</h2>
+                    <p style="margin: 8px 0 0 0; font-size: 14px; opacity: 0.9;">Payment Successfully Posted</p>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 30px 20px; font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 13px; color: #555555;">
+                    <p style="margin: 0 0 10px 0;">Dear <t t-out="object.partner_id.name"/>
+,</p>
+                    <p style="margin: 10px 0;">Your payment has been <strong style="color: #875a7b;">successfully processed</strong> and posted to the accounting system.</p>
+                    <div style="background-color: #f4eaf7; border-left: 4px solid #875a7b; padding: 15px; margin: 20px 0;">
+                        <h3 style="margin: 0 0 12px 0; color: #6c3a5c; font-size: 16px; font-weight: 600;">Processed Payment</h3>
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <tr>
+                                <td style="padding: 4px 0; color: #666666; font-weight: 600; width: 40%;">Voucher Number:</td>
+                                <td style="padding: 4px 0; color: #333333; font-weight: 600;">
+                                    <t t-out="object.voucher_number or object.name"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 4px 0; color: #666666; font-weight: 600;">Partner:</td>
+                                <td style="padding: 4px 0; color: #333333;">
+                                    <t t-out="object.partner_id.name"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 4px 0; color: #666666; font-weight: 600;">Amount:</td>
+                                <td style="padding: 4px 0; color: #875a7b; font-weight: 700; font-size: 16px;">
+                                    <t t-out="object.currency_id.symbol"/>
+                                    <t t-out="'{:,.2f}'.format(object.amount)"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 4px 0; color: #666666; font-weight: 600;">Payment Date:</td>
+                                <td style="padding: 4px 0; color: #333333;">
+                                    <t t-out="object.date"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 4px 0; color: #666666; font-weight: 600;">Payment Method:</td>
+                                <td style="padding: 4px 0; color: #333333;">
+                                    <t t-out="object.journal_id.name"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 4px 0; color: #666666; font-weight: 600;">Status:</td>
+                                <td style="padding: 4px 0; color: #875a7b; font-weight: 600;">✓ POSTED</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div style="text-align: center; margin: 30px 0;">
+                        <a t-attf-href="/web#id={{object.id}}&amp;model=account.payment&amp;view_type=form" style="background-color: #875a7b; color: #ffffff; padding: 12px 30px; text-decoration: none; border-radius: 4px; display: inline-block; font-size: 14px; font-weight: 600;">View Payment</a>
+                    </div>
+                    <p style="margin: 10px 0 0 0;">Best regards,<br/>
+                    <strong>Accounts Payable Team</strong>
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 15px 20px; background-color: #f9f9f9; border-top: 1px solid #e0e0e0; text-align: center; font-size: 11px; color: #999999;">This is an automated notification.</td>
+        </tr>
+    </tbody>
+</table>
+</div>
+</field>
+<field name="auto_delete" eval="True"/>
+</record>
+
+<!-- 5. Rejected - Payment Rejected (red) -->
+<record id="mail_template_payment_rejected" model="mail.template">
+<field name="name">Payment Rejected</field>
+<field name="model_id" ref="account.model_account_payment"/>
+<field name="subject">Payment ${object.voucher_number or object.name} Rejected</field>
+<field name="email_from">${object.company_id.email or user.email}</field>
+<field name="email_to">${object.create_uid.email or ''}</field>
+<field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px; background-color: #f5f5f5;">
+<table style="width: 100%; max-width: 600px; margin: 20px auto; background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 4px;">
+    <tbody>
+        <tr>
+            <td style="padding: 20px; background-color: #F44336; color: #ffffff; text-align: center; border-radius: 4px 4px 0 0;">
+                <h2 style="margin: 0; font-size: 24px; font-weight: 300;">🔴 Payment Rejected</h2>
+                <p style="margin: 8px 0 0 0; font-size: 14px; opacity: 0.9;">Action Required</p>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 30px 20px; font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 13px; color: #555555;">
+                <p style="margin: 0 0 10px 0;">Dear <t t-out="object.create_uid.name"/>
+,</p>
+                <p style="margin: 10px 0;">Unfortunately, your payment has been <strong style="color: #F44336;">rejected</strong> during the approval process.</p>
+                <div style="background-color: #FFEBEE; border-left: 4px solid #F44336; padding: 15px; margin: 20px 0;">
+                    <h3 style="margin: 0 0 12px 0; color: #C62828; font-size: 16px; font-weight: 600;">Rejected Payment</h3>
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tr>
+                            <td style="padding: 4px 0; color: #666666; font-weight: 600; width: 40%;">Voucher Number:</td>
+                            <td style="padding: 4px 0; color: #333333; font-weight: 600;">
+                                <t t-out="object.voucher_number or object.name"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 4px 0; color: #666666; font-weight: 600;">Partner:</td>
+                            <td style="padding: 4px 0; color: #333333;">
+                                <t t-out="object.partner_id.name"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 4px 0; color: #666666; font-weight: 600;">Amount:</td>
+                            <td style="padding: 4px 0; color: #F44336; font-weight: 700; font-size: 16px;">
+                                <t t-out="object.currency_id.symbol"/>
+                                <t t-out="'{:,.2f}'.format(object.amount)"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 4px 0; color: #666666; font-weight: 600;">Rejected By:</td>
+                            <td style="padding: 4px 0; color: #333333;">
+                                <t t-out="object.reviewer_id.name or object.write_uid.name"/>
+                            </td>
+                        </tr>
+                        <tr t-if="object.rejection_reason">
+                            <td style="padding: 4px 0; color: #666666; font-weight: 600;">Reason:</td>
+                            <td style="padding: 4px 0; color: #C62828; font-weight: 600;">
+                                <t t-out="object.rejection_reason"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 4px 0; color: #666666; font-weight: 600;">Status:</td>
+                            <td style="padding: 4px 0; color: #F44336; font-weight: 600;">✗ REJECTED</td>
+                        </tr>
+                    </table>
+                </div>
+                <div style="background-color: #FFF9C4; border-left: 4px solid #FBC02D; padding: 15px; margin: 20px 0;">
+                    <p style="margin: 0; color: #F57F17; font-weight: 600;">⚠️ Next Steps:</p>
+                    <p style="margin: 8px 0 0 0; color: #555;">Please review the rejection reason and make necessary corrections before resubmitting.</p>
+                </div>
+                <div style="text-align: center; margin: 30px 0;">
+                    <a t-attf-href="/web#id={{object.id}}&amp;model=account.payment&amp;view_type=form" style="background-color: #F44336; color: #ffffff; padding: 12px 30px; text-decoration: none; border-radius: 4px; display: inline-block; font-size: 14px; font-weight: 600;">View Payment</a>
+                </div>
+                <p style="margin: 10px 0 0 0;">Best regards,<br/>
+                <strong>Payment Approval Team</strong>
+            </p>
+        </td>
+    </tr>
+</tbody>
+</table>
+</div>
+</field>
+<field name="auto_delete" eval="True"/>
+</record>
+
+<!-- 6. Urgent - Payment Reminder/Escalation (deep orange) -->
+<record id="mail_template_payment_reminder" model="mail.template">
+<field name="name">Payment Approval Reminder</field>
+<field name="model_id" ref="account.model_account_payment"/>
+<field name="subject">URGENT: Payment ${object.voucher_number or object.name} Awaiting Approval</field>
+<field name="email_from">${object.company_id.email or user.email}</field>
+<field name="email_to">${object.company_id.email or user.email}</field>
+<field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px; background-color: #f5f5f5;">
+<table style="width: 100%; max-width: 600px; margin: 20px auto; background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 4px;">
+<tbody>
+    <tr>
+        <td style="padding: 20px; background-color: #FF5722; color: #ffffff; text-align: center; border-radius: 4px 4px 0 0;">
+            <h2 style="margin: 0; font-size: 24px; font-weight: 300;">⚡ URGENT: Payment Reminder</h2>
+            <p style="margin: 8px 0 0 0; font-size: 14px; opacity: 0.9;">Immediate Attention Required</p>
+        </td>
+    </tr>
+    <tr>
+        <td style="padding: 30px 20px; font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 13px; color: #555555;">
+            <p style="margin: 0 0 10px 0;">Dear Approver,</p>
+            <p style="margin: 10px 0;">This is an <strong style="color: #FF5722;">URGENT REMINDER</strong> that a payment is still awaiting your approval.</p>
+            <div style="background-color: #FBE9E7; border-left: 4px solid #FF5722; padding: 15px; margin: 20px 0;">
+                <h3 style="margin: 0 0 12px 0; color: #D84315; font-size: 16px; font-weight: 600;">⏰ Payment Overdue</h3>
+                <table style="width: 100%; border-collapse: collapse;">
+                    <tr>
+                        <td style="padding: 4px 0; color: #666666; font-weight: 600; width: 40%;">Voucher Number:</td>
+                        <td style="padding: 4px 0; color: #333333; font-weight: 600;">
+                            <t t-out="object.voucher_number or object.name"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 4px 0; color: #666666; font-weight: 600;">Partner:</td>
+                        <td style="padding: 4px 0; color: #333333;">
+                            <t t-out="object.partner_id.name"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 4px 0; color: #666666; font-weight: 600;">Amount:</td>
+                        <td style="padding: 4px 0; color: #FF5722; font-weight: 700; font-size: 16px;">
+                            <t t-out="object.currency_id.symbol"/>
+                            <t t-out="'{:,.2f}'.format(object.amount)"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 4px 0; color: #666666; font-weight: 600;">Days Pending:</td>
+                        <td style="padding: 4px 0; color: #FF5722; font-weight: 600;">
+                            <t t-out="(datetime.datetime.now() - object.create_date).days"/>
+ days</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 4px 0; color: #666666; font-weight: 600;">Priority:</td>
+                        <td style="padding: 4px 0; color: #FF5722; font-weight: 600;">⚡ HIGH PRIORITY</td>
+                    </tr>
+                </table>
+            </div>
+            <div style="background-color: #FFECB3; border-left: 4px solid #FFA000; padding: 15px; margin: 20px 0;">
+                <p style="margin: 0; color: #FF6F00; font-weight: 600;">⚠️ Action Required:</p>
+                <p style="margin: 8px 0 0 0; color: #555;">Please review and approve this payment as soon as possible to avoid delays in vendor payments.</p>
+            </div>
+            <div style="text-align: center; margin: 30px 0;">
+                <a t-attf-href="/web#id={{object.id}}&amp;model=account.payment&amp;view_type=form" style="background-color: #FF5722; color: #ffffff; padding: 12px 30px; text-decoration: none; border-radius: 4px; display: inline-block; font-size: 14px; font-weight: 600;">Review Payment Immediately</a>
+            </div>
+            <p style="margin: 10px 0 0 0;">Best regards,<br/>
+            <strong>Payment System (Automated Reminder)</strong>
+        </p>
+    </td>
+</tr>
+<tr>
+    <td style="padding: 15px 20px; background-color: #f9f9f9; border-top: 1px solid #e0e0e0; text-align: center; font-size: 11px; color: #999999;">
+        <strong style="color: #FF5722;">AUTOMATED ESCALATION - IMMEDIATE ACTION REQUIRED</strong>
+    </td>
+</tr>
+</tbody>
+</table>
+</div>
+</field>
+<field name="auto_delete" eval="True"/>
+</record>
+</odoo>

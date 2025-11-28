@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_employee_form_inherit_uae" model="ir.ui.view">
+        <field name="name">hr.employee.form.inherit.uae</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page string="UAE Specific" name="uae_specific">
+                    <group>
+                        <group string="Documents">
+                            <field name="visa_expiry_date"/>
+                            <field name="passport_expiry_date"/>
+                            <field name="emirates_id"/>
+                            <field name="emirates_id_expiry_date"/>
+                            <field name="joining_date"/>
+                        </group>
+                        <group string="Annual Benefits">
+                            <field name="annual_air_ticket"/>
+                            <field name="air_ticket_amount" invisible_if="not annual_air_ticket"/>
+                            <field name="air_ticket_frequency" invisible_if="not annual_air_ticket"/>
+                            <field name="last_ticket_date" invisible_if="not annual_air_ticket"/>
+                            <field name="next_ticket_date" invisible_if="not annual_air_ticket"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Leave Benefits">
+                            <field name="annual_leave_days"/>
+                            <field name="annual_leave_salary_type"/>
+                        </group>
+                        <group string="Agent Settings">
+                            <field name="is_agent"/>
+                            <field name="agent_type"/>
+                            <field name="primary_agent_business_commission"/>
+                            <field name="primary_agent_personal_commission"/>
+                            <field name="secondary_agent_business_commission"/>
+                            <field name="secondary_agent_personal_commission"/>
+                            <field name="exclusive_rm_commission"/>
+                            <field name="exclusive_sm_commission"/>
+                        </group>
+                    </group>
+                </page>
+            </notebook>
+        </field>
+    </record>
+</odoo>

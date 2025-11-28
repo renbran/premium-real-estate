@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_kyc_source_funds_user,kyc.source.funds.user,model_kyc_source_funds,base.group_user,1,1,1,1
+access_kyc_source_wealth_user,kyc.source.wealth.user,model_kyc_source_wealth,base.group_user,1,1,1,1
+access_kyc_source_funds_portal,kyc.source.funds.portal,model_kyc_source_funds,base.group_portal,1,0,0,0
+access_kyc_source_wealth_portal,kyc.source.wealth.portal,model_kyc_source_wealth,base.group_portal,1,0,0,0
+access_kyc_source_funds_public,kyc.source.funds.public,model_kyc_source_funds,base.group_public,1,0,0,0
+access_kyc_source_wealth_public,kyc.source.wealth.public,model_kyc_source_wealth,base.group_public,1,0,0,0

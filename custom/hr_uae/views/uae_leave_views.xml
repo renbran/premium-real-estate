@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- UAE Leave Type Tree View -->
+    <record id="view_uae_leave_type_tree" model="ir.ui.view">
+        <field name="name">uae.leave.type.tree</field>
+        <field name="model">uae.leave.type</field>
+        <field name="arch" type="xml">
+            <tree string="UAE Leave Types">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="max_days"/>
+                <field name="payment_type"/>
+                <field name="is_paid"/>
+                <field name="requires_documentation"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- UAE Leave Type Form View -->
+    <record id="view_uae_leave_type_form" model="ir.ui.view">
+        <field name="name">uae.leave.type.form</field>
+        <field name="model">uae.leave.type</field>
+        <field name="arch" type="xml">
+            <form string="UAE Leave Type">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="max_days"/>
+                            <field name="sequence"/>
+                        </group>
+                        <group>
+                            <field name="is_paid"/>
+                            <field name="payment_type"/>
+                            <field name="requires_documentation"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Payment Details" invisible="payment_type != 'split'">
+                            <field name="full_pay_days" required="payment_type == 'split'"/>
+                            <field name="half_pay_days" required="payment_type == 'split'"/>
+                            <field name="unpaid_days"/>
+                        </group>
+                        <group string="Additional Settings">
+                            <field name="is_annual"/>
+                            <field name="is_religious"/>
+                            <field name="is_study"/>
+                            <field name="for_uae_national_only"/>
+                            <field name="validity_in_months"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- UAE Leave Allocation Tree View -->
+    <record id="view_uae_leave_allocation_tree" model="ir.ui.view">
+        <field name="name">uae.leave.allocation.tree</field>
+        <field name="model">uae.leave.allocation</field>
+        <field name="arch" type="xml">
+            <tree string="Leave Allocations" decoration-info="state == 'draft'" decoration-success="state == 'validate'" decoration-danger="state == 'refuse'">
+                <field name="name"/>
+                <field name="employee_id"/>
+                <field name="leave_type_id"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="number_of_days"/>
+                <field name="payment_amount"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- UAE Leave Allocation Form View -->
+    <record id="view_uae_leave_allocation_form" model="ir.ui.view">
+        <field name="name">uae.leave.allocation.form</field>
+        <field name="model">uae.leave.allocation</field>
+        <field name="arch" type="xml">
+            <form string="Leave Allocation">
+                <header>
+                    <button name="action_confirm" string="Confirm" type="object" class="oe_highlight" invisible="state != 'draft'"/>
+                    <button name="action_validate" string="Validate" type="object" class="oe_highlight" invisible="state != 'confirm'"/>
+                    <button name="action_refuse" string="Refuse" type="object" invisible="state not in ('draft','confirm')"/>
+                    <button name="action_cancel" string="Cancel" type="object" invisible="state not in ('draft','confirm')"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="employee_id" options="{'no_create': True}" readonly="state != 'draft'"/>
+                            <field name="leave_type_id" options="{'no_create': True}" readonly="state != 'draft'"/>
+                        </group>
+                        <group>
+                            <field name="date_from" readonly="state != 'draft'"/>
+                            <field name="date_to" readonly="state != 'draft'"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="number_of_days"/>
+                            <field name="payment_amount"/>
+                        </group>
+                        <group>
+                            <field name="notes"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- UAE Leave Type Search View -->
+    <record id="view_uae_leave_type_search" model="ir.ui.view">
+        <field name="name">uae.leave.type.search</field>
+        <field name="model">uae.leave.type</field>
+        <field name="arch" type="xml">
+            <search string="Search UAE Leave Types">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="is_paid"/>
+                <filter string="Paid" name="paid" domain="[('is_paid','=',True)]"/>
+                <filter string="Unpaid" name="unpaid" domain="[('is_paid','=',False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- UAE Leave Allocation Search View -->
+    <record id="view_uae_leave_allocation_search" model="ir.ui.view">
+        <field name="name">uae.leave.allocation.search</field>
+        <field name="model">uae.leave.allocation</field>
+        <field name="arch" type="xml">
+            <search string="Search Leave Allocations">
+                <field name="name"/>
+                <field name="employee_id"/>
+                <field name="leave_type_id"/>
+                <field name="state"/>
+                <filter string="Draft" name="draft" domain="[('state','=','draft')]"/>
+                <filter string="Confirmed" name="confirm" domain="[('state','=','confirm')]"/>
+                <filter string="Validated" name="validate" domain="[('state','=','validate')]"/>
+                <filter string="Refused" name="refuse" domain="[('state','=','refuse')]"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Actions -->
+    <record id="action_uae_leave_type" model="ir.actions.act_window">
+        <field name="name">UAE Leave Types</field>
+        <field name="res_model">uae.leave.type</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_uae_leave_allocation" model="ir.actions.act_window">
+        <field name="name">Leave Allocations</field>
+        <field name="res_model">uae.leave.allocation</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem id="menu_uae_leave_type"
+              name="UAE Leave Types"
+              parent="hr.menu_human_resources_configuration"
+              action="action_uae_leave_type"
+              sequence="90"/>
+
+    <menuitem id="menu_uae_leave_allocation"
+              name="UAE Leave Allocations"
+              parent="hr_holidays.menu_hr_holidays_root"
+              action="action_uae_leave_allocation"
+              sequence="2"/>
+</odoo>

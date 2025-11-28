@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Commission Summary Report Views -->
+        <record id="view_commission_summary_report_tree" model="ir.ui.view">
+            <field name="name">commission.summary.report.tree</field>
+            <field name="model">commission.summary.report</field>
+            <field name="arch" type="xml">
+                <tree string="Commission Summary Report" create="false" edit="false" delete="false">
+                    <field name="partner_name"/>
+                    <field name="commission_type"/>
+                    <field name="total_commission" sum="Total Commission"/>
+                    <field name="commission_count" sum="Count"/>
+                    <field name="avg_commission" avg="Average"/>
+                    <field name="payment_status"/>
+                    <field name="paid_amount" sum="Paid"/>
+                    <field name="pending_amount" sum="Pending"/>
+                    <field name="year"/>
+                    <field name="month"/>
+                    <field name="quarter"/>
+                    <field name="currency_id" groups="base.group_multi_currency"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_commission_summary_report_search" model="ir.ui.view">
+            <field name="name">commission.summary.report.search</field>
+            <field name="model">commission.summary.report</field>
+            <field name="arch" type="xml">
+                <search string="Commission Summary">
+                    <field name="partner_name" string="Partner"/>
+                    <field name="commission_type"/>
+                    <field name="payment_status"/>
+                    <filter name="pending" string="Pending Payments" domain="[('payment_status', '=', 'pending')]"/>
+                    <filter name="paid" string="Paid" domain="[('payment_status', '=', 'paid')]"/>
+                    <separator/>
+                    <filter name="current_year" string="Current Year" 
+                            domain="[('year', '=', context_today().year)]"/>
+                    <filter name="current_month" string="Current Month" 
+                            domain="[('year', '=', context_today().year), ('month', '=', context_today().month)]"/>
+                    <separator/>
+                    <group expand="0" string="Group By">
+                        <filter name="group_partner" string="Partner" context="{'group_by': 'partner_name'}"/>
+                        <filter name="group_type" string="Commission Type" context="{'group_by': 'commission_type'}"/>
+                        <filter name="group_status" string="Payment Status" context="{'group_by': 'payment_status'}"/>
+                        <filter name="group_month" string="Month" context="{'group_by': 'month'}"/>
+                        <filter name="group_year" string="Year" context="{'group_by': 'year'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_commission_summary_report_graph" model="ir.ui.view">
+            <field name="name">commission.summary.report.graph</field>
+            <field name="model">commission.summary.report</field>
+            <field name="arch" type="xml">
+                <graph string="Commission Analysis" type="bar" stacked="True">
+                    <field name="commission_type"/>
+                    <field name="total_commission" type="measure"/>
+                    <field name="payment_status" type="col"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="view_commission_summary_report_pivot" model="ir.ui.view">
+            <field name="name">commission.summary.report.pivot</field>
+            <field name="model">commission.summary.report</field>
+            <field name="arch" type="xml">
+                <pivot string="Commission Pivot Analysis">
+                    <field name="commission_type" type="row"/>
+                    <field name="payment_status" type="col"/>
+                    <field name="total_commission" type="measure"/>
+                    <field name="commission_count" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <!-- Commission Payment Report Views -->
+        <record id="view_commission_payment_report_tree" model="ir.ui.view">
+            <field name="name">commission.payment.report.tree</field>
+            <field name="model">commission.payment.report</field>
+            <field name="arch" type="xml">
+                <tree string="Commission Payment Report" create="false" edit="false" delete="false">
+                    <field name="sale_order_id"/>
+                    <field name="partner_id"/>
+                    <field name="commission_type"/>
+                    <field name="commission_amount"/>
+                    <field name="po_state"/>
+                    <field name="commission_posted"/>
+                    <field name="invoice_count"/>
+                    <field name="paid_amount"/>
+                    <field name="date_order"/>
+                    <field name="currency_id" groups="base.group_multi_currency"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_commission_payment_report_search" model="ir.ui.view">
+            <field name="name">commission.payment.report.search</field>
+            <field name="model">commission.payment.report</field>
+            <field name="arch" type="xml">
+                <search string="Commission Payments">
+                    <field name="sale_order_id"/>
+                    <field name="partner_id"/>
+                    <field name="commission_type"/>
+                    <filter name="posted" string="Posted" domain="[('commission_posted', '=', True)]"/>
+                    <filter name="not_posted" string="Not Posted" domain="[('commission_posted', '=', False)]"/>
+                    <filter name="has_invoices" string="Has Vendor Bills" domain="[('invoice_count', '>', 0)]"/>
+                    <separator/>
+                    <group expand="0" string="Group By">
+                        <filter name="group_partner" string="Partner" context="{'group_by': 'partner_id'}"/>
+                        <filter name="group_po_state" string="PO Status" context="{'group_by': 'po_state'}"/>
+                        <filter name="group_commission_type" string="Commission Type" context="{'group_by': 'commission_type'}"/>
+                        <filter name="group_month" string="Month" context="{'group_by': 'date_order:month'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Commission Dashboard Views -->
+        <record id="view_commission_dashboard_tree" model="ir.ui.view">
+            <field name="name">commission.dashboard.tree</field>
+            <field name="model">commission.dashboard</field>
+            <field name="arch" type="xml">
+                <tree string="Commission Dashboard" create="false" edit="false" delete="false">
+                    <field name="period"/>
+                    <field name="total_sales"/>
+                    <field name="total_commissions"/>
+                    <field name="commission_percentage"/>
+                    <field name="external_commissions"/>
+                    <field name="internal_commissions"/>
+                    <field name="pending_payments"/>
+                    <field name="completed_payments"/>
+                    <field name="currency_id" groups="base.group_multi_currency"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_commission_dashboard_graph" model="ir.ui.view">
+            <field name="name">commission.dashboard.graph</field>
+            <field name="model">commission.dashboard</field>
+            <field name="arch" type="xml">
+                <graph string="Commission Trends" type="line">
+                    <field name="period"/>
+                    <field name="total_commissions" type="measure"/>
+                    <field name="commission_percentage" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <!-- Actions -->
+        <record id="action_commission_summary_report" model="ir.actions.act_window">
+            <field name="name">Commission Summary Report</field>
+            <field name="res_model">commission.summary.report</field>
+            <field name="view_mode">tree,graph,pivot</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Commission Summary Report
+                </p>
+                <p>
+                    Analyze commission distribution by partners, types, and payment status.
+                    Use filters and grouping to get detailed insights.
+                </p>
+            </field>
+        </record>
+
+        <record id="action_commission_payment_report" model="ir.actions.act_window">
+            <field name="name">Commission Payment Tracking</field>
+            <field name="res_model">commission.payment.report</field>
+            <field name="view_mode">tree</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Commission Payment Tracking
+                </p>
+                <p>
+                    Track the payment status of commission purchase orders and vendor bills.
+                </p>
+            </field>
+        </record>
+
+        <record id="action_commission_dashboard" model="ir.actions.act_window">
+            <field name="name">Commission Dashboard</field>
+            <field name="res_model">commission.dashboard</field>
+            <field name="view_mode">tree,graph</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Commission Dashboard
+                </p>
+                <p>
+                    High-level overview of commission trends and performance metrics.
+                </p>
+            </field>
+        </record>
+
+        <!-- Enhanced Sale Order Form with Validation Button -->
+        <record id="view_order_form_inherit_commission_validation" model="ir.ui.view">
+            <field name="name">sale.order.form.inherit.commission.validation</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="commission_ax.view_order_form_inherit_commission_enhanced"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_reset_commissions']" position="after">
+                    <button name="action_validate_commission_setup" 
+                            type="object" 
+                            string="Validate Setup" 
+                            class="btn-secondary"
+                            help="Validate commission configuration before processing"/>
+                </xpath>
+                
+                <xpath expr="//field[@name='commission_status']" position="after">
+                    <field name="commission_last_modified" readonly="1"/>
+                    <field name="commission_modified_by" readonly="1"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Menu Structure -->
+        <menuitem id="menu_commission_reports" 
+                  name="Commission Reports" 
+                  parent="sale.sale_menu_root" 
+                  sequence="100"
+                  groups="sales_team.group_sale_manager"/>
+
+        <menuitem id="menu_commission_summary_report" 
+                  name="Commission Summary" 
+                  parent="menu_commission_reports" 
+                  action="action_commission_summary_report" 
+                  sequence="10"/>
+
+        <menuitem id="menu_commission_payment_report" 
+                  name="Payment Tracking" 
+                  parent="menu_commission_reports" 
+                  action="action_commission_payment_report" 
+                  sequence="20"/>
+
+        <menuitem id="menu_commission_dashboard" 
+                  name="Dashboard" 
+                  parent="menu_commission_reports" 
+                  action="action_commission_dashboard" 
+                  sequence="30"/>
+
+    </data>
+</odoo>

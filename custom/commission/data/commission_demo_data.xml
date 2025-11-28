@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Demo Commission Products -->
+        <record id="product_broker_commission" model="product.product">
+            <field name="name">Broker Commission</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price">0.0</field>
+            <field name="purchase_ok">True</field>
+            <field name="sale_ok">False</field>
+            <field name="description">Service product for broker commission payments</field>
+        </record>
+
+        <record id="product_referrer_commission" model="product.product">
+            <field name="name">Referrer Commission</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price">0.0</field>
+            <field name="purchase_ok">True</field>
+            <field name="sale_ok">False</field>
+            <field name="description">Service product for referrer commission payments</field>
+        </record>
+
+        <record id="product_cashback_commission" model="product.product">
+            <field name="name">Cashback Commission</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price">0.0</field>
+            <field name="purchase_ok">True</field>
+            <field name="sale_ok">False</field>
+            <field name="description">Service product for cashback commission payments</field>
+        </record>
+
+        <record id="product_agent_commission" model="product.product">
+            <field name="name">Agent Commission</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price">0.0</field>
+            <field name="purchase_ok">True</field>
+            <field name="sale_ok">False</field>
+            <field name="description">Service product for agent commission payments</field>
+        </record>
+
+        <record id="product_manager_commission" model="product.product">
+            <field name="name">Manager Commission</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price">0.0</field>
+            <field name="purchase_ok">True</field>
+            <field name="sale_ok">False</field>
+            <field name="description">Service product for manager commission payments</field>
+        </record>
+
+        <record id="product_director_commission" model="product.product">
+            <field name="name">Director Commission</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="list_price">0.0</field>
+            <field name="purchase_ok">True</field>
+            <field name="sale_ok">False</field>
+            <field name="description">Service product for director commission payments</field>
+        </record>
+
+    </data>
+</odoo>

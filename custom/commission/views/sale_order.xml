@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_order_form_inherit_commission_enhanced" model="ir.ui.view">
+            <field name="name">sale.order.form.inherit.commission.enhanced</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <!-- Add commission buttons in header -->
+                <xpath expr="//header" position="inside">
+                    <button name="action_process_commissions" 
+                            type="object" 
+                            string="Calculate Commissions" 
+                            class="btn-primary" 
+                            invisible="commission_status != 'draft'"
+                            help="Calculate and create commission purchase orders"/>
+                    <button name="action_confirm_commissions" 
+                            type="object" 
+                            string="Confirm Commissions" 
+                            class="btn-primary" 
+                            invisible="commission_status != 'calculated'"
+                            help="Confirm the calculated commissions"/>
+                    <button name="action_reset_commissions" 
+                            type="object" 
+                            string="Reset to Draft" 
+                            invisible="commission_status == 'draft'"
+                            help="Reset commission status to draft"/>
+                </xpath>
+
+                <!-- Add commission status field in header area -->
+                <xpath expr="//field[@name='client_order_ref']" position="after">
+                    <field name="commission_status" widget="statusbar" statusbar_visible="draft,calculated,confirmed"/>
+                </xpath>
+
+                <!-- Add commission section as a new page in notebook -->
+                <xpath expr="//notebook" position="inside">
+                    <page string="Commissions" name="commissions">
+                        <group>
+                            <group string="Commission Summary">
+                                <field name="total_external_commission_amount" readonly="1"/>
+                                <field name="total_internal_commission_amount" readonly="1"/>
+                                <field name="total_commission_amount" readonly="1"/>
+                                <field name="company_share" readonly="1"/>
+                                <field name="net_company_share" readonly="1"/>
+                            </group>
+                            <group string="Commission Controls">
+                                <field name="commission_processed" readonly="1"/>
+                                <field name="purchase_order_count" string="Generated POs"/>
+                                <field name="sales_value" readonly="1"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="External Commissions" name="external_commissions">
+                                <group>
+                                    <group string="Broker" name="broker_group">
+                                        <field name="broker_partner_id"/>
+                                        <field name="broker_commission_type" widget="selection" options="{'no_create': True}" help="Select how the broker commission is calculated: Fixed, Percentage of Unit Price, or Percentage of Untaxed Total."/>
+                                        <field name="broker_rate"/>
+                                        <field name="broker_amount" readonly="1" if="broker_commission_type"/>
+                                    </group>
+                                    <group string="Referrer" name="referrer_group">
+                                        <field name="referrer_partner_id"/>
+                                        <field name="referrer_commission_type" widget="selection" options="{'no_create': True}" help="Select how the referrer commission is calculated: Fixed, Percentage of Unit Price, or Percentage of Untaxed Total."/>
+                                        <field name="referrer_rate"/>
+                                        <field name="referrer_amount" readonly="1" if="referrer_commission_type"/>
+                                    </group>
+                                </group>
+                                <group>
+                                    <group string="Cashback" name="cashback_group">
+                                        <field name="cashback_partner_id"/>
+                                        <field name="cashback_commission_type" widget="selection" options="{'no_create': True}" help="Select how the cashback is calculated: Fixed, Percentage of Unit Price, or Percentage of Untaxed Total."/>
+                                        <field name="cashback_rate"/>
+                                        <field name="cashback_amount" readonly="1" if="cashback_commission_type"/>
+                                    </group>
+                                    <group string="Other External" name="other_external_group">
+                                        <field name="other_external_partner_id"/>
+                                        <field name="other_external_commission_type" widget="selection" options="{'no_create': True}" help="Select how the other external commission is calculated: Fixed, Percentage of Unit Price, or Percentage of Untaxed Total."/>
+                                        <field name="other_external_rate"/>
+                                        <field name="other_external_amount" readonly="1" if="other_external_commission_type"/>
+                                    </group>
+                                </group>
+                            </page>
+
+                            <page string="Internal Commissions" name="internal_commissions">
+                                <group>
+                                    <group string="Agent 1" name="agent1_group">
+                                        <field name="agent1_partner_id"/>
+                                        <field name="agent1_commission_type" widget="selection" options="{'no_create': True}" help="Select how Agent 1 commission is calculated: Fixed, Percentage of Unit Price, or Percentage of Untaxed Total."/>
+                                        <field name="agent1_rate"/>
+                                        <field name="agent1_amount" readonly="1" if="agent1_commission_type"/>
+                                    </group>
+                                    <group string="Agent 2" name="agent2_group">
+                                        <field name="agent2_partner_id"/>
+                                        <field name="agent2_commission_type" widget="selection" options="{'no_create': True}" help="Select how Agent 2 commission is calculated: Fixed, Percentage of Unit Price, or Percentage of Untaxed Total."/>
+                                        <field name="agent2_rate"/>
+                                        <field name="agent2_amount" readonly="1" if="agent2_commission_type"/>
+                                    </group>
+                                </group>
+                                <group>
+                                    <group string="Manager" name="manager_group">
+                                        <field name="manager_partner_id"/>
+                                        <field name="manager_commission_type" widget="selection" options="{'no_create': True}" help="Select how Manager commission is calculated: Fixed, Percentage of Unit Price, or Percentage of Untaxed Total."/>
+                                        <field name="manager_rate"/>
+                                        <field name="manager_amount" readonly="1" if="manager_commission_type"/>
+                                    </group>
+                                    <group string="Director" name="director_group">
+                                        <field name="director_partner_id"/>
+                                        <field name="director_commission_type" widget="selection" options="{'no_create': True}" help="Select how Director commission is calculated: Fixed, Percentage of Unit Price, or Percentage of Untaxed Total."/>
+                                        <field name="director_rate"/>
+                                        <field name="director_amount" readonly="1" if="director_commission_type"/>
+                                    </group>
+                                </group>
+                            </page>
+
+                            <page string="Legacy Commissions" name="legacy_commissions">
+                                <group>
+                                    <group string="Consultant" name="consultant_group">
+                                        <field name="consultant_id"/>
+                                        <field name="consultant_commission_type" widget="selection" options="{'no_create': True}" help="Select how Consultant commission is calculated: Fixed, Percentage of Unit Price, or Percentage of Untaxed Total."/>
+                                        <field name="consultant_rate"/>
+                                        <field name="consultant_amount" readonly="1" if="consultant_commission_type"/>
+                                    </group>
+                                    <group string="Manager (Legacy)" name="manager_legacy_group">
+                                        <field name="manager_id"/>
+                                        <field name="manager_commission_type" widget="selection" options="{'no_create': True}" help="Select how Manager commission is calculated: Fixed, Percentage of Unit Price, or Percentage of Untaxed Total."/>
+                                        <field name="manager_rate"/>
+                                        <field name="manager_amount" readonly="1" if="manager_commission_type"/>
+                                    </group>
+                                </group>
+                                <group>
+                                    <group string="Second Agent" name="second_agent_group">
+                                        <field name="second_agent_id"/>
+                                        <field name="second_agent_commission_type" widget="selection" options="{'no_create': True}" help="Select how Second Agent commission is calculated: Fixed, Percentage of Unit Price, or Percentage of Untaxed Total."/>
+                                        <field name="second_agent_rate"/>
+                                        <field name="second_agent_amount" readonly="1" if="second_agent_commission_type"/>
+                                    </group>
+                                    <group string="Director (Legacy)" name="director_legacy_group">
+                                        <field name="director_partner_id"/>
+                                        <field name="director_commission_type" widget="selection" options="{'no_create': True}" help="Select how Director commission is calculated: Fixed, Percentage of Unit Price, or Percentage of Untaxed Total."/>
+                                        <field name="director_rate"/>
+                                        <field name="director_amount" readonly="1" if="director_commission_type"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

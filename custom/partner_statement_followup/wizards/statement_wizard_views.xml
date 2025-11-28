@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Partner Statement Wizard Views -->
+
+    <!-- Statement Wizard Form View -->
+    <record id="view_partner_statement_wizard_form" model="ir.ui.view">
+        <field name="name">partner.statement.wizard.form</field>
+        <field name="model">partner.statement.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Generate Partner Statement">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Partner Statement Generator</h1>
+                        <p>Generate professional partner statements with ageing analysis</p>
+                    </div>
+
+                    <group>
+                        <group name="partners">
+                            <field name="partner_ids" widget="many2many_tags" placeholder="Select partners (leave empty for all customers)"/>
+                            <field name="filter_by" widget="radio"/>
+                            <field name="customer_only"/>
+                            <field name="exclude_zero_balance"/>
+                        </group>
+
+                        <group name="dates">
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                            <field name="ageing_date"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+
+                    <group name="options">
+                        <group>
+                            <field name="include_unreconciled_only"/>
+                            <field name="show_aging_buckets"/>
+                            <field name="include_payments"/>
+                            <field name="group_by_salesperson"/>
+                        </group>
+
+                        <group>
+                            <field name="output_format" widget="radio"/>
+                            <field name="send_email"/>
+                            <field name="email_template_id" attrs="{'invisible': [('send_email', '=', False)]}"/>
+                            <field name="auto_followup"/>
+                        </group>
+                    </group>
+
+                    <group name="ageing_config" string="Ageing Configuration">
+                        <field name="ageing_bucket_1"/>
+                        <field name="ageing_bucket_2"/>
+                        <field name="ageing_bucket_3"/>
+                        <field name="ageing_bucket_4"/>
+                    </group>
+
+                </sheet>
+                <footer>
+                    <button name="action_generate_statement" string="Generate Statement" type="object" class="btn-primary"/>
+                    <button name="action_preview_statement" string="Preview" type="object" class="btn-secondary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Quick Statement Wizard (simplified) -->
+    <record id="view_quick_statement_wizard_form" model="ir.ui.view">
+        <field name="name">quick.statement.wizard.form</field>
+        <field name="model">partner.statement.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Quick Statement">
+                <sheet>
+                    <div class="oe_title">
+                        <h2>Quick Partner Statement</h2>
+                    </div>
+                    <group>
+                        <field name="partner_ids" string="Partners" required="1"/>
+                        <field name="date_to" string="As of Date"/>
+                        <field name="send_email"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_generate_statement" string="Generate" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Statement Results View -->
+    <record id="view_statement_result_form" model="ir.ui.view">
+        <field name="name">statement.result.form</field>
+        <field name="model">statement.result</field>
+        <field name="arch" type="xml">
+            <form string="Statement Results" create="false" edit="false">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="partner_id"/>
+                        </h1>
+                        <h2>Statement as of <field name="date_to"/>
+                        </h2>
+                    </div>
+
+                    <group>
+                        <group>
+                            <field name="total_due"/>
+                            <field name="current_balance"/>
+                            <field name="overdue_balance"/>
+                        </group>
+                        <group>
+                            <field name="credit_limit"/>
+                            <field name="available_credit"/>
+                            <field name="last_payment_date"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Ageing Analysis">
+                            <field name="ageing_line_ids">
+                                <tree>
+                                    <field name="period_name"/>
+                                    <field name="days_range"/>
+                                    <field name="amount" sum="Total"/>
+                                    <field name="percentage"/>
+                                </tree>
+                            </field>
+                        </page>
+
+                        <page string="Outstanding Invoices">
+                            <field name="invoice_line_ids">
+                                <tree>
+                                    <field name="move_id"/>
+                                    <field name="date"/>
+                                    <field name="date_maturity"/>
+                                    <field name="debit"/>
+                                    <field name="credit"/>
+                                    <field name="balance"/>
+                                    <field name="days_overdue"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button name="action_download_pdf" string="Download PDF" type="object" class="btn-primary"/>
+                    <button name="action_send_email" string="Email Statement" type="object" class="btn-secondary"/>
+                    <button string="Close" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

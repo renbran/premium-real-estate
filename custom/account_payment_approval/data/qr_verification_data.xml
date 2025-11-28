@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- QR Verification Configuration Data -->
+    
+    <!-- QR Code Configuration Parameters -->
+    <record id="qr_verification_token_length" model="ir.config_parameter">
+        <field name="key">account_payment_approval.qr_token_length</field>
+        <field name="value">32</field>
+    </record>
+    
+    <record id="qr_verification_expiry_days" model="ir.config_parameter">
+        <field name="key">account_payment_approval.qr_expiry_days</field>
+        <field name="value">365</field>
+    </record>
+    
+    <record id="qr_code_size" model="ir.config_parameter">
+        <field name="key">account_payment_approval.qr_code_size</field>
+        <field name="value">200</field>
+    </record>
+    
+    <record id="qr_code_border" model="ir.config_parameter">
+        <field name="key">account_payment_approval.qr_code_border</field>
+        <field name="value">4</field>
+    </record>
+    
+    <!-- Verification Portal Settings -->
+    <record id="verification_portal_enabled" model="ir.config_parameter">
+        <field name="key">account_payment_approval.verification_portal_enabled</field>
+        <field name="value">True</field>
+    </record>
+    
+    <record id="verification_portal_public_access" model="ir.config_parameter">
+        <field name="key">account_payment_approval.verification_portal_public_access</field>
+        <field name="value">True</field>
+    </record>
+    
+    <!-- Security Settings -->
+    <record id="verification_rate_limit" model="ir.config_parameter">
+        <field name="key">account_payment_approval.verification_rate_limit</field>
+        <field name="value">100</field>
+    </record>
+    
+    <record id="verification_log_access" model="ir.config_parameter">
+        <field name="key">account_payment_approval.verification_log_access</field>
+        <field name="value">True</field>
+    </record>
+    
+    <!-- OSUS Branding Configuration -->
+    <record id="osus_company_name" model="ir.config_parameter">
+        <field name="key">account_payment_approval.osus_company_name</field>
+        <field name="value">OSUS Properties</field>
+    </record>
+    
+    <record id="osus_company_tagline" model="ir.config_parameter">
+        <field name="key">account_payment_approval.osus_company_tagline</field>
+        <field name="value">Real Estate Excellence Since 2010</field>
+    </record>
+    
+    <record id="osus_verification_email" model="ir.config_parameter">
+        <field name="key">account_payment_approval.osus_verification_email</field>
+        <field name="value">verification@osusproperties.com</field>
+    </record>
+    
+    <!-- Digital Signature Settings -->
+    <record id="signature_required_stages" model="ir.config_parameter">
+        <field name="key">account_payment_approval.signature_required_stages</field>
+        <field name="value">submitted,reviewed,approved,authorized</field>
+    </record>
+    
+    <record id="signature_canvas_width" model="ir.config_parameter">
+        <field name="key">account_payment_approval.signature_canvas_width</field>
+        <field name="value">400</field>
+    </record>
+    
+    <record id="signature_canvas_height" model="ir.config_parameter">
+        <field name="key">account_payment_approval.signature_canvas_height</field>
+        <field name="value">150</field>
+    </record>
+    
+</odoo>

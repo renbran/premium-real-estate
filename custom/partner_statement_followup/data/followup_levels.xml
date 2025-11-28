@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Default Follow-up Configuration -->
+        <record id="default_followup_config" model="res.partner.statement.config">
+            <field name="name">Default Follow-up Configuration</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="ageing_bucket_1">30</field>
+            <field name="ageing_bucket_2">60</field>
+            <field name="ageing_bucket_3">90</field>
+            <field name="ageing_bucket_4">120</field>
+            <field name="days_between_levels">7</field>
+            <field name="max_followup_level">3</field>
+            <field name="auto_followup">True</field>
+            <field name="send_email">True</field>
+            <field name="create_activity">True</field>
+        </record>
+
+    </data>
+</odoo>

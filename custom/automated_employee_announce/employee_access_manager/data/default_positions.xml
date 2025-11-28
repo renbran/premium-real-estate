@@ -1,0 +1,16 @@
+<odoo>
+    <data noupdate="1">
+        <record id="position_sales_admin" model="hr.employee.position">
+            <field name="name">Sales Admin</field>
+        </record>
+        <record id="position_accountant" model="hr.employee.position">
+            <field name="name">Accountant</field>
+        </record>
+        <record id="position_cfo" model="hr.employee.position">
+            <field name="name">CFO</field>
+        </record>
+        <record id="position_ceo" model="hr.employee.position">
+            <field name="name">CEO</field>
+        </record>
+    </data>
+</odoo>

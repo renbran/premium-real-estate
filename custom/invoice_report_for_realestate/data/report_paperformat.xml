@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="paperformat_osus_invoice" model="report.paperformat">
+        <field name="name">OSUS Invoice Format</field>
+        <field name="format">A4</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">50</field>
+        <field name="margin_bottom">50</field>
+        <field name="margin_left">10</field>
+        <field name="margin_right">10</field>
+        <field name="header_line">false</field>
+        <field name="header_spacing">40</field>
+        <field name="dpi">90</field>
+    </record>
+</odoo>

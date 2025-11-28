@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Email Template for Order Status Changes -->
+        <record id="email_template_order_status_change" model="mail.template">
+            <field name="name">OSUS Order Status Change Notification</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="subject">Order ${object.name} - Status Updated to ${object.custom_status_id.name}</field>
+            <field name="email_from">${(object.user_id.email or user.email)|safe}</field>
+            <field name="email_to">${object.partner_id.email}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px; background-color: #f8f9fa; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+                    <table align="center" width="590" cellpadding="0" cellspacing="0" style="margin: 20px auto; background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                        <!-- Header with OSUS Branding -->
+                        <tr>
+                            <td style="background: linear-gradient(135deg, #800020 0%, #a00030 100%); padding: 30px; text-align: center; border-radius: 8px 8px 0 0;">
+                                <div style="background: white; width: 60px; height: 60px; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 24px; color: #800020;">
+                                    O
+                                </div>
+                                <h1 style="color: white; margin: 0; font-size: 24px; font-weight: 300;">OSUS Properties</h1>
+                                <p style="color: rgba(255,255,255,0.9); margin: 5px 0 0 0; font-size: 14px;">Order Status Update</p>
+                            </td>
+                        </tr>
+
+                        <!-- Content -->
+                        <tr>
+                            <td style="padding: 30px;">
+                                <h2 style="color: #800020; margin: 0 0 20px 0; font-size: 20px;">Order Status Update</h2>
+
+                                <p style="color: #555; line-height: 1.6; margin: 0 0 20px 0;">
+                                    Dear ${object.partner_id.name},
+                                </p>
+
+                                <p style="color: #555; line-height: 1.6; margin: 0 0 20px 0;">
+                                    We're writing to inform you that your order <strong>${object.name}</strong> has been updated.
+                                </p>
+
+                                <!-- Order Details Box -->
+                                <div style="background: #f8f9fa; border-left: 4px solid #800020; padding: 20px; margin: 20px 0; border-radius: 0 4px 4px 0;">
+                                    <table width="100%" cellpadding="5" cellspacing="0">
+                                        <tr>
+                                            <td style="font-weight: bold; color: #800020; width: 120px;">Order Number:</td>
+                                            <td style="color: #555;">${object.name}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-weight: bold; color: #800020;">Current Status:</td>
+                                            <td style="color: #555;">
+                                                <span style="background: #800020; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: bold;">
+                                                    ${object.custom_status_id.name}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-weight: bold; color: #800020;">Order Total:</td>
+                                            <td style="color: #555;">${object.amount_total} ${object.currency_id.symbol}</td>
+                                        </tr>
+                                        <tr t-if="object.total_commission_amount > 0">
+                                            <td style="font-weight: bold; color: #800020;">Commission:</td>
+                                            <td style="color: #555;">${object.total_commission_amount} ${object.currency_id.symbol}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-weight: bold; color: #800020;">Sales Person:</td>
+                                            <td style="color: #555;">${object.user_id.name}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+
+                                <!-- Status-specific messages -->
+                                <div t-if="object.custom_status_id.name == 'Documentation'">
+                                    <p style="color: #555; line-height: 1.6; margin: 0 0 15px 0;">
+                                        <strong>Next Steps:</strong> Our team is now gathering the required documentation for your order.
+                                    </p>
+                                </div>
+
+                                <div t-if="object.custom_status_id.name == 'Commission Calculation'">
+                                    <p style="color: #555; line-height: 1.6; margin: 0 0 15px 0;">
+                                        <strong>Next Steps:</strong> We're calculating the commission details for your order.
+                                    </p>
+                                </div>
+
+                                <div t-if="object.custom_status_id.name == 'Review'">
+                                    <p style="color: #555; line-height: 1.6; margin: 0 0 15px 0;">
+                                        <strong>Next Steps:</strong> Your order is currently under management review.
+                                    </p>
+                                </div>
+
+                                <div t-if="object.custom_status_id.name == 'Approved'">
+                                    <p style="color: #555; line-height: 1.6; margin: 0 0 15px 0;">
+                                        <strong>Great News!</strong> Your order has been approved and will be processed shortly.
+                                    </p>
+                                </div>
+
+                                <div t-if="object.custom_status_id.name == 'Posted'">
+                                    <p style="color: #555; line-height: 1.6; margin: 0 0 15px 0;">
+                                        <strong>Order Complete!</strong> Your order has been successfully processed and posted.
+                                    </p>
+                                </div>
+
+                                <p style="color: #555; line-height: 1.6; margin: 20px 0;">
+                                    If you have any questions about your order, please don't hesitate to contact us.
+                                </p>
+
+                                <!-- Call to Action -->
+                                <div style="text-align: center; margin: 30px 0;">
+                                    <a href="${object.get_portal_url()}" style="background: #800020; color: white; padding: 12px 30px; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block;">
+                                        View Order Details
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- Footer -->
+                        <tr>
+                            <td style="background: #f8f9fa; padding: 20px; text-align: center; border-radius: 0 0 8px 8px; border-top: 1px solid #e9ecef;">
+                                <p style="color: #6c757d; margin: 0; font-size: 12px;">
+                                    Best regards,<br/>
+                                <strong style="color: #800020;">OSUS Properties Team</strong>
+                            </p>
+                            <p style="color: #6c757d; margin: 10px 0 0 0; font-size: 11px;">
+                                    This is an automated message. Please do not reply directly to this email.
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </field>
+    </record>
+
+    <!-- Email Template for Commission Calculation Complete -->
+    <record id="email_template_commission_calculated" model="mail.template">
+        <field name="name">OSUS Commission Calculation Complete</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="subject">Commission Calculated for Order ${object.name}</field>
+        <field name="email_from">${(object.user_id.email or user.email)|safe}</field>
+        <field name="email_to">${object.user_id.email}</field>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px; background-color: #f8f9fa; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+                <table align="center" width="590" cellpadding="0" cellspacing="0" style="margin: 20px auto; background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                    <tr>
+                        <td style="background: linear-gradient(135deg, #800020 0%, #a00030 100%); padding: 30px; text-align: center; border-radius: 8px 8px 0 0;">
+                            <div style="background: white; width: 60px; height: 60px; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 24px; color: #800020;">
+                                    💰
+                            </div>
+                            <h1 style="color: white; margin: 0; font-size: 24px; font-weight: 300;">Commission Calculation</h1>
+                            <p style="color: rgba(255,255,255,0.9); margin: 5px 0 0 0; font-size: 14px;">Order ${object.name}</p>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 30px;">
+                            <h2 style="color: #800020; margin: 0 0 20px 0; font-size: 20px;">Commission Details</h2>
+
+                            <div style="background: #f8f9fa; border-left: 4px solid #ffd700; padding: 20px; margin: 20px 0; border-radius: 0 4px 4px 0;">
+                                <table width="100%" cellpadding="5" cellspacing="0">
+                                    <tr>
+                                        <td style="font-weight: bold; color: #800020; width: 140px;">Order Amount:</td>
+                                        <td style="color: #555;">${object.amount_total} ${object.currency_id.symbol}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight: bold; color: #800020;">Commission Amount:</td>
+                                        <td style="color: #555; font-weight: bold; font-size: 16px;">
+                                                ${object.total_commission_amount} ${object.currency_id.symbol}
+                                        </td>
+                                    </tr>
+                                    <tr t-if="object.commission_percentage > 0">
+                                        <td style="font-weight: bold; color: #800020;">Commission Rate:</td>
+                                        <td style="color: #555;">${object.commission_percentage}%</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight: bold; color: #800020;">Calculation Date:</td>
+                                        <td style="color: #555;">${object.commission_calculated_date}</td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <p style="color: #555; line-height: 1.6; margin: 20px 0;">
+                                    The commission for order <strong>${object.name}</strong> has been successfully calculated using our integrated commission system.
+                            </p>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="background: #f8f9fa; padding: 20px; text-align: center; border-radius: 0 0 8px 8px; border-top: 1px solid #e9ecef;">
+                            <p style="color: #6c757d; margin: 0; font-size: 12px;">
+                                <strong style="color: #800020;">OSUS Properties Commission System</strong>
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </field>
+    </record>
+
+    <!-- Email Template for Order Approval -->
+    <record id="email_template_order_approved" model="mail.template">
+        <field name="name">OSUS Order Approval Notification</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="subject">Order ${object.name} Approved ✅</field>
+        <field name="email_from">${(object.final_review_user_id.email or user.email)|safe}</field>
+        <field name="email_to">${object.user_id.email},${object.partner_id.email}</field>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px; background-color: #f8f9fa; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+                <table align="center" width="590" cellpadding="0" cellspacing="0" style="margin: 20px auto; background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                    <tr>
+                        <td style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); padding: 30px; text-align: center; border-radius: 8px 8px 0 0;">
+                            <div style="background: white; width: 60px; height: 60px; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 24px; color: #28a745;">
+                                    ✅
+                            </div>
+                            <h1 style="color: white; margin: 0; font-size: 24px; font-weight: 300;">Order Approved!</h1>
+                            <p style="color: rgba(255,255,255,0.9); margin: 5px 0 0 0; font-size: 14px;">${object.name}</p>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 30px;">
+                            <h2 style="color: #28a745; margin: 0 0 20px 0; font-size: 20px;">🎉 Congratulations!</h2>
+
+                            <p style="color: #555; line-height: 1.6; margin: 0 0 20px 0;">
+                                    Great news! Order <strong>${object.name}</strong> has been approved and is ready for processing.
+                            </p>
+
+                            <div style="background: #f8f9fa; border-left: 4px solid #28a745; padding: 20px; margin: 20px 0; border-radius: 0 4px 4px 0;">
+                                <table width="100%" cellpadding="5" cellspacing="0">
+                                    <tr>
+                                        <td style="font-weight: bold; color: #28a745; width: 120px;">Approved By:</td>
+                                        <td style="color: #555;">${object.final_review_user_id.name}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight: bold; color: #28a745;">Approval Date:</td>
+                                        <td style="color: #555;">${object.final_review_date}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight: bold; color: #28a745;">Order Value:</td>
+                                        <td style="color: #555; font-weight: bold;">${object.amount_total} ${object.currency_id.symbol}</td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <p style="color: #555; line-height: 1.6; margin: 20px 0;">
+                                    The order will now proceed to the final posting stage and be processed accordingly.
+                            </p>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="background: #f8f9fa; padding: 20px; text-align: center; border-radius: 0 0 8px 8px; border-top: 1px solid #e9ecef;">
+                            <p style="color: #6c757d; margin: 0; font-size: 12px;">
+                                <strong style="color: #800020;">OSUS Properties Approval System</strong>
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </field>
+    </record>
+
+</data>
+</odoo>

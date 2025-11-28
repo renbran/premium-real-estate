@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Payment Summary Report -->
+        <record id="action_report_payment_summary" model="ir.actions.report">
+            <field name="name">Payment Summary</field>
+            <field name="model">account.payment</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">account_payment_approval.report_payment_summary</field>
+            <field name="report_file">account_payment_approval.report_payment_summary</field>
+        </record>
+        
+        <!-- Payment Summary Template -->
+        <template id="report_payment_summary">
+            <t t-call="web.html_container">
+                <div class="page">
+                    <div class="oe_structure"/>
+                    <div class="row">
+                        <div class="col-12">
+                            <h2>Payment Summary Report</h2>
+                        </div>
+                    </div>
+                    
+                    <table class="table table-sm o_main_table">
+                        <thead>
+                            <tr>
+                                <th>Voucher #</th>
+                                <th>Date</th>
+                                <th>Partner</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="docs" t-as="doc">
+                                <tr>
+                                    <td><span t-field="doc.voucher_number"/></td>
+                                    <td><span t-field="doc.date"/></td>
+                                    <td><span t-field="doc.partner_id.name"/></td>
+                                    <td><span t-field="doc.amount"/> <span t-field="doc.currency_id.name"/></td>
+                                    <td><span t-field="doc.voucher_state"/></td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                    
+                    <div class="oe_structure"/>
+                </div>
+            </t>
+        </template>
+    </data>
+</odoo>

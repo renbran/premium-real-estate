@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- QR Verification Component Templates -->
+<templates>
+    <t t-name="account_payment_approval.QRVerificationWidget" owl="1">
+        <div class="qr-verification-widget">
+            <div class="qr-header">
+                <h4 class="mb-3">
+                    <i class="fa fa-qrcode me-2"></i>
+                    Payment Verification
+                </h4>
+            </div>
+
+            <div class="qr-content" t-if="state.showQR">
+                <div class="text-center mb-3">
+                    <div class="qr-code-container" t-ref="qrCodeContainer">
+                        <!-- QR Code will be rendered here -->
+                    </div>
+                </div>
+
+                <div class="qr-info">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <strong>Payment Reference:</strong>
+                            <p t-esc="props.paymentRef"/>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Amount:</strong>
+                            <p t-esc="props.amount"/>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <strong>Partner:</strong>
+                            <p t-esc="props.partnerName"/>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Status:</strong>
+                            <span t-att-class="'badge badge-' + getStatusClass()" t-esc="props.status"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="qr-actions mt-3">
+                    <button class="btn btn-primary btn-sm me-2" t-on-click="downloadQR">
+                        <i class="fa fa-download me-1"></i>
+                        Download QR
+                    </button>
+                    <button class="btn btn-info btn-sm me-2" t-on-click="shareQR">
+                        <i class="fa fa-share me-1"></i>
+                        Share
+                    </button>
+                    <button class="btn btn-secondary btn-sm" t-on-click="printQR">
+                        <i class="fa fa-print me-1"></i>
+                        Print
+                    </button>
+                </div>
+
+                <div class="verification-url mt-3">
+                    <label class="form-label">Verification URL:</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" t-att-value="state.verificationUrl" readonly="readonly"/>
+                        <button class="btn btn-outline-secondary" t-on-click="copyURL" type="button">
+                            <i class="fa fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="qr-scanner" t-if="state.showScanner">
+                <div class="scanner-container">
+                    <div class="scanner-header">
+                        <h5>Scan QR Code</h5>
+                        <button class="btn btn-sm btn-outline-secondary" t-on-click="toggleScanner">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="scanner-video-container" t-ref="scannerContainer">
+                        <video t-ref="scannerVideo" autoplay="autoplay" muted="muted"></video>
+                        <canvas t-ref="scannerCanvas" style="display: none;"></canvas>
+                    </div>
+                    <div class="scanner-controls mt-2">
+                        <button class="btn btn-success btn-sm" t-on-click="startScanner" t-if="!state.scannerActive">
+                            <i class="fa fa-camera me-1"></i>
+                            Start Scanner
+                        </button>
+                        <button class="btn btn-danger btn-sm" t-on-click="stopScanner" t-if="state.scannerActive">
+                            <i class="fa fa-stop me-1"></i>
+                            Stop Scanner
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="qr-verification-result" t-if="state.verificationResult">
+                <div t-att-class="'alert alert-' + (state.verificationResult.success ? 'success' : 'danger')">
+                    <h6 t-if="state.verificationResult.success">
+                        <i class="fa fa-check-circle me-2"></i>
+                        Verification Successful
+                    </h6>
+                    <h6 t-else="">
+                        <i class="fa fa-exclamation-triangle me-2"></i>
+                        Verification Failed
+                    </h6>
+                    <p t-esc="state.verificationResult.message"/>
+
+                    <div t-if="state.verificationResult.success and state.verificationResult.paymentData">
+                        <hr/>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <strong>Payment:</strong>
+                                <span t-esc="state.verificationResult.paymentData.name"/>
+                            </div>
+                            <div class="col-md-6">
+                                <strong>Amount:</strong>
+                                <span t-esc="state.verificationResult.paymentData.amount"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <strong>Partner:</strong>
+                                <span t-esc="state.verificationResult.paymentData.partner"/>
+                            </div>
+                            <div class="col-md-6">
+                                <strong>Verified At:</strong>
+                                <span t-esc="state.verificationResult.timestamp"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="qr-controls mt-3">
+                <div class="btn-group" role="group">
+                    <button class="btn btn-outline-primary" t-att-class="{'active': state.showQR}" t-on-click="showQRCode">
+                        <i class="fa fa-qrcode me-1"></i>
+                        Show QR
+                    </button>
+                    <button class="btn btn-outline-primary" t-att-class="{'active': state.showScanner}" t-on-click="toggleScanner">
+                        <i class="fa fa-camera me-1"></i>
+                        Scanner
+                    </button>
+                    <button class="btn btn-outline-primary" t-on-click="refreshQR">
+                        <i class="fa fa-refresh me-1"></i>
+                        Refresh
+                    </button>
+                </div>
+            </div>
+
+            <!-- Loading Overlay -->
+            <div class="qr-loading-overlay" t-if="state.loading">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-2">Processing...</p>
+            </div>
+        </div>
+    </t>
+
+    <!-- Mobile QR Verification Template -->
+    <t t-name="account_payment_approval.MobileQRVerification" owl="1">
+        <div class="mobile-qr-verification">
+            <div class="mobile-header">
+                <div class="company-logo">
+                    <img src="/account_payment_approval/static/description/icon.png" alt="OSUS Properties"/>
+                </div>
+                <h2>Payment Verification</h2>
+                <p class="text-muted">OSUS Properties Payment System</p>
+            </div>
+
+            <div class="verification-content">
+                <div t-if="state.verificationStatus === 'loading'" class="text-center">
+                    <div class="spinner-border text-primary mb-3" role="status"></div>
+                    <p>Verifying payment...</p>
+                </div>
+
+                <div t-if="state.verificationStatus === 'success'" class="verification-success">
+                    <div class="success-icon text-center mb-4">
+                        <i class="fa fa-check-circle fa-4x text-success"></i>
+                    </div>
+
+                    <div class="payment-details card">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0">Payment Verified Successfully</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-2">
+                                <div class="col-6">
+                                    <strong>Reference:</strong>
+                                </div>
+                                <div class="col-6" t-esc="state.paymentData.name"></div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-6">
+                                    <strong>Amount:</strong>
+                                </div>
+                                <div class="col-6" t-esc="state.paymentData.amount"></div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-6">
+                                    <strong>Partner:</strong>
+                                </div>
+                                <div class="col-6" t-esc="state.paymentData.partner"></div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-6">
+                                    <strong>Status:</strong>
+                                </div>
+                                <div class="col-6">
+                                    <span class="badge bg-success" t-esc="state.paymentData.status"></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <strong>Verified:</strong>
+                                </div>
+                                <div class="col-6" t-esc="state.verificationTime"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="verification-actions mt-4 text-center">
+                        <button class="btn btn-primary me-2" t-on-click="downloadReceipt">
+                            <i class="fa fa-download me-1"></i>
+                            Download Receipt
+                        </button>
+                        <button class="btn btn-outline-primary" t-on-click="shareVerification">
+                            <i class="fa fa-share me-1"></i>
+                            Share
+                        </button>
+                    </div>
+                </div>
+
+                <div t-if="state.verificationStatus === 'error'" class="verification-error">
+                    <div class="error-icon text-center mb-4">
+                        <i class="fa fa-exclamation-triangle fa-4x text-danger"></i>
+                    </div>
+
+                    <div class="error-details card">
+                        <div class="card-header bg-danger text-white">
+                            <h5 class="mb-0">Verification Failed</h5>
+                        </div>
+                        <div class="card-body">
+                            <p t-esc="state.errorMessage"></p>
+
+                            <div t-if="state.errorCode === 'EXPIRED'" class="alert alert-warning">
+                                <strong>Token Expired:</strong> This verification link has expired. 
+                                Please request a new verification from the payment creator.
+                            </div>
+
+                            <div t-if="state.errorCode === 'INVALID'" class="alert alert-danger">
+                                <strong>Invalid Token:</strong> This verification link is not valid. 
+                                Please check the QR code or URL and try again.
+                            </div>
+
+                            <div t-if="state.errorCode === 'USED'" class="alert alert-info">
+                                <strong>Already Verified:</strong> This payment has already been verified. 
+                                Check the payment system for current status.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="error-actions mt-4 text-center">
+                        <button class="btn btn-primary me-2" t-on-click="retryVerification">
+                            <i class="fa fa-refresh me-1"></i>
+                            Retry
+                        </button>
+                        <button class="btn btn-outline-secondary" t-on-click="contactSupport">
+                            <i class="fa fa-envelope me-1"></i>
+                            Contact Support
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mobile-footer mt-4">
+                <div class="text-center text-muted">
+                    <small>
+                        © 2025 OSUS Properties. All rights reserved.<br/>
+                        Secure Payment Verification System
+                    </small>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <!-- QR Code Generation Progress Template -->
+    <t t-name="account_payment_approval.QRGenerationProgress" owl="1">
+        <div class="qr-generation-progress">
+            <div class="progress-header text-center mb-3">
+                <h5>Generating QR Code</h5>
+                <p class="text-muted">Please wait while we create your verification code...</p>
+            </div>
+
+            <div class="progress mb-3">
+                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" t-att-style="'width: ' + state.progress + '%'" t-att-aria-valuenow="state.progress" aria-valuemin="0" aria-valuemax="100">
+                    <span t-esc="state.progress + '%'"></span>
+                </div>
+            </div>
+
+            <div class="progress-steps">
+                <div class="step" t-att-class="{'active': state.currentStep >= 1, 'completed': state.currentStep > 1}">
+                    <i class="fa fa-check-circle"></i>
+                    <span>Validating Payment</span>
+                </div>
+                <div class="step" t-att-class="{'active': state.currentStep >= 2, 'completed': state.currentStep > 2}">
+                    <i class="fa fa-key"></i>
+                    <span>Generating Token</span>
+                </div>
+                <div class="step" t-att-class="{'active': state.currentStep >= 3, 'completed': state.currentStep > 3}">
+                    <i class="fa fa-qrcode"></i>
+                    <span>Creating QR Code</span>
+                </div>
+                <div class="step" t-att-class="{'active': state.currentStep >= 4, 'completed': state.currentStep > 4}">
+                    <i class="fa fa-check"></i>
+                    <span>Complete</span>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

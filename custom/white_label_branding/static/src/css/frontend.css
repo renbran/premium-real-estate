@@ -1,0 +1,42 @@
+/* White Label Frontend CSS */
+
+/* Login page branding */
+.oe_login_form .oe_single_form_container .database_list,
+.oe_login_form .oe_single_form_container .oe_login_bottom {
+    display: none !important;
+}
+
+/* Hide Odoo powered by on login */
+.oe_login .oe_login_footer {
+    display: none !important;
+}
+
+/* Custom login logo */
+.o_white_label_login_logo {
+    max-height: 80px;
+    max-width: 300px;
+    margin-bottom: 20px;
+}
+
+/* Website branding */
+.website_brand img[src*="odoo"] {
+    display: none !important;
+}
+
+/* Portal branding */
+.o_portal_navbar .navbar-brand img[src*="odoo"] {
+    display: none !important;
+}
+
+/* Custom website footer */
+.o_white_label_website_footer {
+    background: #2c3e50;
+    color: white;
+    padding: 40px 0;
+    text-align: center;
+}
+
+.o_white_label_website_footer p {
+    margin: 0;
+    opacity: 0.8;
+}

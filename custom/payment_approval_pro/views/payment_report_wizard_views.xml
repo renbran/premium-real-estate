@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Payment Report Wizard Form View -->
+        <record id="view_payment_report_wizard_form" model="ir.ui.view">
+            <field name="name">payment.report.wizard.form</field>
+            <field name="model">payment.report.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Generate Payment Reports">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <i class="fa fa-print"/> Enhanced Payment Reports
+                            </h1>
+                            <p class="o_form_subtitle">
+                                Generate professional payment reports with OSUS branding
+                            </p>
+                        </div>
+                        
+                        <group>
+                            <group string="Report Configuration">
+                                <field name="report_type" widget="radio"/>
+                                <field name="include_draft"/>
+                            </group>
+                            
+                            <group string="Filters">
+                                <field name="payment_type"/>
+                                <field name="date_from"/>
+                                <field name="date_to"/>
+                            </group>
+                        </group>
+                        
+                        <group string="Grouping Options">
+                            <field name="group_by_partner"/>
+                            <field name="group_by_journal"/>
+                        </group>
+                        
+                        <group string="Selected Payments">
+                            <field name="payment_ids" widget="many2many_tags" options="{'color_field': 'payment_type'}"/>
+                        </group>
+                        
+                        <div class="alert alert-info" role="alert">
+                            <strong>Report Types:</strong>
+                            <ul>
+                                <li><strong>Enhanced:</strong> Comprehensive vouchers with signatures, QR codes, and receipts</li>
+                                <li><strong>Compact:</strong> Condensed format for quick reference</li>
+                                <li><strong>Summary:</strong> Professional single-page summaries</li>
+                                <li><strong>Multiple:</strong> Table format for bulk reporting</li>
+                            </ul>
+                        </div>
+                    </sheet>
+                    
+                    <footer>
+                        <button name="action_generate_report" string="Generate Report" type="object" class="btn-primary"/>
+                        <button name="action_preview_selection" string="Preview Selection" type="object" class="btn-secondary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Payment Report Wizard Action -->
+        <record id="action_payment_report_wizard" model="ir.actions.act_window">
+            <field name="name">Payment Report Generator</field>
+            <field name="res_model">payment.report.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="binding_model_id" ref="account.model_account_payment"/>
+            <field name="binding_view_types">list</field>
+        </record>
+    </data>
+</odoo>

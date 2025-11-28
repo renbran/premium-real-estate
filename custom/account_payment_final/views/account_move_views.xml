@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Enhanced Invoice/Bill Form View with Unified Approval Workflow Statusbar -->
+        <record id="view_move_form_approval_workflow" model="ir.ui.view">
+            <field name="name">account.move.form.approval.workflow</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+
+                <!-- REPLACE the original header completely for invoices/bills -->
+                <xpath expr="//header" position="replace">
+                    <header class="invoice-header">
+                        <!-- UNIFIED STATUS BAR - Only show our approval workflow statusbar -->
+                        <field name="approval_state" widget="statusbar" statusbar_visible="draft,under_review,for_approval,approved,posted" statusbar_colors='{"draft":"secondary","under_review":"info","for_approval":"warning","approved":"success","posted":"success"}' readonly="0" invisible="move_type not in ['in_invoice', 'in_refund', 'out_invoice', 'out_refund']"/>
+
+                        <!-- Hide original state field but keep it for backend compatibility -->
+                        <field name="state" invisible="1"/>
+
+                        <!-- Hidden computed fields for button logic -->
+                        <field name="can_submit_for_review" invisible="1"/>
+                        <field name="can_review" invisible="1"/>
+                        <field name="can_approve" invisible="1"/>
+                        <field name="can_post_manual" invisible="1"/>
+                        <field name="move_type" invisible="1"/>
+
+                        <!-- UNIFIED WORKFLOW BUTTONS for Invoices/Bills -->
+                        <div class="workflow-buttons osus-workflow" invisible="move_type not in ['in_invoice', 'in_refund', 'out_invoice', 'out_refund']">
+                            <!-- Draft Stage: Submit for Review -->
+                            <button name="action_submit_for_review" string="Submit for Review" type="object" class="btn osus_primary_btn" invisible="approval_state != 'draft'" confirm="Submit this invoice/bill for review?"/>
+
+                            <!-- Review Stage: Approve or Reject -->
+                            <button name="action_review_approve" string="Review &amp; Approve" type="object" class="btn osus_success_btn" groups="account_payment_final.group_payment_voucher_reviewer" invisible="approval_state != 'under_review'"/>
+
+                            <!-- Approval Stage: Final Approval -->
+                            <button name="action_final_approve" string="Approve &amp; Post" type="object" class="btn osus_success_btn" groups="account_payment_final.group_payment_voucher_approver" invisible="approval_state != 'for_approval'"/>
+
+                            <!-- Manual Post (Only if auto-post failed) -->
+                            <button name="action_post_invoice_bill" string="Post to Ledger" type="object" class="btn osus_primary_btn" groups="account_payment_final.group_payment_poster" invisible="approval_state != 'approved'" confirm="Manually post this approved invoice/bill?"/>
+
+                            <!-- Reject Button -->
+                            <button name="action_reject_invoice_bill" string="Reject" type="object" class="btn osus_danger_btn" groups="account_payment_final.group_payment_voucher_approver" invisible="approval_state not in ['under_review', 'for_approval']" confirm="Are you sure you want to reject this invoice/bill? It will return to draft state."/>
+                        </div>
+
+                        <!-- Keep original buttons for other move types (journal entries, etc.) -->
+                        <div invisible="move_type in ['in_invoice', 'in_refund', 'out_invoice', 'out_refund']">
+                            <!-- Standard Odoo statusbar for non-invoice/bill moves -->
+                            <field name="state" widget="statusbar" statusbar_visible="draft,posted"/>
+
+                            <!-- Standard Odoo buttons for journal entries -->
+                            <button name="action_post" string="Post" type="object" class="btn-primary" invisible="state != 'draft'" data-hotkey="v"/>
+                            <button name="button_draft" string="Reset to Draft" type="object" class="btn-secondary" invisible="state != 'posted'" groups="account.group_account_manager" data-hotkey="w"/>
+                            <button name="button_cancel" string="Cancel" type="object" class="btn-secondary" invisible="state not in ('draft', 'posted')" data-hotkey="z"/>
+                        </div>
+                    </header>
+                </xpath>
+
+                <!-- Add approval workflow fields to the form with safer xpath -->
+                <xpath expr="//notebook" position="inside">
+                    <page name="approval_workflow" string="Approval Workflow" invisible="move_type not in ['in_invoice', 'in_refund', 'out_invoice', 'out_refund']">
+                        <group name="approval_workflow_details" string="Approval Details">
+                            <group>
+                                <field name="reviewer_id" readonly="1"/>
+                                <field name="reviewer_date" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="approver_id" readonly="1"/>
+                                <field name="approver_date" readonly="1"/>
+                            </group>
+                        </group>
+
+                        <!-- Workflow Status Indicators -->
+                        <group name="workflow_status" string="Workflow Status">
+                            <div class="o_row">
+                                <field name="can_submit_for_review" widget="boolean_toggle" readonly="1"/>
+                                <label for="can_submit_for_review" string="Can Submit for Review"/>
+                            </div>
+                            <div class="o_row">
+                                <field name="can_review" widget="boolean_toggle" readonly="1"/>
+                                <label for="can_review" string="Can Review"/>
+                            </div>
+                            <div class="o_row">
+                                <field name="can_approve" widget="boolean_toggle" readonly="1"/>
+                                <label for="can_approve" string="Can Approve"/>
+                            </div>
+                            <div class="o_row">
+                                <field name="can_post_manual" widget="boolean_toggle" readonly="1"/>
+                                <label for="can_post_manual" string="Can Post Manually"/>
+                            </div>
+                        </group>
+                    </page>
+                </xpath>
+
+                <!-- Override the default Post button to enforce approval workflow -->
+                <xpath expr="//button[@name='action_post']" position="attributes">
+                    <attribute name="invisible">move_type in ['in_invoice', 'in_refund', 'out_invoice', 'out_refund'] and approval_state != 'approved'</attribute>
+                </xpath>
+
+                <!-- Add workflow guidance message -->
+                <xpath expr="//button[@name='action_post']" position="after">
+                    <div class="alert alert-info" role="alert" invisible="move_type not in ['in_invoice', 'in_refund', 'out_invoice', 'out_refund'] or approval_state == 'approved'">
+                        <i class="fa fa-info-circle"/>
+ This invoice/bill requires approval workflow. Please submit for review first.
+                    </div>
+                </xpath>
+
+            </field>
+        </record>
+
+        <!-- Enhanced tree view to show approval state -->
+        <record id="view_account_invoice_tree_approval" model="ir.ui.view">
+            <field name="name">account.move.tree.approval</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_invoice_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='state']" position="after">
+                    <field name="approval_state" decoration-info="approval_state == 'under_review'" decoration-warning="approval_state == 'for_approval'" decoration-success="approval_state == 'approved'" decoration-danger="approval_state == 'cancelled'" invisible="move_type not in ['in_invoice', 'in_refund', 'out_invoice', 'out_refund']"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Search view enhancement -->
+        <record id="view_account_invoice_filter_approval" model="ir.ui.view">
+            <field name="name">account.move.search.approval</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+            <field name="arch" type="xml">
+                <!-- Add approval filters at the end of the search view - safer approach -->
+                <xpath expr="//search" position="inside">
+                    <separator/>
+                    <filter string="Pending Review" name="approval_under_review" domain="[('approval_state', '=', 'under_review')]"/>
+                    <filter string="Pending Approval" name="approval_pending" domain="[('approval_state', '=', 'for_approval')]"/>
+                    <filter string="Approved" name="approval_approved" domain="[('approval_state', '=', 'approved')]"/>
+
+                    <!-- Group by approval state -->
+                    <group expand="0" string="Group By">
+                        <filter string="Approval State" name="group_approval_state" domain="[]" context="{'group_by': 'approval_state'}"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

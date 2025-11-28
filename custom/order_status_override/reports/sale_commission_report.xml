@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Commission Report Definition -->
+    <record id="report_sale_commission" model="ir.actions.report">
+        <field name="name">Commission Report</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">order_status_override.sale_commission_document</field>
+        <field name="report_file">order_status_override.sale_commission_document</field>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="paperformat_commission_report"/>
+        <field name="print_report_name">'Commission Report - %s' % (object.name)</field>
+    </record>
+
+    <!-- Action for Bulk Commission Reports -->
+    <record id="action_commission_reports" model="ir.actions.act_window">
+        <field name="name">Commission Reports</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('state', 'in', ['sale', 'done'])]</field>
+        <field name="context">{'search_default_sales': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Generate commission reports for confirmed sales orders
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Item for Commission Reports (Parent) -->
+    <menuitem id="menu_commission_reports" name="Commission Reports" parent="sale.sale_menu_root" sequence="99"/>
+
+    <!-- Menu Item for Commission Reports Action (Child) -->
+    <menuitem id="menu_commission_reports_action" name="Generate Reports" parent="menu_commission_reports" action="action_commission_reports" sequence="10"/>
+</odoo>

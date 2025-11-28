@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Payment Report Wizard Views -->
+
+    <!-- Single Payment Report Wizard Form -->
+    <record id="view_payment_report_wizard_form" model="ir.ui.view">
+        <field name="name">payment.report.wizard.form</field>
+        <field name="model">payment.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Generate Payment Report">
+                <style>
+                    .wizard-header {
+                        background: linear-gradient(135deg, #6B2B47, #8B1538);
+                        color: white;
+                        padding: 15px;
+                        margin: -20px -20px 20px -20px;
+                        text-align: center;
+                        border-radius: 5px;
+                    }
+                    .wizard-section {
+                        background-color: #f8f9fa;
+                        border: 1px solid #dee2e6;
+                        padding: 15px;
+                        margin: 10px 0;
+                        border-radius: 5px;
+                    }
+                    .wizard-section-title {
+                        color: #6B2B47;
+                        font-weight: bold;
+                        margin-bottom: 10px;
+                        border-bottom: 1px solid #D4AF37;
+                        padding-bottom: 5px;
+                    }
+                </style>
+
+                <div class="wizard-header">
+                    <h2>OSUS Payment Report Generator</h2>
+                    <p>Generate professional payment voucher reports with digital signatures and QR verification</p>
+                </div>
+
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="payment_id" readonly="1"/>
+                            <field name="report_types" widget="radio"/>
+                            <field name="format_type" widget="radio"/>
+                        </group>
+                        <group>
+                            <field name="include_qr_code"/>
+                            <field name="include_signatures"/>
+                            <field name="include_audit_trail"/>
+                        </group>
+                    </group>
+
+                    <div class="wizard-section">
+                        <div class="wizard-section-title">Email Options</div>
+                        <group>
+                            <field name="send_email"/>
+                            <field name="email_recipient" invisible="not send_email" placeholder="recipient@example.com"/>
+                        </group>
+                    </div>
+
+                    <!-- Report Configuration Summary -->
+                    <div class="wizard-section">
+                        <div class="wizard-section-title">Report Configuration</div>
+                        <p>
+                            <strong>Report Type:</strong>
+                            <field name="report_types" readonly="1" nolabel="1"/>
+                        </p>
+                        <p>
+                            <strong>Output Format:</strong>
+                            <field name="format_type" readonly="1" nolabel="1"/>
+                        </p>
+                    </div>
+                </sheet>
+
+                <footer>
+                    <button string="Preview Report" name="action_preview_report" type="object" class="btn-secondary"/>
+                    <button string="Generate Report" name="action_generate_report" type="object" class="oe_highlight"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Bulk Payment Report Wizard Form -->
+    <record id="view_payment_bulk_report_wizard_form" model="ir.ui.view">
+        <field name="name">payment.bulk.report.wizard.form</field>
+        <field name="model">payment.bulk.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Generate Bulk Payment Reports">
+                <div class="wizard-header">
+                    <h2>OSUS Bulk Report Generator</h2>
+                    <p>Generate multiple payment reports in a single operation</p>
+                </div>
+
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="payment_ids" widget="many2many_tags" readonly="1"/>
+                            <field name="report_type" widget="radio"/>
+                            <field name="format_type" widget="radio"/>
+                        </group>
+                        <group>
+                            <field name="include_cover_page"/>
+                            <field name="group_by_partner"/>
+                            <field name="group_by_date"/>
+                        </group>
+                    </group>
+
+                    <!-- Selected Payments Summary -->
+                    <div class="wizard-section">
+                        <div class="wizard-section-title">Selected Payments Summary</div>
+                        <p>
+                            <strong>Number of Payments:</strong>
+                            <field name="total_payments_count" readonly="1" nolabel="1"/>
+ payments selected</p>
+                        <p>
+                            <strong>Total Amount:</strong>
+                            <field name="total_amount" readonly="1" nolabel="1" widget="monetary"/>
+ (mixed currencies)</p>
+                        <p>
+                            <strong>Date Range:</strong>
+                            <field name="date_from" readonly="1" nolabel="1"/>
+ - 
+                            <field name="date_to" readonly="1" nolabel="1"/>
+                        </p>
+                    </div>
+                </sheet>
+
+                <footer>
+                    <button string="Generate Bulk Reports" name="action_generate_bulk_reports" type="object" class="oe_highlight"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Wizard Actions -->
+    <record id="action_payment_report_wizard" model="ir.actions.act_window">
+        <field name="name">Generate Payment Report</field>
+        <field name="res_model">payment.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="action_payment_bulk_report_wizard" model="ir.actions.act_window">
+        <field name="name">Generate Bulk Payment Reports</field>
+        <field name="res_model">payment.bulk.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Server action for bulk report wizard -->
+    <record id="action_bulk_report_wizard_server" model="ir.actions.server">
+        <field name="name">Generate Bulk Reports</field>
+        <field name="model_id" ref="account.model_account_payment"/>
+        <field name="binding_model_id" ref="account.model_account_payment"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+if records:
+    wizard = env['payment.bulk.report.wizard'].create({
+        'payment_ids': [(6, 0, records.ids)],
+    })
+    
+    action = {
+        'type': 'ir.actions.act_window',
+        'name': 'Generate Bulk Payment Reports',
+        'res_model': 'payment.bulk.report.wizard',
+        'res_id': wizard.id,
+        'view_mode': 'form',
+        'target': 'new',
+    }
+        </field>
+    </record>
+
+    <!-- Add report wizard button to payment form -->
+    <record id="view_account_payment_form_report_wizard" model="ir.ui.view">
+        <field name="name">account.payment.form.report.wizard</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_print_multiple_reports" string="Report Options" type="object" class="btn-info" invisible="voucher_state in ['draft']"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Security rules for wizard models -->
+    <record id="payment_report_wizard_rule" model="ir.rule">
+        <field name="name">Payment Report Wizard Access</field>
+        <field name="model_id" ref="model_payment_report_wizard"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('account_payment_approval.group_payment_voucher_user'))]"/>
+    </record>
+
+    <record id="payment_bulk_report_wizard_rule" model="ir.rule">
+        <field name="name">Payment Bulk Report Wizard Access</field>
+        <field name="model_id" ref="model_payment_bulk_report_wizard"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('account_payment_approval.group_payment_voucher_user'))]"/>
+    </record>
+
+    <!-- Add models to access rights -->
+    <record id="access_payment_report_wizard_user" model="ir.model.access">
+        <field name="name">payment.report.wizard user</field>
+        <field name="model_id" ref="model_payment_report_wizard"/>
+        <field name="group_id" ref="account_payment_approval.group_payment_voucher_user"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+
+    <record id="access_payment_bulk_report_wizard_user" model="ir.model.access">
+        <field name="name">payment.bulk.report.wizard user</field>
+        <field name="model_id" ref="model_payment_bulk_report_wizard"/>
+        <field name="group_id" ref="account_payment_approval.group_payment_voucher_user"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+
+    <!-- Security rules for wizard models -->
+    <record id="view_account_payment_tree_enhanced_reports" model="ir.ui.view">
+        <field name="name">account.payment.tree.enhanced.reports</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="create">true</attribute>
+                <attribute name="edit">true</attribute>
+                <attribute name="delete">true</attribute>
+                <attribute name="export_xlsx">true</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Add dashboard widget for quick reports -->
+    <record id="payment_reports_dashboard_action" model="ir.actions.act_window">
+        <field name="name">Quick Reports Dashboard</field>
+        <field name="res_model">account.payment</field>
+        <field name="view_mode">graph,pivot,tree</field>
+        <field name="domain">[]</field>
+        <field name="context">{
+            'search_default_group_by_state': 1,
+            'search_default_this_month': 1
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Payment Reports Dashboard
+            </p>
+            <p>
+                Generate quick reports and analytics for payment vouchers.
+                Use the filters to analyze specific time periods or payment states.
+            </p>
+        </field>
+    </record>
+
+    <!-- Create shortcut actions for common reports -->
+    <record id="action_print_today_payments" model="ir.actions.server">
+        <field name="name">Print Today's Payments</field>
+        <field name="model_id" ref="account.model_account_payment"/>
+        <field name="state">code</field>
+        <field name="code">
+# Get today's payments
+today = fields.Date.today()
+payments = env['account.payment'].search([
+    ('date', '=', today),
+    ('voucher_state', 'in', ['posted', 'authorized'])
+])
+
+if not payments:
+    raise UserError(_("No payments found for today that are ready for printing."))
+
+# Generate bulk report
+wizard = env['payment.bulk.report.wizard'].create({
+    'payment_ids': [(6, 0, payments.ids)],
+    'report_type': 'enhanced',
+    'format_type': 'pdf',
+    'include_cover_page': True,
+    'group_by_date': True
+})
+
+action = wizard.action_generate_bulk_reports()
+        </field>
+    </record>
+
+    <record id="action_print_pending_approvals" model="ir.actions.server">
+        <field name="name">Print Pending Approvals Report</field>
+        <field name="model_id" ref="account.model_account_payment"/>
+        <field name="state">code</field>
+        <field name="code">
+# Get payments pending approval
+payments = env['account.payment'].search([
+    ('voucher_state', 'in', ['submitted', 'under_review', 'approved'])
+])
+
+if not payments:
+    raise UserError(_("No payments found that are pending approval."))
+
+# Generate audit trail reports
+wizard = env['payment.bulk.report.wizard'].create({
+    'payment_ids': [(6, 0, payments.ids)],
+    'report_type': 'audit_trail',
+    'format_type': 'pdf',
+    'include_cover_page': True,
+    'group_by_partner': True
+})
+
+action = wizard.action_generate_bulk_reports()
+        </field>
+    </record>
+
+</odoo>

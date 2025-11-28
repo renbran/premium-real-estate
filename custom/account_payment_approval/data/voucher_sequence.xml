@@ -1,0 +1,44 @@
+<odoo>
+    <data noupdate="1">
+
+        <!-- Payment Voucher Sequence -->
+        <record id="sequence_payment_voucher" model="ir.sequence">
+            <field name="name">Payment Voucher</field>
+            <field name="code">payment.voucher</field>
+            <field name="prefix">PV/%(range_year)s/</field>
+            <field name="suffix"></field>
+            <field name="padding">5</field>
+            <field name="number_increment">1</field>
+            <field name="number_next">1</field>
+            <field name="use_date_range">True</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Receipt Voucher Sequence -->
+        <record id="sequence_receipt_voucher" model="ir.sequence">
+            <field name="name">Receipt Voucher</field>
+            <field name="code">receipt.voucher</field>
+            <field name="prefix">RV/%(range_year)s/</field>
+            <field name="suffix"></field>
+            <field name="padding">5</field>
+            <field name="number_increment">1</field>
+            <field name="number_next">1</field>
+            <field name="use_date_range">True</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- QR Verification Token Sequence -->
+        <record id="sequence_qr_verification_token" model="ir.sequence">
+            <field name="name">QR Verification Token</field>
+            <field name="code">qr.verification.token</field>
+            <field name="prefix">QR</field>
+            <field name="suffix"></field>
+            <field name="padding">8</field>
+            <field name="number_increment">1</field>
+            <field name="number_next">1</field>
+            <field name="use_date_range">False</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+    </data>
+</odoo>

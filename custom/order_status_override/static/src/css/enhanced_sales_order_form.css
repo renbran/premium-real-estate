@@ -1,0 +1,102 @@
+/* CloudPepper Compatible Sales Order Form Styling */
+/* Minimal styling to prevent RPC errors while maintaining functionality */
+
+/* ===== WORKFLOW BUTTON VISIBILITY FIX ===== */
+
+/* Ensure workflow buttons are visible with correct names */
+.o_form_view button[name="action_move_to_document_review"],
+.o_form_view button[name="action_move_to_commission_calculation"],
+.o_form_view button[name="action_move_to_allocation"],
+.o_form_view button[name="action_move_to_final_review"],
+.o_form_view button[name="action_approve_order"],
+.o_form_view button[name="action_move_to_post"],
+.o_form_view button[name="action_post_order"],
+.o_form_view button[name="action_reject_order"],
+.o_form_view button[name="action_reassign_workflow_users"] {
+  display: inline-block;
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Enhanced Status Bar - Minimal Version */
+.o_enhanced_statusbar .o_statusbar_status {
+  padding: 8px 14px;
+  margin: 0 3px;
+  font-weight: 600;
+  border-radius: 4px;
+  border: 1px solid #ced4da;
+  background-color: #f8f9fa;
+  color: #495057;
+}
+
+.o_enhanced_statusbar .o_statusbar_status.o_arrow_button_current {
+  background-color: #1f4788;
+  color: white;
+  border-color: #1f4788;
+}
+
+/* Order Status Labels */
+.o_order_status_label {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.o_order_status_draft {
+  background-color: #f8f9fa;
+  color: #6c757d;
+}
+.o_order_status_document_review {
+  background-color: #fff3cd;
+  color: #856404;
+}
+.o_order_status_commission_calculation {
+  background-color: #d4edda;
+  color: #155724;
+}
+.o_order_status_allocation {
+  background-color: #d1ecf1;
+  color: #0c5460;
+}
+.o_order_status_final_review {
+  background-color: #ffeaa7;
+  color: #6c5ce7;
+}
+.o_order_status_approved {
+  background-color: #d4edda;
+  color: #155724;
+}
+.o_order_status_posted {
+  background-color: #1f4788;
+  color: white;
+}
+.o_order_status_rejected {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+/* Form View Enhancements - Minimal */
+.o_form_view .o_form_sheet {
+  max-width: none;
+}
+
+.o_form_view .o_form_sheet .o_group {
+  margin-bottom: 16px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .o_enhanced_statusbar .o_statusbar_status {
+    padding: 6px 10px;
+    margin: 0 1px;
+    font-size: 11px;
+  }
+
+  .o_order_status_label {
+    padding: 3px 6px;
+    font-size: 10px;
+  }
+}

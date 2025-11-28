@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Main Payment Voucher Management Menu -->
+        <menuitem 
+            id="menu_payment_voucher_management"
+            name="Payment Vouchers"
+            parent="account.menu_finance"
+            sequence="25"
+            groups="account.group_account_user"/>
+        
+        <!-- Dashboard -->
+        <menuitem 
+            id="menu_payment_dashboard"
+            name="Dashboard"
+            parent="menu_payment_voucher_management"
+            action="action_payment_dashboard"
+            sequence="5"
+            groups="account.group_account_user"/>
+        
+        <!-- All Payment Vouchers -->
+        <menuitem 
+            id="menu_payment_vouchers_all"
+            name="All Vouchers"
+            parent="menu_payment_voucher_management"
+            action="action_payment_voucher_all"
+            sequence="10"
+            groups="account.group_account_user"/>
+        
+        <!-- Workflow Management Submenu -->
+        <menuitem 
+            id="menu_payment_workflow"
+            name="Workflow Management"
+            parent="menu_payment_voucher_management"
+            sequence="20"
+            groups="account.group_account_user"/>
+        
+        <!-- Pending Reviews -->
+        <menuitem 
+            id="menu_payment_pending_review"
+            name="Pending Review"
+            parent="menu_payment_workflow"
+            action="action_payment_pending_review"
+            sequence="10"
+            groups="account_payment_final.group_payment_voucher_reviewer"/>
+        
+        <!-- Pending Approvals -->
+        <menuitem 
+            id="menu_payment_pending_approval"
+            name="Pending Approval"
+            parent="menu_payment_workflow"
+            action="action_payment_pending_approval"
+            sequence="20"
+            groups="account_payment_final.group_payment_voucher_approver"/>
+        
+        <!-- Pending Authorization -->
+        <menuitem 
+            id="menu_payment_pending_authorization"
+            name="Pending Authorization"
+            parent="menu_payment_workflow"
+            action="action_payment_pending_authorization"
+            sequence="30"
+            groups="account_payment_final.group_payment_voucher_authorizer"/>
+        
+        <!-- Ready to Post -->
+        <menuitem 
+            id="menu_payment_ready_to_post"
+            name="Ready to Post"
+            parent="menu_payment_workflow"
+            action="action_payment_ready_to_post"
+            sequence="40"
+            groups="account_payment_final.group_payment_voucher_poster"/>
+        
+        <!-- Personal Views Submenu -->
+        <menuitem 
+            id="menu_payment_personal"
+            name="My Payments"
+            parent="menu_payment_voucher_management"
+            sequence="30"
+            groups="account.group_account_user"/>
+        
+        <!-- My Submissions -->
+        <menuitem 
+            id="menu_payment_my_submissions"
+            name="My Submissions"
+            parent="menu_payment_personal"
+            action="action_payment_my_submissions"
+            sequence="10"
+            groups="account.group_account_user"/>
+        
+        <!-- My Reviews -->
+        <menuitem 
+            id="menu_payment_my_reviews"
+            name="My Reviews"
+            parent="menu_payment_personal"
+            action="action_payment_my_reviews"
+            sequence="20"
+            groups="account_payment_final.group_payment_voucher_reviewer"/>
+        
+        <!-- My Approvals -->
+        <menuitem 
+            id="menu_payment_my_approvals"
+            name="My Approvals"
+            parent="menu_payment_personal"
+            action="action_payment_my_approvals"
+            sequence="30"
+            groups="account_payment_final.group_payment_voucher_approver"/>
+        
+        <!-- My Authorizations -->
+        <menuitem 
+            id="menu_payment_my_authorizations"
+            name="My Authorizations"
+            parent="menu_payment_personal"
+            action="action_payment_my_authorizations"
+            sequence="40"
+            groups="account_payment_final.group_payment_voucher_authorizer"/>
+        
+        <!-- Reports Submenu -->
+        <menuitem 
+            id="menu_payment_reports"
+            name="Reports"
+            parent="menu_payment_voucher_management"
+            sequence="80"
+            groups="account.group_account_user"/>
+        
+        <!-- Configuration Submenu -->
+        <menuitem 
+            id="menu_payment_voucher_config"
+            name="Configuration"
+            parent="menu_payment_voucher_management"
+            sequence="90"
+            groups="account.group_account_manager"/>
+        
+        <!-- Approval Settings -->
+        <menuitem 
+            id="menu_payment_approval_settings"
+            name="Approval Settings"
+            parent="menu_payment_voucher_config"
+            action="action_payment_voucher_config"
+            sequence="10"
+            groups="account.group_account_manager"/>
+        
+        <!-- Security Groups -->
+        <menuitem 
+            id="menu_payment_security_groups"
+            name="User Groups"
+            parent="menu_payment_voucher_config"
+            action="base.action_res_groups"
+            sequence="20"
+            groups="base.group_system"/>
+        
+        <!-- QR Verification Portal (External) -->
+        <menuitem 
+            id="menu_payment_qr_verification"
+            name="QR Verification Portal"
+            parent="menu_payment_voucher_management"
+            sequence="85"
+            groups="base.group_user"/>
+
+    </data>
+</odoo>

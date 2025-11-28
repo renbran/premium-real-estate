@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <!-- Payment Approval Dashboard Template -->
+    <t t-name="payment_approval_pro.PaymentApprovalDashboard">
+        <div class="o_payment_approval_dashboard">
+            <!-- Dashboard Header -->
+            <div class="dashboard-header">
+                <h1>
+                    <i class="fa fa-credit-card"/> Payment Approval Dashboard
+                </h1>
+                <div class="dashboard-actions">
+                    <div class="date-range-buttons">
+                        <button t-foreach="['week', 'month', 'quarter', 'year']" 
+                                t-as="range" 
+                                t-key="range"
+                                class="btn btn-sm"
+                                t-att-class="getDateRangeClass(range)"
+                                t-on-click="() => this.onDateRangeChange(range)"
+                                t-esc="range.charAt(0).toUpperCase() + range.slice(1)"/>
+                    </div>
+                    <button class="btn btn-sm btn-refresh" 
+                            t-on-click="onRefresh"
+                            t-att-disabled="state.refreshing">
+                        <i t-att-class="state.refreshing ? 'fa fa-spinner fa-spin' : 'fa fa-refresh'"/>
+                        <span t-if="state.refreshing">Refreshing...</span>
+                        <span t-else="">Refresh</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Loading State -->
+            <div t-if="state.isLoading" class="dashboard-loading">
+                <div class="spinner"></div>
+                <div class="loading-text">Loading dashboard data...</div>
+            </div>
+
+            <!-- Dashboard Content -->
+            <div t-elif="hasData()" class="dashboard-content">
+                <!-- Statistics Cards -->
+                <div class="dashboard-stats">
+                    <div class="stat-card clickable" 
+                         t-on-click="() => this.onNavigateToView('list', [])">
+                        <div class="stat-value" t-esc="state.dashboardData.total_count"/>
+                        <div class="stat-label">Total Vouchers</div>
+                        <div class="stat-change positive" t-if="state.dashboardData.total_change > 0">
+                            <i class="fa fa-arrow-up"/> +<t t-esc="state.dashboardData.total_change"/>%
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card clickable" 
+                         t-on-click="() => this.onQuickAction('pending_review')">
+                        <div class="stat-value" t-esc="state.dashboardData.pending_review"/>
+                        <div class="stat-label">Pending Review</div>
+                    </div>
+                    
+                    <div class="stat-card clickable" 
+                         t-on-click="() => this.onQuickAction('pending_approval')">
+                        <div class="stat-value" t-esc="state.dashboardData.pending_approval"/>
+                        <div class="stat-label">Pending Approval</div>
+                    </div>
+                    
+                    <div class="stat-card clickable" 
+                         t-on-click="() => this.onQuickAction('pending_authorization')">
+                        <div class="stat-value" t-esc="state.dashboardData.pending_authorization"/>
+                        <div class="stat-label">Pending Authorization</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-value" t-esc="formatCurrency(state.dashboardData.total_amount)"/>
+                        <div class="stat-label">Total Amount</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-value" t-esc="formatCurrency(state.dashboardData.approved_amount)"/>
+                        <div class="stat-label">Approved Amount</div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="dashboard-charts">
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>Status Distribution</h3>
+                        </div>
+                        <div class="chart-content">
+                            <canvas id="statusChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>Amount by Status</h3>
+                        </div>
+                        <div class="chart-content">
+                            <canvas id="amountChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container timeline-container">
+                        <div class="chart-header">
+                            <h3>Voucher Timeline</h3>
+                        </div>
+                        <div class="chart-content">
+                            <canvas id="timelineChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="dashboard-quick-actions">
+                    <div class="quick-actions-header">
+                        <h3>Quick Actions</h3>
+                    </div>
+                    <div class="quick-actions-grid">
+                        <a href="#" class="quick-action-btn" 
+                           t-on-click.prevent="() => this.onQuickAction('create_voucher')">
+                            <div class="action-icon">
+                                <i class="fa fa-plus"/>
+                            </div>
+                            <div class="action-label">Create Voucher</div>
+                        </a>
+                        
+                        <a href="#" class="quick-action-btn" 
+                           t-on-click.prevent="() => this.onQuickAction('pending_review')">
+                            <div class="action-icon">
+                                <i class="fa fa-eye"/>
+                            </div>
+                            <div class="action-label">Review Queue</div>
+                            <div class="action-count" t-esc="state.dashboardData.pending_review"/>
+                        </a>
+                        
+                        <a href="#" class="quick-action-btn" 
+                           t-on-click.prevent="() => this.onQuickAction('pending_approval')">
+                            <div class="action-icon">
+                                <i class="fa fa-thumbs-up"/>
+                            </div>
+                            <div class="action-label">Approval Queue</div>
+                            <div class="action-count" t-esc="state.dashboardData.pending_approval"/>
+                        </a>
+                        
+                        <a href="#" class="quick-action-btn" 
+                           t-on-click.prevent="() => this.onQuickAction('pending_authorization')">
+                            <div class="action-icon">
+                                <i class="fa fa-key"/>
+                            </div>
+                            <div class="action-label">Authorization Queue</div>
+                            <div class="action-count" t-esc="state.dashboardData.pending_authorization"/>
+                        </a>
+                        
+                        <a href="#" class="quick-action-btn" 
+                           t-on-click.prevent="() => this.onQuickAction('reports')">
+                            <div class="action-icon">
+                                <i class="fa fa-bar-chart"/>
+                            </div>
+                            <div class="action-label">Reports</div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Empty State -->
+            <div t-else="" class="dashboard-empty">
+                <div class="empty-icon">
+                    <i class="fa fa-credit-card"/>
+                </div>
+                <div class="empty-title">No Payment Vouchers</div>
+                <div class="empty-description">
+                    Get started by creating your first payment voucher
+                </div>
+                <button class="btn btn-primary" 
+                        t-on-click="() => this.onQuickAction('create_voucher')">
+                    <i class="fa fa-plus"/> Create Payment Voucher
+                </button>
+            </div>
+        </div>
+    </t>
+
+    <!-- Payment Widget Template -->
+    <t t-name="payment_approval_pro.PaymentWidget">
+        <div class="o_payment_widget">
+            <div class="payment-widget-header">
+                <h4>
+                    <i class="fa fa-credit-card"/> Payment Information
+                </h4>
+                <div class="payment-status">
+                    <span class="badge" t-att-class="getStatusBadgeClass(props.record.data.state)">
+                        <t t-esc="props.record.data.state"/>
+                    </span>
+                </div>
+            </div>
+            
+            <div class="payment-widget-content">
+                <div class="payment-summary">
+                    <div class="summary-row">
+                        <span class="label">Amount:</span>
+                        <span class="value" t-esc="formatCurrency(props.record.data.amount)"/>
+                    </div>
+                    <div class="summary-row">
+                        <span class="label">Date:</span>
+                        <span class="value" t-esc="props.record.data.payment_date"/>
+                    </div>
+                    <div class="summary-row">
+                        <span class="label">Reference:</span>
+                        <span class="value" t-esc="props.record.data.reference"/>
+                    </div>
+                </div>
+                
+                <div class="workflow-actions" t-if="!props.readonly">
+                    <button t-if="canPerformAction('submit')" 
+                            class="btn btn-primary btn-sm"
+                            t-on-click="onWorkflowAction('action_submit_for_review')">
+                        <i class="fa fa-send"/> Submit for Review
+                    </button>
+                    
+                    <button t-if="canPerformAction('approve')" 
+                            class="btn btn-success btn-sm"
+                            t-on-click="onWorkflowAction('action_approve')">
+                        <i class="fa fa-check"/> Approve
+                    </button>
+                    
+                    <button t-if="canPerformAction('authorize')" 
+                            class="btn btn-info btn-sm"
+                            t-on-click="onWorkflowAction('action_authorize')">
+                        <i class="fa fa-key"/> Authorize
+                    </button>
+                    
+                    <button t-if="canPerformAction('reject')" 
+                            class="btn btn-danger btn-sm"
+                            t-on-click="onWorkflowAction('action_reject')">
+                        <i class="fa fa-times"/> Reject
+                    </button>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

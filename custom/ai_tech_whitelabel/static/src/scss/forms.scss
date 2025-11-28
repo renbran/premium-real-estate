@@ -1,0 +1,308 @@
+// AI Tech Theme - Form Styling
+// Enhanced form inputs and layouts
+// ==========================================
+
+.o_form_view, .o_form_sheet_bg {
+    .o_form_sheet {
+        background: var(--ai-dark-surface);
+        border-radius: var(--ai-border-radius-lg);
+        padding: var(--ai-spacing-2xl);
+        box-shadow: var(--ai-shadow-lg);
+        
+        // Form groups
+        .o_group {
+            margin-bottom: var(--ai-spacing-lg);
+            
+            .o_group_title {
+                color: var(--ai-primary);
+                font-weight: var(--ai-font-weight-semibold);
+                font-size: var(--ai-font-size-lg);
+                margin-bottom: var(--ai-spacing-md);
+                padding-bottom: var(--ai-spacing-sm);
+                border-bottom: 2px solid var(--ai-dark-border);
+                display: flex;
+                align-items: center;
+                gap: var(--ai-spacing-sm);
+                
+                &::before {
+                    content: '';
+                    width: 4px;
+                    height: 24px;
+                    background: var(--ai-gradient-primary);
+                    border-radius: var(--ai-border-radius-sm);
+                }
+            }
+        }
+        
+        // Form rows
+        .o_row {
+            display: flex;
+            gap: var(--ai-spacing-md);
+            margin-bottom: var(--ai-spacing-md);
+            
+            > .o_field_widget {
+                flex: 1;
+            }
+        }
+        
+        // Field labels
+        .o_form_label {
+            color: var(--ai-text-secondary);
+            font-weight: var(--ai-font-weight-medium);
+            font-size: var(--ai-font-size-sm);
+            margin-bottom: var(--ai-spacing-xs);
+            display: block;
+            
+            &.o_form_label_required {
+                &::after {
+                    content: '*';
+                    color: var(--ai-danger);
+                    margin-left: 4px;
+                }
+            }
+        }
+        
+        // Field widgets
+        .o_field_widget {
+            margin-bottom: var(--ai-spacing-md);
+            
+            // Text fields
+            &.o_field_char, 
+            &.o_field_text,
+            &.o_field_email,
+            &.o_field_phone,
+            &.o_field_url {
+                input, textarea {
+                    width: 100%;
+                    background: var(--ai-dark-surface-light);
+                    border: 1px solid var(--ai-dark-border);
+                    border-radius: var(--ai-border-radius-sm);
+                    color: var(--ai-text-primary);
+                    padding: var(--ai-spacing-sm) var(--ai-spacing-md);
+                    font-size: var(--ai-font-size-sm);
+                    transition: all var(--ai-transition-base);
+                    
+                    &::placeholder {
+                        color: var(--ai-text-muted);
+                    }
+                    
+                    &:focus {
+                        outline: none;
+                        border-color: var(--ai-primary);
+                        box-shadow: var(--ai-glow-primary);
+                        background: var(--ai-dark-surface);
+                    }
+                    
+                    &:disabled {
+                        background: var(--ai-dark-bg);
+                        opacity: 0.6;
+                        cursor: not-allowed;
+                    }
+                }
+                
+                textarea {
+                    min-height: 100px;
+                    resize: vertical;
+                }
+            }
+            
+            // Many2one / Selection
+            &.o_field_many2one,
+            &.o_field_selection {
+                .o_input_dropdown {
+                    position: relative;
+                    
+                    input {
+                        padding-right: 36px;
+                    }
+                    
+                    .o_dropdown_button {
+                        position: absolute;
+                        right: 0;
+                        top: 0;
+                        bottom: 0;
+                        width: 36px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        color: var(--ai-text-muted);
+                        cursor: pointer;
+                        transition: color var(--ai-transition-fast);
+                        
+                        &:hover {
+                            color: var(--ai-primary);
+                        }
+                    }
+                }
+            }
+            
+            // Date/Datetime
+            &.o_field_date,
+            &.o_field_datetime {
+                .o_datepicker {
+                    position: relative;
+                    
+                    .o_datepicker_input {
+                        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%230ea5e9' stroke-width='2'%3E%3Crect x='3' y='4' width='18' height='18' rx='2' ry='2'%3E%3C/rect%3E%3Cline x1='16' y1='2' x2='16' y2='6'%3E%3C/line%3E%3Cline x1='8' y1='2' x2='8' y2='6'%3E%3C/line%3E%3Cline x1='3' y1='10' x2='21' y2='10'%3E%3C/line%3E%3C/svg%3E");
+                        background-repeat: no-repeat;
+                        background-position: right var(--ai-spacing-sm) center;
+                        background-size: 20px;
+                        padding-right: 40px;
+                    }
+                }
+            }
+            
+            // Boolean / Checkbox
+            &.o_field_boolean {
+                .o_checkbox {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: var(--ai-spacing-sm);
+                    cursor: pointer;
+                    
+                    input[type="checkbox"] {
+                        appearance: none;
+                        -webkit-appearance: none;
+                        width: 20px;
+                        height: 20px;
+                        border: 2px solid var(--ai-dark-border);
+                        border-radius: var(--ai-border-radius-sm);
+                        background: var(--ai-dark-surface);
+                        cursor: pointer;
+                        position: relative;
+                        transition: all var(--ai-transition-fast);
+                        
+                        &:checked {
+                            background: var(--ai-gradient-primary);
+                            border-color: var(--ai-primary);
+                            box-shadow: var(--ai-glow-primary);
+                            
+                            &::after {
+                                content: '✓';
+                                position: absolute;
+                                top: 50%;
+                                left: 50%;
+                                transform: translate(-50%, -50%);
+                                color: white;
+                                font-weight: bold;
+                                font-size: 14px;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // Tags / Many2many tags
+            &.o_field_many2many_tags {
+                .o_field_tags {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: var(--ai-spacing-xs);
+                    
+                    .o_tag {
+                        background: var(--ai-gradient-primary);
+                        color: white;
+                        padding: var(--ai-spacing-xs) var(--ai-spacing-sm);
+                        border-radius: var(--ai-border-radius-full);
+                        font-size: var(--ai-font-size-xs);
+                        font-weight: var(--ai-font-weight-medium);
+                        display: inline-flex;
+                        align-items: center;
+                        gap: var(--ai-spacing-xs);
+                        box-shadow: 0 0 10px rgba(14, 165, 233, 0.3);
+                        transition: all var(--ai-transition-fast);
+                        
+                        &:hover {
+                            transform: translateY(-2px);
+                            box-shadow: var(--ai-glow-primary);
+                        }
+                        
+                        .o_delete {
+                            cursor: pointer;
+                            opacity: 0.7;
+                            
+                            &:hover {
+                                opacity: 1;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // Monetary / Float
+            &.o_field_monetary,
+            &.o_field_float,
+            &.o_field_integer {
+                input {
+                    text-align: right;
+                    font-family: var(--ai-font-mono);
+                }
+            }
+            
+            // HTML / Rich text
+            &.o_field_html {
+                .note-editor {
+                    background: var(--ai-dark-surface-light);
+                    border: 1px solid var(--ai-dark-border);
+                    border-radius: var(--ai-border-radius-md);
+                    
+                    .note-toolbar {
+                        background: var(--ai-dark-surface);
+                        border-bottom: 1px solid var(--ai-dark-border);
+                        
+                        .btn {
+                            color: var(--ai-text-secondary);
+                            
+                            &:hover {
+                                color: var(--ai-primary);
+                            }
+                        }
+                    }
+                    
+                    .note-editable {
+                        background: var(--ai-dark-surface);
+                        color: var(--ai-text-primary);
+                        min-height: 200px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Field validation states
+.o_field_invalid {
+    input, textarea, select {
+        border-color: var(--ai-danger) !important;
+        box-shadow: 0 0 10px rgba(239, 68, 68, 0.3) !important;
+    }
+    
+    .o_form_label {
+        color: var(--ai-danger);
+    }
+}
+
+// Form button box (action buttons at top)
+.o_form_button_box {
+    display: flex;
+    gap: var(--ai-spacing-md);
+    margin-bottom: var(--ai-spacing-lg);
+    flex-wrap: wrap;
+    
+    .btn {
+        flex: 1;
+        min-width: 120px;
+    }
+}
+
+// Readonly form view
+.o_form_readonly {
+    .o_field_widget {
+        input, textarea, select {
+            background: transparent;
+            border: none;
+            color: var(--ai-text-primary);
+            padding: var(--ai-spacing-xs) 0;
+        }
+    }
+}

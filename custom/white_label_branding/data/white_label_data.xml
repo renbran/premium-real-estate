@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Default White Label Settings -->
+        <record id="default_white_label_settings" model="res.company">
+            <field name="white_label_name" eval="False"/>
+            <field name="replace_odoo_branding" eval="True"/>
+            <field name="hide_odoo_documentation" eval="True"/>
+            <field name="hide_odoo_support" eval="True"/>
+        </record>
+
+    </data>
+</odoo>

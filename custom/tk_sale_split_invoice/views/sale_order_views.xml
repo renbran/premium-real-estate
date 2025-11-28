@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_sale_order_form_inherit" model="ir.ui.view">
+        <field name="name">view.sale.order.form.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet" position="before">
+                <field name="invoice_ids" invisible="1"/>
+                <field name="is_split" invisible="1"/>
+            </xpath>
+            <xpath expr="//header/button[@id='create_invoice']" position="before">
+                <button name="action_split_invoices"
+                        type="object"
+                        string="Split Invoices"
+                        class="oe_highlight"
+                        invisible="state != 'sale' or invoice_ids or is_split"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

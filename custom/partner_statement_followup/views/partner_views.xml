@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Partner Form View Extensions -->
+    <record id="view_partner_form_statement_followup" model="ir.ui.view">
+        <field name="name">res.partner.form.statement.followup</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page string="Follow-up" name="followup" attrs="{'invisible': [('is_company', '=', False)]}">
+                    <group>
+                        <group name="followup_status">
+                            <field name="balance_due_company_currency"/>
+                            <field name="current_followup_level"/>
+                            <field name="last_followup_date"/>
+                            <field name="next_followup_date"/>
+                        </group>
+                        <group name="followup_controls">
+                            <field name="followup_blocked"/>
+                            <button name="action_send_followup" 
+                                    string="Send Follow-up" 
+                                    type="object" 
+                                    class="btn-primary"
+                                    attrs="{'invisible': ['|', ('followup_blocked', '=', True), ('balance_due_company_currency', '&lt;=', 0)]}"/>
+                            <button name="action_reset_followup" 
+                                    string="Reset Follow-up" 
+                                    type="object" 
+                                    class="btn-secondary"
+                                    attrs="{'invisible': [('current_followup_level', '=', 0)]}"/>
+                        </group>
+                    </group>
+                    
+                    <separator string="Actions"/>
+                    <div class="oe_button_box" name="followup_buttons">
+                        <button name="action_open_statement_wizard" 
+                                string="View Statement" 
+                                type="object" 
+                                class="oe_stat_button" 
+                                icon="fa-file-text-o"/>
+                    </div>
+                    
+                    <separator string="Follow-up History"/>
+                    <field name="statement_ids" nolabel="1">
+                        <tree>
+                            <field name="followup_date"/>
+                            <field name="followup_level"/>
+                            <field name="method"/>
+                            <field name="balance_due"/>
+                            <field name="user_id"/>
+                            <field name="email_sent"/>
+                            <button name="action_view_email" 
+                                    string="View Email" 
+                                    type="object" 
+                                    icon="fa-envelope"
+                                    attrs="{'invisible': [('email_sent', '=', False)]}"/>
+                            <button name="action_resend_followup" 
+                                    string="Resend" 
+                                    type="object" 
+                                    icon="fa-repeat"/>
+                        </tree>
+                    </field>
+                </page>
+            </notebook>
+        </field>
+    </record>
+
+    <!-- Partner List View with Follow-up Info -->
+    <record id="view_partner_tree_statement_followup" model="ir.ui.view">
+        <field name="name">res.partner.tree.statement.followup</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="arch" type="xml">
+            <field name="email" position="after">
+                <field name="balance_due_company_currency" sum="Total Balance Due"/>
+                <field name="current_followup_level"/>
+                <field name="last_followup_date"/>
+                <field name="next_followup_date"/>
+                <field name="followup_blocked"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- Follow-up Partners View -->
+    <record id="view_partner_followup_tree" model="ir.ui.view">
+        <field name="name">res.partner.followup.tree</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <tree string="Partners Due for Follow-up" 
+                  decoration-danger="current_followup_level >= 3"
+                  decoration-warning="current_followup_level == 2"
+                  decoration-info="current_followup_level == 1">
+                <field name="name"/>
+                <field name="email"/>
+                <field name="phone"/>
+                <field name="balance_due_company_currency" sum="Total Balance"/>
+                <field name="current_followup_level"/>
+                <field name="last_followup_date"/>
+                <field name="next_followup_date"/>
+                <field name="followup_blocked"/>
+                <button name="action_send_followup" 
+                        string="Send Follow-up" 
+                        type="object" 
+                        icon="fa-envelope"
+                        attrs="{'invisible': ['|', ('followup_blocked', '=', True), ('balance_due_company_currency', '&lt;=', 0)]}"/>
+                <button name="action_open_statement_wizard" 
+                        string="Statement" 
+                        type="object" 
+                        icon="fa-file-text-o"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Follow-up Partners Search View -->
+    <record id="view_partner_followup_search" model="ir.ui.view">
+        <field name="name">res.partner.followup.search</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <search string="Partners Follow-up">
+                <field name="name" string="Partner" 
+                       filter_domain="['|', '|', ('display_name', 'ilike', self), ('ref', '=', self), ('email', 'ilike', self)]"/>
+                <field name="current_followup_level"/>
+                <field name="balance_due_company_currency"/>
+                
+                <separator/>
+                <filter name="due_followup" string="Due for Follow-up" 
+                        domain="[('next_followup_date', '&lt;=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter name="overdue" string="Has Overdue Balance" 
+                        domain="[('balance_due_company_currency', '&gt;', 0)]"/>
+                <filter name="blocked" string="Follow-up Blocked" 
+                        domain="[('followup_blocked', '=', True)]"/>
+                
+                <separator/>
+                <filter name="level_1" string="Level 1" 
+                        domain="[('current_followup_level', '=', 1)]"/>
+                <filter name="level_2" string="Level 2" 
+                        domain="[('current_followup_level', '=', 2)]"/>
+                <filter name="level_3" string="Level 3" 
+                        domain="[('current_followup_level', '=', 3)]"/>
+                
+                <group expand="0" string="Group By">
+                    <filter name="group_followup_level" string="Follow-up Level" 
+                            context="{'group_by': 'current_followup_level'}"/>
+                    <filter name="group_next_date" string="Next Follow-up Date" 
+                            context="{'group_by': 'next_followup_date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Actions -->
+    <record id="action_partners_followup" model="ir.actions.act_window">
+        <field name="name">Partners Follow-up</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_partner_followup_tree"/>
+        <field name="search_view_id" ref="view_partner_followup_search"/>
+        <field name="domain">[('is_company', '=', True), ('balance_due_company_currency', '>', 0)]</field>
+        <field name="context">{
+            'default_is_company': True,
+            'search_default_due_followup': 1,
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No partners due for follow-up
+            </p>
+            <p>
+                Partners with outstanding balances will appear here when they are due for follow-up.
+            </p>
+        </field>
+    </record>
+
+    <!-- Follow-up History Views -->
+    <record id="view_followup_history_tree" model="ir.ui.view">
+        <field name="name">res.partner.followup.history.tree</field>
+        <field name="model">res.partner.followup.history</field>
+        <field name="arch" type="xml">
+            <tree string="Follow-up History" create="false">
+                <field name="followup_date"/>
+                <field name="partner_id"/>
+                <field name="followup_level"/>
+                <field name="method"/>
+                <field name="balance_due"/>
+                <field name="user_id"/>
+                <field name="email_sent"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <button name="action_view_email" 
+                        string="View Email" 
+                        type="object" 
+                        icon="fa-envelope"
+                        attrs="{'invisible': [('email_sent', '=', False)]}"/>
+                <button name="action_resend_followup" 
+                        string="Resend" 
+                        type="object" 
+                        icon="fa-repeat"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_followup_history_form" model="ir.ui.view">
+        <field name="name">res.partner.followup.history.form</field>
+        <field name="model">res.partner.followup.history</field>
+        <field name="arch" type="xml">
+            <form string="Follow-up History" create="false">
+                <header>
+                    <button name="action_resend_followup" 
+                            string="Resend Follow-up" 
+                            type="object" 
+                            class="btn-primary"
+                            attrs="{'invisible': [('template_id', '=', False)]}"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="followup_level"/>
+                            <field name="followup_date"/>
+                            <field name="method"/>
+                        </group>
+                        <group>
+                            <field name="balance_due"/>
+                            <field name="user_id"/>
+                            <field name="email_sent"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    
+                    <group string="Email Details" attrs="{'invisible': [('template_id', '=', False)]}">
+                        <field name="template_id"/>
+                        <field name="mail_message_id"/>
+                    </group>
+                    
+                    <group string="Notes">
+                        <field name="notes" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_followup_history_search" model="ir.ui.view">
+        <field name="name">res.partner.followup.history.search</field>
+        <field name="model">res.partner.followup.history</field>
+        <field name="arch" type="xml">
+            <search string="Follow-up History">
+                <field name="partner_id"/>
+                <field name="followup_level"/>
+                <field name="followup_date"/>
+                <field name="user_id"/>
+                
+                <separator/>
+                <filter name="this_month" string="This Month" 
+                        domain="[('followup_date', '>=', (context_today() - relativedelta(months=1)).strftime('%Y-%m-01'))]"/>
+                <filter name="this_week" string="This Week" 
+                        domain="[('followup_date', '>=', (context_today() - relativedelta(weeks=1)).strftime('%Y-%m-%d'))]"/>
+                <filter name="today" string="Today" 
+                        domain="[('followup_date', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                
+                <separator/>
+                <filter name="email_sent" string="Email Sent" 
+                        domain="[('email_sent', '=', True)]"/>
+                <filter name="email_failed" string="Email Failed" 
+                        domain="[('email_sent', '=', False), ('method', '=', 'email')]"/>
+                
+                <group expand="0" string="Group By">
+                    <filter name="group_partner" string="Partner" 
+                            context="{'group_by': 'partner_id'}"/>
+                    <filter name="group_level" string="Follow-up Level" 
+                            context="{'group_by': 'followup_level'}"/>
+                    <filter name="group_date" string="Follow-up Date" 
+                            context="{'group_by': 'followup_date'}"/>
+                    <filter name="group_user" string="User" 
+                            context="{'group_by': 'user_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_followup_history" model="ir.actions.act_window">
+        <field name="name">Follow-up History</field>
+        <field name="res_model">res.partner.followup.history</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_followup_history_search"/>
+        <field name="context">{
+            'search_default_this_month': 1,
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No follow-up history found
+            </p>
+            <p>
+                Follow-up emails sent to partners will be tracked here.
+            </p>
+        </field>
+    </record>
+</odoo>

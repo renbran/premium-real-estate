@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <!-- Employee Form View Inheritance - Add to notebook -->
+        <record id="view_employee_form_greetings" model="ir.ui.view">
+            <field name="name">hr.employee.form.greetings</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page string="OSUS Greetings" name="osus_greetings">
+                        <group>
+                            <group string="Personal Information">
+                                <field name="birthday"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Employee Tree View Inheritance - Simple addition -->
+        <record id="view_employee_tree_greetings" model="ir.ui.view">
+            <field name="name">hr.employee.tree.greetings</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="birthday" optional="hide"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Employee Search View Inheritance - Simple filters only -->
+        <record id="view_employee_filter_greetings" model="ir.ui.view">
+            <field name="name">hr.employee.search.greetings</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='inactive']" position="before">
+                    <separator/>
+                    <filter name="birthday_today" string="Birthday Today" domain="[('birthday','!=',False), ('birthday','like',context_today().strftime('%%m-%%d'))]"/>
+                    <filter name="work_anniversary_today" string="Work Anniversary Today" domain="[('joining_date','!=',False), ('joining_date','like',context_today().strftime('%%m-%%d'))]"/>
+                    <filter name="upcoming_anniversaries" string="Upcoming Anniversaries (This Month)" domain="[('joining_date','!=',False), ('joining_date','like',context_today().strftime('%%m'))]"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

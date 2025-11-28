@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+
+                <!-- Enhanced Payment Form View with Direct Override -->
+                <record id="view_account_payment_form_enhanced_final" model="ir.ui.view">
+                        <field name="name">account.payment.form.enhanced.final</field>
+                        <field name="model">account.payment</field>
+                        <field name="inherit_id" ref="account.view_account_payment_form"/>
+                        <field name="priority" eval="99"/>
+                        <field name="arch" type="xml">
+
+                                <!-- Replace entire header with our workflow statusbar and buttons -->
+                                <xpath expr="//header" position="replace">
+                                        <header>
+                                                <!-- Custom Approval Workflow Statusbar - Always Visible -->
+                                                <field name="approval_state" widget="statusbar" statusbar_visible="draft,under_review,for_approval,for_authorization,approved,posted" statusbar_colors='{"draft":"secondary","under_review":"info","for_approval":"warning","for_authorization":"warning","approved":"success","posted":"success"}'/>
+
+                                                <!-- Essential hidden fields -->
+                                                <field name="state" invisible="1"/>
+                                                <field name="payment_type" invisible="1"/>
+
+                                                <!-- Workflow Action Buttons with Simple Visibility Logic -->
+                                                <!-- Submit for Review - Show only in draft state -->
+                                                <button name="action_submit_for_review" string="Submit for Review" type="object" class="btn-primary" invisible="approval_state != 'draft'"/>
+
+                                                <!-- Review Button - Show only in under_review state -->
+                                                <button name="action_review_payment" string="Review" type="object" class="btn-success" invisible="approval_state != 'under_review'"/>
+
+                                                <!-- Approve Button - Show only in for_approval state -->
+                                                <button name="action_approve_payment" string="Approve" type="object" class="btn-success" invisible="approval_state != 'for_approval'"/>
+
+                                                <!-- Authorize Button - Show only in for_authorization state -->
+                                                <button name="action_authorize_payment" string="Authorize" type="object" class="btn-success" invisible="approval_state != 'for_authorization'"/>
+
+                                                <!-- Post Button - Show only in approved state -->
+                                                <button name="action_post" string="Post Payment" type="object" class="btn-primary" invisible="approval_state != 'approved'"/>
+
+                                                <!-- Reject Button - Show for reviewable states -->
+                                                <button name="action_reject_payment" string="Reject" type="object" class="btn-danger" invisible="approval_state not in ['under_review', 'for_approval', 'for_authorization']" confirm="Are you sure you want to reject this payment?"/>
+
+                                                <!-- Print Buttons - Show for posted payments -->
+                                                <button name="action_print_payment_voucher" string="View Payment" type="object" class="btn-outline-primary" invisible="approval_state not in ['approved', 'posted']"/>
+                                        </header>
+                                </xpath>
+
+                                <!-- Add voucher number field after name -->
+                                <xpath expr="//field[@name='name']" position="after">
+                                        <field name="voucher_number" readonly="1" invisible="voucher_number == False"/>
+                                </xpath>
+
+                                <!-- Add QR Code display - ALWAYS VISIBLE when available -->
+                                <xpath expr="//div[hasclass('oe_title')]" position="before">
+                                        <field name="qr_code" widget="image" class="oe_avatar" options="{'size': [90, 90]}" readonly="0"/>
+                                        <!-- Need access_token for button visibility check -->
+                                        <field name="access_token" invisible="1"/>
+                                        <div class="oe_button_box" style="margin-top: 5px;">
+                                                <button name="action_regenerate_qr_code" string="🔄 Regenerate QR" type="object" class="btn-sm btn-secondary" invisible="id == False" groups="base.group_user"/>
+                                                <button name="action_open_verification_url" string="🔗 Test QR URL" type="object" class="btn-sm btn-info" invisible="access_token == False" groups="base.group_user"/>
+                                        </div>
+                                </xpath>
+
+                                <!-- Add QR and access token fields -->
+                                <xpath expr="//field[@name='ref']" position="after">
+                                        <field name="remarks" placeholder="Enter payment remarks..." invisible="remarks == False"/>
+                                        <!-- Access token shown only to system admins -->
+                                        <field name="access_token" readonly="1" groups="base.group_system" invisible="access_token == False"/>
+                                        <field name="qr_code_urls" readonly="1" groups="base.group_system" string="QR Code Status" invisible="qr_code_urls == False"/>
+                                </xpath>
+
+                                <!-- Add approval workflow information -->
+                                <xpath expr="//sheet" position="inside">
+                                        <group name="workflow_info" string="Approval Workflow" invisible="approval_state in [False, 'draft']">
+                                                <group>
+                                                        <field name="approval_state" readonly="1"/>
+                                                        <field name="reviewer_id" readonly="1" invisible="reviewer_id == False"/>
+                                                        <field name="approver_id" readonly="1" invisible="approver_id == False"/>
+                                                        <field name="authorizer_id" readonly="1" invisible="authorizer_id == False"/>
+                                                </group>
+                                                <group>
+                                                        <field name="reviewer_date" readonly="1" invisible="reviewer_date == False"/>
+                                                        <field name="approver_date" readonly="1" invisible="approver_date == False"/>
+                                                        <field name="authorizer_date" readonly="1" invisible="authorizer_date == False"/>
+                                                </group>
+                                        </group>
+                                </xpath>
+
+                        </field>
+                </record>
+
+                <!-- Enhanced Payment Tree View -->
+                <record id="view_account_payment_tree_enhanced" model="ir.ui.view">
+                        <field name="name">account.payment.tree.enhanced</field>
+                        <field name="model">account.payment</field>
+                        <field name="inherit_id" ref="account.view_account_payment_tree"/>
+                        <field name="priority" eval="90"/>
+                        <field name="arch" type="xml">
+
+                                <!-- Add approval state after state field -->
+                                <xpath expr="//field[@name='state']" position="after">
+                                        <field name="approval_state" decoration-info="approval_state == 'under_review'" decoration-warning="approval_state in ['for_approval', 'for_authorization']" decoration-success="approval_state in ['approved', 'posted']"/>
+                                </xpath>
+
+                                <!-- Add voucher number after name -->
+                                <xpath expr="//field[@name='name']" position="after">
+                                        <field name="voucher_number" optional="show"/>
+                                </xpath>
+
+                                <!-- Add amount field for executive decorations -->
+                                <xpath expr="//field[@name='approval_state']" position="after">
+                                        <field name="amount" optional="show"/>
+                                </xpath>
+
+                        </field>
+                </record>
+
+                <!-- Enhanced Payment Tree View Action -->
+                <record id="action_account_payment_tree" model="ir.actions.act_window">
+                        <field name="name">Payments</field>
+                        <field name="res_model">account.payment</field>
+                        <field name="view_mode">tree,form</field>
+                        <field name="view_id" ref="view_account_payment_tree_enhanced"/>
+                        <field name="context">{'create': True}</field>
+                        <field name="domain">[]</field>
+                        <field name="help" type="html">
+                                <p class="o_view_nocontent_smiling_face">
+                    Create your first payment!
+                                </p>
+                                <p>
+                    Create payments to vendors or receive payments from customers.
+                    Payments go through an enhanced approval workflow for security.
+                                </p>
+                        </field>
+                </record>
+
+                <!-- Enhanced Payment Form View Action -->
+                <record id="view_account_payment_form_action" model="ir.actions.act_window.view">
+                        <field name="sequence" eval="2"/>
+                        <field name="view_mode">form</field>
+                        <field name="view_id" ref="view_account_payment_form_enhanced_final"/>
+                        <field name="act_window_id" ref="action_account_payment_tree"/>
+                </record>
+
+                <!-- ========================================== -->
+                <!-- EXECUTIVE-LEVEL ACTIONS -->
+                <!-- ========================================== -->
+
+                <!-- Executive Payment Summary - High-level view for C-level executives -->
+                <record id="action_account_payment_executive_tree" model="ir.actions.act_window">
+                        <field name="name">Executive Payment Summary</field>
+                        <field name="res_model">account.payment</field>
+                        <field name="view_mode">tree,form,pivot,graph</field>
+                        <field name="view_id" ref="view_account_payment_tree_enhanced"/>
+                        <field name="context">{
+                                'create': False,
+                                'group_by': ['approval_state', 'payment_type', 'date'],
+                                'search_default_group_by_approval_state': 1,
+                                'search_default_this_month': 1
+                        }</field>
+                        <field name="domain">[('amount', '>', 0)]</field>
+                        <field name="help" type="html">
+                                <p class="o_view_nocontent_smiling_face">
+                                        Executive Payment Overview
+                                </p>
+                                <p>
+                                        High-level summary of all payment activities for executive review.
+                                        Use filters to analyze payment trends and approval workflow performance.
+                                </p>
+                        </field>
+                </record>
+
+                <!-- Pending Approvals Action - Quick access for managers -->
+                <record id="action_account_payment_pending_approvals" model="ir.actions.act_window">
+                        <field name="name">Payments Pending Approval</field>
+                        <field name="res_model">account.payment</field>
+                        <field name="view_mode">tree,form</field>
+                        <field name="view_id" ref="view_account_payment_tree_enhanced"/>
+                        <field name="context">{
+                                'create': False,
+                                'search_default_pending_review': 1,
+                                'search_default_pending_approval': 1,
+                                'search_default_pending_authorization': 1
+                        }</field>
+                        <field name="domain">[('approval_state', 'in', ['under_review', 'for_approval', 'for_authorization'])]</field>
+                        <field name="help" type="html">
+                                <p class="o_view_nocontent_smiling_face">
+                                        No payments pending approval
+                                </p>
+                                <p>
+                                        This view shows all payments that require your attention for review, approval, or authorization.
+                                        Stay on top of the approval workflow to ensure timely payment processing.
+                                </p>
+                        </field>
+                </record>
+
+                <!-- Payment Analytics Action -->
+                <record id="action_payment_analytics" model="ir.actions.act_window">
+                        <field name="name">Payment Analytics</field>
+                        <field name="res_model">account.payment</field>
+                        <field name="view_mode">graph,pivot,tree</field>
+                        <field name="context">{
+                                'group_by': ['approval_state', 'payment_type', 'partner_id', 'date:month'],
+                                'search_default_group_by_state': 1,
+                                'search_default_this_year': 1
+                        }</field>
+                        <field name="domain">[('amount', '>', 0)]</field>
+                        <field name="help" type="html">
+                                <p class="o_view_nocontent_smiling_face">
+                                        Payment Analytics Dashboard
+                                </p>
+                                <p>
+                                        Analyze payment trends, volumes, and approval workflow performance.
+                                        Use the graph and pivot views to gain insights into payment patterns.
+                                </p>
+                        </field>
+                </record>
+
+                <!-- Executive Payment Report Action -->
+                <record id="action_payment_executive_report" model="ir.actions.act_window">
+                        <field name="name">Executive Payment Report</field>
+                        <field name="res_model">account.payment</field>
+                        <field name="view_mode">pivot,graph,tree</field>
+                        <field name="context">{
+                                'group_by': ['approval_state', 'payment_type', 'date:month'],
+                                'search_default_group_by_approval': 1,
+                                'search_default_large_payments': 1,
+                                'search_default_this_quarter': 1
+                        }</field>
+                        <field name="domain">[('amount', '&gt;=', 1000)]</field>
+                        <field name="help" type="html">
+                                <p class="o_view_nocontent_smiling_face">
+                                        Executive Payment Report
+                                </p>
+                                <p>
+                                        Comprehensive report focusing on significant payments for executive review.
+                                        Includes trend analysis and approval workflow metrics.
+                                </p>
+                        </field>
+                </record>
+
+
+</odoo>

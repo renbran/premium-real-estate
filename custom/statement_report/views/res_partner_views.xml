@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Customer and vendor statements -->
+    <record id="view_partner_form" model="ir.ui.view">
+        <field name="name">res.partner.view.form.inherit.statement.report
+        </field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='sales_purchases']" position="after">
+                <page name="customer_statement_page"
+                      string="Customer Statement">
+                    <button name="action_print_pdf" type="object"
+                            class="btn-secondary">
+                        Print PDF
+                    </button>
+                    <button name="action_print_xlsx" type="object"
+                            class="btn-secondary">
+                        Print Excel
+                    </button>
+                    <button name="action_share_pdf" type="object"
+                            class="btn-secondary">
+                        Send PDF By Email
+                    </button>
+                    <button name="action_share_xlsx" type="object"
+                            class="btn-secondary">
+                        Send Excel By Email
+                    </button>
+                    <br/>
+                    <br/>
+                    <!-- Customer Statement Aging Summary -->
+                    <group name="customer_aging" string="Aging Summary" col="6">
+                        <field name="customer_aging_current" string="Current (0-30)" readonly="1" widget="monetary"/>
+                        <field name="customer_aging_30" string="31-60 Days" readonly="1" widget="monetary"/>
+                        <field name="customer_aging_60" string="61-90 Days" readonly="1" widget="monetary"/>
+                        <field name="customer_aging_90" string="91-120 Days" readonly="1" widget="monetary"/>
+                        <field name="customer_aging_120" string="120+ Days" readonly="1" widget="monetary"/>
+                        <field name="customer_aging_total" string="Total Due" readonly="1" widget="monetary"/>
+                    </group>
+                    <br/>
+                    <field name="customer_report_ids">
+                        <tree create='false' delete="false">
+                            <field name="currency_id" column_invisible="1"/>
+                            <field name="invoice_date"
+                                   string="Invoice Date"/>
+                            <field name="name" string="Invoice No."/>
+                            <field name="ref" string="Reference"/>
+                            <field name="invoice_date_due"/>
+                            <field name="amount_total_signed"
+                                   sum="Total Amount" string="Total Amount"
+                                   widget="monetary"
+                                   options="{'currency_field': 'currency_id'}"/>
+                            <field name="amount_residual_signed"
+                                   string="Amount Due" widget="monetary"
+                                   options="{'currency_field': 'currency_id'}"/>
+                            <field name="amount_residual" sum="Balance Due"
+                                   string="Balance" widget="monetary"
+                                   options="{'currency_field': 'currency_id'}"/>
+                        </tree>
+                    </field>
+                </page>
+                <page name="supplier_statement"
+                      string="Supplier Statement">
+                    <button name="action_vendor_print_pdf" type="object"
+                            class="btn-secondary">
+                        Print PDF
+                    </button>
+                    <button name="action_vendor_print_xlsx" type="object"
+                            class="btn-secondary">
+                        Print Excel
+                    </button>
+                    <button name="action_vendor_share_pdf" type="object"
+                            class="btn-secondary">
+                        Send PDF By Email
+                    </button>
+                    <button name="action_vendor_share_xlsx" type="object"
+                            class="btn-secondary">
+                        Send Excel By Email
+                    </button>
+                    <br/>
+                    <br/>
+                    <!-- Supplier Statement Aging Summary -->
+                    <group name="supplier_aging" string="Aging Summary" col="6">
+                        <field name="supplier_aging_current" string="Current (0-30)" readonly="1" widget="monetary"/>
+                        <field name="supplier_aging_30" string="31-60 Days" readonly="1" widget="monetary"/>
+                        <field name="supplier_aging_60" string="61-90 Days" readonly="1" widget="monetary"/>
+                        <field name="supplier_aging_90" string="91-120 Days" readonly="1" widget="monetary"/>
+                        <field name="supplier_aging_120" string="120+ Days" readonly="1" widget="monetary"/>
+                        <field name="supplier_aging_total" string="Total Due" readonly="1" widget="monetary"/>
+                    </group>
+                    <br/>
+                    <field name="vendor_statement_ids">
+                        <tree create="false" delete="false">
+                            <field name="currency_id" column_invisible="1"/>
+                            <field name="invoice_date" string="Bill Date"/>
+                            <field name="name" string="Bill No."/>
+                            <field name="ref" string="Reference"/>
+                            <field name="invoice_date_due"/>
+                            <field name="amount_total_signed"
+                                   sum="Total Amount" string="Total Amount"
+                                   widget="monetary"
+                                   options="{'currency_field': 'currency_id'}"/>
+                            <field name="amount_residual_signed"
+                                   string="Amount Due" widget="monetary"
+                                   options="{'currency_field': 'currency_id'}"/>
+                            <field name="amount_residual" sum="Balance Due"
+                                   string="Balance" widget="monetary"
+                                   options="{'currency_field': 'currency_id'}"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

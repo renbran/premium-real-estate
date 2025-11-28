@@ -1,0 +1,458 @@
+// AI Tech Theme - Main Theme Styles
+// Core styling for Odoo backend
+// ==========================================
+
+// Import Google Fonts
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+// Global Overrides
+body, .o_web_client {
+    font-family: var(--ai-font-family) !important;
+    background: var(--ai-dark-bg) !important;
+    color: var(--ai-text-primary) !important;
+}
+
+// Main Web Client Container
+.o_web_client {
+    background: var(--ai-dark-bg);
+    
+    // Subtle animated background gradient
+    &::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: var(--ai-gradient-glow);
+        opacity: 0.5;
+        pointer-events: none;
+        z-index: 0;
+    }
+}
+
+// Action Manager (main content area)
+.o_action_manager {
+    background: transparent;
+    
+    .o_action {
+        background: var(--ai-dark-surface);
+        border-radius: var(--ai-border-radius-lg);
+        box-shadow: var(--ai-shadow-lg);
+        margin: var(--ai-spacing-md);
+        animation: ai-fade-in 0.3s ease-out;
+    }
+}
+
+// Control Panel (search bar and filters)
+.o_control_panel {
+    background: var(--ai-glass-bg) !important;
+    -webkit-backdrop-filter: blur(var(--ai-glass-blur));
+    backdrop-filter: blur(var(--ai-glass-blur));
+    border: 1px solid var(--ai-glass-border);
+    border-radius: var(--ai-border-radius-md);
+    padding: var(--ai-spacing-md);
+    margin-bottom: var(--ai-spacing-lg);
+    
+    .o_cp_searchview {
+        background: var(--ai-dark-surface);
+        border: 1px solid var(--ai-dark-border);
+        border-radius: var(--ai-border-radius-md);
+        padding: var(--ai-spacing-sm);
+        transition: all var(--ai-transition-base);
+        
+        &:focus-within {
+            border-color: var(--ai-primary);
+            box-shadow: var(--ai-glow-primary);
+        }
+        
+        input {
+            background: transparent;
+            color: var(--ai-text-primary);
+            border: none;
+            
+            &::placeholder {
+                color: var(--ai-text-muted);
+            }
+        }
+    }
+    
+    .o_cp_buttons {
+        .btn {
+            background: var(--ai-gradient-primary);
+            color: white;
+            border: none;
+            border-radius: var(--ai-border-radius-sm);
+            padding: var(--ai-spacing-sm) var(--ai-spacing-md);
+            font-weight: var(--ai-font-weight-medium);
+            transition: all var(--ai-transition-fast);
+            
+            &:hover {
+                transform: translateY(-2px);
+                box-shadow: var(--ai-glow-primary);
+            }
+            
+            &.btn-primary {
+                background: var(--ai-gradient-primary);
+            }
+            
+            &.btn-secondary {
+                background: var(--ai-dark-surface-light);
+                border: 1px solid var(--ai-dark-border);
+                
+                &:hover {
+                    border-color: var(--ai-primary);
+                }
+            }
+        }
+    }
+}
+
+// Breadcrumb Navigation
+.o_control_panel .breadcrumb {
+    background: transparent;
+    padding: 0;
+    margin: 0;
+    
+    .breadcrumb-item {
+        color: var(--ai-text-secondary);
+        font-size: var(--ai-font-size-sm);
+        
+        &.active {
+            color: var(--ai-primary);
+            font-weight: var(--ai-font-weight-semibold);
+        }
+        
+        a {
+            color: var(--ai-text-secondary);
+            transition: color var(--ai-transition-fast);
+            
+            &:hover {
+                color: var(--ai-primary);
+                text-decoration: none;
+            }
+        }
+        
+        + .breadcrumb-item::before {
+            content: '›';
+            color: var(--ai-text-muted);
+            margin: 0 var(--ai-spacing-sm);
+        }
+    }
+}
+
+// List View / Kanban View
+.o_list_view, .o_kanban_view {
+    background: transparent;
+    
+    table {
+        background: var(--ai-dark-surface);
+        border-radius: var(--ai-border-radius-md);
+        overflow: hidden;
+        box-shadow: var(--ai-shadow-md);
+        
+        thead {
+            background: var(--ai-gradient-primary);
+            
+            th {
+                color: white;
+                font-weight: var(--ai-font-weight-semibold);
+                border-bottom: 2px solid var(--ai-primary-dark);
+                padding: var(--ai-spacing-md);
+                font-size: var(--ai-font-size-sm);
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+        }
+        
+        tbody {
+            tr {
+                background: var(--ai-dark-surface);
+                border-bottom: 1px solid var(--ai-dark-border);
+                transition: all var(--ai-transition-fast);
+                
+                &:hover {
+                    background: var(--ai-dark-surface-light);
+                    transform: scale(1.01);
+                    box-shadow: var(--ai-shadow-sm);
+                }
+                
+                td {
+                    color: var(--ai-text-primary);
+                    padding: var(--ai-spacing-md);
+                    border-color: var(--ai-dark-border);
+                }
+            }
+        }
+    }
+}
+
+// Kanban Cards
+.o_kanban_record {
+    background: var(--ai-glass-bg) !important;
+    -webkit-backdrop-filter: blur(var(--ai-glass-blur));
+    backdrop-filter: blur(var(--ai-glass-blur));
+    border: 1px solid var(--ai-glass-border) !important;
+    border-radius: var(--ai-border-radius-md) !important;
+    padding: var(--ai-spacing-md) !important;
+    transition: all var(--ai-transition-base);
+    box-shadow: var(--ai-shadow-sm);
+    
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--ai-shadow-lg), var(--ai-glow-primary);
+        border-color: var(--ai-primary) !important;
+    }
+    
+    .o_kanban_record_title {
+        color: var(--ai-text-primary);
+        font-weight: var(--ai-font-weight-semibold);
+        font-size: var(--ai-font-size-base);
+    }
+    
+    .o_kanban_record_subtitle {
+        color: var(--ai-text-secondary);
+        font-size: var(--ai-font-size-sm);
+    }
+}
+
+// Form Views
+.o_form_view {
+    background: var(--ai-dark-surface);
+    border-radius: var(--ai-border-radius-lg);
+    padding: var(--ai-spacing-xl);
+    box-shadow: var(--ai-shadow-lg);
+    
+    .o_form_sheet {
+        background: transparent;
+        padding: var(--ai-spacing-lg);
+    }
+    
+    .o_form_statusbar {
+        background: var(--ai-glass-bg);
+        -webkit-backdrop-filter: blur(var(--ai-glass-blur));
+        backdrop-filter: blur(var(--ai-glass-blur));
+        border: none;
+        border-radius: var(--ai-border-radius-md);
+        padding: var(--ai-spacing-sm);
+        margin-bottom: var(--ai-spacing-lg);
+        
+        .o_arrow_button {
+            background: var(--ai-dark-surface-light);
+            color: var(--ai-text-secondary);
+            border: 1px solid var(--ai-dark-border);
+            transition: all var(--ai-transition-fast);
+            
+            &.btn-primary {
+                background: var(--ai-gradient-primary);
+                color: white;
+                border: none;
+                box-shadow: var(--ai-glow-primary);
+            }
+            
+            &:hover:not(.btn-primary) {
+                background: var(--ai-dark-surface);
+                color: var(--ai-primary);
+                border-color: var(--ai-primary);
+            }
+        }
+    }
+}
+
+// Notebook / Tabs
+.o_notebook {
+    .nav-tabs {
+        border-bottom: 2px solid var(--ai-dark-border);
+        margin-bottom: var(--ai-spacing-lg);
+        
+        .nav-link {
+            color: var(--ai-text-secondary);
+            border: none;
+            border-bottom: 2px solid transparent;
+            padding: var(--ai-spacing-sm) var(--ai-spacing-md);
+            margin-bottom: -2px;
+            font-weight: var(--ai-font-weight-medium);
+            transition: all var(--ai-transition-fast);
+            
+            &:hover {
+                color: var(--ai-primary);
+                border-bottom-color: var(--ai-primary);
+            }
+            
+            &.active {
+                color: var(--ai-primary);
+                border-bottom-color: var(--ai-primary);
+                background: transparent;
+                box-shadow: 0 2px 8px rgba(14, 165, 233, 0.3);
+            }
+        }
+    }
+}
+
+// Chatter (messaging/activity)
+.o_mail_thread {
+    background: var(--ai-dark-surface);
+    border-radius: var(--ai-border-radius-md);
+    padding: var(--ai-spacing-md);
+    
+    .o_thread_message {
+        background: var(--ai-dark-surface-light);
+        border: 1px solid var(--ai-dark-border);
+        border-radius: var(--ai-border-radius-sm);
+        padding: var(--ai-spacing-md);
+        margin-bottom: var(--ai-spacing-sm);
+        transition: all var(--ai-transition-fast);
+        
+        &:hover {
+            border-color: var(--ai-primary);
+            box-shadow: var(--ai-shadow-sm);
+        }
+    }
+}
+
+// Scrollbars (Webkit)
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--ai-dark-bg);
+    border-radius: var(--ai-border-radius-sm);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--ai-gradient-primary);
+    border-radius: var(--ai-border-radius-sm);
+    border: 2px solid var(--ai-dark-bg);
+    
+    &:hover {
+        background: var(--ai-primary-light);
+        box-shadow: var(--ai-glow-primary);
+    }
+}
+
+// Modals & Dialogs
+.modal-content {
+    background: var(--ai-dark-surface);
+    border: 1px solid var(--ai-dark-border);
+    border-radius: var(--ai-border-radius-lg);
+    box-shadow: var(--ai-shadow-xl);
+    
+    .modal-header {
+        background: var(--ai-gradient-primary);
+        color: white;
+        border-bottom: none;
+        border-radius: var(--ai-border-radius-lg) var(--ai-border-radius-lg) 0 0;
+        padding: var(--ai-spacing-lg);
+        
+        .modal-title {
+            font-weight: var(--ai-font-weight-semibold);
+            font-size: var(--ai-font-size-xl);
+        }
+        
+        .btn-close {
+            filter: invert(1);
+            opacity: 0.8;
+            
+            &:hover {
+                opacity: 1;
+            }
+        }
+    }
+    
+    .modal-body {
+        padding: var(--ai-spacing-xl);
+        color: var(--ai-text-primary);
+    }
+    
+    .modal-footer {
+        border-top: 1px solid var(--ai-dark-border);
+        padding: var(--ai-spacing-lg);
+    }
+}
+
+// Dropdown Menus
+.dropdown-menu {
+    background: var(--ai-dark-surface);
+    border: 1px solid var(--ai-dark-border);
+    border-radius: var(--ai-border-radius-md);
+    box-shadow: var(--ai-shadow-lg);
+    padding: var(--ai-spacing-sm);
+    
+    .dropdown-item {
+        color: var(--ai-text-primary);
+        border-radius: var(--ai-border-radius-sm);
+        padding: var(--ai-spacing-sm) var(--ai-spacing-md);
+        transition: all var(--ai-transition-fast);
+        
+        &:hover {
+            background: var(--ai-dark-surface-light);
+            color: var(--ai-primary);
+        }
+        
+        &.active, &:active {
+            background: var(--ai-gradient-primary);
+            color: white;
+        }
+    }
+    
+    .dropdown-divider {
+        border-color: var(--ai-dark-border);
+    }
+}
+
+// Tooltips
+.tooltip {
+    .tooltip-inner {
+        background: var(--ai-dark-surface);
+        color: var(--ai-text-primary);
+        border: 1px solid var(--ai-primary);
+        border-radius: var(--ai-border-radius-sm);
+        padding: var(--ai-spacing-sm) var(--ai-spacing-md);
+        box-shadow: var(--ai-glow-primary);
+        font-size: var(--ai-font-size-sm);
+    }
+    
+    .tooltip-arrow::before {
+        border-top-color: var(--ai-primary);
+    }
+}
+
+// Badges & Tags
+.badge {
+    border-radius: var(--ai-border-radius-full);
+    padding: var(--ai-spacing-xs) var(--ai-spacing-sm);
+    font-weight: var(--ai-font-weight-medium);
+    font-size: var(--ai-font-size-xs);
+    
+    &.badge-primary {
+        background: var(--ai-gradient-primary);
+        box-shadow: var(--ai-glow-primary);
+    }
+    
+    &.badge-success {
+        background: var(--ai-success);
+        box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+    }
+    
+    &.badge-warning {
+        background: var(--ai-warning);
+        box-shadow: 0 0 10px rgba(245, 158, 11, 0.3);
+    }
+    
+    &.badge-danger {
+        background: var(--ai-danger);
+        box-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
+    }
+}
+
+// Loading States
+.o_loading {
+    background: var(--ai-dark-bg);
+    
+    &::after {
+        border-color: var(--ai-primary) transparent transparent transparent;
+    }
+}

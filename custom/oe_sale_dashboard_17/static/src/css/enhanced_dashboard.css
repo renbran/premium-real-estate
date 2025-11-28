@@ -1,0 +1,344 @@
+/**
+ * Enhanced Sales Dashboard CSS - OSUS Professional Theme
+ * Professional styling with OSUS burgundy/gold color palette
+ */
+
+/* OSUS Brand Color Variables */
+:root {
+    --osus-burgundy: #4d1a1a;
+    --osus-burgundy-dark: #7d1e2d;
+    --osus-burgundy-light: #cc4d66;
+    --osus-gold: #b8a366;
+    --osus-gold-light: #f5f5e6;
+    --osus-gold-dark: #9d7f47;
+    --osus-white: #ffffff;
+    --osus-light-gray: #f8f9fa;
+    --osus-shadow: 0 4px 12px rgba(77, 26, 26, 0.1);
+    --osus-shadow-hover: 0 8px 25px rgba(77, 26, 26, 0.15);
+}
+
+/* OSUS Brand Color Classes */
+.text-osus-burgundy { color: var(--osus-burgundy) !important; }
+.text-osus-gold { color: var(--osus-gold) !important; }
+.bg-osus-burgundy { background-color: var(--osus-burgundy) !important; }
+.bg-osus-gold { background-color: var(--osus-gold) !important; }
+.bg-osus-light { background-color: var(--osus-light-gray) !important; }
+
+/* OSUS Button Styles */
+.btn-osus-primary {
+    background-color: var(--osus-burgundy);
+    border-color: var(--osus-burgundy);
+    color: white;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-osus-primary:hover {
+    background-color: var(--osus-burgundy-dark);
+    border-color: var(--osus-burgundy-dark);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: var(--osus-shadow-hover);
+}
+
+.btn-osus-secondary {
+    background-color: var(--osus-gold);
+    border-color: var(--osus-gold);
+    color: var(--osus-burgundy);
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-osus-secondary:hover {
+    background-color: var(--osus-gold-dark);
+    border-color: var(--osus-gold-dark);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: var(--osus-shadow-hover);
+}
+
+/* Dashboard Container */
+.o_sales_dashboard {
+    background: linear-gradient(135deg, #fafafa 0%, #f8f9fa 100%);
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Dashboard Header */
+.dashboard_header {
+    background: linear-gradient(135deg, var(--osus-white) 0%, var(--osus-light-gray) 100%);
+    border-bottom: 3px solid var(--osus-burgundy) !important;
+    border-radius: 0 0 15px 15px;
+    box-shadow: var(--osus-shadow);
+}
+
+.dashboard_header h2 {
+    font-weight: 700;
+    color: var(--osus-burgundy);
+    margin-bottom: 0.5rem;
+}
+
+/* KPI Cards */
+.osus-kpi-card {
+    transition: all 0.3s ease;
+    border-radius: 15px;
+    background: linear-gradient(135deg, var(--osus-white) 0%, #fefefe 100%);
+    box-shadow: var(--osus-shadow);
+    overflow: hidden;
+    position: relative;
+}
+
+.osus-kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(135deg, var(--osus-burgundy) 0%, var(--osus-gold) 100%);
+}
+
+.osus-kpi-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--osus-shadow-hover);
+}
+
+.osus-kpi-card .card-body {
+    padding: 2rem 1.5rem;
+}
+
+.osus-kpi-card .kpi-icon i {
+    transition: all 0.3s ease;
+}
+
+.osus-kpi-card:hover .kpi-icon i {
+    transform: scale(1.1);
+}
+
+.osus-kpi-card h3 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Chart Cards */
+.card {
+    border-radius: 15px;
+    box-shadow: var(--osus-shadow);
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: var(--osus-shadow-hover);
+    transform: translateY(-2px);
+}
+
+.card-header {
+    border-radius: 15px 15px 0 0 !important;
+    border-bottom: 2px solid var(--osus-burgundy);
+    padding: 1.25rem 1.5rem;
+    background: linear-gradient(135deg, var(--osus-light-gray) 0%, #f0f0f0 100%);
+}
+
+.card-header h5 {
+    font-weight: 700;
+    margin-bottom: 0;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+/* Chart Container */
+.chart-container {
+    position: relative;
+    width: 100%;
+    height: 300px;
+}
+
+.chart-container canvas {
+    border-radius: 10px;
+}
+
+/* Tables */
+.table {
+    margin-bottom: 0;
+}
+
+.table th {
+    background-color: var(--osus-light-gray);
+    color: var(--osus-burgundy);
+    font-weight: 700;
+    border-top: none;
+    border-bottom: 2px solid var(--osus-burgundy);
+    padding: 1rem 0.75rem;
+}
+
+.table td {
+    padding: 0.875rem 0.75rem;
+    vertical-align: middle;
+    border-top: 1px solid #e9ecef;
+}
+
+.table tbody tr:hover {
+    background-color: rgba(77, 26, 26, 0.02);
+    transform: scale(1.01);
+    transition: all 0.2s ease;
+}
+
+/* Form Controls */
+.form-control {
+    border-radius: 8px;
+    border: 2px solid #e9ecef;
+    padding: 0.75rem 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: var(--osus-burgundy);
+    box-shadow: 0 0 0 0.2rem rgba(77, 26, 26, 0.15);
+}
+
+.form-label {
+    font-weight: 600;
+    color: var(--osus-burgundy);
+    margin-bottom: 0.5rem;
+}
+
+/* Loading State */
+.spinner-border.text-osus-burgundy {
+    color: var(--osus-burgundy) !important;
+}
+
+/* Alert Styles */
+.alert {
+    border-radius: 12px;
+    border: none;
+    box-shadow: var(--osus-shadow);
+}
+
+.alert-info {
+    background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+    color: var(--osus-burgundy);
+    border-left: 4px solid var(--osus-gold);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .dashboard_header {
+        border-radius: 0;
+    }
+    
+    .dashboard_header .row {
+        flex-direction: column;
+    }
+    
+    .dashboard_header .col-md-6:last-child {
+        margin-top: 1rem;
+    }
+    
+    .osus-kpi-card h3 {
+        font-size: 2rem;
+    }
+    
+    .card-header h5 {
+        font-size: 1rem;
+    }
+    
+    .chart-container {
+        height: 250px;
+    }
+}
+
+@media (max-width: 576px) {
+    .osus-kpi-card .card-body {
+        padding: 1.5rem 1rem;
+    }
+    
+    .osus-kpi-card h3 {
+        font-size: 1.75rem;
+    }
+    
+    .chart-container {
+        height: 200px;
+    }
+    
+    .table-responsive {
+        font-size: 0.875rem;
+    }
+}
+
+/* Animation Classes */
+.fade-in {
+    animation: fadeIn 0.6s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.slide-in-left {
+    animation: slideInLeft 0.8s ease-out;
+}
+
+@keyframes slideInLeft {
+    from { opacity: 0; transform: translateX(-50px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+.slide-in-right {
+    animation: slideInRight 0.8s ease-out;
+}
+
+@keyframes slideInRight {
+    from { opacity: 0; transform: translateX(50px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+/* Professional Touch */
+.dashboard_content {
+    padding: 0 1.5rem 2rem;
+}
+
+.dashboard_content .card {
+    margin-bottom: 1.5rem;
+}
+
+/* Professional Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--osus-light-gray);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--osus-burgundy);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--osus-burgundy-dark);
+}
+
+/* Print Styles */
+@media print {
+    .dashboard_header .col-md-6:last-child {
+        display: none;
+    }
+    
+    .card {
+        page-break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+    
+    .chart-container {
+        height: 250px;
+    }
+}

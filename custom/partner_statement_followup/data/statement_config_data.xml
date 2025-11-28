@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Statement Configuration Data -->
+
+    <!-- Default Statement Configuration -->
+    <record id="default_statement_config" model="statement.config">
+        <field name="name">Default Statement Configuration</field>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="ageing_bucket_1">30</field>
+        <field name="ageing_bucket_2">60</field>
+        <field name="ageing_bucket_3">90</field>
+        <field name="ageing_bucket_4">120</field>
+        <field name="include_zero_balance">False</field>
+        <field name="show_credit_balance">True</field>
+        <field name="currency_format">symbol_before</field>
+        <field name="date_format">dd/mm/yyyy</field>
+        <field name="statement_footer">Thank you for your business. Please contact us if you have any questions about this statement.</field>
+        <field name="auto_followup">True</field>
+        <field name="followup_interval">7</field>
+    </record>
+
+    <!-- Default Ageing Periods -->
+    <record id="ageing_period_current" model="statement.ageing.period">
+        <field name="name">Current</field>
+        <field name="sequence">1</field>
+        <field name="days_from">0</field>
+        <field name="days_to">0</field>
+        <field name="color">#28a745</field>
+    </record>
+
+    <record id="ageing_period_1_30" model="statement.ageing.period">
+        <field name="name">1-30 Days</field>
+        <field name="sequence">2</field>
+        <field name="days_from">1</field>
+        <field name="days_to">30</field>
+        <field name="color">#ffc107</field>
+    </record>
+
+    <record id="ageing_period_31_60" model="statement.ageing.period">
+        <field name="name">31-60 Days</field>
+        <field name="sequence">3</field>
+        <field name="days_from">31</field>
+        <field name="days_to">60</field>
+        <field name="color">#fd7e14</field>
+    </record>
+
+    <record id="ageing_period_61_90" model="statement.ageing.period">
+        <field name="name">61-90 Days</field>
+        <field name="sequence">4</field>
+        <field name="days_from">61</field>
+        <field name="days_to">90</field>
+        <field name="color">#dc3545</field>
+    </record>
+
+    <record id="ageing_period_over_90" model="statement.ageing.period">
+        <field name="name">Over 90 Days</field>
+        <field name="sequence">5</field>
+        <field name="days_from">91</field>
+        <field name="days_to">999999</field>
+        <field name="color">#6f42c1</field>
+    </record>
+
+    <!-- System Parameters -->
+    <record id="default_statement_template" model="ir.config_parameter">
+        <field name="key">partner_statement_followup.default_template</field>
+        <field name="value">statement_default_template</field>
+    </record>
+
+    <record id="auto_followup_enabled" model="ir.config_parameter">
+        <field name="key">partner_statement_followup.auto_followup</field>
+        <field name="value">True</field>
+    </record>
+
+    <record id="statement_portal_enabled" model="ir.config_parameter">
+        <field name="key">partner_statement_followup.portal_enabled</field>
+        <field name="value">True</field>
+    </record>
+</odoo>

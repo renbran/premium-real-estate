@@ -1,0 +1,102 @@
+<odoo>
+    <template id="commission_payout_report_template_enhanced">
+        <t t-name="order_status_override.commission_payout_report_template_professional">
+        <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+
+        <!-- Helpers -->
+        <t t-set="external_total" t-value="(o.total_external_commission_amount or 0)"/>
+        <t t-set="internal_total" t-value="(o.total_internal_commission_amount or 0)"/>
+        <t t-set="total_commission" t-value="external_total + internal_total"/>
+        <t t-set="net_before_vat"  t-value="(o.amount_total or 0) - total_commission"/>
+        <t t-set="vat_rate"        t-value="0.05"/>
+        <t t-set="vat_amount"      t-value="net_before_vat * vat_rate"/>
+        <t t-set="net_commission"  t-value="net_before_vat - vat_amount"/>
+
+        <t t-call="web.external_layout">
+            <div class="page">
+            <style>
+                @page { margin: 6mm; size: A4; }
+                body { font-family: 'Segoe UI', Arial, sans-serif; font-size: 10px; line-height: 1.1; color: #000; }
+                .header { background: linear-gradient(135deg, #6b0632, #8b0d42); color: #fff; padding: 6px 8px; margin: -6mm -6mm 4px -6mm; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; }
+                .header h1 { margin: 0; font-size: 16px; font-weight: bold; color: #fff; }
+                .header .sub { font-size: 8px; opacity: .9; }
+                .section { background: #6b0632; color: #fff; font-size: 10px; font-weight: bold; padding: 2px 4px; margin: 3px 0 1px 0; border-radius: 2px; text-transform: uppercase; }
+                table { width: 100%; border-collapse: collapse; font-size: 9px; }
+                th { background: #f5f1f3; color: #6b0632; padding: 1px 3px; }
+                td { padding: 1px 3px; border-bottom: 1px solid #e6e6e6; }
+                .right { text-align: right; }
+                .highlight { font-weight: 700; color: #6b0632; }
+                .row { display: flex; justify-content: space-between; padding: 1px 0; border-bottom: 1px dotted #ccc; }
+                .row:last-child { border-bottom: none; font-weight: bold; }
+                .footer { margin-top: 3px; font-size: 7px; color: #555; text-align: center; }
+            </style>
+
+            <!-- HEADER -->
+            <div class="header">
+                <div>
+                <h1>Commission Report</h1>
+                <div class="sub">
+                    Order: <span t-field="o.name"/> | Date: <span t-field="o.booking_date" t-options="{'widget': 'date'}"/>
+                </div>
+                </div>
+                <div style="font-size: 7px;">
+                OSUS Real Estate<br/>
+                Business Bay, Dubai<br/>
+                +971-4-366-4500
+                </div>
+            </div>
+
+            <!-- DEAL INFO (single column) -->
+            <div class="section">Deal Information</div>
+            <div class="row"><div>Customer:</div><div><span t-field="o.partner_id.name"/></div></div>
+            <div class="row"><div>Project:</div><div><span t-field="o.project_id.name"/></div></div>
+            <div class="row"><div>Unit:</div><div><span t-field="o.unit_id.name"/></div></div>
+            <div class="row"><div>Order Total (AED):</div><div class="highlight"><span t-esc="'{:,.2f}'.format(o.amount_total or 0)"/></div></div>
+
+            <!-- EXTERNAL COMMISSIONS -->
+            <div class="section">External Commissions</div>
+            <div class="row"><div>Broker (<span t-field="o.broker_partner_id.name" t-options="{'default': '—'"/>):</div><div><span t-esc="'{:,.2f}'.format(o.broker_amount or 0)"/></div></div>
+            <div class="row"><div>Referrer (<span t-field="o.referrer_partner_id.name" t-options="{'default': '—'"/>):</div><div><span t-esc="'{:,.2f}'.format(o.referrer_amount or 0)"/></div></div>
+            <div class="row"><div>Cashback (<span t-field="o.cashback_partner_id.name" t-options="{'default': '—'"/>):</div><div><span t-esc="'{:,.2f}'.format(o.cashback_amount or 0)"/></div></div>
+            <div class="row"><div>Other External (<span t-field="o.other_external_partner_id.name" t-options="{'default': '—'"/>):</div><div><span t-esc="'{:,.2f}'.format(o.other_external_amount or 0)"/></div></div>
+            <div class="row"><div><strong>Total External (AED)</strong></div><div class="highlight"><strong><span t-esc="'{:,.2f}'.format(external_total)"/></strong></div></div>
+
+            <!-- INTERNAL COMMISSIONS -->
+            <div class="section">Internal Commissions</div>
+            <div class="row"><div>Agent 1 (<span t-field="o.agent1_partner_id.name" t-options="{'default': '—'"/>):</div><div><span t-esc="'{:,.2f}'.format(o.agent1_amount or 0)"/></div></div>
+            <div class="row"><div>Agent 2 (<span t-field="o.agent2_partner_id.name" t-options="{'default': '—'"/>):</div><div><span t-esc="'{:,.2f}'.format(o.agent2_amount or 0)"/></div></div>
+            <div class="row"><div>Manager (<span t-field="o.manager_partner_id.name" t-options="{'default': '—'"/>):</div><div><span t-esc="'{:,.2f}'.format(o.manager_amount or 0)"/></div></div>
+            <div class="row"><div>Director (<span t-field="o.director_partner_id.name" t-options="{'default': '—'"/>):</div><div><span t-esc="'{:,.2f}'.format(o.director_amount or 0)"/></div></div>
+            <div class="row"><div><strong>Total Internal (AED)</strong></div><div class="highlight"><strong><span t-esc="'{:,.2f}'.format(internal_total)"/></strong></div></div>
+
+            <!-- SUMMARY -->
+            <div class="section">Summary</div>
+            <table>
+                <tr><td class="right">Total Commission (AED):</td><td class="right"><span t-esc="'{:,.2f}'.format(total_commission)"/></td></tr>
+                <tr><td class="right">Net Before VAT (AED):</td><td class="right"><span t-esc="'{:,.2f}'.format(net_before_vat)"/></td></tr>
+                <tr><td class="right">VAT 5 % (AED):</td><td class="right"><span t-esc="'{:,.2f}'.format(vat_amount)"/></td></tr>
+                <tr><td class="right"><strong>Net Commission (AED)</strong></td><td class="right"><strong><span t-esc="'{:,.2f}'.format(net_commission)"/></strong></td></tr>
+            </table>
+
+            <!-- FOOTER -->
+            <div class="footer">
+                Generated by <span t-field="o.create_uid.name"/> on <span t-field="o.create_date" t-options="{'widget': 'datetime'}"/>
+            </div>
+            </div>
+        </t>
+        </t>
+    </t>
+    </t>
+    </template>
+
+    <report
+        id="commission_payout_report"
+        model="commission.ax"
+        string="Commission Payout Report"
+        report_type="qweb-html"
+        name="commission_ax.commission_payout_report_template_enhanced"
+        file="commission_ax.commission_payout_report_template_enhanced"
+        print_report_name="'Commission Payout Report - %s' % (object.name)"
+    />
+</odoo>

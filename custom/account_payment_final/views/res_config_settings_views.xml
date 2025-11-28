@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Safe Configuration Settings View -->
+        <record id="res_config_settings_view_form_payment_voucher" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.payment.voucher</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <!-- Add at the end of the form -->
+                <xpath expr="//form" position="inside">
+                    <div class="app_settings_block" data-string="OSUS Payment Vouchers" 
+                         string="OSUS Payment Vouchers" data-key="osus_payment_voucher">
+                        <h2>OSUS Payment Voucher Settings</h2>
+                        
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane"/>
+                                <div class="o_setting_right_pane">
+                                    <span class="o_form_label">OSUS Branding</span>
+                                    <div class="text-muted">
+                                        Enable OSUS brand guidelines for payment vouchers
+                                    </div>
+                                    <div class="content-group mt16">
+                                        <field name="use_osus_branding"/>
+                                        <label for="use_osus_branding"/>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane"/>
+                                <div class="o_setting_right_pane">
+                                    <span class="o_form_label">Auto-Post Payments</span>
+                                    <div class="text-muted">
+                                        Automatically post payments when approved
+                                    </div>
+                                    <div class="content-group mt16">
+                                        <field name="auto_post_approved_payments"/>
+                                        <label for="auto_post_approved_payments"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane"/>
+                                <div class="o_setting_right_pane">
+                                    <span class="o_form_label">Approval Amount Limit</span>
+                                    <div class="text-muted">
+                                        Maximum amount regular users can approve
+                                    </div>
+                                    <div class="content-group mt16">
+                                        <field name="max_approval_amount"/>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane"/>
+                                <div class="o_setting_right_pane">
+                                    <span class="o_form_label">Email Notifications</span>
+                                    <div class="text-muted">
+                                        Send email notifications for approval requests
+                                    </div>
+                                    <div class="content-group mt16">
+                                        <field name="send_approval_notifications"/>
+                                        <label for="send_approval_notifications"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

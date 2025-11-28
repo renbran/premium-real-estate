@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <!-- Digital Signature Widget Template -->
+    <t t-name="account_payment_approval.DigitalSignatureWidget" owl="1">
+        <div class="digital-signature-widget o_field_widget">
+            <div class="signature-header d-flex justify-content-between align-items-center mb-3">
+                <h6 class="mb-0">
+                    <i class="fa fa-edit me-2"/>
+Digital Signature
+                </h6>
+                <span t-att-class="'badge ' + (state.hasSignature ? 'bg-success' : 'bg-warning')">
+                    <i t-att-class="'fa ' + (state.hasSignature ? 'fa-check-circle' : 'fa-clock-o')"/>
+                    <t t-if="state.hasSignature">Signed</t>
+                    <t t-else="">Pending</t>
+                </span>
+            </div>
+
+            <div class="signature-canvas-container border rounded p-3" t-att-class="{'bg-light': !state.hasSignature}">
+                <canvas t-ref="signatureCanvas" class="signature-canvas w-100" width="500" height="200" style="border: 1px dashed #ccc; cursor: crosshair;" />
+
+                <div t-if="!state.hasSignature" class="signature-placeholder text-center text-muted mt-3">
+                    <i class="fa fa-pencil fa-2x mb-2"/>
+                    <p>Click and drag to create your signature</p>
+                </div>
+            </div>
+
+            <div class="signature-controls mt-3 d-flex gap-2" t-if="!props.readonly">
+                <!-- Pen Tools -->
+                <div class="btn-group">
+                    <button type="button" class="btn btn-sm btn-outline-secondary" t-on-click="() => this.changePenColor('#000000')" t-att-class="{'active': state.penColor === '#000000'}">
+                        <span class="color-dot bg-dark"/>
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" t-on-click="() => this.changePenColor('#0066cc')" t-att-class="{'active': state.penColor === '#0066cc'}">
+                        <span class="color-dot bg-primary"/>
+                    </button>
+                </div>
+
+                <!-- Pen Width -->
+                <div class="btn-group">
+                    <button type="button" class="btn btn-sm btn-outline-secondary" t-on-click="() => this.changePenWidth(1)" t-att-class="{'active': state.penWidth === 1}">Thin</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" t-on-click="() => this.changePenWidth(3)" t-att-class="{'active': state.penWidth === 3}">Thick</button>
+                </div>
+
+                <!-- Actions -->
+                <button type="button" class="btn btn-sm btn-success" t-on-click="saveSignature" t-att-disabled="!state.hasSignature">
+                    <i class="fa fa-save me-1"/>
+Save
+                </button>
+
+                <button type="button" class="btn btn-sm btn-secondary" t-on-click="clearSignature">
+                    <i class="fa fa-eraser me-1"/>
+Clear
+                </button>
+            </div>
+
+            <div t-if="props.readonly and !state.hasSignature" class="alert alert-info mt-3">
+                <i class="fa fa-info-circle me-1"/>
+No signature available
+            </div>
+        </div>
+    </t>
+
+    <!-- QR Code Widget Template -->
+    <t t-name="account_payment_approval.QRCodeWidget" owl="1">
+        <div class="qr-code-widget o_field_widget">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0">
+                        <i class="fa fa-qrcode me-2"/>
+QR Verification Code
+                    </h6>
+                    <div class="btn-group btn-group-sm">
+                        <button type="button" class="btn btn-outline-primary" t-att-class="{'active': !state.showScanner}" t-on-click="showQRCode">
+                            <i class="fa fa-qrcode me-1"/>
+Show QR
+                        </button>
+                        <button type="button" class="btn btn-outline-primary" t-att-class="{'active': state.showScanner}" t-on-click="toggleScanner">
+                            <i class="fa fa-camera me-1"/>
+Scanner
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <!-- QR Code Display -->
+                    <div t-if="!state.showScanner" class="qr-display text-center">
+                        <div t-if="state.qrCodeData" class="qr-image-container mb-3">
+                            <img t-att-src="state.qrCodeData" alt="Payment QR Code" class="img-fluid" style="max-width: 200px;"/>
+                        </div>
+
+                        <div t-else="" class="alert alert-warning">
+                            <i class="fa fa-exclamation-triangle me-1"/>
+                            QR Code not generated yet
+                        </div>
+
+                        <div class="qr-actions d-flex gap-2 justify-content-center">
+                            <button type="button" class="btn btn-sm btn-primary" t-on-click="downloadQR" t-att-disabled="!state.qrCodeData">
+                                <i class="fa fa-download me-1"/>
+Download
+                            </button>
+
+                            <button type="button" class="btn btn-sm btn-info" t-on-click="copyVerificationUrl" t-att-disabled="!state.verificationUrl">
+                                <i class="fa fa-copy me-1"/>
+Copy URL
+                            </button>
+
+                            <button type="button" class="btn btn-sm btn-secondary" t-on-click="refreshQR" t-att-disabled="state.loading">
+                                <i t-att-class="'fa ' + (state.loading ? 'fa-spinner fa-spin' : 'fa-refresh') + ' me-1'"/>
+                                Refresh
+                            </button>
+                        </div>
+
+                        <div t-if="state.verificationUrl" class="mt-3">
+                            <small class="text-muted">Verification URL:</small>
+                            <div class="input-group input-group-sm">
+                                <input type="text" class="form-control" t-att-value="state.verificationUrl" readonly="readonly"/>
+                                <button class="btn btn-outline-secondary" t-on-click="copyVerificationUrl">
+                                    <i class="fa fa-copy"/>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- QR Scanner -->
+                    <div t-if="state.showScanner" class="qr-scanner">
+                        <div class="scanner-container">
+                            <div class="scanner-header d-flex justify-content-between align-items-center mb-3">
+                                <h6 class="mb-0">Scan QR Code</h6>
+                                <button type="button" class="btn btn-sm btn-outline-secondary" t-on-click="toggleScanner">
+                                    <i class="fa fa-times"/>
+                                </button>
+                            </div>
+
+                            <div class="scanner-video-container position-relative">
+                                <video t-ref="scannerVideo" autoplay="true" muted="true" class="w-100 rounded" style="max-height: 300px; object-fit: cover;"/>
+                                <canvas t-ref="scannerCanvas" style="display: none;"/>
+
+                                <div class="scanner-overlay position-absolute top-50 start-50 translate-middle">
+                                    <div class="scanner-frame border border-primary border-3 rounded" style="width: 200px; height: 200px; border-style: dashed !important;"/>
+                                </div>
+                            </div>
+
+                            <div class="scanner-controls mt-3 text-center">
+                                <button type="button" class="btn btn-success" t-on-click="startCamera" t-if="!state.scannerActive">
+                                    <i class="fa fa-camera me-1"/>
+Start Scanner
+                                </button>
+
+                                <button type="button" class="btn btn-danger" t-on-click="stopCamera" t-if="state.scannerActive">
+                                    <i class="fa fa-stop me-1"/>
+Stop Scanner
+                                </button>
+                            </div>
+
+                            <!-- Manual Input Fallback -->
+                            <div class="mt-4 border-top pt-3">
+                                <h6>Manual Input</h6>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Paste QR code data or URL here" t-ref="manualInput"/>
+                                    <button type="button" class="btn btn-primary" t-on-click="() => this.validateQRCode(this.refs.manualInput.el.value)">
+                                        <i class="fa fa-check me-1"/>
+Validate
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Verification Result -->
+                    <div t-if="state.verificationResult" class="verification-result mt-3">
+                        <div t-att-class="'alert alert-' + (state.verificationResult.success ? 'success' : 'danger')">
+                            <div class="d-flex align-items-center">
+                                <i t-att-class="'fa ' + (state.verificationResult.success ? 'fa-check-circle' : 'fa-exclamation-circle') + ' me-2'"/>
+                                <div>
+                                    <strong t-esc="state.verificationResult.success ? 'Success!' : 'Failed!'"/>
+                                    <p class="mb-0" t-esc="state.verificationResult.message"/>
+                                </div>
+                            </div>
+
+                            <div t-if="state.verificationResult.success and state.verificationResult.payment_data" class="mt-2">
+                                <small class="text-muted">Payment Details:</small>
+                                <ul class="list-unstyled mb-0 mt-1">
+                                    <li>
+                                        <strong>Amount:</strong>
+                                        <span t-esc="state.verificationResult.payment_data.currency"/>
+                                        <span t-esc="state.verificationResult.payment_data.amount"/>
+                                    </li>
+                                    <li>
+                                        <strong>Partner:</strong>
+                                        <span t-esc="state.verificationResult.payment_data.partner"/>
+                                    </li>
+                                    <li>
+                                        <strong>Date:</strong>
+                                        <span t-esc="state.verificationResult.payment_data.date"/>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Loading Overlay -->
+                    <div t-if="state.loading" class="loading-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-white bg-opacity-75">
+                        <div class="text-center">
+                            <div class="spinner-border text-primary mb-2"/>
+                            <p class="mb-0">Processing...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <!-- Payment Approval Dashboard Template -->
+    <t t-name="account_payment_approval.PaymentApprovalDashboard" owl="1">
+        <div class="payment-approval-dashboard">
+            <div class="row">
+                <!-- Statistics Cards -->
+                <div class="col-md-3 mb-4">
+                    <div class="card h-100 border-warning">
+                        <div class="card-body text-center">
+                            <div class="display-6 text-warning mb-2">
+                                <span t-esc="state.stats.pending_review"/>
+                            </div>
+                            <h6 class="card-title">Pending Review</h6>
+                            <button class="btn btn-sm btn-outline-warning" t-on-click="() => this.openPaymentsList('under_review')">
+                                View All
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 mb-4">
+                    <div class="card h-100 border-info">
+                        <div class="card-body text-center">
+                            <div class="display-6 text-info mb-2">
+                                <span t-esc="state.stats.pending_approval"/>
+                            </div>
+                            <h6 class="card-title">Pending Approval</h6>
+                            <button class="btn btn-sm btn-outline-info" t-on-click="() => this.openPaymentsList('submitted')">
+                                View All
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 mb-4">
+                    <div class="card h-100 border-primary">
+                        <div class="card-body text-center">
+                            <div class="display-6 text-primary mb-2">
+                                <span t-esc="state.stats.pending_authorization"/>
+                            </div>
+                            <h6 class="card-title">Pending Authorization</h6>
+                            <button class="btn btn-sm btn-outline-primary" t-on-click="() => this.openPaymentsList('approved')">
+                                View All
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 mb-4">
+                    <div class="card h-100 border-success">
+                        <div class="card-body text-center">
+                            <div class="display-6 text-success mb-2">
+                                <span t-esc="state.stats.total_amount"/>
+                            </div>
+                            <h6 class="card-title">Total Amount</h6>
+                            <small class="text-muted">This Month</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Payments -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Recent Payments</h5>
+                        </div>
+                        <div class="card-body">
+                            <div t-if="state.loading" class="text-center py-4">
+                                <div class="spinner-border text-primary"/>
+                                <p class="mt-2 mb-0">Loading...</p>
+                            </div>
+
+                            <div t-else="" class="table-responsive">
+                                <table class="table table-sm table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Voucher #</th>
+                                            <th>Partner</th>
+                                            <th>Amount</th>
+                                            <th>State</th>
+                                            <th>Date</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr t-foreach="state.recentPayments" t-as="payment" t-key="payment.id">
+                                            <td>
+                                                <a href="#" t-on-click="() => this.openPayment(payment.id)" class="text-decoration-none">
+                                                    <span t-esc="payment.voucher_number"/>
+                                                </a>
+                                            </td>
+                                            <td t-esc="payment.partner_name"/>
+                                            <td>
+                                                <span t-esc="payment.currency_symbol"/>
+                                                <span t-esc="payment.amount"/>
+                                            </td>
+                                            <td>
+                                                <span t-att-class="'badge bg-' + payment.state_color" t-esc="payment.state_display"/>
+                                            </td>
+                                            <td t-esc="payment.date"/>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-primary" t-on-click="() => this.openPayment(payment.id)">
+                                                    <i class="fa fa-eye"/>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <div t-if="!state.recentPayments.length" class="text-center py-4 text-muted">
+                                    <i class="fa fa-inbox fa-3x mb-3"/>
+                                    <p>No recent payments found</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <!-- QR Verification Page Template -->
+    <t t-name="account_payment_approval.QRVerificationPage" owl="1">
+        <div class="qr-verification-page container-fluid py-4">
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-8 col-lg-6">
+                    <div class="card shadow">
+                        <div class="card-header bg-primary text-white text-center">
+                            <h4 class="mb-0">
+                                <i class="fa fa-qrcode me-2"/>
+                                Payment Verification
+                            </h4>
+                            <small>OSUS Properties Payment System</small>
+                        </div>
+
+                        <div class="card-body">
+                            <!-- Content will be rendered by the controller -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

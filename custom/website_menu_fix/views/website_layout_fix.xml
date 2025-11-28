@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- 
+    Website Layout Menu Fix
+    This template ensures proper menu rendering by overriding any problematic menu implementations
+    -->
+    
+    <!-- Fix for website layout menu issues -->
+    <template id="website_layout_menu_fix" inherit_id="website.layout" name="Website Layout Menu Fix" priority="100">
+        <!-- Remove any problematic menu implementations that use backend menu logic -->
+        <xpath expr="//nav//a[contains(@t-foreach, 'load_menus_root')]" position="replace">
+            <!-- Replace with proper website menu implementation -->
+            <t t-foreach="website.menu_id.child_id" t-as="submenu">
+                <t t-call="website.submenu">
+                    <t t-set="item_class" t-valuef="nav-item"/>
+                    <t t-set="link_class" t-valuef="nav-link"/>
+                </t>
+            </t>
+        </xpath>
+        
+        <!-- Alternative fix: replace any problematic menu dropdown items -->
+        <xpath expr="//a[contains(@t-foreach, 'env[') and contains(@t-foreach, 'ir.ui.menu')]" position="replace">
+            <!-- Replace with proper website menu implementation -->
+            <t t-foreach="website.menu_id.child_id" t-as="submenu">
+                <li class="nav-item dropdown" t-if="submenu.child_id">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span t-esc="submenu.name"/>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <t t-foreach="submenu.child_id" t-as="child_menu">
+                            <li><a class="dropdown-item" t-att-href="child_menu.url" t-esc="child_menu.name"/></li>
+                        </t>
+                    </ul>
+                </li>
+                <li class="nav-item" t-else="">
+                    <a class="nav-link" t-att-href="submenu.url" t-esc="submenu.name"/>
+                </li>
+            </t>
+        </xpath>
+    </template>
+    
+    <!-- Additional safety template to handle header menu issues -->
+    <template id="website_header_menu_safety" inherit_id="website.layout" name="Website Header Menu Safety" priority="99">
+        <xpath expr="//header" position="attributes">
+            <attribute name="t-ignore">true</attribute>
+        </xpath>
+        <xpath expr="//header" position="after">
+            <header>
+                <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                    <div class="container">
+                        <a class="navbar-brand" href="/" t-field="website.logo" t-options="{'widget': 'image'}"/>
+                        
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        
+                        <div class="collapse navbar-collapse" id="navbarNav">
+                            <ul class="navbar-nav ms-auto">
+                                <t t-foreach="website.menu_id.child_id" t-as="submenu">
+                                    <li class="nav-item dropdown" t-if="submenu.child_id">
+                                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                            <span t-esc="submenu.name"/>
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            <t t-foreach="submenu.child_id" t-as="child_menu">
+                                                <li><a class="dropdown-item" t-att-href="child_menu.url" t-esc="child_menu.name"/></li>
+                                            </t>
+                                        </ul>
+                                    </li>
+                                    <li class="nav-item" t-else="">
+                                        <a class="nav-link" t-att-href="submenu.url" t-esc="submenu.name"/>
+                                    </li>
+                                </t>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+            </header>
+        </xpath>
+    </template>
+    
+    <!-- Template to handle menu action issues -->
+    <template id="website_menu_action_fix" inherit_id="website.layout" name="Website Menu Action Fix" priority="98">
+        <!-- This template removes any references to menu['action'] which cause the split error -->
+        <xpath expr="//a[contains(@t-attf-href, 'menu[') and contains(@t-attf-href, 'action')]" position="attributes">
+            <attribute name="t-attf-href">/web#menu_id=#{menu.get('id', '')}</attribute>
+        </xpath>
+    </template>
+</odoo>

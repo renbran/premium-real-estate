@@ -1,0 +1,746 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Enhanced Order Status Report Template -->
+        <template id="enhanced_order_status_report_template">
+            <t t-name="order_status_override.enhanced_order_status_report_template">
+                <t t-call="web.html_container">
+                    <t t-foreach="docs" t-as="o">
+                        <t t-call="web.external_layout">
+                            <div class="page">
+                                <style>
+                                    @page {
+                                        margin: 8mm;
+                                        size: A4;
+                                    }
+                                    
+                                    .order-status-container {
+                                        font-family: 'Arial', sans-serif;
+                                        background: white;
+                                        font-size: 13px;
+                                        line-height: 1.4;
+                                        margin: 0;
+                                        padding: 0;
+                                        color: #000;
+                                    }
+                                    
+                                    .report-header {
+                                        background: linear-gradient(135deg, #1f4788, #2d5aa0);
+                                        color: white;
+                                        padding: 15px 20px;
+                                        margin: 0 0 15px 0;
+                                        border-radius: 8px;
+                                        text-align: center;
+                                    }
+                                    
+                                    .report-title {
+                                        font-size: 24px;
+                                        font-weight: bold;
+                                        margin: 0;
+                                    }
+                                    
+                                    .order-info {
+                                        background: #f8f9fa;
+                                        padding: 15px;
+                                        border-radius: 6px;
+                                        margin-bottom: 15px;
+                                    }
+                                    
+                                    .info-grid {
+                                        display: grid;
+                                        grid-template-columns: 1fr 1fr;
+                                        gap: 15px;
+                                    }
+                                    
+                                    .info-item {
+                                        margin-bottom: 8px;
+                                    }
+                                    
+                                    .info-label {
+                                        font-weight: bold;
+                                        color: #1f4788;
+                                    }
+                                    
+                                    .status-badge {
+                                        display: inline-block;
+                                        padding: 4px 8px;
+                                        border-radius: 4px;
+                                        font-weight: bold;
+                                        font-size: 11px;
+                                        text-transform: uppercase;
+                                    }
+                                    
+                                    .status-draft { background-color: #f8f9fa; color: #6c757d; }
+                                    .status-document_review { background-color: #fff3cd; color: #856404; }
+                                    .status-commission_calculation { background-color: #d4edda; color: #155724; }
+                                    .status-allocation { background-color: #d1ecf1; color: #0c5460; }
+                                    .status-final_review { background-color: #ffeaa7; color: #6c5ce7; }
+                                    .status-approved { background-color: #d4edda; color: #155724; }
+                                    .status-posted { background-color: #1f4788; color: white; }
+                                    .status-rejected { background-color: #f8d7da; color: #721c24; }
+                                </style>
+
+                                <div class="order-status-container">
+                                    <!-- Header Section -->
+                                    <div class="report-header">
+                                        <h1 class="report-title">Order Status Report</h1>
+                                        <div>Order: <span t-field="o.name"/>
+ | Date: <span t-field="o.date_order" t-options="{'widget': 'date'}"/>
+                                    </div>
+                                </div>
+
+                                <!-- Order Information -->
+                                <div class="order-info">
+                                    <h3 style="color: #1f4788; margin-bottom: 15px;">Order Details</h3>
+                                    <div class="info-grid">
+                                        <div>
+                                            <div class="info-item">
+                                                <span class="info-label">Customer:</span>
+                                                <span t-field="o.partner_id.name"/>
+                                            </div>
+                                            <div class="info-item">
+                                                <span class="info-label">Email:</span>
+                                                <span t-field="o.partner_id.email"/>
+                                            </div>
+                                            <div class="info-item">
+                                                <span class="info-label">Phone:</span>
+                                                <span t-field="o.partner_id.phone"/>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="info-item">
+                                                <span class="info-label">Order Status:</span>
+                                                <span t-attf-class="status-badge status-#{o.order_status or 'draft'}">
+                                                    <span t-field="o.order_status"/>
+                                                </span>
+                                            </div>
+                                            <div class="info-item">
+                                                <span class="info-label">Total Amount:</span>
+                                                <span t-field="o.amount_total" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                            </div>
+                                            <div class="info-item">
+                                                <span class="info-label">Salesperson:</span>
+                                                <span t-field="o.user_id.name"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Order Lines -->
+                                <h3 style="color: #1f4788; margin: 20px 0 10px 0;">Order Items</h3>
+                                <table class="table table-sm">
+                                    <thead style="background-color: #1f4788; color: white;">
+                                        <tr>
+                                            <th>Product</th>
+                                            <th>Description</th>
+                                            <th>Qty</th>
+                                            <th>Unit Price</th>
+                                            <th>Subtotal</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr t-foreach="o.order_line" t-as="line">
+                                            <td>
+                                                <span t-field="line.product_id.name"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="line.name"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="line.product_uom_qty"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="line.price_unit"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="line.price_subtotal"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <!-- Footer -->
+                                <div style="margin-top: 30px; text-align: center; font-size: 11px; color: #666;">
+                                        Generated on <span t-esc="datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')"/>
+                                        by <span t-field="o.create_uid.name"/>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </t>
+</template>
+
+<!-- Professional Single-Page Commission Report Template -->
+<template id="commission_payout_report_template_professional">
+    <t t-name="order_status_override.commission_report_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <style>
+                                    @page {
+                                        margin: 8mm;
+                                        size: A4;
+                                    }
+                                    
+                                    .commission-container {
+                                        font-family: 'Arial', sans-serif;
+                                        background: white;
+                                        font-size: 13px;
+                                        line-height: 1.4;
+                                        margin: 0;
+                                        padding: 0;
+                                        color: #000;
+                                        height: 100%;
+                                    }
+                                    
+                                    .report-header {
+                                        background: linear-gradient(135deg, #800020, #a0002a);
+                                        color: white;
+                                        padding: 15px 20px;
+                                        margin: 0 0 15px 0;
+                                        border-radius: 8px;
+                                        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+                                        position: relative;
+                                    }
+                                    
+                                    .header-content {
+                                        display: flex;
+                                        align-items: center;
+                                        justify-content: space-between;
+                                    }
+                                    
+                                    .report-title {
+                                        font-size: 28px;
+                                        font-weight: bold;
+                                        letter-spacing: 2px;
+                                        text-transform: uppercase;
+                                        margin: 0;
+                                        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+                                    }
+                                    
+                                    .report-subtitle {
+                                        font-size: 14px;
+                                        margin: 5px 0 0 0;
+                                        opacity: 0.9;
+                                        color: #ffd700;
+                                        font-weight: 500;
+                                    }
+                                    
+                                    .company-info {
+                                        text-align: right;
+                                        font-size: 12px;
+                                        color: white;
+                                        line-height: 1.3;
+                                    }
+                                    
+                                    .company-name {
+                                        font-size: 16px;
+                                        font-weight: bold;
+                                        color: #ffd700;
+                                        margin-bottom: 3px;
+                                    }
+                                    
+                                    .qr-section {
+                                        position: absolute;
+                                        top: 15px;
+                                        left: 20px;
+                                        width: 60px;
+                                        text-align: center;
+                                    }
+                                    
+                                    .qr-placeholder {
+                                        width: 50px;
+                                        height: 50px;
+                                        background: white;
+                                        border: 2px solid #800020;
+                                        border-radius: 4px;
+                                        margin: 0 auto;
+                                        display: flex;
+                                        align-items: center;
+                                        justify-content: center;
+                                        font-size: 8px;
+                                        color: #800020;
+                                        font-weight: bold;
+                                    }
+                                    
+                                    .section-header {
+                                        background: linear-gradient(135deg, #800020, #a0002a);
+                                        color: #ffd700;
+                                        padding: 8px 15px;
+                                        margin: 15px 0 10px 0;
+                                        font-size: 14px;
+                                        font-weight: bold;
+                                        text-transform: uppercase;
+                                        letter-spacing: 1px;
+                                        border-radius: 5px;
+                                        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                                    }
+                                    
+                                    .deal-info-grid {
+                                        display: grid;
+                                        grid-template-columns: 1fr 1fr;
+                                        gap: 20px;
+                                        margin: 10px 0;
+                                    }
+                                    
+                                    .info-column {
+                                        display: flex;
+                                        flex-direction: column;
+                                        gap: 8px;
+                                    }
+                                    
+                                    .info-item {
+                                        display: flex;
+                                        align-items: center;
+                                        border-bottom: 1px solid #e0e0e0;
+                                        padding-bottom: 5px;
+                                    }
+                                    
+                                    .info-label {
+                                        color: #800020;
+                                        font-weight: bold;
+                                        font-size: 12px;
+                                        min-width: 120px;
+                                        text-transform: uppercase;
+                                        letter-spacing: 0.5px;
+                                    }
+                                    
+                                    .info-value {
+                                        flex: 1;
+                                        color: #000;
+                                        font-weight: 600;
+                                        font-size: 13px;
+                                        padding-left: 10px;
+                                    }
+                                    
+                                    .highlight-value {
+                                        color: #800020;
+                                        font-weight: bold;
+                                        font-size: 14px;
+                                    }
+                                    
+                                    .commission-grid {
+                                        display: grid;
+                                        grid-template-columns: 1fr 1fr;
+                                        gap: 15px;
+                                        margin: 10px 0;
+                                    }
+                                    
+                                    .commission-box {
+                                        border: 2px solid #800020;
+                                        border-radius: 8px;
+                                        background: linear-gradient(135deg, #fff9e6, #f5f5f5);
+                                        padding: 12px;
+                                        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                                    }
+                                    
+                                    .box-title {
+                                        background: #800020;
+                                        color: #ffd700;
+                                        font-weight: bold;
+                                        font-size: 13px;
+                                        margin: -12px -12px 10px -12px;
+                                        padding: 8px 12px;
+                                        text-transform: uppercase;
+                                        letter-spacing: 0.5px;
+                                        text-align: center;
+                                        border-radius: 6px 6px 0 0;
+                                    }
+                                    
+                                    .commission-item {
+                                        display: flex;
+                                        justify-content: space-between;
+                                        align-items: center;
+                                        margin-bottom: 6px;
+                                        font-size: 12px;
+                                        padding: 3px 0;
+                                        border-bottom: 1px dotted #ccc;
+                                    }
+                                    
+                                    .commission-item:last-child {
+                                        border-bottom: none;
+                                        margin-bottom: 0;
+                                    }
+                                    
+                                    .commission-label {
+                                        color: #333;
+                                        font-weight: 500;
+                                    }
+                                    
+                                    .commission-amount {
+                                        color: #800020;
+                                        font-weight: bold;
+                                        font-size: 13px;
+                                    }
+                                    
+                                    .commission-total {
+                                        background: #800020;
+                                        color: #ffd700;
+                                        margin: 8px -12px -12px -12px;
+                                        padding: 8px 12px;
+                                        font-weight: bold;
+                                        font-size: 14px;
+                                        display: flex;
+                                        justify-content: space-between;
+                                        border-radius: 0 0 6px 6px;
+                                    }
+                                    
+                                    .totals-section {
+                                        background: linear-gradient(135deg, #800020, #a0002a);
+                                        color: white;
+                                        padding: 15px;
+                                        text-align: center;
+                                        margin: 15px 0;
+                                        border-radius: 8px;
+                                        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+                                    }
+                                    
+                                    .totals-grid {
+                                        display: grid;
+                                        grid-template-columns: 1fr 1fr 1fr;
+                                        gap: 20px;
+                                        margin-top: 10px;
+                                    }
+                                    
+                                    .total-item {
+                                        text-align: center;
+                                        padding: 10px;
+                                        background: rgba(255,255,255,0.1);
+                                        border-radius: 6px;
+                                        border: 1px solid rgba(255,255,255,0.2);
+                                    }
+                                    
+                                    .total-label {
+                                        font-size: 12px;
+                                        margin-bottom: 5px;
+                                        color: #ffd700;
+                                        font-weight: 600;
+                                        text-transform: uppercase;
+                                        letter-spacing: 0.5px;
+                                    }
+                                    
+                                    .total-amount {
+                                        font-size: 18px;
+                                        font-weight: bold;
+                                        color: white;
+                                        text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+                                    }
+                                    
+                                    .footer-section {
+                                        background: linear-gradient(135deg, #800020, #a0002a);
+                                        color: white;
+                                        text-align: center;
+                                        padding: 10px 15px;
+                                        font-size: 10px;
+                                        margin: 15px 0 0 0;
+                                        border-radius: 6px;
+                                        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                                    }
+                                    
+                                    .footer-title {
+                                        font-size: 12px;
+                                        font-weight: bold;
+                                        margin-bottom: 3px;
+                                        color: #ffd700;
+                                    }
+                                    
+                                    .creator-info {
+                                        font-size: 9px;
+                                        color: #666;
+                                        margin-top: 10px;
+                                        text-align: center;
+                                        font-style: italic;
+                                    }
+                                    
+                                    .status-badge {
+                                        display: inline-block;
+                                        padding: 3px 8px;
+                                        border-radius: 12px;
+                                        font-size: 10px;
+                                        font-weight: bold;
+                                        text-transform: uppercase;
+                                        letter-spacing: 0.5px;
+                                    }
+                                    
+                                    .status-draft {
+                                        background: #ffc107;
+                                        color: #000;
+                                    }
+                                    
+                                    .status-confirmed {
+                                        background: #28a745;
+                                        color: white;
+                                    }
+                                    
+                                    @media print {
+                                        .page {
+                                            margin: 0;
+                                            padding: 5px;
+                                        }
+                                        .commission-container {
+                                            margin: 0;
+                                            padding: 0;
+                                        }
+                                    }
+                        </style>
+
+                        <div class="commission-container">
+                            <!-- Header Section -->
+                            <div class="report-header">
+                                <div class="qr-section">
+                                    <t t-if="o.qr_code">
+                                        <img t-att-src="'data:image/png;base64,' + o.qr_code.decode('utf-8')" style="width: 50px; height: 50px; border-radius: 4px;"/>
+                                    </t>
+                                    <t t-else="">
+                                        <div class="qr-placeholder">QR</div>
+                                    </t>
+                                </div>
+
+                                <div class="header-content">
+                                    <div style="flex: 1; text-align: center; margin-left: 80px;">
+                                        <h1 class="report-title">Commission Report</h1>
+                                        <div class="report-subtitle">
+                                                    Order: <strong>
+                                            <span t-field="o.name"/>
+                                        </strong> | 
+                                                    Date: <strong>
+                                        <span t-field="o.date_order" t-options="{'widget': 'date'}"/>
+                                    </strong>
+                                </div>
+                            </div>
+
+                            <div class="company-info">
+                                <div class="company-name">OSUS Real Estate</div>
+                                <div>Business Bay, Dubai</div>
+                                <div>+971-4-366-4500</div>
+                                <div style="margin-top: 5px; font-size: 10px; color: #ffd700;">www.osusrealestate.com</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Deal Information Section -->
+                    <div class="section-header">Deal Information</div>
+                    <div class="deal-info-grid">
+                        <div class="info-column">
+                            <div class="info-item">
+                                <div class="info-label">Customer:</div>
+                                <div class="info-value">
+                                    <span t-field="o.partner_id.name"/>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Email:</div>
+                                <div class="info-value">
+                                    <span t-field="o.partner_id.email"/>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Phone:</div>
+                                <div class="info-value">
+                                    <span t-field="o.partner_id.phone"/>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Status:</div>
+                                <div class="info-value">
+                                    <span t-if="o.state == 'draft'" class="status-badge status-draft">Draft</span>
+                                    <span t-elif="o.state == 'sale'" class="status-badge status-confirmed">Confirmed</span>
+                                    <span t-else="" class="status-badge">
+                                        <span t-field="o.state"/>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="info-column">
+                            <div class="info-item">
+                                <div class="info-label">Project:</div>
+                                <div class="info-value">
+                                    <span t-field="o.project_id.name"/>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Unit:</div>
+                                <div class="info-value">
+                                    <span t-field="o.unit_id.name"/>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Order Total:</div>
+                                <div class="info-value highlight-value">
+                                    <span t-field="o.amount_total" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Currency:</div>
+                                <div class="info-value">
+                                    <span t-field="o.currency_id.name"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Commission Breakdown Section -->
+                    <div class="section-header">Commission Breakdown</div>
+                    <div class="commission-grid">
+                        <!-- External Parties Commission -->
+                        <div class="commission-box">
+                            <div class="box-title">External Parties</div>
+
+                            <div class="commission-item">
+                                <span class="commission-label">Broker (<span t-field="o.broker_partner_id.name"/>
+):</span>
+                                <span class="commission-amount">
+                                    <t t-esc="'{:.1f}%'.format(o.broker_rate if o.broker_rate else 0)"/>
+                                </span>
+                            </div>
+
+                            <div class="commission-item">
+                                <span class="commission-label">Broker Amount:</span>
+                                <span class="commission-amount">
+                                    <t t-esc="'{:,.0f} AED'.format(o.broker_amount if o.broker_amount else 0)"/>
+                                </span>
+                            </div>
+
+                            <div class="commission-item">
+                                <span class="commission-label">Referrer Commission:</span>
+                                <span class="commission-amount">
+                                    <t t-esc="'{:,.0f} AED'.format(o.referrer_amount if o.referrer_amount else 0)"/>
+                                </span>
+                            </div>
+
+                            <div class="commission-item">
+                                <span class="commission-label">Cashback:</span>
+                                <span class="commission-amount">
+                                    <t t-esc="'{:,.0f} AED'.format(o.cashback_amount if o.cashback_amount else 0)"/>
+                                </span>
+                            </div>
+
+                            <div class="commission-total">
+                                <span>Total External:</span>
+                                <span>
+                                    <t t-esc="'{:,.0f} AED'.format(o.total_external_commission_amount or 0)"/>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Internal Parties Commission -->
+                        <div class="commission-box">
+                            <div class="box-title">Internal Parties</div>
+
+                            <div class="commission-item">
+                                <span class="commission-label">Agent 1 (<span t-field="o.agent1_partner_id.name"/>
+):</span>
+                                <span class="commission-amount">
+                                    <t t-esc="'{:.1f}%'.format(o.agent1_rate if o.agent1_rate else 0)"/>
+                                </span>
+                            </div>
+
+                            <div class="commission-item">
+                                <span class="commission-label">Agent 1 Amount:</span>
+                                <span class="commission-amount">
+                                    <t t-esc="'{:,.0f} AED'.format(o.agent1_amount if o.agent1_amount else 0)"/>
+                                </span>
+                            </div>
+
+                            <div class="commission-item">
+                                <span class="commission-label">Agent 2 Amount:</span>
+                                <span class="commission-amount">
+                                    <t t-esc="'{:,.0f} AED'.format(o.agent2_amount if o.agent2_amount else 0)"/>
+                                </span>
+                            </div>
+
+                            <div class="commission-item">
+                                <span class="commission-label">Manager Commission:</span>
+                                <span class="commission-amount">
+                                    <t t-esc="'{:,.0f} AED'.format(o.manager_amount if o.manager_amount else 0)"/>
+                                </span>
+                            </div>
+
+                            <div class="commission-item">
+                                <span class="commission-label">Director Commission:</span>
+                                <span class="commission-amount">
+                                    <t t-esc="'{:,.0f} AED'.format(o.director_amount if o.director_amount else 0)"/>
+                                </span>
+                            </div>
+
+                            <div class="commission-total">
+                                <span>Total Internal:</span>
+                                <span>
+                                    <t t-esc="'{:,.0f} AED'.format(o.total_internal_commission_amount or 0)"/>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Overall Totals Section -->
+                    <div class="totals-section">
+                        <div style="font-size: 16px; font-weight: bold; color: #ffd700; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;">Financial Summary</div>
+                        <div class="totals-grid">
+                            <div class="total-item">
+                                <div class="total-label">Order Total</div>
+                                <div class="total-amount">
+                                    <span t-field="o.amount_total" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                </div>
+                            </div>
+                            <div class="total-item">
+                                <div class="total-label">Total Commissions</div>
+                                <div class="total-amount">
+                                    <t t-esc="'{:,.0f} AED'.format(o.total_commission_amount or 0)"/>
+                                </div>
+                            </div>
+                            <div class="total-item">
+                                <div class="total-label">Net Amount</div>
+                                <div class="total-amount">
+                                    <t t-esc="'{:,.0f} AED'.format((o.amount_total or 0) - (o.total_commission_amount or 0))"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Creator Information -->
+                    <div class="creator-info">
+                                        Generated by: <strong>
+                        <span t-field="o.create_uid.name"/>
+                    </strong> on 
+                    <strong>
+                        <span t-field="o.create_date" t-options="{'widget': 'datetime'}"/>
+                    </strong>
+                    <t t-if="o.write_uid != o.create_uid">
+                                            | Last modified by: <strong>
+                        <span t-field="o.write_uid.name"/>
+                    </strong>
+                </t>
+            </div>
+
+            <!-- Footer Section -->
+            <div class="footer-section">
+                <div class="footer-title">Commission Report - Confidential Document</div>
+                <div>This is a computer-generated commission report. All amounts are subject to verification and final approval.</div>
+                <div style="font-size: 9px; margin-top: 4px; opacity: 0.8; color: #ffd700;">
+                                            OSUS Real Estate Brokerage LLC | Dubai, UAE | License No: RERA-1234567
+                </div>
+            </div>
+        </div>
+    </div>
+</t>
+</t>
+</t>
+</t>
+</template>
+
+<!-- Professional Commission Report Action -->
+<record id="report_commission_payout_professional" model="ir.actions.report">
+<field name="name">Commission Payout Report (Professional)</field>
+<field name="model">sale.order</field>
+<field name="report_type">qweb-pdf</field>
+<field name="report_name">order_status_override.commission_payout_report_template_professional</field>
+<field name="report_file">order_status_override.commission_payout_report_template_professional</field>
+<field name="print_report_name">'Commission Report - %s' % object.name</field>
+<field name="paperformat_id" ref="base.paperformat_euro"/>
+</record>
+</data>
+</odoo>

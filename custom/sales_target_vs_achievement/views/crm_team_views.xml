@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherit the Sales Team form view to add a computed Team Target field -->
+    <record id="crm_team_view_form_inherit_sales_target_vs_achievement" model="ir.ui.view">
+        <field name="name">crm.team.view.form.inherit.team.target</field>
+        <field name="model">crm.team</field>
+        <field name="inherit_id" ref="sales_team.crm_team_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="before">
+                <!-- New Group for Team Target -->
+                <group string="Team Target">
+                    <field name="team_target" widget="monetary" readonly="1" string="Team Target"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

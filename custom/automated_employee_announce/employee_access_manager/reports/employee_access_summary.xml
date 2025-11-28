@@ -1,0 +1,40 @@
+<odoo>
+    <report 
+        id="employee_access_summary_report" 
+        model="hr.employee" 
+        string="Employee Access Summary" 
+        report_type="qweb-pdf" 
+        name="employee_access_manager.employee_access_summary" 
+        file="employee_access_manager.employee_access_summary" 
+        menu="True"/>
+    
+    <template id="employee_access_summary">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <div class="page">
+                    <h2>Employee Access Summary for <t t-esc="doc.name"/></h2>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Position</th>
+                                <th>Access Rights</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="doc.position_ids" t-as="position">
+                                <tr>
+                                    <td><t t-esc="position.name"/></td>
+                                    <td>
+                                        <t t-foreach="position.access_rights_ids" t-as="access_right">
+                                            <span><t t-esc="access_right.name"/></span><br/>
+                                        </t>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

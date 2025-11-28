@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="oe_sale_dashboard_17.SalesDashboard">
+        <div class="o_oe_sale_dashboard_17_container sales_dashboard_container">
+            <!-- Loading Indicator -->
+            <div class="loading_indicator" t-if="state.loading">
+                <i class="fa fa-spinner fa-spin fa-3x" title="Loading spinner"></i>
+                <p>Loading enhanced dashboard data...</p>
+            </div>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard_content" t-if="!state.loading">
+                <!-- Header Section -->
+                <div class="dashboard_header">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h2>Enhanced Sales Dashboard</h2>
+                            <p>Real-time sales analytics with agent rankings and booking date analysis</p>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="dashboard_filters">
+                                <div class="form-group">
+                                    <label>Date Range:</label>
+                                    <div class="input-group">
+                                        <input type="date" id="start_date" class="form-control" t-model="state.dateRange.start"/>
+                                        <input type="date" id="end_date" class="form-control" t-model="state.dateRange.end"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Sale Type:</label>
+                                    <select id="sale_type_filter" class="form-control" multiple="multiple">
+                                        <!-- Populated by JavaScript -->
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <button class="btn btn-primary" id="refresh_dashboard" t-on-click="refreshData">
+                                        <i class="fa fa-refresh" title="Refresh dashboard"></i> Refresh
+                                    </button>
+                                    <button class="btn btn-info" id="test_backend" t-on-click="testBackendConnectivity">
+                                        <i class="fa fa-cog" title="Test backend"></i> Test
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- KPI Cards Section -->
+                <div class="kpi_section mb-4">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="kpi_card">
+                                <div class="kpi_icon">
+                                    <i class="fa fa-file-text-o" title="Total Quotations Icon"></i>
+                                </div>
+                                <div class="kpi_content">
+                                    <h3 id="total_quotations">
+                                        <t t-esc="formatNumber(state.data.performance.total_quotations)"/>
+                                    </h3>
+                                    <p>Total Quotations</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="kpi_card">
+                                <div class="kpi_icon">
+                                    <i class="fa fa-shopping-cart" title="Sales Orders Icon"></i>
+                                </div>
+                                <div class="kpi_content">
+                                    <h3 id="total_orders">
+                                        <t t-esc="formatNumber(state.data.performance.total_orders)"/>
+                                    </h3>
+                                    <p>Sales Orders</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="kpi_card">
+                                <div class="kpi_icon">
+                                    <i class="fa fa-check-circle" title="Invoiced Sales Icon"></i>
+                                </div>
+                                <div class="kpi_content">
+                                    <h3 id="total_invoiced">
+                                        <t t-esc="formatNumber(state.data.performance.total_invoiced)"/>
+                                    </h3>
+                                    <p>Invoiced Sales</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="kpi_card">
+                                <div class="kpi_icon">
+                                    <i class="fa fa-money" title="Total Revenue Icon"></i>
+                                </div>
+                                <div class="kpi_content">
+                                    <h3 id="total_amount">
+                                        <t t-esc="formatCurrency(state.data.performance.total_amount)"/>
+                                    </h3>
+                                    <p>Total Revenue</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="charts_section">
+                    <div class="row">
+                        <!-- Monthly Trend Chart -->
+                        <div class="col-md-8">
+                            <div class="chart_container">
+                                <h4>Monthly Sales Trend (by Booking Date)</h4>
+                                <canvas id="monthly_trend_chart" width="400" height="200"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Sales by State Pie Chart -->
+                        <div class="col-md-4">
+                            <div class="chart_container">
+                                <h4>Sales by State</h4>
+                                <canvas id="sales_state_chart" width="300" height="200"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <!-- Top Customers Chart -->
+                        <div class="col-md-6">
+                            <div class="chart_container">
+                                <h4>Top Customers</h4>
+                                <canvas id="top_customers_chart" width="400" height="200"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Sales Team Performance -->
+                        <div class="col-md-6">
+                            <div class="chart_container">
+                                <h4>Sales Team Performance</h4>
+                                <canvas id="sales_team_chart" width="400" height="200"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Agent and Broker Rankings -->
+                    <div class="row mt-4">
+                        <!-- Agent Rankings -->
+                        <div class="col-md-6">
+                            <div class="chart_container">
+                                <h4>Top Agents by Revenue</h4>
+                                <canvas id="agent_ranking_chart" width="400" height="200"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Broker Rankings -->
+                        <div class="col-md-6">
+                            <div class="chart_container">
+                                <h4>Top Brokers by Revenue</h4>
+                                <canvas id="broker_ranking_chart" width="400" height="200"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Agent and Broker Performance Tables -->
+                <div class="tables_section mt-4">
+                    <div class="row">
+                        <!-- Agent Performance Table -->
+                        <div class="col-md-6">
+                            <div class="table_container">
+                                <h4>Agent Performance Details</h4>
+                                <div id="agent_performance_table">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Agent</th>
+                                                <th>Deal Count</th>
+                                                <th>Total Revenue</th>
+                                                <th>Avg Price Unit</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="agent_table_body">
+                                            <tr t-foreach="state.data.agentRanking.agents" t-as="agent" t-key="agent_index">
+                                                <td>
+                                                    <t t-esc="agent"/>
+                                                </td>
+                                                <td>
+                                                    <t t-esc="state.data.agentRanking.deal_counts[agent_index]"/>
+                                                </td>
+                                                <td>
+                                                    <t t-esc="formatCurrency(state.data.agentRanking.total_amounts[agent_index])"/>
+                                                </td>
+                                                <td>
+                                                    <t t-esc="formatCurrency(state.data.agentRanking.avg_price_units[agent_index])"/>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Broker Performance Table -->
+                        <div class="col-md-6">
+                            <div class="table_container">
+                                <h4>Broker Performance Details</h4>
+                                <div id="broker_performance_table">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Broker</th>
+                                                <th>Deal Count</th>
+                                                <th>Total Revenue</th>
+                                                <th>Avg Price Unit</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="broker_table_body">
+                                            <tr t-foreach="state.data.brokerRanking.brokers" t-as="broker" t-key="broker_index">
+                                                <td>
+                                                    <t t-esc="broker"/>
+                                                </td>
+                                                <td>
+                                                    <t t-esc="state.data.brokerRanking.deal_counts[broker_index]"/>
+                                                </td>
+                                                <td>
+                                                    <t t-esc="formatCurrency(state.data.brokerRanking.total_amounts[broker_index])"/>
+                                                </td>
+                                                <td>
+                                                    <t t-esc="formatCurrency(state.data.brokerRanking.avg_price_units[broker_index])"/>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Orders Table -->
+                    <div class="row mt-4">
+                        <div class="col-md-12">
+                            <div class="table_container">
+                                <h4>Recent Sales Orders (by Booking Date)</h4>
+                                <div id="recent_orders_table">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Order #</th>
+                                                <th>Customer</th>
+                                                <th>Booking Date</th>
+                                                <th>Amount</th>
+                                                <th>State</th>
+                                                <th>Agent</th>
+                                                <th>Broker</th>
+                                                <th>Sale Type</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="orders_table_body">
+                                            <!-- Populated by JavaScript -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Commission Sequence -->
+        <record id="seq_commission_ax" model="ir.sequence">
+            <field name="name">Commission AX</field>
+            <field name="code">commission.ax</field>
+            <field name="prefix">COM</field>
+            <field name="suffix"></field>
+            <field name="padding">5</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Cron Job for Commission Processing -->
+        <record id="cron_process_commissions" model="ir.cron">
+            <field name="name">Process Commission AX Automatically</field>
+            <field name="model_id" ref="model_commission_ax"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_process_commissions()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+            <field name="numbercall">-1</field>
+            <field name="active" eval="True"/>
+            <field name="user_id" ref="base.user_root"/>
+        </record>
+
+        <!-- Email Template for Commission Notification -->
+        <record id="email_template_commission_created" model="mail.template">
+            <field name="name">Commission Created Notification</field>
+            <field name="model_id" ref="model_commission_ax"/>
+            <field name="subject">Commission {{ object.name }} - {{ object.state.title() }}</field>
+            <field name="email_from">{{ (object.company_id.email or user.email) }}</field>
+            <field name="email_to">{{ object.sale_order_id.user_id.email }}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px; font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; color: #333; background: #fff;">
+                    <table border="0" cellpadding="0" cellspacing="0" style="width: 100%; background: #fff;">
+                        <tr>
+                            <td align="center">
+                                <table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background: #fff; color: #333; border-top: 4px solid #800020;">
+                                    <tbody>
+                                        <tr>
+                                            <td align="center" style="min-width: 590px;">
+                                                <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background: transparent; padding: 0px 8px 0px 8px; margin: 0px;">
+                                                    <tr>
+                                                        <td valign="middle">
+                                                            <span style="font-size: 10px;">Commission Notification</span>
+                                                            <br/>
+                                                            <span style="font-size: 20px; font-weight: bold; color: #800020;">
+                                                                {{ object.company_id.name }}
+                                                            </span>
+                                                        </td>
+                                                        <td valign="middle" align="right">
+                                                            <img style="padding: 0px; margin: 0px; height: auto; width: 80px;" src="/logo.png" alt="${object.company_id.name}"/>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="2" style="text-align:center;">
+                                                            <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center" style="min-width: 590px;">
+                                                <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background: transparent; padding: 0px 8px 0px 8px; margin:0px;">
+                                                    <tr>
+                                                        <td valign="top" style="font-size: 13px;">
+                                                            <div>
+                                                                Dear {{ object.sale_order_id.user_id.name }},<br/>
+                                                            <br/>
+                                                                
+                                                                A commission record has been {{ 'created' if object.state == 'draft' else object.state }} for your sales order.
+                                                            <br/>
+                                                            <br/>
+
+                                                            <strong>Commission Details:</strong>
+                                                            <br/>
+                                                                Commission Reference: {{ object.name }}<br/>
+                                                                Sale Order: {{ object.sale_order_id.name }}<br/>
+                                                                Status: {{ object.state.title() }}<br/>
+                                                                Total Commission: {{ object.total_commission_amount }} {{ object.currency_id.name }}<br/>
+                                                                Type: {{ object.commission_type.title() }}<br/>
+                                        <br/>
+                                                                
+                                                                % if object.state == 'calculated':
+                                                                    The commission has been calculated and is ready for confirmation.
+                                                                % elif object.state == 'confirmed':
+                                                                    The commission has been confirmed and vendor bills will be created.
+                                                                % elif object.state == 'paid':
+                                                                    The commission has been fully paid.
+                                                                % endif
+                                                                
+                                        <br/>
+                                        <br/>
+                                                                Thank you,<br/>
+                                                                {{ user.name }}
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </td>
+</tr>
+</table>
+</div>
+</field>
+<field name="auto_delete" eval="False"/>
+</record>
+
+<!-- Commission Configuration Parameters -->
+<record id="config_auto_process_enabled" model="ir.config_parameter">
+<field name="key">commission_ax.auto_process_enabled</field>
+<field name="value">True</field>
+</record>
+
+<record id="config_auto_create_vendor_bills" model="ir.config_parameter">
+<field name="key">commission_ax.auto_create_vendor_bills</field>
+<field name="value">True</field>
+</record>
+
+<record id="config_notification_enabled" model="ir.config_parameter">
+<field name="key">commission_ax.notification_enabled</field>
+<field name="value">True</field>
+</record>
+
+</data>
+</odoo>

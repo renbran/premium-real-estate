@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_crm_executive_dashboard_manager,crm.executive.dashboard.manager,model_crm_executive_dashboard,group_crm_executive_dashboard_manager,1,1,1,1
+access_crm_executive_dashboard_user,crm.executive.dashboard.user,model_crm_executive_dashboard,group_crm_executive_dashboard_user,1,1,1,0
+access_crm_executive_dashboard_sales_manager,crm.executive.dashboard.sales.manager,model_crm_executive_dashboard,sales_team.group_sale_manager,1,1,1,1
+access_crm_executive_dashboard_sales_user,crm.executive.dashboard.sales.user,model_crm_executive_dashboard,sales_team.group_sale_salesman,1,0,0,0

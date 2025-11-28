@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree view for Individual Target and Achievement Details -->
+    <record id="target_achieve_view_tree" model="ir.ui.view">
+        <field name="name">target.achieve.view.tree</field>
+        <field name="model">target.achieve</field>
+        <field name="arch" type="xml">
+            <tree string="Sales Target Details" decoration-success="achievement_percentage &gt;= 100" decoration-info="achievement_percentage &gt;= 75 and achievement_percentage &lt; 100" decoration-danger="achievement_percentage &lt; 75">
+                <field name="name"/>
+                <field name="consultant_id"/>
+                <field name="manager_id"/>
+                <field name="reference_date"/>
+                <field name="time_span"/>
+                <field name="team_id"/>
+                <field name="user_target" sum="Total Target"/>
+                <field name="person_achieved_amt" sum="Total Achievement"/>
+                <field name="achievement_percentage" widget="percentage"/>
+                <field name="remaining_target" sum="Total Remaining"/>
+                <field name="state" widget="badge" decoration-success="state == 'done'" decoration-info="state == 'confirmed'" decoration-warning="state == 'draft'" decoration-danger="state == 'cancel'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form view -->
+    <record id="target_achieve_view_form" model="ir.ui.view">
+        <field name="name">target.achieve.view.form</field>
+        <field name="model">target.achieve</field>
+        <field name="arch" type="xml">
+            <form string="Sales Target">
+                <header>
+                    <button name="action_confirm" string="Confirm" type="object" class="oe_highlight" state="draft"/>
+                    <button name="action_done" string="Mark as Done" type="object" class="oe_highlight" state="confirmed"/>
+                    <button name="action_cancel" string="Cancel" type="object" state="draft,confirmed"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="consultant_id" options="{'no_create': True}" domain="[('employee', '=', True)]"/>
+                            <field name="manager_id" options="{'no_create': True}" domain="[('employee', '=', True)]"/>
+                            <field name="team_id" readonly="1"/>
+                            <field name="reference_date"/>
+                            <field name="time_span"/>
+                        </group>
+                        <group>
+                            <field name="user_target"/>
+                            <field name="person_achieved_amt" readonly="1"/>
+                            <field name="achievement_percentage" widget="percentage" readonly="1"/>
+                            <field name="remaining_target" readonly="1"/>
+                        </group>
+                    </group>
+                    <!-- Pipeline Overview -->
+                    <notebook>
+                        <page string="Sales Pipeline" name="sales_pipeline">
+                            <field name="pipeline_ids" readonly="1">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="date_deadline"/>
+                                    <field name="expected_revenue"/>
+                                    <field name="probability"/>
+                                    <field name="stage_id"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Achieved Sales" name="achieved_sales">
+                            <field name="sale_order_ids" readonly="1">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="partner_id"/>
+                                    <field name="x_book"/>
+                                    <field name="amount_total"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search view -->
+    <record id="target_achieve_view_search" model="ir.ui.view">
+        <field name="name">target.achieve.view.search</field>
+        <field name="model">target.achieve</field>
+        <field name="arch" type="xml">
+            <search string="Search Targets">
+                <field name="name"/>
+                <field name="consultant_id"/>
+                <field name="manager_id"/>
+                <field name="team_id"/>
+                <field name="reference_date"/>
+                <separator/>
+                <filter string="My Targets" name="my_targets" domain="[('consultant_id.user_id','=',uid)]"/>
+                <filter string="My Team" name="my_team" domain="[('manager_id.user_id','=',uid)]"/>
+                <separator/>
+                <filter string="Draft" name="draft" domain="[('state','=','draft')]"/>
+                <filter string="Confirmed" name="confirmed" domain="[('state','=','confirmed')]"/>
+                <filter string="Done" name="done" domain="[('state','=','done')]"/>
+                <separator/>
+                <filter string="Achieved" name="achieved" domain="[('achievement_percentage','>=',100)]"/>
+                <filter string="At Risk" name="at_risk" domain="[('achievement_percentage','&lt;',75)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Team" name="team" context="{'group_by': 'team_id'}"/>
+                    <filter string="Manager" name="manager" context="{'group_by': 'manager_id'}"/>
+                    <filter string="Time Span" name="time_span" context="{'group_by': 'time_span'}"/>
+                    <filter string="Status" name="status" context="{'group_by': 'state'}"/>
+                    <filter string="Month" name="month" context="{'group_by': 'reference_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Graph view -->
+    <record id="target_achieve_view_graph" model="ir.ui.view">
+        <field name="name">target.achieve.view.graph</field>
+        <field name="model">target.achieve</field>
+        <field name="arch" type="xml">
+            <graph string="Target Achievement Analysis" type="bar" sample="1">
+                <field name="team_id"/>
+                <field name="person_achieved_amt" type="measure"/>
+                <field name="user_target" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Kanban view -->
+    <record id="target_achieve_view_kanban" model="ir.ui.view">
+        <field name="name">target.achieve.view.kanban</field>
+        <field name="model">target.achieve</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" sample="1">
+                <field name="name"/>
+                <field name="consultant_id"/>
+                <field name="user_target"/>
+                <field name="person_achieved_amt"/>
+                <field name="achievement_percentage"/>
+                <field name="state"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <div class="row">
+                                <div class="col-6">
+                                    <strong><field name="name"/></strong>
+                                </div>
+                                <div class="col-6 text-end">
+                                    <span class="badge rounded-pill" t-attf-class="bg-#{{'success': record.achievement_percentage.raw_value &gt;= 100, 'warning': record.achievement_percentage.raw_value &gt;= 75 and record.achievement_percentage.raw_value &lt; 100, 'danger': record.achievement_percentage.raw_value &lt; 75}}">
+                                        <field name="achievement_percentage" widget="percentage"/>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    Target: <field name="user_target"/>
+                                </div>
+                                <div class="col-6 text-end">
+                                    Achieved: <field name="person_achieved_amt"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'confirmed': 'info', 'done': 'success', 'cancel': 'danger'}}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Actions -->
+    <record id="action_target_achieve" model="ir.actions.act_window">
+        <field name="name">Sales Targets</field>
+        <field name="res_model">target.achieve</field>
+        <field name="view_mode">kanban,tree,form,graph</field>
+        <field name="search_view_id" ref="target_achieve_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first sales target!
+            </p>
+            <p>
+                Track and manage sales targets for your team members.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem id="menu_sales_target_root" 
+              name="Sales Targets" 
+              parent="sale.sale_menu_root" 
+              sequence="6"/>
+
+    <menuitem id="menu_target_achieve" 
+              name="Targets" 
+              parent="menu_sales_target_root" 
+              action="action_target_achieve" 
+              sequence="1"/>
+</odoo>

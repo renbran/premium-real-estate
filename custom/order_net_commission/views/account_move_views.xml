@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+
+        <!-- Minimal Safe Invoice/Bill Form View -->
+        <record id="view_move_form_enhanced" model="ir.ui.view">
+            <field name="name">account.move.form.enhanced</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+
+                <!-- Add required move_type field for conditions -->
+                <xpath expr="//sheet" position="before">
+                    <field name="move_type" invisible="1"/>
+                </xpath>
+
+                <!-- Add hidden fields for intelligent button conditions -->
+                <xpath expr="//header" position="before">
+                    <field name="move_type" invisible="1"/>
+                    <field name="approval_state" invisible="1"/>
+                    <field name="can_submit_for_review" invisible="1"/>
+                    <field name="can_review" invisible="1"/>
+                    <field name="can_approve" invisible="1"/>
+                    <field name="can_post_manual" invisible="1"/>
+                </xpath>
+
+                <!-- Add intelligent workflow buttons only for invoices/bills -->
+                <xpath expr="//header" position="inside">
+                    <button name="action_submit_for_review" string="Submit for Review" type="object" class="btn-primary" invisible="can_submit_for_review == False"/>
+
+                    <button name="action_review_approve" string="Review &amp; Approve" type="object" class="btn-success" invisible="can_review == False"/>
+
+                    <button name="action_final_approve" string="Final Approve" type="object" class="btn-success" invisible="can_approve == False"/>
+
+                    <button name="action_reject_invoice_bill" string="Reject" type="object" class="btn-danger" invisible="can_review == False and can_approve == False" confirm="Are you sure you want to reject this document?"/>
+                </xpath>
+
+            </field>
+        </record>
+
+        <!-- Minimal Safe Invoice/Bill Tree View -->
+        <record id="view_invoice_tree_enhanced" model="ir.ui.view">
+            <field name="name">account.move.tree.enhanced</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_tree"/>
+            <field name="arch" type="xml">
+
+                <!-- Add the js_class for bulk printing -->
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="js_class">osus_bulk_print_list</attribute>
+                </xpath>
+
+                <!-- Declare required fields -->
+                <xpath expr="//field[@name='name']" position="before">
+                    <field name="move_type" column_invisible="1"/>
+                    <field name="company_currency_id" column_invisible="1"/>
+                    <field name="made_sequence_hole" column_invisible="1"/>
+                </xpath>
+
+            </field>
+        </record>
+
+
+</odoo>

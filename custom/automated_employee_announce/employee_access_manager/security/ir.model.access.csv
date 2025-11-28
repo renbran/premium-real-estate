@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_employee_position,Access Employee Position,model_employee_access_manager_hr_employee_position,,1,1,1,1
+access_position_access_template,Access Position Access Template,model_employee_access_manager_position_access_template,,1,1,1,1
+access_res_users_inherit,Access Res Users Inherit,model_employee_access_manager_res_users_inherit,,1,1,1,1

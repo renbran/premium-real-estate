@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Enhanced Payment Voucher Report Action -->
+        <record id="action_report_payment_voucher_enhanced" model="ir.actions.report">
+            <field name="name">Enhanced Payment Voucher</field>
+            <field name="model">account.payment</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">payment_approval_pro.report_payment_voucher_document_enhanced</field>
+            <field name="print_report_name">
+                ('Enhanced Receipt - %s' if object.payment_type == 'inbound' else 'Enhanced Voucher - %s') % (object.name or 'DRAFT')
+            </field>
+            <field name="binding_model_id" ref="account.model_account_payment"/>
+            <field name="binding_type">report</field>
+            <field name="paperformat_id" ref="base.paperformat_euro"/>
+            <field name="groups_id" eval="[(6, 0, [ref('base.group_user')])]"/>
+        </record>
+
+        <!-- Compact Payment Voucher Report Action -->
+        <record id="action_report_payment_voucher_compact" model="ir.actions.report">
+            <field name="name">Compact Payment Voucher</field>
+            <field name="model">account.payment</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">payment_approval_pro.report_payment_voucher_compact</field>
+            <field name="print_report_name">
+                ('Compact Receipt - %s' if object.payment_type == 'inbound' else 'Compact Voucher - %s') % (object.name or 'DRAFT')
+            </field>
+            <field name="binding_model_id" ref="account.model_account_payment"/>
+            <field name="binding_type">report</field>
+            <field name="paperformat_id" ref="base.paperformat_euro"/>
+            <field name="groups_id" eval="[(6, 0, [ref('base.group_user')])]"/>
+        </record>
+
+        <!-- Professional Payment Summary Report Action -->
+        <record id="action_report_payment_summary_professional" model="ir.actions.report">
+            <field name="name">Professional Payment Summary</field>
+            <field name="model">account.payment</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">payment_approval_pro.report_payment_summary_professional</field>
+            <field name="print_report_name">
+                'Payment Summary - %s' % (object.name or 'DRAFT')
+            </field>
+            <field name="binding_model_id" ref="account.model_account_payment"/>
+            <field name="binding_type">report</field>
+            <field name="paperformat_id" ref="base.paperformat_euro"/>
+            <field name="groups_id" eval="[(6, 0, [ref('account.group_account_manager')])]"/>
+        </record>
+
+        <!-- Multiple Payment Reports Action -->
+        <record id="action_report_multiple_payments" model="ir.actions.report">
+            <field name="name">Multiple Payment Reports</field>
+            <field name="model">account.payment</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">payment_approval_pro.report_multiple_payments</field>
+            <field name="print_report_name">'Multiple Payment Reports - %s' % time.strftime('%Y%m%d')</field>
+            <field name="binding_model_id" ref="account.model_account_payment"/>
+            <field name="binding_type">report</field>
+            <field name="paperformat_id" ref="base.paperformat_euro"/>
+            <field name="groups_id" eval="[(6, 0, [ref('account.group_account_manager')])]"/>
+        </record>
+
+        <!-- Professional Payment Summary Template -->
+        <template id="report_payment_summary_professional">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <style>
+                                .summary-container {
+                                    font-family: 'Segoe UI', Arial, sans-serif;
+                                    color: #333;
+                                    font-size: 11px;
+                                }
+                                
+                                .summary-header {
+                                    background: linear-gradient(135deg, #1f4788, #2980b9);
+                                    color: white;
+                                    padding: 20px;
+                                    text-align: center;
+                                    border-radius: 8px;
+                                    margin-bottom: 25px;
+                                }
+                                
+                                .summary-title {
+                                    font-size: 24px;
+                                    font-weight: 700;
+                                    margin: 0;
+                                    text-transform: uppercase;
+                                    letter-spacing: 1px;
+                                }
+                                
+                                .summary-stats {
+                                    display: grid;
+                                    grid-template-columns: 1fr 1fr 1fr;
+                                    gap: 15px;
+                                    margin-bottom: 25px;
+                                }
+                                
+                                .stat-card {
+                                    background: #f8f9fa;
+                                    border: 2px solid #1f4788;
+                                    padding: 15px;
+                                    text-align: center;
+                                    border-radius: 6px;
+                                }
+                                
+                                .stat-value {
+                                    font-size: 18px;
+                                    font-weight: 700;
+                                    color: #1f4788;
+                                    margin-bottom: 5px;
+                                }
+                                
+                                .stat-label {
+                                    font-size: 10px;
+                                    text-transform: uppercase;
+                                    color: #666;
+                                    letter-spacing: 0.5px;
+                                }
+                                
+                                .payment-details-table {
+                                    width: 100%;
+                                    border-collapse: collapse;
+                                    margin-bottom: 20px;
+                                }
+                                
+                                .payment-details-table th {
+                                    background: #1f4788;
+                                    color: white;
+                                    padding: 10px;
+                                    text-align: left;
+                                    font-size: 10px;
+                                    text-transform: uppercase;
+                                }
+                                
+                                .payment-details-table td {
+                                    padding: 8px 10px;
+                                    border: 1px solid #ddd;
+                                    font-size: 10px;
+                                }
+                                
+                                .payment-details-table tr:nth-child(even) {
+                                    background: #f8f9fa;
+                                }
+                            </style>
+                            
+                            <div class="summary-container">
+                                <div class="summary-header">
+                                    <div class="summary-title">Payment Summary Report</div>
+                                    <div style="margin-top: 10px;">
+                                        Document: <span t-field="o.name"/> | 
+                                        Generated: <span t-esc="datetime.datetime.now().strftime('%B %d, %Y')"/>
+                                    </div>
+                                </div>
+                                
+                                <div class="summary-stats">
+                                    <div class="stat-card">
+                                        <div class="stat-value" t-field="o.amount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                        <div class="stat-label">Total Amount</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-value">
+                                            <t t-if="o.payment_type == 'inbound'">RECEIVED</t>
+                                            <t t-else="">PAID</t>
+                                        </div>
+                                        <div class="stat-label">Transaction Type</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-value" t-field="o.state"/>
+                                        <div class="stat-label">Current Status</div>
+                                    </div>
+                                </div>
+                                
+                                <table class="payment-details-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Field</th>
+                                            <th>Details</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>Payment Reference</strong></td>
+                                            <td><span t-field="o.name"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Partner</strong></td>
+                                            <td><span t-field="o.partner_id.name"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Payment Method</strong></td>
+                                            <td><span t-field="o.journal_id.name"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Currency</strong></td>
+                                            <td><span t-field="o.currency_id.name"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Payment Date</strong></td>
+                                            <td><span t-field="o.date" t-options="{'widget': 'date'}"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Reference</strong></td>
+                                            <td><span t-field="o.ref"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Created By</strong></td>
+                                            <td><span t-field="o.create_uid.name"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Creation Date</strong></td>
+                                            <td><span t-field="o.create_date" t-options="{'widget': 'datetime'}"/></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                
+                                <div style="margin-top: 30px; text-align: center; font-size: 10px; color: #666;">
+                                    <strong>OSUS Properties - Professional Payment Management System</strong><br/>
+                                    This document is computer-generated and does not require physical signature for validity.
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <!-- Multiple Payments Report Template -->
+        <template id="report_multiple_payments">
+            <t t-call="web.html_container">
+                <div class="page">
+                    <style>
+                        .multi-payment-header {
+                            background: linear-gradient(135deg, #1f4788, #2980b9);
+                            color: white;
+                            padding: 20px;
+                            text-align: center;
+                            border-radius: 8px;
+                            margin-bottom: 30px;
+                        }
+                        
+                        .multi-payment-title {
+                            font-size: 26px;
+                            font-weight: 700;
+                            margin: 0;
+                            text-transform: uppercase;
+                            letter-spacing: 1.5px;
+                        }
+                        
+                        .payment-summary-table {
+                            width: 100%;
+                            border-collapse: collapse;
+                            margin-bottom: 30px;
+                            font-size: 10px;
+                        }
+                        
+                        .payment-summary-table th {
+                            background: #1f4788;
+                            color: white;
+                            padding: 12px 8px;
+                            text-align: left;
+                            font-weight: 600;
+                            text-transform: uppercase;
+                            letter-spacing: 0.5px;
+                        }
+                        
+                        .payment-summary-table td {
+                            padding: 10px 8px;
+                            border: 1px solid #ddd;
+                            vertical-align: top;
+                        }
+                        
+                        .payment-summary-table tr:nth-child(even) {
+                            background: #f8f9fa;
+                        }
+                        
+                        .total-row {
+                            background: #1f4788 !important;
+                            color: white !important;
+                            font-weight: 700;
+                        }
+                        
+                        .total-row td {
+                            border-color: #1f4788 !important;
+                        }
+                    </style>
+                    
+                    <div class="multi-payment-header">
+                        <div class="multi-payment-title">Multiple Payment Reports</div>
+                        <div style="margin-top: 10px; font-size: 14px;">
+                            Generated on: <span t-esc="datetime.datetime.now().strftime('%B %d, %Y at %I:%M %p')"/>
+                        </div>
+                    </div>
+                    
+                    <table class="payment-summary-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 15%;">Payment #</th>
+                                <th style="width: 20%;">Partner</th>
+                                <th style="width: 10%;">Type</th>
+                                <th style="width: 15%;">Method</th>
+                                <th style="width: 12%;">Date</th>
+                                <th style="width: 15%;">Amount</th>
+                                <th style="width: 8%;">Status</th>
+                                <th style="width: 5%;">QR</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="total_amount" t-value="0"/>
+                            <t t-set="inbound_total" t-value="0"/>
+                            <t t-set="outbound_total" t-value="0"/>
+                            
+                            <t t-foreach="docs" t-as="payment">
+                                <tr>
+                                    <td><span t-field="payment.name"/></td>
+                                    <td><span t-field="payment.partner_id.name"/></td>
+                                    <td>
+                                        <span style="padding: 2px 6px; border-radius: 10px; font-size: 8px; font-weight: 600;" 
+                                              t-att-style="'background: #d4edda; color: #155724;' if payment.payment_type == 'inbound' else 'background: #f8d7da; color: #721c24;'">
+                                            <t t-if="payment.payment_type == 'inbound'">IN</t>
+                                            <t t-else="">OUT</t>
+                                        </span>
+                                    </td>
+                                    <td><span t-field="payment.journal_id.name"/></td>
+                                    <td><span t-field="payment.date" t-options="{'widget': 'date'}"/></td>
+                                    <td style="text-align: right; font-weight: 600;">
+                                        <span t-field="payment.amount" t-options="{'widget': 'monetary', 'display_currency': payment.currency_id}"/>
+                                    </td>
+                                    <td>
+                                        <span style="font-size: 8px; font-weight: 600;" t-field="payment.state"/>
+                                    </td>
+                                    <td style="text-align: center;">
+                                        <t t-if="payment.qr_code">✓</t>
+                                        <t t-else="">-</t>
+                                    </td>
+                                </tr>
+                                
+                                <t t-set="total_amount" t-value="total_amount + payment.amount"/>
+                                <t t-if="payment.payment_type == 'inbound'">
+                                    <t t-set="inbound_total" t-value="inbound_total + payment.amount"/>
+                                </t>
+                                <t t-else="">
+                                    <t t-set="outbound_total" t-value="outbound_total + payment.amount"/>
+                                </t>
+                            </t>
+                            
+                            <!-- Summary Totals -->
+                            <tr class="total-row">
+                                <td colspan="5" style="text-align: right; font-weight: 700;">TOTALS:</td>
+                                <td style="text-align: right; font-weight: 700;">
+                                    <span t-esc="'{:,.2f}'.format(total_amount)"/>
+                                </td>
+                                <td colspan="2" style="text-align: center;">
+                                    <span t-esc="len(docs)"/> items
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+                        <div style="background: #d4edda; border: 2px solid #155724; padding: 15px; border-radius: 6px;">
+                            <div style="color: #155724; font-weight: 700; font-size: 12px; margin-bottom: 5px;">INBOUND PAYMENTS</div>
+                            <div style="color: #155724; font-size: 16px; font-weight: 700;">
+                                <span t-esc="'{:,.2f}'.format(inbound_total)"/>
+                            </div>
+                        </div>
+                        <div style="background: #f8d7da; border: 2px solid #721c24; padding: 15px; border-radius: 6px;">
+                            <div style="color: #721c24; font-weight: 700; font-size: 12px; margin-bottom: 5px;">OUTBOUND PAYMENTS</div>
+                            <div style="color: #721c24; font-size: 16px; font-weight: 700;">
+                                <span t-esc="'{:,.2f}'.format(outbound_total)"/>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 30px; text-align: center; font-size: 10px; color: #666; border-top: 1px solid #ddd; padding-top: 15px;">
+                        <strong>OSUS Properties - Payment Management System</strong><br/>
+                        Multiple Payment Reports | Computer Generated Document<br/>
+                        Report contains <span t-esc="len(docs)"/> payment records
+                    </div>
+                </div>
+            </t>
+        </template>
+    </data>
+</odoo>

@@ -1,0 +1,390 @@
+/* ======================================
+   Report Font Enhancement CSS
+   Advanced font styling with high contrast
+   and adaptive transparency for all reports
+   ====================================== */
+
+/* Root variables for consistent styling */
+:root {
+  --report-font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --report-font-size-base: 12px;
+  --report-font-size-small: 10px;
+  --report-font-size-large: 14px;
+  --report-font-size-header: 16px;
+  --report-font-size-title: 20px;
+  --report-line-height: 1.4;
+  --report-letter-spacing: 0.02em;
+  --report-text-color: #212529;
+  --report-text-color-light: #6c757d;
+  --report-background-color: #ffffff;
+  --report-background-alpha: 0.95;
+  --report-border-color: #dee2e6;
+  --report-shadow-color: rgba(0, 0, 0, 0.1);
+  --report-contrast-ratio: 4.5;
+}
+
+/* Base font enhancement for all reports */
+.o_report_layout_standard,
+.o_report_layout_boxed,
+.o_report_layout_clean,
+.report-enhanced,
+body.o_report_page {
+  font-family: var(--report-font-family) !important;
+  font-size: var(--report-font-size-base) !important;
+  line-height: var(--report-line-height) !important;
+  letter-spacing: var(--report-letter-spacing) !important;
+  color: var(--report-text-color) !important;
+  background-color: rgba(255, 255, 255, var(--report-background-alpha)) !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+  text-rendering: optimizeLegibility !important;
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "pnum" 1, "tnum" 0, "onum" 1, "lnum" 0, "dlig" 0 !important;
+}
+
+/* High contrast text with adaptive shadow */
+.report-enhanced,
+.o_report_layout_standard,
+.o_report_layout_boxed,
+.o_report_layout_clean {
+  text-shadow: 
+    0 1px 1px rgba(255, 255, 255, 0.8),
+    0 -1px 1px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Adaptive contrast based on background */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --report-text-color: #f8f9fa;
+    --report-text-color-light: #adb5bd;
+    --report-background-color: #212529;
+    --report-border-color: #495057;
+    --report-shadow-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .report-enhanced,
+  .o_report_layout_standard,
+  .o_report_layout_boxed,
+  .o_report_layout_clean {
+    text-shadow: 
+      0 1px 1px rgba(0, 0, 0, 0.8),
+      0 -1px 1px rgba(255, 255, 255, 0.3) !important;
+  }
+}
+
+/* Headers with enhanced visibility */
+.o_report_layout_standard h1,
+.o_report_layout_boxed h1,
+.o_report_layout_clean h1,
+.report-enhanced h1 {
+  font-size: var(--report-font-size-title) !important;
+  font-weight: 700 !important;
+  color: var(--report-text-color) !important;
+  text-shadow: 0 2px 4px var(--report-shadow-color) !important;
+  margin: 0.5em 0 !important;
+  letter-spacing: -0.02em !important;
+}
+
+.o_report_layout_standard h2,
+.o_report_layout_boxed h2,
+.o_report_layout_clean h2,
+.o_report_layout_standard h3,
+.o_report_layout_boxed h3,
+.o_report_layout_clean h3,
+.o_report_layout_standard h4,
+.o_report_layout_boxed h4,
+.o_report_layout_clean h4,
+.report-enhanced h2,
+.report-enhanced h3,
+.report-enhanced h4 {
+  font-size: var(--report-font-size-header) !important;
+  font-weight: 600 !important;
+  color: var(--report-text-color) !important;
+  text-shadow: 0 1px 2px var(--report-shadow-color) !important;
+  margin: 0.3em 0 !important;
+}
+
+/* Enhanced table styling with high contrast */
+.o_report_layout_standard table,
+.o_report_layout_boxed table,
+.o_report_layout_clean table,
+.report-enhanced table {
+  width: 100% !important;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  background-color: rgba(255, 255, 255, var(--report-background-alpha)) !important;
+  border-radius: 4px !important;
+  overflow: hidden !important;
+  box-shadow: 0 2px 4px var(--report-shadow-color) !important;
+  margin: 1em 0 !important;
+}
+
+.o_report_layout_standard th,
+.o_report_layout_boxed th,
+.o_report_layout_clean th,
+.report-enhanced th {
+  font-size: var(--report-font-size-base) !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+  background: linear-gradient(135deg, #495057 0%, #343a40 100%) !important;
+  padding: 12px 16px !important;
+  text-align: left !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5) !important;
+  border-bottom: 2px solid #dee2e6 !important;
+  position: relative !important;
+}
+
+.o_report_layout_standard th::after,
+.o_report_layout_boxed th::after,
+.o_report_layout_clean th::after,
+.report-enhanced th::after {
+  content: '' !important;
+  position: absolute !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: 2px !important;
+  background: linear-gradient(90deg, #007bff 0%, #0056b3 100%) !important;
+}
+
+.o_report_layout_standard td,
+.o_report_layout_boxed td,
+.o_report_layout_clean td,
+.report-enhanced td {
+  font-size: var(--report-font-size-base) !important;
+  padding: 10px 16px !important;
+  border-bottom: 1px solid var(--report-border-color) !important;
+  color: var(--report-text-color) !important;
+  background-color: rgba(255, 255, 255, 0.8) !important;
+  transition: background-color 0.2s ease !important;
+}
+
+/* Zebra striping for better readability */
+.o_report_layout_standard tr:nth-child(even) td,
+.o_report_layout_boxed tr:nth-child(even) td,
+.o_report_layout_clean tr:nth-child(even) td,
+.report-enhanced tr:nth-child(even) td {
+  background-color: rgba(248, 249, 250, 0.8) !important;
+}
+
+.o_report_layout_standard tr:hover td,
+.o_report_layout_boxed tr:hover td,
+.o_report_layout_clean tr:hover td,
+.report-enhanced tr:hover td {
+  background-color: rgba(0, 123, 255, 0.1) !important;
+}
+
+/* Enhanced styling for amounts and monetary values */
+.o_report_layout_standard .text-right,
+.o_report_layout_boxed .text-right,
+.o_report_layout_clean .text-right,
+.o_report_layout_standard .amount,
+.o_report_layout_boxed .amount,
+.o_report_layout_clean .amount,
+.o_report_layout_standard .monetary,
+.o_report_layout_boxed .monetary,
+.o_report_layout_clean .monetary,
+.report-enhanced .amount,
+.report-enhanced .monetary,
+.report-enhanced .text-right {
+  text-align: right !important;
+  font-weight: 600 !important;
+  font-variant-numeric: tabular-nums !important;
+  color: var(--report-text-color) !important;
+}
+
+/* Total rows with special emphasis */
+.o_report_layout_standard .total,
+.o_report_layout_boxed .total,
+.o_report_layout_clean .total,
+.report-enhanced .total,
+.o_report_layout_standard .subtotal,
+.o_report_layout_boxed .subtotal,
+.o_report_layout_clean .subtotal,
+.report-enhanced .subtotal {
+  font-weight: 700 !important;
+  background: linear-gradient(135deg, rgba(0, 123, 255, 0.1) 0%, rgba(0, 123, 255, 0.2) 100%) !important;
+  border-top: 2px solid #007bff !important;
+  color: var(--report-text-color) !important;
+}
+
+/* Address and contact information */
+.o_report_layout_standard .address,
+.o_report_layout_boxed .address,
+.o_report_layout_clean .address,
+.report-enhanced .address {
+  font-size: var(--report-font-size-base) !important;
+  line-height: 1.6 !important;
+  color: var(--report-text-color-light) !important;
+  background-color: rgba(248, 249, 250, 0.8) !important;
+  padding: 12px 16px !important;
+  border-left: 4px solid #007bff !important;
+  border-radius: 0 4px 4px 0 !important;
+  margin: 1em 0 !important;
+}
+
+/* Dates and references */
+.o_report_layout_standard .date,
+.o_report_layout_boxed .date,
+.o_report_layout_clean .date,
+.report-enhanced .date,
+.o_report_layout_standard .reference,
+.o_report_layout_boxed .reference,
+.o_report_layout_clean .reference,
+.report-enhanced .reference {
+  font-size: var(--report-font-size-base) !important;
+  font-weight: 500 !important;
+  color: var(--report-text-color-light) !important;
+  font-variant-numeric: tabular-nums !important;
+}
+
+/* Page breaks and print optimization */
+@media print {
+  .o_report_layout_standard,
+  .o_report_layout_boxed,
+  .o_report_layout_clean,
+  .report-enhanced {
+    -webkit-print-color-adjust: exact !important;
+    color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
+  .o_report_layout_standard table,
+  .o_report_layout_boxed table,
+  .o_report_layout_clean table,
+  .report-enhanced table {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+  
+  .o_report_layout_standard tr,
+  .o_report_layout_boxed tr,
+  .o_report_layout_clean tr,
+  .report-enhanced tr {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+}
+
+/* Responsive font sizing */
+@media screen and (max-width: 768px) {
+  :root {
+    --report-font-size-base: 14px;
+    --report-font-size-header: 18px;
+    --report-font-size-title: 22px;
+  }
+  
+  .o_report_layout_standard th,
+  .o_report_layout_boxed th,
+  .o_report_layout_clean th,
+  .report-enhanced th,
+  .o_report_layout_standard td,
+  .o_report_layout_boxed td,
+  .o_report_layout_clean td,
+  .report-enhanced td {
+    padding: 8px 12px !important;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  :root {
+    --report-font-size-base: 16px;
+    --report-font-size-header: 20px;
+    --report-font-size-title: 24px;
+  }
+}
+
+/* Accessibility enhancements */
+@media (prefers-reduced-motion: reduce) {
+  .o_report_layout_standard *,
+  .o_report_layout_boxed *,
+  .o_report_layout_clean *,
+  .report-enhanced * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --report-text-color: #000000;
+    --report-background-color: #ffffff;
+    --report-border-color: #000000;
+  }
+  
+  .o_report_layout_standard,
+  .o_report_layout_boxed,
+  .o_report_layout_clean,
+  .report-enhanced {
+    text-shadow: none !important;
+    border: 2px solid #000000 !important;
+  }
+  
+  .o_report_layout_standard th,
+  .o_report_layout_boxed th,
+  .o_report_layout_clean th,
+  .report-enhanced th {
+    background: #000000 !important;
+    color: #ffffff !important;
+    border: 2px solid #000000 !important;
+  }
+  
+  .o_report_layout_standard td,
+  .o_report_layout_boxed td,
+  .o_report_layout_clean td,
+  .report-enhanced td {
+    border: 1px solid #000000 !important;
+  }
+}
+
+/* RTL language support */
+[dir="rtl"] .o_report_layout_standard,
+[dir="rtl"] .o_report_layout_boxed,
+[dir="rtl"] .o_report_layout_clean,
+[dir="rtl"] .report-enhanced {
+  text-align: right !important;
+}
+
+[dir="rtl"] .o_report_layout_standard .amount,
+[dir="rtl"] .o_report_layout_boxed .amount,
+[dir="rtl"] .o_report_layout_clean .amount,
+[dir="rtl"] .report-enhanced .amount,
+[dir="rtl"] .o_report_layout_standard .monetary,
+[dir="rtl"] .o_report_layout_boxed .monetary,
+[dir="rtl"] .o_report_layout_clean .monetary,
+[dir="rtl"] .report-enhanced .monetary {
+  text-align: left !important;
+}
+
+/* Specific enhancements for different report types */
+.invoice-report .o_report_layout_standard,
+.invoice-report .o_report_layout_boxed,
+.invoice-report .o_report_layout_clean {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 249, 250, 0.95) 100%) !important;
+}
+
+.financial-report .o_report_layout_standard,
+.financial-report .o_report_layout_boxed,
+.financial-report .o_report_layout_clean {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(240, 248, 255, 0.98) 100%) !important;
+}
+
+/* Animation for smooth loading */
+@keyframes fadeInReport {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.o_report_layout_standard,
+.o_report_layout_boxed,
+.o_report_layout_clean,
+.report-enhanced {
+  animation: fadeInReport 0.3s ease-out !important;
+}
