@@ -1,9 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_hr_agent_commission_user,hr.agent.commission.user,model_hr_agent_commission,hr.group_hr_user,1,1,1,0
-access_hr_agent_commission_manager,hr.agent.commission.manager,model_hr_agent_commission,hr.group_hr_manager,1,1,1,1
-access_uae_leave_type_user,uae.leave.type.user,model_uae_leave_type,hr.group_hr_user,1,0,0,0
-access_uae_leave_type_manager,uae.leave.type.manager,model_uae_leave_type,hr.group_hr_manager,1,1,1,1
-access_uae_leave_allocation_user,uae.leave.allocation.user,model_uae_leave_allocation,hr.group_hr_user,1,1,1,0
-access_uae_leave_allocation_manager,uae.leave.allocation.manager,model_uae_leave_allocation,hr.group_hr_manager,1,1,1,1
-access_hr_air_ticket_user,hr.air.ticket.user,model_hr_air_ticket,hr.group_hr_user,1,1,1,0
-access_hr_air_ticket_manager,hr.air.ticket.manager,model_hr_air_ticket,hr.group_hr_manager,1,1,1,1
