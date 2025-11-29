@@ -13,9 +13,27 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --burgundy: #800020;
+            --wine-red: #722F37;
+            --rose-gold: #B76E79;
+            --champagne-gold: #F7E7CE;
+            --versace-gold: #C9B037;
+            --bronze: #CD7F32;
+            --charcoal: #1A1A1D;
+            --graphite: #2E2E2E;
+            --warm-cream: #FAF0E6;
+            --pearl-white: #FFF9F0;
+            --champagne-beige: #EBE3D5;
+            --baroque-gold: #CFB53B;
+            --blush-pink: #E8C4C4;
+            --dusty-rose: #C9A9A6;
+            --midnight-plum: #4A1C40;
+        }
+
         body {
             font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0a0e27 0%, #1a1a3e 25%, #16213e 50%, #0f3460 75%, #1a1a3e 100%);
+            background: linear-gradient(135deg, var(--charcoal) 0%, #1a1a3e 25%, #16213e 50%, #0f3460 75%, #1a1a3e 100%);
             color: #333;
             line-height: 1.6;
             position: relative;
@@ -36,7 +54,7 @@
         }
 
         header {
-            background: rgba(10, 14, 39, 0.98);
+            background: rgba(26, 26, 29, 0.98);
             backdrop-filter: blur(10px);
             padding: 1.2rem 2rem;
             position: fixed;
@@ -51,7 +69,7 @@
         header.scrolled {
             padding: 0.8rem 2rem;
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
-            background: rgba(10, 14, 39, 0.99);
+            background: rgba(26, 26, 29, 0.99);
         }
 
         .header-content {
@@ -63,28 +81,50 @@
         }
 
         .logo {
-            font-size: 2rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #C9B037, #E8D44D);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-decoration: none;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--champagne-gold);
+            text-shadow: 0 0 10px rgba(183, 110, 121, 0.5);
             letter-spacing: 2px;
-            transition: transform 0.3s ease;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo img {
+            height: 40px;
+            width: auto;
+            filter: drop-shadow(0 0 5px rgba(201, 176, 55, 0.6));
+            transition: all 0.3s ease;
         }
 
         .logo:hover {
+            text-shadow: 0 0 20px rgba(201, 176, 55, 0.8);
             transform: scale(1.05);
         }
 
+        .logo:hover img {
+            filter: drop-shadow(0 0 10px rgba(201, 176, 55, 1));
+            transform: rotateZ(5deg);
+        }
+
+        nav {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
         nav a {
-            color: rgba(255, 255, 255, 0.8);
+            color: var(--warm-cream);
             text-decoration: none;
-            margin-left: 2.5rem;
-            transition: all 0.3s ease;
-            font-weight: 500;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             position: relative;
+            transition: color 0.3s ease;
         }
 
         nav a::after {
@@ -94,21 +134,21 @@
             left: 0;
             width: 0;
             height: 2px;
-            background: linear-gradient(90deg, #C9B037, #B76E79);
+            background: var(--rose-gold);
             transition: width 0.3s ease;
-        }
-
-        nav a:hover {
-            color: #C9B037;
         }
 
         nav a:hover::after {
             width: 100%;
         }
 
+        nav a:hover {
+            color: var(--versace-gold);
+        }
+
         .back-btn {
-            background: linear-gradient(135deg, #C9B037, #B76E79);
-            color: white;
+            background: linear-gradient(135deg, var(--burgundy), var(--rose-gold));
+            color: var(--pearl-white);
             border: none;
             padding: 0.85rem 2rem;
             border-radius: 50px;
@@ -117,7 +157,7 @@
             text-decoration: none;
             display: inline-block;
             font-weight: 600;
-            box-shadow: 0 10px 25px rgba(201, 176, 55, 0.3);
+            box-shadow: 0 10px 25px rgba(128, 0, 32, 0.3);
             position: relative;
             overflow: hidden;
         }
@@ -135,7 +175,7 @@
 
         .back-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 15px 35px rgba(201, 176, 55, 0.5);
+            box-shadow: 0 15px 35px rgba(183, 110, 121, 0.5);
         }
 
         .back-btn:hover::before {
@@ -172,7 +212,7 @@
             left: 0;
             width: 60px;
             height: 4px;
-            background: linear-gradient(90deg, #C9B037, #B76E79);
+            background: linear-gradient(90deg, var(--versace-gold), var(--rose-gold));
             border-radius: 2px;
         }
 
@@ -251,7 +291,7 @@
         }
 
         .gallery-label {
-            color: #C9B037;
+            color: var(--versace-gold);
             font-size: 1.2rem;
             font-weight: 700;
             letter-spacing: 1px;
@@ -277,7 +317,7 @@
             margin-bottom: 2rem;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             border-left: 6px solid transparent;
-            border-image: linear-gradient(135deg, #C9B037, #B76E79) 1;
+            border-image: linear-gradient(135deg, var(--versace-gold), var(--rose-gold)) 1;
             backdrop-filter: blur(10px);
             position: relative;
             overflow: hidden;
@@ -318,7 +358,7 @@
         }
 
         .property-location {
-            color: #B76E79;
+            color: var(--rose-gold);
             font-size: 1.3rem;
             margin-bottom: 1.5rem;
             font-weight: 600;
@@ -329,7 +369,7 @@
 
         .property-price {
             font-size: 2.5rem;
-            background: linear-gradient(135deg, #C9B037, #E8D44D);
+            background: linear-gradient(135deg, var(--versace-gold), #E8D44D);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -377,7 +417,7 @@
 
         .spec-value {
             font-size: 2.2rem;
-            color: #C9B037;
+            color: var(--versace-gold);
             font-weight: 900;
             margin-bottom: 0.3rem;
         }
@@ -395,7 +435,7 @@
             padding: 2rem;
             border-radius: 15px;
             margin-bottom: 2.5rem;
-            border-left: 5px solid #C9B037;
+            border-left: 5px solid var(--versace-gold);
             line-height: 1.9;
             color: #555;
             font-size: 1.05rem;
@@ -424,7 +464,7 @@
             content: '';
             width: 5px;
             height: 32px;
-            background: linear-gradient(135deg, #C9B037, #B76E79);
+            background: linear-gradient(135deg, var(--versace-gold), var(--rose-gold));
             margin-right: 1.2rem;
             border-radius: 3px;
         }
@@ -454,7 +494,7 @@
             left: -100%;
             width: 100%;
             height: 2px;
-            background: linear-gradient(90deg, #C9B037, #B76E79);
+            background: linear-gradient(90deg, var(--versace-gold), var(--rose-gold));
             transition: left 0.5s ease;
         }
 
@@ -569,7 +609,7 @@
         .form-group input:focus,
         .form-group textarea:focus {
             outline: none;
-            border-color: #C9B037;
+            border-color: var(--versace-gold);
             box-shadow: 0 0 20px rgba(201, 176, 55, 0.4);
             background: rgba(255, 255, 255, 1);
             transform: translateY(-2px);
@@ -588,7 +628,7 @@
             padding: 1.5rem;
             background: rgba(255, 255, 255, 0.6);
             border-radius: 12px;
-            border-left: 4px solid #C9B037;
+            border-left: 4px solid var(--versace-gold);
             transition: all 0.4s ease;
         }
 
@@ -653,25 +693,25 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #C9B037, #B76E79);
+            background: linear-gradient(135deg, var(--burgundy), var(--rose-gold));
             color: white;
-            box-shadow: 0 15px 35px rgba(201, 176, 55, 0.3);
+            box-shadow: 0 15px 35px rgba(128, 0, 32, 0.3);
         }
 
         .btn-primary:hover {
             transform: translateY(-5px);
-            box-shadow: 0 25px 50px rgba(201, 176, 55, 0.5);
+            box-shadow: 0 25px 50px rgba(128, 0, 32, 0.5);
         }
 
         .btn-secondary {
             background: transparent;
-            color: #C9B037;
-            border: 2.5px solid #C9B037;
+            color: var(--versace-gold);
+            border: 2.5px solid var(--versace-gold);
             transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
         }
 
         .btn-secondary:hover {
-            background: #C9B037;
+            background: var(--versace-gold);
             color: white;
             transform: translateY(-5px);
             box-shadow: 0 15px 35px rgba(201, 176, 55, 0.4);
@@ -679,7 +719,7 @@
 
         /* Footer */
         footer {
-            background: rgba(10, 14, 39, 0.98);
+            background: rgba(26, 26, 29, 0.98);
             backdrop-filter: blur(10px);
             color: white;
             padding: 3rem 2rem;
@@ -697,7 +737,7 @@
             left: 0;
             width: 100%;
             height: 1px;
-            background: linear-gradient(90deg, transparent, #C9B037, transparent);
+            background: linear-gradient(90deg, transparent, var(--versace-gold), transparent);
         }
 
         footer p {
@@ -707,14 +747,14 @@
         }
 
         footer a {
-            color: #C9B037;
+            color: var(--versace-gold);
             text-decoration: none;
             transition: all 0.3s ease;
             font-weight: 600;
         }
 
         footer a:hover {
-            color: #B76E79;
+            color: var(--rose-gold);
             text-decoration: underline;
         }
 
@@ -851,7 +891,10 @@
     <!-- Header -->
     <header>
         <div class="header-content">
-            <a href="index.html" class="logo">OSUS Properties</a>
+            <a href="index.html" class="logo">
+                <img src="static/media/images/osus-logo.png" alt="OSUS Properties Logo">
+                OSUS Properties
+            </a>
             <nav>
                 <a href="index.html">Home</a>
                 <a href="property-01.html">Properties</a>
@@ -863,7 +906,7 @@
 
     <!-- Main Container -->
     <div class="container">
-        <a href="property-01.html" class="back-btn">← Back to Properties</a>
+        <a href="index.html" class="back-btn">← Back to Properties</a>
 
         <!-- Gallery Section -->
         <section class="gallery-section">
