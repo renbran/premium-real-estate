@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Property Details - OSUS Properties</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1a3e 25%, #16213e 50%, #0f3460 75%, #1a1a3e 100%);
+            color: #333;
+            line-height: 1.6;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(201, 176, 55, 0.05) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(183, 110, 121, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        header {
+            background: rgba(10, 14, 39, 0.98);
+            backdrop-filter: blur(10px);
+            padding: 1.2rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            border-bottom: 1px solid rgba(201, 176, 55, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        header.scrolled {
+            padding: 0.8rem 2rem;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+            background: rgba(10, 14, 39, 0.99);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #C9B037, #E8D44D);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+            letter-spacing: 2px;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        nav a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            margin-left: 2.5rem;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            position: relative;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #C9B037, #B76E79);
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover {
+            color: #C9B037;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .back-btn {
+            background: linear-gradient(135deg, #C9B037, #B76E79);
+            color: white;
+            border: none;
+            padding: 0.85rem 2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 600;
+            box-shadow: 0 10px 25px rgba(201, 176, 55, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .back-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(201, 176, 55, 0.5);
+        }
+
+        .back-btn:hover::before {
+            left: 100%;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            margin-top: 90px;
+        }
+
+        /* Gallery Section */
+        .gallery-section {
+            margin-bottom: 4rem;
+        }
+
+        .gallery-title {
+            font-size: 2.8rem;
+            color: white;
+            margin-bottom: 2.5rem;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            font-weight: 800;
+            letter-spacing: 1px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .gallery-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, #C9B037, #B76E79);
+            border-radius: 2px;
+        }
+
+        .gallery-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+            margin-top: 2rem;
+        }
+
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 20px;
+            cursor: pointer;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.320, 1);
+            height: 320px;
+            background: linear-gradient(135deg, rgba(201, 176, 55, 0.15), rgba(183, 110, 121, 0.15));
+            border: 2px solid rgba(201, 176, 55, 0.4);
+        }
+
+        .gallery-item::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 30px 70px rgba(201, 176, 55, 0.5);
+            border-color: rgba(201, 176, 55, 0.8);
+        }
+
+        .gallery-item:hover::before {
+            opacity: 0.3;
+        }
+
+        .gallery-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.7s cubic-bezier(0.23, 1, 0.320, 1);
+            filter: brightness(0.9);
+        }
+
+        .gallery-item:hover .gallery-image {
+            transform: scale(1.15) rotate(2deg);
+            filter: brightness(1.1);
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 40%, rgba(0,0,0,0.9) 100%);
+            display: flex;
+            align-items: flex-end;
+            padding: 2rem;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+
+        .gallery-label {
+            color: #C9B037;
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            animation: slideUp 0.5s ease forwards;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Property Details */
+        .property-details {
+            background: rgba(255, 255, 255, 0.97);
+            padding: 3rem;
+            border-radius: 25px;
+            margin-bottom: 2rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border-left: 6px solid transparent;
+            border-image: linear-gradient(135deg, #C9B037, #B76E79) 1;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .property-details::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(201, 176, 55, 0.05) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .property-header {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .property-title {
+            font-size: 3.2rem;
+            color: #0a0e27;
+            margin-bottom: 1rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            line-height: 1.2;
+            background: linear-gradient(135deg, #0a0e27, #16213e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .property-location {
+            color: #B76E79;
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .property-price {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #C9B037, #E8D44D);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+        }
+
+        .specs-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .spec-item {
+            background: linear-gradient(135deg, rgba(201, 176, 55, 0.1), rgba(183, 110, 121, 0.08));
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            border: 2px solid rgba(201, 176, 55, 0.25);
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .spec-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(201, 176, 55, 0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .spec-item:hover {
+            transform: translateY(-8px);
+            border-color: rgba(201, 176, 55, 0.6);
+            box-shadow: 0 10px 30px rgba(201, 176, 55, 0.2);
+        }
+
+        .spec-item:hover::before {
+            left: 100%;
+        }
+
+        .spec-value {
+            font-size: 2.2rem;
+            color: #C9B037;
+            font-weight: 900;
+            margin-bottom: 0.3rem;
+        }
+
+        .spec-label {
+            color: #666;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 700;
+        }
+
+        .description {
+            background: linear-gradient(135deg, rgba(201, 176, 55, 0.08), rgba(183, 110, 121, 0.08));
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2.5rem;
+            border-left: 5px solid #C9B037;
+            line-height: 1.9;
+            color: #555;
+            font-size: 1.05rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Amenities Section */
+        .amenities-section {
+            margin-bottom: 3rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: #0a0e27;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 5px;
+            height: 32px;
+            background: linear-gradient(135deg, #C9B037, #B76E79);
+            margin-right: 1.2rem;
+            border-radius: 3px;
+        }
+
+        .amenities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .amenity-item {
+            background: linear-gradient(135deg, rgba(201, 176, 55, 0.12), rgba(183, 110, 121, 0.1));
+            padding: 1.5rem;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            border: 2px solid rgba(201, 176, 55, 0.3);
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .amenity-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #C9B037, #B76E79);
+            transition: left 0.5s ease;
+        }
+
+        .amenity-item:hover {
+            background: linear-gradient(135deg, rgba(201, 176, 55, 0.2), rgba(183, 110, 121, 0.15));
+            border-color: rgba(201, 176, 55, 0.6);
+            transform: translateY(-8px);
+            box-shadow: 0 12px 35px rgba(201, 176, 55, 0.2);
+        }
+
+        .amenity-item:hover::before {
+            left: 100%;
+        }
+
+        .amenity-icon {
+            font-size: 2rem;
+            margin-right: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .amenity-item:hover .amenity-icon {
+            transform: scale(1.2) rotate(10deg);
+        }
+
+        .amenity-text {
+            color: #555;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        /* Contact Section */
+        .contact-section {
+            background: linear-gradient(135deg, rgba(201, 176, 55, 0.15), rgba(183, 110, 121, 0.12));
+            padding: 3rem;
+            border-radius: 20px;
+            border: 2px solid rgba(201, 176, 55, 0.4);
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .contact-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(201, 176, 55, 0.1) 1px, transparent 1px);
+            background-size: 30px 30px;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .contact-title {
+            font-size: 2rem;
+            color: #0a0e27;
+            margin-bottom: 2.5rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.7rem;
+            color: #333;
+            font-weight: 700;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid rgba(201, 176, 55, 0.3);
+            border-radius: 12px;
+            font-family: inherit;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+            background: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+            color: #333;
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: rgba(100, 100, 100, 0.5);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #C9B037;
+            box-shadow: 0 0 20px rgba(201, 176, 55, 0.4);
+            background: rgba(255, 255, 255, 1);
+            transform: translateY(-2px);
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .info-item {
+            margin-bottom: 2.5rem;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 12px;
+            border-left: 4px solid #C9B037;
+            transition: all 0.4s ease;
+        }
+
+        .info-item:hover {
+            background: rgba(255, 255, 255, 0.8);
+            transform: translateX(10px);
+            box-shadow: 0 8px 25px rgba(201, 176, 55, 0.2);
+        }
+
+        .info-label {
+            color: #999;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .info-value {
+            color: #0a0e27;
+            font-size: 1.3rem;
+            font-weight: 800;
+        }
+
+        .cta-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 1.2rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #C9B037, #B76E79);
+            color: white;
+            box-shadow: 0 15px 35px rgba(201, 176, 55, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(201, 176, 55, 0.5);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #C9B037;
+            border: 2.5px solid #C9B037;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+        }
+
+        .btn-secondary:hover {
+            background: #C9B037;
+            color: white;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(201, 176, 55, 0.4);
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(10, 14, 39, 0.98);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+            margin-top: 4rem;
+            border-top: 1px solid rgba(201, 176, 55, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #C9B037, transparent);
+        }
+
+        footer p {
+            margin: 0.8rem 0;
+            font-size: 1rem;
+            line-height: 1.8;
+        }
+
+        footer a {
+            color: #C9B037;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        footer a:hover {
+            color: #B76E79;
+            text-decoration: underline;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.85) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        @keyframes shimmer {
+            0% {
+                opacity: 0.6;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0.6;
+            }
+        }
+
+        @keyframes slideInFromLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInFromRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .property-details {
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .gallery-item {
+            animation: fadeInScale 0.6s ease forwards;
+        }
+
+        .gallery-item:nth-child(1) { animation-delay: 0.1s; }
+        .gallery-item:nth-child(2) { animation-delay: 0.2s; }
+        .gallery-item:nth-child(3) { animation-delay: 0.3s; }
+        .gallery-item:nth-child(4) { animation-delay: 0.4s; }
+        .gallery-item:nth-child(5) { animation-delay: 0.5s; }
+        .gallery-item:nth-child(6) { animation-delay: 0.6s; }
+
+        .amenity-item {
+            animation: slideInFromLeft 0.6s ease forwards;
+        }
+
+        .amenity-item:nth-child(odd) { animation-name: slideInFromLeft; }
+        .amenity-item:nth-child(even) { animation-name: slideInFromRight; }
+
+        .amenity-item:nth-child(1) { animation-delay: 0.1s; }
+        .amenity-item:nth-child(2) { animation-delay: 0.15s; }
+        .amenity-item:nth-child(3) { animation-delay: 0.2s; }
+        .amenity-item:nth-child(4) { animation-delay: 0.25s; }
+        .amenity-item:nth-child(5) { animation-delay: 0.3s; }
+        .amenity-item:nth-child(6) { animation-delay: 0.35s; }
+        .amenity-item:nth-child(7) { animation-delay: 0.4s; }
+        .amenity-item:nth-child(8) { animation-delay: 0.45s; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .property-header {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-buttons {
+                grid-template-columns: 1fr;
+            }
+
+            .property-title {
+                font-size: 2.2rem;
+            }
+
+            .gallery-container {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+
+            .specs-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .property-details {
+                padding: 1.5rem;
+            }
+
+            nav a {
+                margin-left: 1rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <a href="index.html" class="logo">OSUS Properties</a>
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="property-01.html">Properties</a>
+                <a href="about.html">About</a>
+                <a href="contact-osus.html">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        <a href="property-01.html" class="back-btn">← Back to Properties</a>
+
+        <!-- Gallery Section -->
+        <section class="gallery-section">
+            <h2 class="gallery-title">Property Gallery</h2>
+            <div class="gallery-container" id="galleryContainer">
+                <!-- Gallery items will be generated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Property Details -->
+        <section class="property-details">
+            <div class="property-header">
+                <div>
+                    <h1 class="property-title" id="propertyTitle">Luxury Penthouse</h1>
+                    <p class="property-location" id="propertyLocation">📍 Dubai, UAE</p>
+                    <p class="property-price" id="propertyPrice">$5,500,000</p>
+                </div>
+                <div class="specs-grid" id="specsGrid">
+                    <!-- Specs will be generated by JavaScript -->
+                </div>
+            </div>
+
+            <div class="description" id="propertyDescription">
+                This luxurious property offers stunning views and world-class amenities...
+            </div>
+
+            <!-- Amenities Section -->
+            <div class="amenities-section">
+                <h3 class="section-title">Premium Amenities</h3>
+                <div class="amenities-grid" id="amenitiesGrid">
+                    <!-- Amenities will be generated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Contact Section -->
+            <div class="contact-section">
+                <h3 class="contact-title">Schedule a Viewing</h3>
+                <div class="contact-grid">
+                    <form class="contact-form" id="propertyContactForm">
+                        <div class="form-group">
+                            <label for="visitName">Full Name *</label>
+                            <input type="text" id="visitName" required placeholder="Your name">
+                        </div>
+                        <div class="form-group">
+                            <label for="visitEmail">Email *</label>
+                            <input type="email" id="visitEmail" required placeholder="your@email.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="visitPhone">Phone *</label>
+                            <input type="tel" id="visitPhone" required placeholder="(555) 000-0000">
+                        </div>
+                        <div class="form-group">
+                            <label for="visitMessage">Message</label>
+                            <textarea id="visitMessage" placeholder="Tell us about your interest..." rows="3"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Request Viewing</button>
+                    </form>
+
+                    <div class="contact-info">
+                        <div class="info-item">
+                            <div class="info-label">Phone</div>
+                            <div class="info-value">+1 (555) 123-4567</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Email</div>
+                            <div class="info-value">info@osusproperties.com</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Office Hours</div>
+                            <div class="info-value">Mon - Fri: 9AM - 6PM<br>Sat - Sun: 10AM - 4PM</div>
+                        </div>
+                        <button class="btn btn-secondary" style="margin-top: 1rem;">Make an Offer</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 OSUS Properties. All rights reserved.</p>
+        <p><a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a> | <a href="#">Contact</a></p>
+    </footer>
+
+    <script>
+        // Property data - can be populated from database
+        const propertyData = {
+            76: {
+                title: 'Luxury Business Tower Office',
+                location: 'Business Bay, Dubai UAE',
+                price: '$2,450,000',
+                beds: '2',
+                baths: '2',
+                sqft: '2,900',
+                type: 'Office',
+                year: '2022',
+                description: 'Premium office space in iconic Business Bay Tower with panoramic views of Dubai skyline. Features modern architecture, high-speed internet, and 24/7 security. Perfect for executive offices or corporate headquarters.',
+                amenities: ['🏢 Modern Office Layout', '🖥️ High-Speed Internet', '🛡️ 24/7 Security', '🚗 Parking Available', '☕ Business Lounge', '📞 Concierge Service', '♿ Wheelchair Access', '🌐 Global Connectivity'],
+                images: [
+                    '/media/images/properties/property-1.jpg',
+                    '/media/images/properties/property-2.jpg',
+                    '/media/images/properties/property-3.jpg',
+                    '/media/images/properties/property-4.jpg',
+                    '/media/images/properties/property-5.jpg',
+                    '/media/images/properties/property-6.jpg'
+                ]
+            },
+            108: {
+                title: 'Modern Waterfront Villa',
+                location: 'Dubai Marina, Dubai UAE',
+                price: '$4,850,000',
+                beds: '4',
+                baths: '5',
+                sqft: '7,200',
+                type: 'Villa',
+                year: '2023',
+                description: 'Contemporary waterfront villa with direct beach access, infinity pools, and luxury finishes. Enjoy breathtaking ocean views from every room with premium interior design and smart home automation.',
+                amenities: ['🏖️ Beach Access', '🏊 Infinity Pool', '👨‍👩‍👧‍👦 Guest House', '🛀 Spa & Sauna', '⛵ Marina Access', '🏋️ Private Gym', '🎬 Home Theater', '🔐 Smart Security'],
+                images: [
+                    '/media/images/properties/property-2.jpg',
+                    '/media/images/properties/property-3.jpg',
+                    '/media/images/properties/property-4.jpg',
+                    '/media/images/properties/property-5.jpg',
+                    '/media/images/properties/property-6.jpg',
+                    '/media/images/properties/property-1.jpg'
+                ]
+            },
+            105: {
+                title: 'Alpine Mountain Estate',
+                location: 'Mountain Resort, Switzerland',
+                price: '$8,200,000',
+                beds: '6',
+                baths: '7',
+                sqft: '10,000',
+                type: 'Estate',
+                year: '2021',
+                description: 'Luxurious alpine estate with stunning mountain views, private skiing access, and world-class amenities. Experience ultimate luxury and privacy in this exclusive mountain retreat with unparalleled natural beauty.',
+                amenities: ['🎿 Ski Access', '❄️ Mountain View', '🔥 Indoor Fireplace', '🛁 Sauna & Steam', '🎮 Game Room', '📚 Library', '🍷 Wine Cellar', '⛺ Outdoor Terrace'],
+                images: [
+                    '/media/images/properties/property-3.jpg',
+                    '/media/images/properties/property-4.jpg',
+                    '/media/images/properties/property-5.jpg',
+                    '/media/images/properties/property-6.jpg',
+                    '/media/images/properties/property-1.jpg',
+                    '/media/images/properties/property-2.jpg'
+                ]
+            },
+            110: {
+                title: 'Sunset Penthouse',
+                location: 'Beverly Hills, CA USA',
+                price: '$8,500,000',
+                beds: '5',
+                baths: '6',
+                sqft: '8,500',
+                type: 'Penthouse',
+                year: '2022',
+                description: 'Stunning penthouse with panoramic city views, smart home technology, and resort-style amenities. Features floor-to-ceiling windows, premium finishes, and cutting-edge automation system controlled from your smartphone.',
+                amenities: ['🏊 Swimming Pool', '💪 Private Gym', '🎬 Home Theater', '🍷 Wine Cellar', '🏠 Smart Home Tech', '🌇 Rooftop Terrace', '🔔 Concierge Service', '🛡️ 24/7 Security'],
+                images: [
+                    '/media/images/properties/property-4.jpg',
+                    '/media/images/properties/property-5.jpg',
+                    '/media/images/properties/property-6.jpg',
+                    '/media/images/properties/property-1.jpg',
+                    '/media/images/properties/property-2.jpg',
+                    '/media/images/properties/property-3.jpg'
+                ]
+            },
+            112: {
+                title: 'Metropolitan Tower Suite',
+                location: 'New York, NY USA',
+                price: '$15,250,000',
+                beds: '4',
+                baths: '4',
+                sqft: '9,200',
+                type: 'Luxury Tower',
+                year: '2024',
+                description: 'Exceptional corner suite in prestigious Manhattan tower with sweeping Central Park and skyline views. State-of-the-art finishes, premium location, and white-glove service included. Ultimate urban luxury living.',
+                amenities: ['🌳 Central Park View', '🛗 Private Elevator', '🍷 Wine Room', '💪 Fitness Center', '🧖 Spa Access', '🔔 Concierge 24/7', '👨‍🍳 Private Chef Kitchen', '🏠 Smart Home System'],
+                images: [
+                    '/media/images/properties/property-5.jpg',
+                    '/media/images/properties/property-6.jpg',
+                    '/media/images/properties/property-1.jpg',
+                    '/media/images/properties/property-2.jpg',
+                    '/media/images/properties/property-3.jpg',
+                    '/media/images/properties/property-4.jpg'
+                ]
+            },
+            115: {
+                title: 'Tropical Paradise Retreat',
+                location: 'Maldives',
+                price: '$9,750,000',
+                beds: '5',
+                baths: '6',
+                sqft: '12,500',
+                type: 'Beach Villa',
+                year: '2023',
+                description: 'Overwater villa with direct lagoon access, private beach, and world-class water sports. Pristine tropical setting with exclusive resort amenities and unforgettable ocean views. Perfect island escape.',
+                amenities: ['🏖️ Private Beach', '🏄 Water Sports', '🤿 Snorkeling Access', '🏊 Infinity Pool', '🧖 Spa Treatment', '👨‍🍳 Private Chef', '🚁 Helipad Access', '🌅 Sunset Deck'],
+                images: [
+                    '/media/images/properties/property-6.jpg',
+                    '/media/images/properties/property-1.jpg',
+                    '/media/images/properties/property-2.jpg',
+                    '/media/images/properties/property-3.jpg',
+                    '/media/images/properties/property-4.jpg',
+                    '/media/images/properties/property-5.jpg'
+                ]
+            }
+        };
+
+        // Get property ID from URL
+        function getPropertyId() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('id') || '76';
+        }
+
+        // Initialize page
+        function initializePage() {
+            const propertyId = getPropertyId();
+            const property = propertyData[propertyId] || propertyData[76];
+
+            // Update title and details
+            document.getElementById('propertyTitle').textContent = property.title;
+            document.getElementById('propertyLocation').textContent = '📍 ' + property.location;
+            document.getElementById('propertyPrice').textContent = property.price;
+            document.getElementById('propertyDescription').textContent = property.description;
+
+            // Update specs
+            const specsGrid = document.getElementById('specsGrid');
+            specsGrid.innerHTML = `
+                <div class="spec-item">
+                    <div class="spec-value">${property.beds}</div>
+                    <div class="spec-label">Bedrooms</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-value">${property.baths}</div>
+                    <div class="spec-label">Bathrooms</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-value">${property.sqft}</div>
+                    <div class="spec-label">Sq Feet</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-value">${property.type}</div>
+                    <div class="spec-label">Property Type</div>
+                </div>
+            `;
+
+            // Update amenities
+            const amenitiesGrid = document.getElementById('amenitiesGrid');
+            amenitiesGrid.innerHTML = property.amenities.map(amenity => `
+                <div class="amenity-item">
+                    <span class="amenity-icon">${amenity.split(' ')[0]}</span>
+                    <span class="amenity-text">${amenity.split(' ').slice(1).join(' ')}</span>
+                </div>
+            `).join('');
+
+            // Generate gallery
+            const galleryContainer = document.getElementById('galleryContainer');
+            galleryContainer.innerHTML = property.images.map((image, index) => `
+                <div class="gallery-item" onclick="openGalleryModal(${index})">
+                    <img src="${image}" alt="${property.title} - Image ${index + 1}" class="gallery-image">
+                    <div class="gallery-overlay">
+                        <span class="gallery-label">Click to View</span>
+                    </div>
+                </div>
+            `).join('');
+
+            // Add GSAP animations
+            gsap.from('.gallery-item', {
+                opacity: 0,
+                scale: 0.9,
+                duration: 0.6,
+                stagger: 0.1,
+                ease: "back.out"
+            });
+
+            gsap.registerPlugin(ScrollTrigger);
+            gsap.from('.amenity-item', {
+                opacity: 0,
+                x: -30,
+                duration: 0.5,
+                stagger: 0.05,
+                scrollTrigger: {
+                    trigger: '.amenities-section',
+                    start: "top center+=100",
+                    toggleActions: "play none none none"
+                }
+            });
+        }
+
+        // Gallery modal
+        function openGalleryModal(index) {
+            const propertyId = getPropertyId();
+            const property = propertyData[propertyId] || propertyData[76];
+            const image = property.images[index];
+
+            // Create modal
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.95);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 2000;
+                animation: fadeIn 0.3s ease;
+            `;
+
+            modal.innerHTML = `
+                <div style="position: relative; max-width: 90%; max-height: 90%; animation: slideInScale 0.4s ease;">
+                    <img src="${image}" alt="Property Image ${index + 1}" style="width: 100%; height: 100%; object-fit: contain;">
+                    <button onclick="this.parentElement.parentElement.remove()" style="
+                        position: absolute;
+                        top: 20px;
+                        right: 20px;
+                        background: #C9B037;
+                        color: white;
+                        border: none;
+                        width: 50px;
+                        height: 50px;
+                        border-radius: 50%;
+                        font-size: 2rem;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                    " onmouseover="this.style.background='#B76E79'" onmouseout="this.style.background='#C9B037'">
+                        ×
+                    </button>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+
+            // Close on click outside
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            });
+
+            // Close on escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    modal.remove();
+                }
+            });
+        }
+
+        // Header scroll effect
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Form submission
+        document.getElementById('propertyContactForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            
+            gsap.to(btn, {
+                scale: 0.95,
+                duration: 0.1,
+                yoyo: true,
+                repeat: 1
+            });
+
+            alert('Thank you! We will contact you soon to schedule a viewing.');
+            e.target.reset();
+        });
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initializePage);
+
+        // Add animation styles
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeIn {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
+            @keyframes slideInScale {
+                from {
+                    opacity: 0;
+                    transform: scale(0.8) translateY(20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: scale(1) translateY(0);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
