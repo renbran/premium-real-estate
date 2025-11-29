@@ -2684,31 +2684,22 @@
 
         // Trigger animation when stats section comes into view
         let statsAnimated = false;
-        function setupStatsAnimation() {
-            const statsObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting && !statsAnimated) {
-                        statsAnimated = true;
-                        const statNumbers = document.querySelectorAll('.stat-big-number[data-target]');
-                        statNumbers.forEach((element) => {
-                            const target = parseInt(element.getAttribute('data-target'));
-                            animateCounter(element, target, 2500);
-                        });
-                    }
-                });
-            }, { threshold: 0.3 });
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !statsAnimated) {
+                    statsAnimated = true;
+                    const statNumbers = document.querySelectorAll('.stat-big-number[data-target]');
+                    statNumbers.forEach((element) => {
+                        const target = parseInt(element.getAttribute('data-target'));
+                        animateCounter(element, target, 2500);
+                    });
+                }
+            });
+        }, { threshold: 0.3 });
 
-            const statsSection = document.querySelector('.stats-showcase');
-            if (statsSection) {
-                statsObserver.observe(statsSection);
-            }
-        }
-
-        // Setup stats animation when DOM is ready
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', setupStatsAnimation);
-        } else {
-            setupStatsAnimation();
+        const statsSection = document.querySelector('.stats-showcase');
+        if (statsSection) {
+            statsObserver.observe(statsSection);
         }
 
         // Form submission
