@@ -1825,11 +1825,11 @@
 
     <!-- Hero Section -->
     <div class="hero">
-        <video class="hero-video" id="heroVideo" autoplay muted playsinline>
+        <video class="hero-video" id="heroVideo" autoplay playsinline>
             <source src="/media/videos/hero-video-1.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
-        <video class="hero-video" id="heroVideo2" muted playsinline style="display: none;">
+        <video class="hero-video" id="heroVideo2" playsinline style="display: none;">
             <source src="/media/videos/hero-video-2.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
@@ -2458,6 +2458,10 @@
         const heroVideo1 = document.getElementById('heroVideo');
         const heroVideo2 = document.getElementById('heroVideo2');
         let currentVideoIndex = 1;
+
+        // Set video volume to 70%
+        if (heroVideo1) heroVideo1.volume = 0.7;
+        if (heroVideo2) heroVideo2.volume = 0.7;
 
         function setupContinuousPlayback() {
             if (heroVideo1 && heroVideo2) {
