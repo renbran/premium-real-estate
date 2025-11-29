@@ -1833,6 +1833,10 @@
             <source src="/media/videos/hero-video-2.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
+        <video class="hero-video" id="heroVideo3" playsinline style="display: none;">
+            <source src="/media/videos/hero-video-3.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
         <div id="particles-js"></div>
         
         <div class="hero-content">
@@ -2071,7 +2075,7 @@
                         </div>
                     </div>
                     <div class="property-price">$8.5M</div>
-                    <button class="property-cta">View Details</button>
+                    <a href="detail_properties_animated.html?id=110" class="property-cta">View Details</a>
                 </div>
             </div>
 
@@ -2098,7 +2102,7 @@
                         </div>
                     </div>
                     <div class="property-price">$6.2M</div>
-                    <button class="property-cta">View Details</button>
+                    <a href="detail_properties_animated.html?id=108" class="property-cta">View Details</a>
                 </div>
             </div>
 
@@ -2125,7 +2129,7 @@
                         </div>
                     </div>
                     <div class="property-price">$12.8M</div>
-                    <button class="property-cta">View Details</button>
+                    <a href="detail_properties_animated.html?id=105" class="property-cta">View Details</a>
                 </div>
             </div>
 
@@ -2152,7 +2156,7 @@
                         </div>
                     </div>
                     <div class="property-price">$15.25M</div>
-                    <button class="property-cta">View Details</button>
+                    <a href="detail_properties_animated.html?id=112" class="property-cta">View Details</a>
                 </div>
             </div>
 
@@ -2179,7 +2183,7 @@
                         </div>
                     </div>
                     <div class="property-price">$9.75M</div>
-                    <button class="property-cta">View Details</button>
+                    <a href="detail_properties_animated.html?id=115" class="property-cta">View Details</a>
                 </div>
             </div>
 
@@ -2206,7 +2210,7 @@
                         </div>
                     </div>
                     <div class="property-price">$7.45M</div>
-                    <button class="property-cta">View Details</button>
+                    <a href="detail_properties_animated.html?id=76" class="property-cta">View Details</a>
                 </div>
             </div>
         </div>
@@ -2457,17 +2461,20 @@
         // Video playback setup
         const heroVideo1 = document.getElementById('heroVideo');
         const heroVideo2 = document.getElementById('heroVideo2');
+        const heroVideo3 = document.getElementById('heroVideo3');
         let currentVideoIndex = 1;
 
         // Set video volume to 70%
         if (heroVideo1) heroVideo1.volume = 0.7;
         if (heroVideo2) heroVideo2.volume = 0.7;
+        if (heroVideo3) heroVideo3.volume = 0.7;
 
         function setupContinuousPlayback() {
-            if (heroVideo1 && heroVideo2) {
+            if (heroVideo1 && heroVideo2 && heroVideo3) {
                 // Start with first video
                 heroVideo1.style.display = 'block';
                 heroVideo2.style.display = 'none';
+                heroVideo3.style.display = 'none';
                 heroVideo1.play().catch(() => {
                     console.log('Autoplay prevented by browser policy');
                 });
@@ -2481,9 +2488,18 @@
                     currentVideoIndex = 2;
                 });
 
-                // When second video ends, loop back to first
+                // When second video ends, play third video
                 heroVideo2.addEventListener('ended', () => {
                     heroVideo2.style.display = 'none';
+                    heroVideo3.style.display = 'block';
+                    heroVideo3.currentTime = 0;
+                    heroVideo3.play();
+                    currentVideoIndex = 3;
+                });
+
+                // When third video ends, loop back to first
+                heroVideo3.addEventListener('ended', () => {
+                    heroVideo3.style.display = 'none';
                     heroVideo1.style.display = 'block';
                     heroVideo1.currentTime = 0;
                     heroVideo1.play();
@@ -2492,8 +2508,12 @@
 
                 // Resume on user interaction for browsers blocking autoplay
                 document.addEventListener('click', () => {
-                    const activeVideo = currentVideoIndex === 1 ? heroVideo1 : heroVideo2;
-                    if (activeVideo.paused) {
+                    let activeVideo;
+                    if (currentVideoIndex === 1) activeVideo = heroVideo1;
+                    else if (currentVideoIndex === 2) activeVideo = heroVideo2;
+                    else activeVideo = heroVideo3;
+                    
+                    if (activeVideo && activeVideo.paused) {
                         activeVideo.play();
                     }
                 }, { once: true });
