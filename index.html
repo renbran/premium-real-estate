@@ -2594,21 +2594,8 @@
             });
         });
 
-        // Animate big stats
-        gsap.utils.toArray('[data-target]').forEach(element => {
-            const targetValue = parseInt(element.dataset.target);
-            gsap.to(element, {
-                textContent: targetValue,
-                duration: 3,
-                ease: "power1.inOut",
-                snap: { textContent: 1000 },
-                scrollTrigger: {
-                    trigger: element,
-                    start: "top center",
-                    once: true
-                }
-            });
-        });
+        // Animate big stats - Using IntersectionObserver (see statsObserver below)
+        // Removed GSAP animation to avoid conflicts
 
         // Scroll animations for cards
         gsap.utils.toArray('.property-card').forEach((card, index) => {
@@ -2668,8 +2655,11 @@
         function animateCounter(element, target, duration = 2500) {
             const startValue = 0;
             const startTime = Date.now();
+            let isAnimating = true;
 
             function updateCounter() {
+                if (!isAnimating) return;
+                
                 const elapsed = Date.now() - startTime;
                 const progress = Math.min(elapsed / duration, 1);
                 
@@ -2685,6 +2675,7 @@
                     requestAnimationFrame(updateCounter);
                 } else {
                     element.textContent = formatNumber(target);
+                    isAnimating = false;
                 }
             }
 
@@ -2692,11 +2683,12 @@
         }
 
         // Trigger animation when stats section comes into view
+        let statsAnimated = false;
         const statsObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting && !entry.target.classList.contains('animated')) {
-                    entry.target.classList.add('animated');
-                    const statNumbers = entry.target.querySelectorAll('.stat-big-number[data-target]');
+                if (entry.isIntersecting && !statsAnimated) {
+                    statsAnimated = true;
+                    const statNumbers = document.querySelectorAll('.stat-big-number[data-target]');
                     statNumbers.forEach((element) => {
                         const target = parseInt(element.getAttribute('data-target'));
                         animateCounter(element, target, 2500);
