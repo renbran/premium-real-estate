@@ -1,5 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_property_sale,access_property_sale,model_property_sale,base.group_user,1,1,1,1
-access_property_property,access_property_property,model_property_property,base.group_user,1,1,1,1
-access_property_sale_line,access_property_sale_line,model_property_sale_line,base.group_user,1,1,1,1
-access_broker_commission_invoice,access_broker_commission_invoice,model_broker_commission_invoice,base.group_user,1,1,1,1
