@@ -2910,17 +2910,8 @@
             document.body.style.overflow = 'auto';
         }
 
-        // Event listeners for property cards
-        const propertyCards = document.querySelectorAll('.property-card');
-        propertyCards.forEach((card, index) => {
-            const btn = card.querySelector('.property-cta');
-            if (btn) {
-                btn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    openPropertyDetail(index);
-                });
-            }
-        });
+        // Event listeners for property cards - DISABLED to allow link navigation
+        // Links now navigate directly to detail_properties_animated.html
         
         // Close button
         const closeBtn = document.querySelector('.modal-close');
