@@ -1,0 +1,23 @@
+{
+  "timestamp": "2025-11-29T13:36:20.353Z",
+  "stats": {
+    "totalChecks": 1,
+    "successfulChecks": 1,
+    "failedChecks": 0,
+    "averageResponseTime": 605,
+    "responseTimes": [
+      605
+    ],
+    "lastCheck": "2025-11-29T13:36:09.782Z",
+    "uptime": 100,
+    "status": "ONLINE"
+  },
+  "config": {
+    "siteUrl": "https://properties.erposus.com",
+    "checkInterval": 30000,
+    "alertThresholds": {
+      "responseTime": 3000,
+      "uptime": 99.9
+    }
+  }
+}

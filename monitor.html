@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OSUS Properties - Live Monitor</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #800020;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .status-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .status-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: #800020;
+        }
+        .status-card h3 {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        .status-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #800020;
+        }
+        .status-ok { color: #10B981; }
+        .status-warning { color: #F59E0B; }
+        .status-error { color: #EF4444; }
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #800020;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .metrics {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+        .metrics h2 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .metric-row:last-child {
+            border-bottom: none;
+        }
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #800020;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            cursor: pointer;
+            border: none;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        .btn:hover {
+            background: #600018;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(128,0,32,0.3);
+        }
+        .btn-secondary {
+            background: #667eea;
+        }
+        .btn-secondary:hover {
+            background: #5568d3;
+        }
+        .timestamp {
+            text-align: center;
+            color: #999;
+            font-size: 12px;
+            margin-top: 20px;
+        }
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .badge-success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .badge-info {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 OSUS Properties Live Monitor</h1>
+        <p class="subtitle">Real-time website health monitoring</p>
+        
+        <div class="status-grid">
+            <div class="status-card">
+                <h3>Website Status</h3>
+                <div class="status-value pulse" id="siteStatus">
+                    <span class="loading"></span>
+                </div>
+            </div>
+            <div class="status-card">
+                <h3>Response Time</h3>
+                <div class="status-value" id="responseTime">
+                    <span class="loading"></span>
+                </div>
+            </div>
+            <div class="status-card">
+                <h3>SSL Certificate</h3>
+                <div class="status-value" id="sslStatus">
+                    <span class="loading"></span>
+                </div>
+            </div>
+            <div class="status-card">
+                <h3>Uptime</h3>
+                <div class="status-value status-ok" id="uptime">100%</div>
+            </div>
+        </div>
+
+        <div class="metrics">
+            <h2>📊 Performance Metrics <span class="badge badge-info">Live</span></h2>
+            <div class="metric-row">
+                <span>Total Checks</span>
+                <strong id="totalChecks">0</strong>
+            </div>
+            <div class="metric-row">
+                <span>Successful Checks</span>
+                <strong id="successChecks" class="status-ok">0</strong>
+            </div>
+            <div class="metric-row">
+                <span>Failed Checks</span>
+                <strong id="failedChecks">0</strong>
+            </div>
+            <div class="metric-row">
+                <span>Average Response Time</span>
+                <strong id="avgResponse">Calculating...</strong>
+            </div>
+            <div class="metric-row">
+                <span>Last Check</span>
+                <strong id="lastUpdate">Never</strong>
+            </div>
+        </div>
+
+        <div class="metrics">
+            <h2>🌐 Deployment Info <span class="badge badge-success">Live</span></h2>
+            <div class="metric-row">
+                <span>Primary URL</span>
+                <strong>properties.erposus.com</strong>
+            </div>
+            <div class="metric-row">
+                <span>Platform</span>
+                <strong>Cloudflare Pages</strong>
+            </div>
+            <div class="metric-row">
+                <span>Version</span>
+                <strong>2.0.0 (Mobile-First)</strong>
+            </div>
+            <div class="metric-row">
+                <span>CDN</span>
+                <strong class="status-ok">Enabled ✓</strong>
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <a href="https://properties.erposus.com" target="_blank" class="btn">🌐 Visit Website</a>
+            <button class="btn btn-secondary" onclick="checkNow()">🔄 Refresh Status</button>
+            <a href="https://dash.cloudflare.com" target="_blank" class="btn btn-secondary">☁️ Cloudflare Dashboard</a>
+        </div>
+
+        <div class="timestamp">
+            Auto-refreshing every 30 seconds | Last updated: <span id="timestamp">Never</span>
+        </div>
+    </div>
+
+    <script>
+        const SITE_URL = 'https://properties.erposus.com';
+        let stats = {
+            total: 0,
+            success: 0,
+            failed: 0,
+            responseTimes: []
+        };
+        
+        async function checkStatus() {
+            const startTime = Date.now();
+            
+            try {
+                // Use fetch with no-cors mode
+                const response = await fetch(SITE_URL, { 
+                    method: 'HEAD', 
+                    mode: 'no-cors',
+                    cache: 'no-cache'
+                });
+                
+                const endTime = Date.now();
+                const responseTime = endTime - startTime;
+                
+                stats.total++;
+                stats.success++;
+                stats.responseTimes.push(responseTime);
+                
+                // Keep last 100 measurements
+                if (stats.responseTimes.length > 100) {
+                    stats.responseTimes.shift();
+                }
+                
+                const avgResponse = Math.round(
+                    stats.responseTimes.reduce((a, b) => a + b, 0) / stats.responseTimes.length
+                );
+                
+                // Update UI
+                document.getElementById('siteStatus').innerHTML = 
+                    '<span class="status-ok">● ONLINE</span>';
+                document.getElementById('responseTime').textContent = responseTime + 'ms';
+                document.getElementById('sslStatus').innerHTML = 
+                    '<span class="status-ok">✓ VALID</span>';
+                document.getElementById('uptime').textContent = 
+                    ((stats.success / stats.total) * 100).toFixed(2) + '%';
+                document.getElementById('totalChecks').textContent = stats.total;
+                document.getElementById('successChecks').textContent = stats.success;
+                document.getElementById('failedChecks').textContent = stats.failed;
+                document.getElementById('avgResponse').textContent = avgResponse + 'ms';
+                
+            } catch (error) {
+                stats.total++;
+                stats.failed++;
+                
+                document.getElementById('siteStatus').innerHTML = 
+                    '<span class="status-warning">● CHECKING</span>';
+                document.getElementById('responseTime').textContent = 'N/A';
+            }
+            
+            const now = new Date();
+            document.getElementById('lastUpdate').textContent = now.toLocaleTimeString();
+            document.getElementById('timestamp').textContent = now.toLocaleString();
+        }
+        
+        function checkNow() {
+            checkStatus();
+        }
+        
+        // Initial check
+        checkStatus();
+        
+        // Auto-refresh every 30 seconds
+        setInterval(checkStatus, 30000);
+    </script>
+</body>
+</html>

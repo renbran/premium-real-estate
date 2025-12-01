@@ -18,10 +18,10 @@
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Montserrat:wght@400;600;700&family=Raleway:wght@300;400;600&display=swap" rel="stylesheet">
     
-    <!-- CDN Libraries - loaded without defer to ensure availability -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <!-- CDN Libraries - loaded at end for performance -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     
     <style>
         /* ============================================
@@ -94,86 +94,39 @@
             position: sticky;
             top: 0;
             z-index: 1000;
-            background: rgba(26, 26, 29, 0.98);
-            -webkit-backdrop-filter: blur(15px);
-            backdrop-filter: blur(15px);
-            border-bottom: 1px solid rgba(183, 110, 121, 0.3);
-            padding: 0;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            background: rgba(26, 26, 29, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(183, 110, 121, 0.2);
+            padding: var(--space-sm);
         }
 
         .header-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0.5rem 1.5rem;
-            min-height: 50px;
+            max-width: 100%;
+            padding: 0 var(--space-sm);
         }
 
         .logo {
             font-family: 'Playfair Display', serif;
-            font-size: 1.1rem;
+            font-size: var(--text-lg);
             color: var(--champagne-gold);
             text-decoration: none;
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+            gap: var(--space-xs);
             flex-shrink: 0;
-            transition: transform 0.3s ease;
-        }
-
-        .logo:hover {
-            transform: scale(1.05);
         }
 
         .logo img {
             height: 32px;
             width: auto;
-            object-fit: contain;
-            filter: drop-shadow(0 0 8px rgba(201, 176, 55, 0.6));
+            filter: drop-shadow(0 0 5px rgba(201, 176, 55, 0.6));
         }
 
         .logo-text {
-            font-weight: 700;
-            letter-spacing: 1px;
-        }
-
-        /* Nav Actions Container */
-        .nav-actions {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        /* Login Button */
-        .btn-login {
-            background: linear-gradient(135deg, var(--burgundy), var(--rose-gold));
-            color: var(--pearl-white);
-            padding: 0.4rem 1rem;
-            border-radius: 20px;
-            border: none;
-            font-weight: 600;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            box-shadow: 0 2px 8px rgba(128, 0, 32, 0.3);
-            white-space: nowrap;
-        }
-
-        .btn-login:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(128, 0, 32, 0.5);
-            background: linear-gradient(135deg, var(--rose-gold), var(--burgundy));
-        }
-
-        .btn-login:active {
-            transform: translateY(0);
+            display: none;
         }
 
         /* Mobile Menu Toggle */
@@ -190,11 +143,6 @@
             width: 40px;
             height: 40px;
             z-index: 1001;
-            transition: transform 0.3s ease;
-        }
-
-        .menu-toggle:hover {
-            transform: scale(1.1);
         }
 
         /* Mobile Navigation Menu */
@@ -239,8 +187,7 @@
             padding-left: var(--space-md);
         }
 
-        .nav-cta,
-        .nav-login {
+        .nav-cta {
             background: linear-gradient(135deg, var(--burgundy), var(--rose-gold));
             padding: var(--space-sm) var(--space-md);
             border-radius: 25px;
@@ -250,15 +197,6 @@
             font-weight: 600;
             margin-top: var(--space-md);
             cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: block;
-        }
-
-        .nav-cta:hover,
-        .nav-login:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(128, 0, 32, 0.5);
         }
 
         /* Overlay for mobile menu */
@@ -280,14 +218,12 @@
         /* ============ MOBILE HERO SECTION ============ */
         .hero {
             position: relative;
-            width: 100vw;
+            width: 100%;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            margin: 0;
-            padding: 0;
             background: linear-gradient(135deg, #1A1A1D 0%, #800020 50%, #4A1C40 100%);
         }
 
@@ -299,59 +235,25 @@
             z-index: 2;
         }
 
-        .hero-video-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            z-index: 1;
-            background: linear-gradient(135deg, #1A1A1D 0%, #800020 50%, #4A1C40 100%);
-        }
-
-        .hero-youtube-iframe {
+        .hero-video {
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 100vw;
-            height: 56.25vw; /* 16:9 aspect ratio */
-            min-height: 100vh;
-            min-width: 177.78vh; /* 100vh * 16/9 */
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
             transform: translate(-50%, -50%);
-            pointer-events: none;
-            border: none;
-        }
-
-        .hero-youtube-iframe iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
-        @media (min-aspect-ratio: 16/9) {
-            .hero-youtube-iframe {
-                width: 100%;
-                height: 56.25vw;
-                min-height: 100%;
-            }
-        }
-
-        @media (max-aspect-ratio: 16/9) {
-            .hero-youtube-iframe {
-                width: 177.78vh;
-                height: 100%;
-                min-width: 100%;
-            }
+            object-fit: cover;
+            z-index: 1;
         }
 
         .hero-content {
             position: relative;
             z-index: 3;
             text-align: center;
-            padding: 0 var(--space-md);
+            padding: var(--space-lg);
             max-width: 100%;
-            width: 100%;
         }
 
         .hero-logo-intro {
@@ -361,16 +263,6 @@
             margin-bottom: var(--space-md);
             text-shadow: 0 0 20px rgba(201, 176, 55, 0.8);
             letter-spacing: 2px;
-            overflow: hidden;
-            white-space: nowrap;
-            border-right: 3px solid var(--champagne-gold);
-            animation: blink-caret 0.75s step-end infinite;
-            display: inline-block;
-        }
-
-        @keyframes blink-caret {
-            from, to { border-color: transparent; }
-            50% { border-color: var(--champagne-gold); }
         }
 
         .hero h1 {
@@ -894,86 +786,6 @@
         /* ============================================
            TABLET BREAKPOINT (min-width: 768px)
            ============================================ */
-        /* Desktop Navigation */
-        @media (min-width: 768px) {
-            /* Hide mobile menu toggle on desktop */
-            .menu-toggle {
-                display: none;
-            }
-
-            /* Show nav horizontally on desktop */
-            nav {
-                position: static;
-                width: auto;
-                height: auto;
-                background: none;
-                backdrop-filter: none;
-                padding: 0;
-                flex-direction: row;
-                gap: 2rem;
-                transition: none;
-                border: none;
-                overflow: visible;
-            }
-
-            /* Desktop nav links */
-            nav a {
-                color: var(--warm-cream);
-                font-size: 0.9rem;
-                padding: 0;
-                border: none;
-                position: relative;
-            }
-
-            nav a::after {
-                content: '';
-                position: absolute;
-                bottom: -5px;
-                left: 0;
-                width: 0;
-                height: 2px;
-                background: var(--champagne-gold);
-                transition: width 0.3s ease;
-            }
-
-            nav a:hover::after {
-                width: 100%;
-            }
-
-            nav a:hover {
-                color: var(--champagne-gold);
-                background: none;
-                padding-left: 0;
-            }
-
-            /* Hide mobile-only nav items on desktop */
-            .nav-cta,
-            .nav-login {
-                display: none;
-            }
-
-            /* Reorganize header layout for desktop */
-            .header-content {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                gap: 3rem;
-            }
-
-            .logo {
-                flex-shrink: 0;
-            }
-
-            nav {
-                flex: 1;
-                justify-content: center;
-            }
-
-            .nav-actions {
-                flex-shrink: 0;
-            }
-        }
-
         @media (min-width: 768px) {
             :root {
                 --space-xs: 0.75rem;
@@ -1184,49 +996,28 @@
                 <img src="/static/media/images/osus-logo.png" alt="OSUS Properties Logo">
                 <span class="logo-text">OSUS PROPERTIES</span>
             </a>
-            <nav id="mobileNav">
-                <a href="#about">About</a>
+            <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">☰</button>
+            <nav id="mainNav">
                 <a href="#properties">Properties</a>
                 <a href="#services">Services</a>
                 <a href="#testimonials">Testimonials</a>
                 <a href="#contact">Contact</a>
-                <a href="https://app.erposus.com/web/login" class="nav-login" target="_blank" rel="noopener">Login</a>
                 <button class="nav-cta" onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})">Schedule Tour</button>
             </nav>
-            <div class="nav-actions">
-                <a href="https://app.erposus.com/web/login" class="btn-login" target="_blank" rel="noopener">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
-                        <polyline points="10 17 15 12 10 7"></polyline>
-                        <line x1="15" y1="12" x2="3" y2="12"></line>
-                    </svg>
-                    Login
-                </a>
-                <button class="menu-toggle" id="menuToggle" aria-label="Toggle Menu">
-                    ☰
-                </button>
-            </div>
         </div>
     </header>
 
     <!-- Hero Section -->
     <section class="hero">
-        <div class="hero-video-container">
-            <iframe 
-                id="heroYouTubeVideo"
-                src="https://www.youtube.com/embed/JPCpq4-1kBw?autoplay=1&mute=1&loop=1&playlist=JPCpq4-1kBw&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3&fs=0&disablekb=1&vq=hd1080"
-                title="OSUS Properties Background Video"
-                frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen
-                class="hero-youtube-iframe"
-                loading="eager">
-            </iframe>
-        </div>
+        <video class="hero-video" id="heroVideo" autoplay loop playsinline>
+            <source src="/static/media/videos/hero-video-1.mp4" type="video/mp4">
+            <source src="/media/videos/hero-video-1.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
         <div class="hero-content">
-            <div class="hero-logo-intro" data-text="OSUS PROPERTIES"></div>
-            <h1 class="typewriter-h1" data-text-before="Discover " data-text-luxury="Luxury" data-text-after=" Redefined"></h1>
-            <p class="typewriter-p" data-text="Experience premium real estate with cutting-edge 3D visualization and expert guidance"></p>
+            <div class="hero-logo-intro">OSUS PROPERTIES</div>
+            <h1>Discover <span>Luxury</span> Redefined</h1>
+            <p>Experience premium real estate with cutting-edge 3D visualization and expert guidance</p>
             <div class="hero-buttons">
                 <button class="btn btn-primary" onclick="document.getElementById('properties').scrollIntoView({behavior: 'smooth'})">Explore Properties</button>
                 <button class="btn btn-secondary" onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})">Schedule Consultation</button>
@@ -1267,21 +1058,21 @@
         <div class="about-visual">
             <div class="staff-carousel">
                 <div class="staff-slide active">
-                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&q=80" alt="Sarah Mitchell">
+                    <img src="/static/media/images/staff/staff-01.png" alt="Sarah Mitchell">
                     <div class="staff-info">
                         <h3>Sarah Mitchell</h3>
                         <p>Senior Agent</p>
                     </div>
                 </div>
                 <div class="staff-slide">
-                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&q=80" alt="James Wilson">
+                    <img src="/static/media/images/staff/staff-02.png" alt="James Wilson">
                     <div class="staff-info">
                         <h3>James Wilson</h3>
                         <p>Luxury Specialist</p>
                     </div>
                 </div>
                 <div class="staff-slide">
-                    <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&q=80" alt="Emma Rodriguez">
+                    <img src="/static/media/images/staff/staff-03.png" alt="Emma Rodriguez">
                     <div class="staff-info">
                         <h3>Emma Rodriguez</h3>
                         <p>Property Manager</p>
@@ -1300,7 +1091,7 @@
         <div class="properties-grid">
             <!-- Property 1 -->
             <div class="property-card">
-                <div class="property-image" style="background-image: url('https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80'); background-size: cover; background-position: center;">
+                <div class="property-image" style="background-image: url('/static/media/images/properties/property-1.jpg'); background-size: cover; background-position: center;">
                     <div class="property-badge">Featured</div>
                 </div>
                 <div class="property-info">
@@ -1327,7 +1118,7 @@
 
             <!-- Property 2 -->
             <div class="property-card">
-                <div class="property-image" style="background-image: url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80'); background-size: cover; background-position: center;">
+                <div class="property-image" style="background-image: url('/static/media/images/properties/property-2.jpg'); background-size: cover; background-position: center;">
                     <div class="property-badge">New</div>
                 </div>
                 <div class="property-info">
@@ -1354,7 +1145,7 @@
 
             <!-- Property 3 -->
             <div class="property-card">
-                <div class="property-image" style="background-image: url('https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&q=80'); background-size: cover; background-position: center;">
+                <div class="property-image" style="background-image: url('/static/media/images/properties/property-3.jpg'); background-size: cover; background-position: center;">
                     <div class="property-badge">Luxury</div>
                 </div>
                 <div class="property-info">
@@ -1445,7 +1236,7 @@
             <div class="footer-col">
                 <h3>Contact</h3>
                 <p>+1 (555) 123-4567</p>
-                <p>info@osusproperties.com</p>
+                <p><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="ea83848c85aa85999f999a98859a8f989e838f99c4898587">[email&#160;protected]</a></p>
             </div>
             <div class="footer-col">
                 <h3>Follow Us</h3>
@@ -1461,7 +1252,7 @@
         </div>
     </footer>
 
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         // Mobile menu toggle
         const menuToggle = document.getElementById('menuToggle');
         const mainNav = document.getElementById('mainNav');
@@ -1485,141 +1276,19 @@
             });
         });
 
-        // Typewriter animation for all hero text elements
-        let typewriterRunning = false;
-        function typeWriter() {
-            // Prevent multiple runs
-            if (typewriterRunning) return;
-            typewriterRunning = true;
-
-            // 1. Type logo "OSUS PROPERTIES"
-            const logoElement = document.querySelector('.hero-logo-intro');
-            if (!logoElement) return;
-            const logoText = logoElement.getAttribute('data-text');
-            let logoIndex = 0;
-            logoElement.textContent = '';
-            logoElement.style.borderRight = '3px solid var(--champagne-gold)';
-            logoElement.style.animation = 'blink-caret 0.75s step-end infinite';
-
-            function typeLogo() {
-                if (logoIndex < logoText.length) {
-                    logoElement.textContent += logoText.charAt(logoIndex);
-                    logoIndex++;
-                    setTimeout(typeLogo, 80); // 80ms per character
-                } else {
-                    // Remove cursor and start h1 after completing
-                    setTimeout(() => {
-                        logoElement.style.borderRight = 'none';
-                        logoElement.style.animation = 'none';
-                        typeH1(); // Start h1 typing
-                    }, 300);
-                }
-            }
-
-            // 2. Type h1 "Discover Luxury Redefined"
-            function typeH1() {
-                const h1Element = document.querySelector('.typewriter-h1');
-                if (!h1Element) return;
-                
-                const beforeText = h1Element.getAttribute('data-text-before') || '';
-                const luxuryText = h1Element.getAttribute('data-text-luxury') || '';
-                const afterText = h1Element.getAttribute('data-text-after') || '';
-                
-                let h1Index = 0;
-                h1Element.innerHTML = '';
-                h1Element.style.borderRight = '3px solid var(--pearl-white)';
-                h1Element.style.animation = 'blink-caret 0.75s step-end infinite';
-
-                function typeH1Char() {
-                    if (h1Index < beforeText.length) {
-                        // Type "Discover "
-                        h1Element.textContent += beforeText.charAt(h1Index);
-                    } else if (h1Index < beforeText.length + luxuryText.length) {
-                        // Type "Luxury" in span
-                        if (h1Index === beforeText.length) {
-                            const span = document.createElement('span');
-                            span.textContent = '';
-                            h1Element.appendChild(span);
-                        }
-                        const span = h1Element.querySelector('span');
-                        span.textContent += luxuryText.charAt(h1Index - beforeText.length);
-                    } else if (h1Index < beforeText.length + luxuryText.length + afterText.length) {
-                        // Type " Redefined"
-                        h1Element.appendChild(document.createTextNode(afterText.charAt(h1Index - beforeText.length - luxuryText.length)));
-                    }
-                    
-                    h1Index++;
-                    
-                    if (h1Index < beforeText.length + luxuryText.length + afterText.length) {
-                        setTimeout(typeH1Char, 70);
-                    } else {
-                        setTimeout(() => {
-                            h1Element.style.borderRight = 'none';
-                            h1Element.style.animation = 'none';
-                            typeP(); // Start paragraph typing
-                        }, 300);
-                    }
-                }
-                typeH1Char();
-            }
-
-            // 3. Type paragraph
-            function typeP() {
-                const pElement = document.querySelector('.typewriter-p');
-                if (!pElement) return;
-                
-                const pText = pElement.getAttribute('data-text') || '';
-                let pIndex = 0;
-                pElement.textContent = '';
-                pElement.style.borderRight = '2px solid var(--pearl-white)';
-                pElement.style.animation = 'blink-caret 0.75s step-end infinite';
-
-                function typePChar() {
-                    if (pIndex < pText.length) {
-                        pElement.textContent += pText.charAt(pIndex);
-                        pIndex++;
-                        setTimeout(typePChar, 40); // Faster for paragraph
-                    } else {
-                        setTimeout(() => {
-                            pElement.style.borderRight = 'none';
-                            pElement.style.animation = 'none';
-                        }, 500);
-                    }
-                }
-                typePChar();
-            }
-
-            // Start typing after a brief delay
-            setTimeout(typeLogo, 500);
+        // Video setup with 70% volume
+        const heroVideo = document.getElementById('heroVideo');
+        if (heroVideo) {
+            heroVideo.volume = 0.7;
+            heroVideo.muted = false;
+            heroVideo.load();
+            heroVideo.play().catch(err => {
+                console.log('Autoplay prevented, video will play on user interaction');
+                document.body.addEventListener('click', () => {
+                    heroVideo.play();
+                }, { once: true });
+            });
         }
-
-        // YouTube Video - Simple approach with retry
-        (function() {
-            var iframe = document.getElementById('heroYouTubeVideo');
-            var container = document.querySelector('.hero-video-container');
-            
-            if (iframe) {
-                // Force reload iframe after page load to ensure autoplay
-                window.addEventListener('load', function() {
-                    setTimeout(function() {
-                        var src = iframe.src;
-                        iframe.src = '';
-                        iframe.src = src;
-                        console.log('✓ YouTube video iframe reloaded');
-                    }, 100);
-                });
-
-                // Handle iframe load error - show gradient fallback
-                iframe.onerror = function() {
-                    console.error('YouTube iframe failed to load');
-                    if (container) {
-                        container.style.background = 'linear-gradient(135deg, #1A1A1D 0%, #800020 50%, #4A1C40 100%)';
-                    }
-                };
-
-                console.log('✓ YouTube video initialized');
-            }
-        })();
 
         // Staff carousel
         let currentSlide = 0;
@@ -1674,34 +1343,12 @@
             e.target.reset();
         });
 
-        // Hide loading screen - immediate fallback in case of issues
-        const hideLoading = () => {
-            const loadingScreen = document.getElementById('loadingScreen');
-            if (loadingScreen) {
-                loadingScreen.style.opacity = '0';
-                loadingScreen.style.transition = 'opacity 0.5s ease';
-                setTimeout(() => {
-                    loadingScreen.style.display = 'none';
-                }, 500);
-            }
-        };
-
-        // Hide loading screen on page load
-        if (document.readyState === 'loading') {
-            window.addEventListener('load', () => {
-                hideLoading();
-                setTimeout(typeWriter, 100); // Start typewriter after loading
-            });
-        } else {
-            hideLoading();
-            setTimeout(typeWriter, 100);
-        }
-
-        // Force hide after 2 seconds regardless
-        setTimeout(() => {
-            hideLoading();
-            setTimeout(typeWriter, 100);
-        }, 2000);
+        // Hide loading screen
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loadingScreen').style.display = 'none';
+            }, 1000);
+        });
 
         // Header scroll effect
         let lastScroll = 0;
@@ -1722,127 +1369,7 @@
         if ('ontouchstart' in window) {
             document.body.classList.add('touch-device');
         }
-
-        // GSAP Animations - Initialize when DOM is ready
-        function initAnimations() {
-            if (typeof gsap === 'undefined') {
-                console.log('GSAP not loaded yet, retrying...');
-                setTimeout(initAnimations, 100);
-                return;
-            }
-
-            // Register ScrollTrigger
-            if (typeof ScrollTrigger !== 'undefined') {
-                gsap.registerPlugin(ScrollTrigger);
-            }
-
-            // Hero content animation
-            gsap.from('.hero-content', {
-                duration: 1.2,
-                y: 50,
-                opacity: 0,
-                ease: 'power3.out',
-                delay: 0.3
-            });
-
-            // Animate hero buttons
-            gsap.from('.hero-buttons .btn', {
-                duration: 0.8,
-                y: 30,
-                opacity: 0,
-                stagger: 0.2,
-                ease: 'power2.out',
-                delay: 0.8
-            });
-
-            // Animate scroll indicator
-            gsap.to('.scroll-indicator', {
-                y: 10,
-                duration: 1.5,
-                repeat: -1,
-                yoyo: true,
-                ease: 'power1.inOut'
-            });
-
-            // Property cards animation with ScrollTrigger
-            if (typeof ScrollTrigger !== 'undefined') {
-                gsap.utils.toArray('.property-card').forEach((card, i) => {
-                    gsap.from(card, {
-                        scrollTrigger: {
-                            trigger: card,
-                            start: 'top 85%',
-                            toggleActions: 'play none none reverse'
-                        },
-                        duration: 0.8,
-                        y: 60,
-                        opacity: 0,
-                        ease: 'power2.out',
-                        delay: i * 0.1
-                    });
-                });
-
-                // Service cards animation
-                gsap.utils.toArray('.service-card').forEach((card, i) => {
-                    gsap.from(card, {
-                        scrollTrigger: {
-                            trigger: card,
-                            start: 'top 85%',
-                            toggleActions: 'play none none reverse'
-                        },
-                        duration: 0.8,
-                        scale: 0.9,
-                        opacity: 0,
-                        ease: 'back.out(1.2)',
-                        delay: i * 0.15
-                    });
-                });
-
-                // Section titles animation
-                gsap.utils.toArray('section h2').forEach(title => {
-                    gsap.from(title, {
-                        scrollTrigger: {
-                            trigger: title,
-                            start: 'top 85%',
-                            toggleActions: 'play none none reverse'
-                        },
-                        duration: 1,
-                        x: -50,
-                        opacity: 0,
-                        ease: 'power2.out'
-                    });
-                });
-            }
-
-            console.log('✓ GSAP animations initialized');
-        }
-
-        // Start animations when ready
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initAnimations);
-        } else {
-            initAnimations();
-        }
-
-        // Media loading error handlers with fallback
-        document.querySelectorAll('img').forEach(img => {
-            img.addEventListener('error', function() {
-                console.error('Failed to load image:', this.src);
-                
-                // Use placeholder for staff images
-                if (this.src.includes('/staff/')) {
-                    this.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="400"%3E%3Crect fill="%23800020" width="400" height="400"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" fill="%23F7E7CE" font-size="24" font-family="Arial"%3EStaff Member%3C/text%3E%3C/svg%3E';
-                    this.alt = 'Staff member photo';
-                } else {
-                    this.style.opacity = '0.3';
-                    this.style.background = 'linear-gradient(135deg, rgba(128,0,32,0.3), rgba(114,47,55,0.3))';
-                    this.alt = 'Image failed to load';
-                }
-            });
-        });
-
-        // YouTube video - no local video error handling needed
-
-        console.log('✓ Page initialization complete');
     </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a629fe7fad7f5cd',t:'MTc2NDQyNDc1Ng=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"version":"2024.11.0","token":"57606736781b436caefade71f917758c","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body>
 </html>

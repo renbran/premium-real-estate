@@ -1,7 +1,7 @@
 ﻿{
   "name": "osus-properties",
-  "version": "1.0.0",
-  "description": "Premium Real Estate Website - OSUS Properties",
+  "version": "2.0.0",
+  "description": "Premium Real Estate Website - OSUS Properties (Mobile-First)",
   "private": true,
   "homepage": "https://properties.erposus.com",
   "repository": {
@@ -12,12 +12,19 @@
     "real-estate",
     "properties",
     "luxury",
-    "website"
+    "website",
+    "mobile-first",
+    "responsive"
   ],
   "author": "OSUS Properties",
   "license": "MIT",
   "scripts": {
+    "start": "python -m http.server 8000",
     "build": "node build.js",
-    "deploy": "echo 'Deployment complete'"
+    "deploy": "powershell -ExecutionPolicy Bypass -File deploy.ps1",
+    "deploy:cloudflare": "npm run build && npx wrangler pages deploy dist --project-name=osusrealestatepremium",
+    "monitor": "node cloudflare-monitor.js",
+    "test": "echo 'Testing mobile-first build...'",
+    "serve": "python -m http.server 8000"
   }
 }

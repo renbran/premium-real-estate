@@ -329,7 +329,7 @@
             margin-bottom: 2rem;
             font-weight: 300;
             letter-spacing: 1px;
-            animation: slideInParagraph 2s cubic-bezier(0.34, 1.56, 0.64, 1) 5.3s both;
+            animation: slideInParagraph 2s cubic-bezier(0.34, 1.56, 0.64, 1) 3.8s both;
             opacity: 0;
         }
 
@@ -351,7 +351,7 @@
             gap: 1.5rem;
             justify-content: center;
             flex-wrap: wrap;
-            animation: fadeInUp 1s ease-out 7.3s both;
+            animation: fadeInUp 1s ease-out 5.2s both;
         }
 
         .btn {
@@ -366,7 +366,7 @@
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
-            animation: buttonPulse 3s ease-in-out 7.3s infinite;
+            animation: buttonPulse 3s ease-in-out 5.2s infinite;
         }
 
         @keyframes buttonPulse {
@@ -1801,7 +1801,7 @@
     <!-- Loading Screen (Hidden if embedded) -->
     <div class="loading-screen" id="loadingScreen" style="display: none;">
         <div class="loader">
-            <img src="/static/media/images/osus-logo.png" alt="OSUS Properties" />
+            <img src="/media/images/osus-logo.png" alt="OSUS Properties" />
             <div class="loader-text">LOADING...</div>
         </div>
     </div>
@@ -1810,7 +1810,7 @@
     <header id="osuHeader" style="display: block;">
         <div class="header-content">
             <div class="logo">
-                <img src="/static/media/images/osus-logo.png" alt="OSUS Properties Logo">
+                <img src="/media/images/osus-logo.png" alt="OSUS Properties Logo">
                 <span>OSUS PROPERTIES</span>
             </div>
             <nav>
@@ -1826,13 +1826,18 @@
     <!-- Hero Section -->
     <div class="hero">
         <video class="hero-video" id="heroVideo" autoplay loop playsinline>
-            <source src="/static/media/videos/hero-video-1.mp4" type="video/mp4">
             <source src="/media/videos/hero-video-1.mp4" type="video/mp4">
+            <source src="/static/media/videos/hero-video-1.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
         <video class="hero-video" id="heroVideo2" loop playsinline style="display: none;">
-            <source src="/static/media/videos/hero-video-2.mp4" type="video/mp4">
             <source src="/media/videos/hero-video-2.mp4" type="video/mp4">
+            <source src="/static/media/videos/hero-video-2.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <video class="hero-video" id="heroVideo3" loop playsinline style="display: none;">
+            <source src="/media/videos/hero-video-3.mp4" type="video/mp4">
+            <source src="/static/media/videos/hero-video-3.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
         <div id="particles-js"></div>
@@ -1886,7 +1891,7 @@
                 <div class="staff-carousel">
                     <!-- Staff Member 1 -->
                     <div class="staff-slide fade">
-                        <img src="/static/media/images/staff/staff-01.png" alt="Staff Member 1">
+                        <img src="/media/images/staff/staff-01.png" alt="Staff Member 1">
                         <div class="staff-info">
                             <h3>Sarah Mitchell</h3>
                             <p>Senior Agent</p>
@@ -1894,7 +1899,7 @@
                     </div>
                     <!-- Staff Member 2 -->
                     <div class="staff-slide fade">
-                        <img src="/static/media/images/staff/staff-02.png" alt="Staff Member 2">
+                        <img src="/media/images/staff/staff-02.png" alt="Staff Member 2">
                         <div class="staff-info">
                             <h3>James Wilson</h3>
                             <p>Luxury Specialist</p>
@@ -1902,7 +1907,7 @@
                     </div>
                     <!-- Staff Member 3 -->
                     <div class="staff-slide fade">
-                        <img src="/static/media/images/staff/staff-03.png" alt="Staff Member 3">
+                        <img src="/media/images/staff/staff-03.png" alt="Staff Member 3">
                         <div class="staff-info">
                             <h3>Emma Rodriguez</h3>
                             <p>Property Manager</p>
@@ -1910,7 +1915,7 @@
                     </div>
                     <!-- Staff Member 4 -->
                     <div class="staff-slide fade">
-                        <img src="/static/media/images/staff/staff-04.png" alt="Staff Member 4">
+                        <img src="/media/images/staff/staff-04.png" alt="Staff Member 4">
                         <div class="staff-info">
                             <h3>Marcus Thompson</h3>
                             <p>Investment Advisor</p>
@@ -1918,7 +1923,7 @@
                     </div>
                     <!-- Staff Member 5 -->
                     <div class="staff-slide fade">
-                        <img src="/static/media/images/staff/staff-05.png" alt="Staff Member 5">
+                        <img src="/media/images/staff/staff-05.png" alt="Staff Member 5">
                         <div class="staff-info">
                             <h3>Victoria Chen</h3>
                             <p>Market Analyst</p>
@@ -1926,7 +1931,7 @@
                     </div>
                     <!-- Staff Member 6 -->
                     <div class="staff-slide fade">
-                        <img src="/static/media/images/staff/staff-06.png" alt="Staff Member 6">
+                        <img src="/media/images/staff/staff-06.png" alt="Staff Member 6">
                         <div class="staff-info">
                             <h3>David Martinez</h3>
                             <p>Legal Consultant</p>
@@ -1934,7 +1939,7 @@
                     </div>
                     <!-- Staff Member 7 -->
                     <div class="staff-slide fade">
-                        <img src="/static/media/images/staff/staff-07.png" alt="Staff Member 7">
+                        <img src="/media/images/staff/staff-07.png" alt="Staff Member 7">
                         <div class="staff-info">
                             <h3>Jennifer Adams</h3>
                             <p>Client Relations</p>
@@ -1942,7 +1947,7 @@
                     </div>
                     <!-- Staff Member 8 -->
                     <div class="staff-slide fade">
-                        <img src="/static/media/images/staff/staff-08.png" alt="Staff Member 8">
+                        <img src="/media/images/staff/staff-08.png" alt="Staff Member 8">
                         <div class="staff-info">
                             <h3>Robert Kelly</h3>
                             <p>Operations Lead</p>
@@ -1950,7 +1955,7 @@
                     </div>
                     <!-- Staff Member 9 -->
                     <div class="staff-slide fade">
-                        <img src="/static/media/images/staff/staff-09.png" alt="Staff Member 9">
+                        <img src="/media/images/staff/staff-09.png" alt="Staff Member 9">
                         <div class="staff-info">
                             <h3>Amanda Brooks</h3>
                             <p>Marketing Director</p>
@@ -1958,7 +1963,7 @@
                     </div>
                     <!-- Staff Member 10 -->
                     <div class="staff-slide fade">
-                        <img src="/static/media/images/staff/staff-10.png" alt="Staff Member 10">
+                        <img src="/media/images/staff/staff-10.png" alt="Staff Member 10">
                         <div class="staff-info">
                             <h3>Christopher Lee</h3>
                             <p>Senior Developer</p>
@@ -1966,7 +1971,7 @@
                     </div>
                     <!-- Staff Member 11 -->
                     <div class="staff-slide fade">
-                        <img src="/static/media/images/staff/staff-11.png" alt="Staff Member 11">
+                        <img src="/media/images/staff/staff-11.png" alt="Staff Member 11">
                         <div class="staff-info">
                             <h3>Michelle White</h3>
                             <p>HR Manager</p>
@@ -1974,7 +1979,7 @@
                     </div>
                     <!-- Staff Member 12 -->
                     <div class="staff-slide fade">
-                        <img src="/static/media/images/staff/staff-12.png" alt="Staff Member 12">
+                        <img src="/media/images/staff/staff-12.png" alt="Staff Member 12">
                         <div class="staff-info">
                             <h3>Thomas Anderson</h3>
                             <p>Finance Lead</p>
@@ -1982,7 +1987,7 @@
                     </div>
                     <!-- Staff Member 13 -->
                     <div class="staff-slide fade">
-                        <img src="/static/media/images/staff/staff-13.png" alt="Staff Member 13">
+                        <img src="/media/images/staff/staff-13.png" alt="Staff Member 13">
                         <div class="staff-info">
                             <h3>Rebecca Turner</h3>
                             <p>Design Specialist</p>
@@ -1990,7 +1995,7 @@
                     </div>
                     <!-- Staff Member 14 -->
                     <div class="staff-slide fade">
-                        <img src="/static/media/images/staff/staff-14.png" alt="Staff Member 14">
+                        <img src="/media/images/staff/staff-14.png" alt="Staff Member 14">
                         <div class="staff-info">
                             <h3>Kevin Garcia</h3>
                             <p>Sales Manager</p>
@@ -1998,7 +2003,7 @@
                     </div>
                     <!-- Staff Member 15 -->
                     <div class="staff-slide fade">
-                        <img src="/static/media/images/staff/staff-15.png" alt="Staff Member 15">
+                        <img src="/media/images/staff/staff-15.png" alt="Staff Member 15">
                         <div class="staff-info">
                             <h3>Lisa Johnson</h3>
                             <p>Support Specialist</p>
@@ -2006,7 +2011,7 @@
                     </div>
                     <!-- Staff Member 16 -->
                     <div class="staff-slide fade">
-                        <img src="/static/media/images/staff/staff-16.png" alt="Staff Member 16">
+                        <img src="/media/images/staff/staff-16.png" alt="Staff Member 16">
                         <div class="staff-info">
                             <h3>Michael Price</h3>
                             <p>Quality Assurance</p>
@@ -2014,7 +2019,7 @@
                     </div>
                     <!-- Staff Member 17 -->
                     <div class="staff-slide fade">
-                        <img src="/static/media/images/staff/staff-17.png" alt="Staff Member 17">
+                        <img src="/media/images/staff/staff-17.png" alt="Staff Member 17">
                         <div class="staff-info">
                             <h3>Sandra Lopez</h3>
                             <p>Content Creator</p>
@@ -2022,7 +2027,7 @@
                     </div>
                     <!-- Staff Member 18 -->
                     <div class="staff-slide fade">
-                        <img src="/static/media/images/staff/staff-18.png" alt="Staff Member 18">
+                        <img src="/media/images/staff/staff-18.png" alt="Staff Member 18">
                         <div class="staff-info">
                             <h3>Daniel Harris</h3>
                             <p>SEO Specialist</p>
@@ -2030,7 +2035,7 @@
                     </div>
                     <!-- Staff Member 19 -->
                     <div class="staff-slide fade">
-                        <img src="/static/media/images/staff/staff-19.png" alt="Staff Member 19">
+                        <img src="/media/images/staff/staff-19.png" alt="Staff Member 19">
                         <div class="staff-info">
                             <h3>Jessica Powell</h3>
                             <p>Event Manager</p>
@@ -2052,7 +2057,7 @@
         <div class="properties-grid">
             <!-- Property 1 -->
             <div class="property-card">
-                <div class="property-image" style="background-image: url('/static/media/images/properties/property-1.jpg'); background-size: cover; background-position: center;">
+                <div class="property-image" style="background-image: url('/media/images/properties/property-1.jpg'); background-size: cover; background-position: center;">
                     <div class="property-badge">Featured</div>
                 </div>
                 <div class="property-info">
@@ -2073,13 +2078,13 @@
                         </div>
                     </div>
                     <div class="property-price">$8.5M</div>
-                    <button class="property-cta">View Details</button>
+                    <a href="detail_properties_animated.html?id=110" class="property-cta">View Details</a>
                 </div>
             </div>
 
             <!-- Property 2 -->
             <div class="property-card">
-                <div class="property-image" style="background-image: url('/static/media/images/properties/property-2.jpg'); background-size: cover; background-position: center;">
+                <div class="property-image" style="background-image: url('/media/images/properties/property-2.jpg'); background-size: cover; background-position: center;">
                     <div class="property-badge">New</div>
                 </div>
                 <div class="property-info">
@@ -2100,13 +2105,13 @@
                         </div>
                     </div>
                     <div class="property-price">$6.2M</div>
-                    <button class="property-cta">View Details</button>
+                    <a href="detail_properties_animated.html?id=108" class="property-cta">View Details</a>
                 </div>
             </div>
 
             <!-- Property 3 -->
             <div class="property-card">
-                <div class="property-image" style="background-image: url('/static/media/images/properties/property-3.jpg'); background-size: cover; background-position: center;">
+                <div class="property-image" style="background-image: url('/media/images/properties/property-3.jpg'); background-size: cover; background-position: center;">
                     <div class="property-badge">Luxury</div>
                 </div>
                 <div class="property-info">
@@ -2127,13 +2132,13 @@
                         </div>
                     </div>
                     <div class="property-price">$12.8M</div>
-                    <button class="property-cta">View Details</button>
+                    <a href="detail_properties_animated.html?id=105" class="property-cta">View Details</a>
                 </div>
             </div>
 
             <!-- Property 4 -->
             <div class="property-card">
-                <div class="property-image" style="background-image: url('/static/media/images/properties/property-4.jpg'); background-size: cover; background-position: center;">
+                <div class="property-image" style="background-image: url('/media/images/properties/property-4.jpg'); background-size: cover; background-position: center;">
                     <div class="property-badge">Premium</div>
                 </div>
                 <div class="property-info">
@@ -2154,13 +2159,13 @@
                         </div>
                     </div>
                     <div class="property-price">$15.25M</div>
-                    <button class="property-cta">View Details</button>
+                    <a href="detail_properties_animated.html?id=112" class="property-cta">View Details</a>
                 </div>
             </div>
 
             <!-- Property 5 -->
             <div class="property-card">
-                <div class="property-image" style="background-image: url('/static/media/images/properties/property-5.jpg'); background-size: cover; background-position: center;">
+                <div class="property-image" style="background-image: url('/media/images/properties/property-5.jpg'); background-size: cover; background-position: center;">
                     <div class="property-badge">Exclusive</div>
                 </div>
                 <div class="property-info">
@@ -2181,13 +2186,13 @@
                         </div>
                     </div>
                     <div class="property-price">$9.75M</div>
-                    <button class="property-cta">View Details</button>
+                    <a href="detail_properties_animated.html?id=115" class="property-cta">View Details</a>
                 </div>
             </div>
 
             <!-- Property 6 -->
             <div class="property-card">
-                <div class="property-image" style="background-image: url('/static/media/images/properties/property-6.jpg'); background-size: cover; background-position: center;">
+                <div class="property-image" style="background-image: url('/media/images/properties/property-6.jpg'); background-size: cover; background-position: center;">
                     <div class="property-badge">Historic</div>
                 </div>
                 <div class="property-info">
@@ -2208,7 +2213,7 @@
                         </div>
                     </div>
                     <div class="property-price">$7.45M</div>
-                    <button class="property-cta">View Details</button>
+                    <a href="detail_properties_animated.html?id=76" class="property-cta">View Details</a>
                 </div>
             </div>
         </div>
@@ -2456,66 +2461,96 @@
             initializeEmbedMode();
         }
 
-        // Continuous dual video playback with audio
+        // Video playback setup with error handling
         const heroVideo1 = document.getElementById('heroVideo');
         const heroVideo2 = document.getElementById('heroVideo2');
+        const heroVideo3 = document.getElementById('heroVideo3');
         let currentVideoIndex = 1;
 
+        // Set video volume to 70%
+        if (heroVideo1) {
+            heroVideo1.volume = 0.7;
+            heroVideo1.muted = false;
+        }
+        if (heroVideo2) {
+            heroVideo2.volume = 0.7;
+            heroVideo2.muted = false;
+        }
+        if (heroVideo3) {
+            heroVideo3.volume = 0.7;
+            heroVideo3.muted = false;
+        }
+
         function setupContinuousPlayback() {
-            if (heroVideo1 && heroVideo2) {
-                // Set volume to 100%
-                heroVideo1.volume = 1.0;
-                heroVideo2.volume = 1.0;
-                heroVideo1.muted = false;
-                heroVideo2.muted = false;
-                
-                // Play first video
+            if (heroVideo1 && heroVideo2 && heroVideo3) {
+                // Start with first video
                 heroVideo1.style.display = 'block';
                 heroVideo2.style.display = 'none';
-                heroVideo1.play().catch(() => {
-                    console.log('Autoplay prevented by browser policy');
-                });
+                heroVideo3.style.display = 'none';
                 
+                // Force video to load and play
+                heroVideo1.load();
+                heroVideo1.play().then(() => {
+                    console.log('Video 1 playing successfully');
+                }).catch((error) => {
+                    console.log('Autoplay prevented, attempting to play on user interaction:', error);
+                    // Try to play on user interaction
+                    document.body.addEventListener('click', () => {
+                        heroVideo1.play();
+                    }, { once: true });
+                });
+
                 // When first video ends, play second video
                 heroVideo1.addEventListener('ended', () => {
                     heroVideo1.style.display = 'none';
                     heroVideo2.style.display = 'block';
                     heroVideo2.currentTime = 0;
-                    heroVideo2.volume = 1.0;
-                    heroVideo2.muted = false;
-                    heroVideo2.play();
+                    heroVideo2.load();
+                    heroVideo2.play().catch(e => console.log('Video 2 play error:', e));
                     currentVideoIndex = 2;
                 });
-                
-                // When second video ends, loop back to first
+
+                // When second video ends, play third video
                 heroVideo2.addEventListener('ended', () => {
                     heroVideo2.style.display = 'none';
+                    heroVideo3.style.display = 'block';
+                    heroVideo3.currentTime = 0;
+                    heroVideo3.load();
+                    heroVideo3.play().catch(e => console.log('Video 3 play error:', e));
+                    currentVideoIndex = 3;
+                });
+
+                // When third video ends, loop back to first
+                heroVideo3.addEventListener('ended', () => {
+                    heroVideo3.style.display = 'none';
                     heroVideo1.style.display = 'block';
                     heroVideo1.currentTime = 0;
-                    heroVideo1.volume = 1.0;
-                    heroVideo1.muted = false;
-                    heroVideo1.play();
+                    heroVideo1.load();
+                    heroVideo1.play().catch(e => console.log('Video 1 loop play error:', e));
                     currentVideoIndex = 1;
                 });
-                
+
                 // Resume on user interaction for browsers blocking autoplay
                 document.addEventListener('click', () => {
-                    const activeVideo = currentVideoIndex === 1 ? heroVideo1 : heroVideo2;
-                    if (activeVideo.paused) {
-                        activeVideo.muted = false;
-                        activeVideo.volume = 1.0;
+                    let activeVideo;
+                    if (currentVideoIndex === 1) activeVideo = heroVideo1;
+                    else if (currentVideoIndex === 2) activeVideo = heroVideo2;
+                    else activeVideo = heroVideo3;
+                    
+                    if (activeVideo && activeVideo.paused) {
                         activeVideo.play();
                     }
                 }, { once: true });
             }
         }
-        
+
         // Initialize on load
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', setupContinuousPlayback);
         } else {
             setupContinuousPlayback();
         }
+
         // Initialize Particles.js
         particlesJS("particles-js", {
             particles: {
@@ -2583,21 +2618,8 @@
             });
         });
 
-        // Animate big stats
-        gsap.utils.toArray('[data-target]').forEach(element => {
-            const targetValue = parseInt(element.dataset.target);
-            gsap.to(element, {
-                textContent: targetValue,
-                duration: 3,
-                ease: "power1.inOut",
-                snap: { textContent: 1000 },
-                scrollTrigger: {
-                    trigger: element,
-                    start: "top center",
-                    once: true
-                }
-            });
-        });
+        // Animate big stats - Using IntersectionObserver (see statsObserver below)
+        // Removed GSAP animation to avoid conflicts
 
         // Scroll animations for cards
         gsap.utils.toArray('.property-card').forEach((card, index) => {
@@ -2657,8 +2679,11 @@
         function animateCounter(element, target, duration = 2500) {
             const startValue = 0;
             const startTime = Date.now();
+            let isAnimating = true;
 
             function updateCounter() {
+                if (!isAnimating) return;
+                
                 const elapsed = Date.now() - startTime;
                 const progress = Math.min(elapsed / duration, 1);
                 
@@ -2674,6 +2699,7 @@
                     requestAnimationFrame(updateCounter);
                 } else {
                     element.textContent = formatNumber(target);
+                    isAnimating = false;
                 }
             }
 
@@ -2681,11 +2707,12 @@
         }
 
         // Trigger animation when stats section comes into view
+        let statsAnimated = false;
         const statsObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting && !entry.target.classList.contains('animated')) {
-                    entry.target.classList.add('animated');
-                    const statNumbers = entry.target.querySelectorAll('.stat-big-number[data-target]');
+                if (entry.isIntersecting && !statsAnimated) {
+                    statsAnimated = true;
+                    const statNumbers = document.querySelectorAll('.stat-big-number[data-target]');
                     statNumbers.forEach((element) => {
                         const target = parseInt(element.getAttribute('data-target'));
                         animateCounter(element, target, 2500);
@@ -2899,17 +2926,8 @@
             document.body.style.overflow = 'auto';
         }
 
-        // Event listeners for property cards
-        const propertyCards = document.querySelectorAll('.property-card');
-        propertyCards.forEach((card, index) => {
-            const btn = card.querySelector('.property-cta');
-            if (btn) {
-                btn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    openPropertyDetail(index);
-                });
-            }
-        });
+        // Event listeners for property cards - DISABLED to allow link navigation
+        // Links now navigate directly to detail_properties_animated.html
         
         // Close button
         const closeBtn = document.querySelector('.modal-close');

@@ -1,2 +1,12 @@
 ﻿# Cloudflare Pages Routing
+
+# Redirect root domain to properties subdomain
+https://erposus.com/*  https://properties.erposus.com/:splat  301
+http://erposus.com/*  https://properties.erposus.com/:splat  301
+
+# Redirect www to properties subdomain
+https://www.erposus.com/*  https://properties.erposus.com/:splat  301
+http://www.erposus.com/*  https://properties.erposus.com/:splat  301
+
+# SPA fallback
 /*  /index.html  200

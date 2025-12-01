@@ -33,8 +33,8 @@ function copyDir(src, dest) {
   });
 }
 
-// Copy static/media directory
-copyDir('static/media', 'dist/media');
+// Copy static directory (preserving structure)
+copyDir('static', 'dist/static');
 console.log('✓ Copied static/media');
 
 console.log('\n✨ Build complete! All files ready in dist/');
