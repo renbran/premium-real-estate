@@ -1636,7 +1636,7 @@
         heroVideos.forEach((video, index) => {
             if (video) {
                 video.volume = targetVolume;
-                video.muted = false; // Start with audio enabled
+                video.muted = true; // Start muted for autoplay compatibility
                 
                 // When a video ends, play the next one
                 video.addEventListener('ended', function() {
@@ -1653,22 +1653,23 @@
         // Start playing the first video
         function startVideoCarousel() {
             if (heroVideos[0]) {
-                // Try to play with audio first
+                isMuted = true; // Start muted
+                
+                // Start video muted (autoplay requirement)
                 heroVideos[0].play().then(() => {
-                    console.log('✓ Hero video carousel started with audio');
-                    // Update mute button to show unmuted state
-                    document.querySelector('.icon-muted').style.display = 'none';
-                    document.querySelector('.icon-unmuted').style.display = 'block';
+                    console.log('✓ Hero video carousel started (muted for autoplay)');
+                    
+                    // Try to unmute immediately after playback starts
+                    setTimeout(() => {
+                        heroVideos[0].muted = false;
+                        isMuted = false;
+                        document.querySelector('.icon-muted').style.display = 'none';
+                        document.querySelector('.icon-unmuted').style.display = 'block';
+                        console.log('✓ Audio unmuted successfully');
+                    }, 100);
+                    
                 }).catch(err => {
-                    // If autoplay with audio fails, try muted
-                    console.log('Autoplay with audio prevented, trying muted:', err);
-                    heroVideos[0].muted = true;
-                    isMuted = true;
-                    heroVideos[0].play().then(() => {
-                        console.log('✓ Video started muted (autoplay restriction)');
-                    }).catch(err2 => {
-                        console.log('Video play error:', err2);
-                    });
+                    console.log('Video play error:', err);
                 });
             }
         }
@@ -1684,6 +1685,7 @@
             // Fade in and play next video
             const nextVideo = heroVideos[currentVideoIndex];
             nextVideo.currentTime = 0;
+            nextVideo.muted = isMuted; // Preserve mute state
             nextVideo.classList.add('active');
             nextVideo.play().catch(err => {
                 console.log('Video play error:', err);
