@@ -1,15 +1,9 @@
 ﻿# Cloudflare Pages Routing
 
-# IMPORTANT: Keep /web path accessible (don't redirect login)
-# This must come BEFORE the catch-all redirects
-
-# Redirect root domain to properties subdomain (except /web paths)
-https://erposus.com/  https://properties.erposus.com/  301
-http://erposus.com/  https://properties.erposus.com/  301
-
-# Redirect www to properties subdomain
-https://www.erposus.com/*  https://properties.erposus.com/:splat  301
-http://www.erposus.com/*  https://properties.erposus.com/:splat  301
+# Redirect only root domain to properties subdomain
+# This allows erposus.com/web and other paths to work normally
+https://erposus.com  https://properties.erposus.com  301
+http://erposus.com  https://properties.erposus.com  301
 
 # SPA fallback (only for this site's pages)
 /*  /index.html  200
