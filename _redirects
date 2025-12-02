@@ -1,5 +1,9 @@
 ﻿# Cloudflare Pages Routing
 
+# Redirect old properties subdomain to new realestate subdomain
+https://properties.erposus.com/*  https://realestate.erposus.com/:splat  301
+http://properties.erposus.com/*  https://realestate.erposus.com/:splat  301
+
 # Redirect only root domain to realestate subdomain
 # This allows erposus.com/web and other paths to work normally
 https://erposus.com  https://realestate.erposus.com  301
