@@ -21,10 +21,19 @@
   "scripts": {
     "start": "python -m http.server 8000",
     "build": "node build.js",
-    "deploy": "powershell -ExecutionPolicy Bypass -File deploy.ps1",
-    "deploy:cloudflare": "npm run build && npx wrangler pages deploy dist --project-name=osusrealestatepremium",
+    "verify": "node verify-build.js",
+    "status": "node status.js",
+    "prebuild": "echo Building OSUS Properties...",
+    "postbuild": "npm run verify",
+    "deploy": "npm run build && npm run deploy:cloudflare",
+    "deploy:cloudflare": "npx wrangler pages deploy dist --project-name=osusrealestatepremium --branch=main",
+    "deploy:check": "npx wrangler pages deployment list --project-name=osusrealestatepremium",
+    "domain:setup": "powershell -ExecutionPolicy Bypass -File setup-domain.ps1",
+    "domain:list": "npx wrangler pages project list",
     "monitor": "node cloudflare-monitor.js",
-    "test": "echo 'Testing mobile-first build...'",
-    "serve": "python -m http.server 8000"
+    "test": "npm run build && npm run verify",
+    "serve": "python -m http.server 8000",
+    "clean": "node -e \"const fs=require('fs');if(fs.existsSync('dist'))fs.rmSync('dist',{recursive:true,force:true});console.log('Cleaned dist directory')\"",
+    "help": "echo Available commands: && echo   npm start - Start dev server && echo   npm run build - Build project && echo   npm run deploy - Deploy to Cloudflare && echo   npm run domain:setup - Setup custom domain && echo   npm run status - Check deployment status && echo   npm run verify - Verify build && echo   npm test - Build and verify"
   }
 }

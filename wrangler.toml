@@ -1,15 +1,9 @@
 name = "osusrealestatepremium"
-compatibility_date = "2025-11-28"
+compatibility_date = "2025-12-02"
 
-[build]
-command = "npm run build"
-cwd = "./"
+# Pages configuration
+pages_build_output_dir = "dist"
 
-[env.production]
-routes = [
-  { pattern = "properties.erposus.com", zone_name = "erposus.com" },
-  { pattern = "properties.erposus.com/*", zone_name = "erposus.com" }
-]
-
-[pages]
-build_output_directory = "dist"
+# Custom domains (configure in Cloudflare dashboard)
+# Production: https://properties.erposus.com
+# Preview: https://osusrealestatepremium.pages.dev
