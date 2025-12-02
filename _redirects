@@ -1,9 +1,9 @@
 ﻿# Cloudflare Pages Routing
 
-# Redirect only root domain to properties subdomain
+# Redirect only root domain to realestate subdomain
 # This allows erposus.com/web and other paths to work normally
-https://erposus.com  https://properties.erposus.com  301
-http://erposus.com  https://properties.erposus.com  301
+https://erposus.com  https://realestate.erposus.com  301
+http://erposus.com  https://realestate.erposus.com  301
 
 # SPA fallback (only for this site's pages)
 /*  /index.html  200
