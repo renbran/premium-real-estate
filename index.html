@@ -77,6 +77,10 @@
             font-size: 16px;
             scroll-behavior: smooth;
             -webkit-text-size-adjust: 100%;
+            overflow-x: hidden;
+            width: 100%;
+            margin: 0;
+            padding: 0;
         }
 
         body {
@@ -87,6 +91,9 @@
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            width: 100%;
+            margin: 0;
+            padding: 0;
         }
 
         /* ============ MOBILE NAVIGATION ============ */
@@ -280,13 +287,13 @@
         /* ============ MOBILE HERO SECTION ============ */
         .hero {
             position: relative;
-            width: 100vw;
+            width: 100%;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            margin: 0;
+            margin: 0 auto;
             padding: 0;
             background: linear-gradient(135deg, #1A1A1D 0%, #800020 50%, #4A1C40 100%);
         }
@@ -303,6 +310,8 @@
             position: absolute;
             top: 0;
             left: 0;
+            right: 0;
+            bottom: 0;
             width: 100%;
             height: 100%;
             overflow: hidden;
@@ -310,39 +319,74 @@
             background: linear-gradient(135deg, #1A1A1D 0%, #800020 50%, #4A1C40 100%);
         }
 
-        .hero-youtube-iframe {
+        .hero-video {
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 100vw;
-            height: 56.25vw; /* 16:9 aspect ratio */
-            min-height: 100vh;
-            min-width: 177.78vh; /* 100vh * 16/9 */
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-            border: none;
-        }
-
-        .hero-youtube-iframe iframe {
             width: 100%;
             height: 100%;
-            border: none;
+            transform: translate(-50%, -50%);
+            object-fit: cover;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
         }
 
+        .hero-video.active {
+            opacity: 1;
+        }
+
+        /* Ensure video covers entire viewport on all aspect ratios */
         @media (min-aspect-ratio: 16/9) {
-            .hero-youtube-iframe {
-                width: 100%;
+            .hero-video {
+                width: 100vw;
                 height: 56.25vw;
-                min-height: 100%;
+                min-height: 100vh;
             }
         }
 
         @media (max-aspect-ratio: 16/9) {
-            .hero-youtube-iframe {
+            .hero-video {
                 width: 177.78vh;
-                height: 100%;
-                min-width: 100%;
+                height: 100vh;
+                min-width: 100vw;
             }
+        }
+
+        /* Mute toggle button */
+        .video-mute-toggle {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            z-index: 10;
+            background: rgba(128, 0, 32, 0.9);
+            border: 2px solid var(--champagne-gold);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--champagne-gold);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            pointer-events: auto;
+        }
+
+        .video-mute-toggle:hover {
+            background: rgba(183, 110, 121, 0.95);
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(201, 176, 55, 0.6);
+        }
+
+        .video-mute-toggle:active {
+            transform: scale(0.95);
+        }
+
+        .video-mute-toggle svg {
+            filter: drop-shadow(0 0 4px rgba(201, 176, 55, 0.5));
         }
 
         .hero-content {
@@ -461,6 +505,44 @@
         @keyframes bounce {
             0%, 100% { transform: translateX(-50%) translateY(0); }
             50% { transform: translateX(-50%) translateY(10px); }
+        }
+
+        /* Video Mute Toggle Button */
+        .video-mute-toggle {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            z-index: 10;
+            background: rgba(128, 0, 32, 0.9);
+            border: 2px solid var(--champagne-gold);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .video-mute-toggle:hover {
+            background: var(--burgundy);
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(128, 0, 32, 0.7);
+        }
+
+        .video-mute-toggle svg {
+            stroke: var(--champagne-gold);
+        }
+
+        @media (max-width: 768px) {
+            .video-mute-toggle {
+                width: 40px;
+                height: 40px;
+                bottom: 15px;
+                right: 15px;
+            }
         }
 
         /* ============ MOBILE SECTIONS ============ */
@@ -1135,7 +1217,7 @@
     <!-- Header -->
     <header id="mainHeader">
         <div class="header-content">
-            <a href="#" class="logo">
+            <a href="#hero" class="logo" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">
                 <img src="/static/media/images/osus-logo.png" alt="OSUS Properties Logo">
                 <span class="logo-text">OSUS PROPERTIES</span>
             </a>
@@ -1145,11 +1227,11 @@
                 <a href="#services">Services</a>
                 <a href="#testimonials">Testimonials</a>
                 <a href="#contact">Contact</a>
-                <a href="https://app.erposus.com/web/login" class="nav-login" target="_blank" rel="noopener">Login</a>
+                <a href="https://erposus.com/web/login" class="nav-login" target="_blank" rel="noopener">Login</a>
                 <button class="nav-cta" onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})">Schedule Tour</button>
             </nav>
             <div class="nav-actions">
-                <a href="https://app.erposus.com/web/login" class="btn-login" target="_blank" rel="noopener">
+                <a href="https://erposus.com/web/login" class="btn-login" target="_blank" rel="noopener">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
                         <polyline points="10 17 15 12 10 7"></polyline>
@@ -1167,21 +1249,31 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero-video-container">
-            <iframe 
-                id="heroYouTubeVideo"
-                src="https://www.youtube.com/embed/JPCpq4-1kBw?autoplay=1&mute=1&loop=1&playlist=JPCpq4-1kBw&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3&fs=0&disablekb=1&vq=hd1080"
-                title="OSUS Properties Background Video"
-                frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen
-                class="hero-youtube-iframe"
-                loading="eager">
-            </iframe>
+            <video class="hero-video active" id="heroVideo1" preload="auto" playsinline>
+                <source src="static/media/videos/hero-video-1.mp4" type="video/mp4">
+            </video>
+            <video class="hero-video" id="heroVideo2" preload="auto" playsinline>
+                <source src="static/media/videos/hero-video-2.mp4" type="video/mp4">
+            </video>
+            <video class="hero-video" id="heroVideo3" preload="auto" playsinline>
+                <source src="static/media/videos/hero-video-3.mp4" type="video/mp4">
+            </video>
+            <button class="video-mute-toggle" id="muteToggle" aria-label="Toggle audio">
+                <svg class="icon-muted" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                    <line x1="23" y1="9" x2="17" y2="15"></line>
+                    <line x1="17" y1="9" x2="23" y2="15"></line>
+                </svg>
+                <svg class="icon-unmuted" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                </svg>
+            </button>
         </div>
         <div class="hero-content">
             <div class="hero-logo-intro" data-text="OSUS PROPERTIES"></div>
             <h1 class="typewriter-h1" data-text-before="Discover " data-text-luxury="Luxury" data-text-after=" Redefined"></h1>
-            <p class="typewriter-p" data-text="Experience premium real estate with cutting-edge 3D visualization and expert guidance"></p>
+            <p class="typewriter-p" data-text="Transforming dreams into reality through innovative property solutions, exceptional service, and unwavering commitment to your success"></p>
             <div class="hero-buttons">
                 <button class="btn btn-primary" onclick="document.getElementById('properties').scrollIntoView({behavior: 'smooth'})">Explore Properties</button>
                 <button class="btn btn-secondary" onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})">Schedule Consultation</button>
@@ -1529,33 +1621,100 @@
             setTimeout(typeLogo, 500);
         }
 
-        // YouTube Video - Simple approach with retry
-        (function() {
-            var iframe = document.getElementById('heroYouTubeVideo');
-            var container = document.querySelector('.hero-video-container');
-            
-            if (iframe) {
-                // Force reload iframe after page load to ensure autoplay
-                window.addEventListener('load', function() {
-                    setTimeout(function() {
-                        var src = iframe.src;
-                        iframe.src = '';
-                        iframe.src = src;
-                        console.log('✓ YouTube video iframe reloaded');
-                    }, 100);
+        // YouTube video mute toggle with API
+        // Hero Video Carousel Controller
+        const heroVideos = [
+            document.getElementById('heroVideo1'),
+            document.getElementById('heroVideo2'),
+            document.getElementById('heroVideo3')
+        ];
+        let currentVideoIndex = 0;
+        let isMuted = false; // Start with audio enabled
+        const targetVolume = 0.6; // 60% volume
+
+        // Initialize videos
+        heroVideos.forEach((video, index) => {
+            if (video) {
+                video.volume = targetVolume;
+                video.muted = false; // Start with audio enabled
+                
+                // When a video ends, play the next one
+                video.addEventListener('ended', function() {
+                    playNextVideo();
                 });
 
-                // Handle iframe load error - show gradient fallback
-                iframe.onerror = function() {
-                    console.error('YouTube iframe failed to load');
-                    if (container) {
-                        container.style.background = 'linear-gradient(135deg, #1A1A1D 0%, #800020 50%, #4A1C40 100%)';
-                    }
-                };
-
-                console.log('✓ YouTube video initialized');
+                // Preload first video
+                if (index === 0) {
+                    video.load();
+                }
             }
-        })();
+        });
+
+        // Start playing the first video
+        function startVideoCarousel() {
+            if (heroVideos[0]) {
+                // Try to play with audio first
+                heroVideos[0].play().then(() => {
+                    console.log('✓ Hero video carousel started with audio');
+                    // Update mute button to show unmuted state
+                    document.querySelector('.icon-muted').style.display = 'none';
+                    document.querySelector('.icon-unmuted').style.display = 'block';
+                }).catch(err => {
+                    // If autoplay with audio fails, try muted
+                    console.log('Autoplay with audio prevented, trying muted:', err);
+                    heroVideos[0].muted = true;
+                    isMuted = true;
+                    heroVideos[0].play().then(() => {
+                        console.log('✓ Video started muted (autoplay restriction)');
+                    }).catch(err2 => {
+                        console.log('Video play error:', err2);
+                    });
+                });
+            }
+        }
+
+        // Play next video in sequence
+        function playNextVideo() {
+            // Fade out current video
+            heroVideos[currentVideoIndex].classList.remove('active');
+            
+            // Move to next video (loop back to start after last video)
+            currentVideoIndex = (currentVideoIndex + 1) % heroVideos.length;
+            
+            // Fade in and play next video
+            const nextVideo = heroVideos[currentVideoIndex];
+            nextVideo.currentTime = 0;
+            nextVideo.classList.add('active');
+            nextVideo.play().catch(err => {
+                console.log('Video play error:', err);
+            });
+        }
+
+        // Mute toggle button
+        const muteToggle = document.getElementById('muteToggle');
+        if (muteToggle) {
+            muteToggle.addEventListener('click', function() {
+                isMuted = !isMuted;
+                
+                heroVideos.forEach(video => {
+                    if (video) {
+                        video.muted = isMuted;
+                    }
+                });
+
+                // Update icon
+                if (isMuted) {
+                    document.querySelector('.icon-muted').style.display = 'block';
+                    document.querySelector('.icon-unmuted').style.display = 'none';
+                } else {
+                    document.querySelector('.icon-muted').style.display = 'none';
+                    document.querySelector('.icon-unmuted').style.display = 'block';
+                }
+            });
+        }
+
+        // Start carousel when page loads
+        window.addEventListener('load', startVideoCarousel);
 
         // OSUS Logo Video - ensure it plays
         const logoVideo = document.querySelector('.logo-video-container video');
